@@ -1,5 +1,46 @@
-\documentclass{report}
-\begin{document}
+\documentclass{scrartcl}
 	\title{Android Go App - Pflichtenheft}
+\begin{document}
 	\maketitle
+	\newpage
+	
+	\tableofcontents
+	\newpage
+	
+	\section{Zielbestimmung}
+	\subsection{Musskriterien}
+		\begin{itemize}
+		\item Anmeldung mit Googleservices
+		\item Ein User kann Mitglied mehrerer Gruppen sein und kann über diese Informationen abrufen.
+		\item Gruppenverwaltung
+			\begin{itemize}
+			\item Erstellen neuer Gruppen.
+			\item Suche bestehender Gruppen.
+			\item Gründer, User Rollenstruktur.
+			\item Mitglieder in die Gruppe aufnehmen, aus der Gruppe entfernen.
+			\end{itemize}
+		\item Terminverwaltung
+			\begin{itemize}
+			\item Termine können mit Zeit, Ort, Name innerhalb einer Gruppe erstellt werden.
+			\item User können bei Terminen zu-/absagen.
+			\item User werden an ihren Termin erinnert.
+			\end{itemize}
+		\item Ein User kann seinen eigenen Standort und den Gruppenmittelpunkt abrufen.	
+		\end{itemize}
+	\subsection{Wunschkriterien}
+		\begin{itemize}
+		\item "Bin Los" und "Bin da"
+			\begin{itemize}
+			\item User können per Button signalisieren ob sie bereits zum Treffpunkt unterwegs sind oder diesen sogar 					schon erreicht haben.
+			\item Nur User die Unterwegs sind werden für den Gruppenmittelpunkt beachtet.
+			\item User die den Treffpunkt erreicht haben werden für die Berechnung der Gruppenmitte stärker fokussiert.
+			\end{itemize}
+		\item Erinnerung an Termin auch bei geschlossener App.
+		\item Statistiken über Teilnahme der User speichern.
+		\end{itemize}
+	\subsection{Abgrenzungskriterien}
+		\begin{itemize}
+		\item Kein Chat.
+		\item User können nicht die Standorte andere User abfrage.
+		\end{itemize}
 \end{document}
