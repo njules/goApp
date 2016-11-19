@@ -98,14 +98,15 @@
 
 
 	\section{Funktionale Anforderungen}
+		
 
-		\subsection{Accountverwaltung}
+		\subsubsection{Accountverwaltung}
 		\begin{itemize}
 		\item[FA10] Anmeldung eines Benutzers in der App über Googleservices.
 		\item[FA20] Ersterfassung und Änderung des Benutzernamens.
 		\end{itemize}
 		
-		\subsection{Gruppenverwaltung}
+		\subsubsection{Gruppenverwaltung}
 		\begin{itemize}
 		\item[FA30] Jeder Benutzer kann eine Gruppe erstellen.
 		\item[FA35] Ersterfassung und spätere Änderung des Gruppennamens durch den Gruppengründer.
@@ -123,8 +124,28 @@
 			\end{itemize}
 		 \item[FA60] Der Gruppengründer kann bestehende Mitglieger aus der Gruppe entfernen.
 		 \item[FA70] Die Gruppe kann durch den Gruppengründer gelöscht werden.
-		 \item[FA80] Der Gruppengründer kann seinen Status als Gruppengründer an ein Mitglied übergeben.
 		 \item[FA80] Mitglieder der Gruppen, ausgenommen des Gruppengründers, können die Gruppe verlassen.
+		 \item[FA90W] Der Gruppengründer kann seinen Status als Gruppengründer an ein Mitglied übergeben.
+		\end{itemize}
+		
+		\subsection{Terminverwaltung}
+		\begin{itemize}
+		\item[FA100] Jedes Mitglied einer Gruppe kann einen Termin erstellen.
+		\item[FA110] Der Terminersteller kann den von ihm erstellten Termin verwalten:
+			\begin{itemize}
+			\item Ersterfassung und Änderung des Terminzeitpunktes.
+			\end{itemize}
+			\begin{itemize}
+			\item Ersterfassung und Änderung des Terminortes.
+			\end{itemize}
+			\begin{itemize}
+			\item Ersterfassung und Änderung des Terminnamens.
+			\end{itemize}
+			
+		\item[FA120] Der Termin wird jedem Gruppenmitglied angezeigt.
+		\item[FA130] Jedes Gruppenmitglied kann einem Termin zu- oder absagen.
+		\item[FA140] Jeder Teilnehmer wird vor Beginn des Termins benachrichtigt werden.
+		
 		\end{itemize}
 		
 		
