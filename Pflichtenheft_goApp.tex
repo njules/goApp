@@ -229,6 +229,56 @@
 
 	\section{Systemmodelle}
 	
+	\subsection{Anwendungsfälle}
+	\subsubsection{Nutzer Registrieren}
+	\begin{description}
+		\item \textbf{Titel:}
+		\begin{description}
+			\item Nutzer Registrieren
+		\end{description}
+		\item \textbf{Kurzbeschreibung:}
+		\begin{description}
+			\item Der Nutzer registriert sich mit seinem Google Play Account
+		\end{description}
+		\item \textbf{Aktoren:}
+		\begin{description}
+			\item Nutzer 
+		\end{description}
+		\item \textbf{Vorbedingungen:}
+		\begin{description}
+			\item Der Nutzer besitzt einen Google Play Account
+			\item Mit diesem Google Play Account ist noch kein Konto verknüpft
+		\end{description}
+		\item \textbf{Ablauf:} \newline Für den Nutzer wird ein Konto auf der Datenbank erstellt und mit seinem Google Play Account verknüpft.
+		\item \textbf{Ergebnis:} \newline Der Nutzer besitzt ein Konto und kann somit zu Gruppen hinzugefügt werden oder selber Gruppen erstellen.
+	\end{description}
+
+	\newpage
+	
+	\subsubsection{Gruppe erstellen}
+	\begin{description}
+		\item \textbf{Titel:}
+		\begin{description}
+			\item Gruppe erstellen
+		\end{description}
+		\item \textbf{Kurzbeschreibung:}
+		\begin{description}
+			\item Der Nutzer Gründet eine Gruppe
+		\end{description}
+		\item \textbf{Aktoren:}
+		\begin{description}
+			\item Nutzer 
+		\end{description}
+		\item \textbf{Vorbedingungen:}
+		\begin{description}
+			\item Der Nutzer hat sich zuvor erfolgreich registriert.
+		\end{description}
+		\item \textbf{Ablauf:} \newline Es wird eine Gruppe erstellt, für die der erstellende Nutzer als Gründer eingetragen wird. Der Nutzer muss einen Namen für seine Gruppe wählen. Damit erhält der Nutzer auch alle Rechte, die dem Gruppengründer zugestanden werden.
+		\item \textbf{Ergebnis:} \newline Der Nutzer ist Gründer einer Gruppe und kann diese im Rahmen seiner Rechte verwalten.
+	\end{description}
+	
+	\newpage
+	
 	\subsection{Anwendungsfalldiagramm}
 	\begin{figure}[h]
 	\includegraphics[width=\textwidth]{goApp_useCase}
