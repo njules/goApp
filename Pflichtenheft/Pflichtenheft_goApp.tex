@@ -222,6 +222,78 @@
 	
 	
 	\section{Globale Testfälle}
+
+	Es muss überprüft werden ob folgende Funktionen wie gewünscht funktionieren.
+	
+	\subsection{Accountverwaltung}
+	\begin{itemize}[nosep] 
+		\item[T10] Registrieren: Eine bisher nicht regestrierte Person mit einem Google-Account regestriert sich mit diesem im System und wählt zusätzlich einen Benutzernamen.
+		\item[T20] Namensänderung: Ein Benutzer ändert seinen Benutzernamen.
+	\end{itemize}	
+	
+	\subsection{Gruppenverwaltung}
+	\begin{itemize}[nosep] 
+		\item[T30] Ein Benutzer erstellt eine neue Gruppe hierzu muss:
+			\begin{itemize}
+			\item ein Gruppenname eingegeben werden
+			\item der entsprechende Benutzer als Gruppengründer eingetragen werden
+			\end{itemize}
+		\item[T40] Gruppenverwaltung aus Gründersicht:
+			\begin{itemize}
+			\item der Gründer wirft einige Mitglieder aus der Gruppe
+			\item ändert den Gruppennamen
+			\item nimmt Beitrittsanfragen an
+			\item löscht Beitrittsanfragen
+			\item löscht die Gruppe
+			\end{itemize}
+		\item[T50] Einer existierende Gruppe beitreten:
+	 		\begin{itemize}
+			\item ein Benutzer sucht über den Gruppennamen nach einer Gruppe 
+			\item schickt der Gruppe eine Beitrittsanfrage
+			\item wartet auf eine Reaktion des Gruppengründers
+			\item bei einer Annahme ist der Benutzer dann Mitglied der Gruppe
+			\item bei einer Ablehnung wird die Beitrittsanfrage gelöscht 
+			\end{itemize}
+		\item[T60] Gruppe Verlassen: Ein Gruppenmitglied, nicht der Gründer, verlässt eine Gruppe.
+	\end{itemize}	
+
+	\subsection{Terminverwaltung}
+	\begin{itemize}[nosep] 
+		\item[T70] Ein beliebiges Gruppenmitglied erstellt einen neuen Termin hierzu muss:
+			\begin{itemize}
+			\item ein Terminname eingegeben werden
+			\item ein Treffpunkt festgelegt werden
+			\item das Datum und die Uhrzeit des Termins festgelegt werden
+			\item der entsprechende Benutzer als Terminadministrator und damit auch als Teilnehmer eingetragen werden
+			\item der Termin nachdem er vorüber ist gelöscht werden
+			\end{itemize}
+		\item[T80] Terminverwaltung durch den Terminadministrator:
+			\begin{itemize}
+			\item der Terminadministrator ändert den Treffpunkt
+			\item den Terminnamen
+			\item die Uhrzeit des Termins
+			\end{itemize}
+		\item[T90] Ein Mitglied lässt sich einen Termin anzeigen und erhält folgende Informationen:
+			\begin{itemize}
+			\item Terminname, Treffpunkt und Zeitpunkt
+			\item wer den Termin gegründet hat
+			\item die Liste aller Teilnehmer
+			\item nur bei eigener Teilnahme und bei Terminstart: den Gruppenmittelpunkt
+			\end{itemize}
+		\item[T100] Ein Mitglied sagt bei einem Termin zu daraufhin wird:
+			\begin{itemize}
+			\item das Mitglied zum Teilnehmer
+			\item in die Teilnehmerliste aufgenommen
+			\item vor Beginn des Termins benarichtigt
+			\end{itemize}
+		\item[T110] Ein Mitglied sagt bei einem Termin ab woraufhin der Termin nicht mehr angezeigt wird. 
+	\end{itemize}
+
+	subsection{Standort}
+	\begin{itemize}[nosep] 
+		\item[T120] Der Server lokalisiert alle Teilnehmer eines Termins eine halbe Stunde vor Terminbeginn und berechnet den gemittelten Standort. 
+		\item[T130] Der Server löscht nach Ende des Termins alle Informationen über die Standorte der Teilnehmer. 
+	 \end{itemize}	
 	
 	\newpage
 	
