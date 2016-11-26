@@ -115,7 +115,7 @@
 		\item[FA30] Jeder Benutzer kann eine Gruppe erstellen.
 		\item[FA35] Ersterfassung und spätere Änderung des Gruppennamens durch den Gruppengründer.
 		\item[FA40] Gruppen können über den Gruppennamen gesucht werden.
-		\item[FA45] Benutzer können Beitrittsanfragen an eine Gruppen senden.
+		\item[FA45] Benutzer können Beitrittsanfragen an eine Gruppe senden.
 		\item[FA50]Der Gruppengründer kann Betrittsanfragen zu der Gruppe verwalten:
 			\begin{itemize}
 			\item Anfragen bestätigen, wodurch der Anfragende Mitglied der Gruppe wird und die Anfrage gelöscht wird.
@@ -126,7 +126,7 @@
 			\begin{itemize}
 			\item Anfragen ignorieren, wodurch die Anfrage bestehen und sichtbar bleibt.
 			\end{itemize}
-		 \item[FA60] Der Gruppengründer kann bestehende Mitglieger aus der Gruppe entfernen.
+		 \item[FA60] Der Gruppengründer kann bestehende Mitglieder aus der Gruppe entfernen.
 		 \item[FA70] Die Gruppe kann durch den Gruppengründer gelöscht werden.
 		 \item[FA80] Mitglieder der Gruppen, ausgenommen des Gruppengründers, können die Gruppe verlassen.
 		 \item[FA90W] Der Gruppengründer kann seinen Status als Gruppengründer an ein Mitglied übergeben.
@@ -213,7 +213,7 @@
 	\item[QA10] Die App soll auf jede Anfrage in durchschnittlich 5 Sekunden reagieren.
 	\item[QA20] Die App fährt in durchschnittlich 10 Sekunden hoch.
 	\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm zu erreichen.
-	\item[QA40] Die App fällt nicht aus, auch bei widrigen Bedingungen (kein Netzwerkverbinndung, Standortungenauigkeit).
+	\item[QA40] Die App fällt nicht aus, auch bei widrigen Bedingungen (kein Netzwerkverbindung, Standortungenauigkeit).
 	\item[QA50] Unterstützt bis zu 20 User pro Gruppe.
 	\item[QA60] Jeder User kann in bis zu 10 Gruppen Mitglied sein.
 	\end{itemize}
@@ -297,7 +297,32 @@
 	Um 12:15 erscheint auf allen Smartphones die Benachrichtigung, dass in 15 Minuten der Termin ansteht.
 	Alle gehen kurz daraufhin los und können in der App sowohl ihren als auch den mittleren Gruppenstandort sehen.
 	Nachdem der Termin vorbei ist, wird er automatisch gelöscht.
+	\newline
+	\newline
+	\begin{figure}[h]
+	\includegraphics[width=\textwidth]{Szenario1}
+	\end{figure}
 	
+	\newpage
+	
+	\subsubsection{Szenario 2}
+	Die Personen Alice, Bob, Carol, Dave und Eve sind in einer gemeinsamen Gruppe.
+	Alice will um 12:00 Uhr in die Mensa gehen. Daher erstellt Alice in der Gruppe einen neuen Termin \glqq{}Mensa 12:00\grqq{}.
+	Alle anderen Gruppenmitglieder sehen den neuen Termin. Bob und Carol wollen auch um 12:00 in die Mensa gehen und klicken auf \glqq{}Teilnehmen\grqq{}.
+	Dave und Eve müssen um 12:00 Uhr noch etwas erledigen und können deshalb erst später in die Mensa, sie klicken deshalb auf \glqq{}Nicht Teilnehmen\grqq{}.
+	Da sie auf \glqq{}Nicht Teilnehmen\grqq{} geklickt haben, ist der Termin für sie nicht mehr sichtbar.
+	Dave erstellt später einen neuen Termin \glqq{}Mensa 12:30\grqq{} in der Gruppe.
+	Um 12:30 hat Eve auch Zeit und klickt auf \glqq{}Teilnehmen\grqq{}.
+	Da Alice, Bob und Carol schon früher in die Mensa gehen klicken sie auf \glqq{}Nicht Teilnehmen\grqq{}.
+	Um 11:45 werden Alice, Bob und Carol an ihren Termin erinnert und um 12:15 Dave und Eve.
+	Der mittlere Gruppenstandort bezieht sich immer ausschließlich auf die Personen, die an dem Termin teilnehmen.
+	So sieht Alice den mittleren Standort von sich, Bob und Carol.	
+	\newline
+	\newline
+	\newline
+	\begin{figure}[h]
+	\includegraphics[width=\textwidth]{Szenario2}
+	\end{figure}
 	\newpage
 
 	\subsection{GUI}
@@ -342,11 +367,7 @@
 	\caption{In der Terminansicht erhält ein Mitglied alle Informationen über einen Termin, darunter sind eine Teilnehmerliste und eine Karte die den Treffpunkt und den eigenen Standort anzeigt. Sollte der Termin kurz bevorstehen wird zusätzlich der gemittelte Gruppenstandort angezeigt.}
  	\end{figure}
 	
-	
-	\begin{figure}[h]
-	\includegraphics[width=0.7\textwidth]{Szenario1}
-	\end{figure}
-	
+
 	\begin{comment}
 	\makeglossary
 	
