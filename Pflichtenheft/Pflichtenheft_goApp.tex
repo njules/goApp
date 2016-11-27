@@ -26,6 +26,7 @@
 			\item Suche bestehender Gruppen.
 			\item Gründer, User Rollenstruktur.
 			\item Mitglieder in die Gruppe aufnehmen, aus der Gruppe entfernen.
+			\item Gruppe löschen
 		\end{itemize}
 		\item Terminverwaltung
 		\begin{itemize}
@@ -458,7 +459,24 @@
 	\newline
 	\newline
 	\begin{figure}[h]
-	\includegraphics[width=\textwidth]{Szenario2}
+		\includegraphics[width=\textwidth]{Szenario2}
+	\end{figure}
+	\newpage
+	
+	\subsubsection{Szenario 3}
+	Es gibt die Personen Alice, Bob, Carol und Dave, welche alle bereits in der App registriert sind.
+	Alice hat Geburtstag und erstellt deshalb eine neue Gruppe mit dem Namen \glqq{}Geburtstag Alice\grqq{}. Die anderen geben in das Suchfeld \glqq{}Geburtstag Alice\grqq{} ein und klicken auf die passende Gruppe.
+	Jetzt erscheint die Nachfrage, ob sie der Gruppe beitreten wollen. Alice sieht nun, welche von ihren Gästen teilnehmen wollen und fügt diese hinzu. Dave möchte auch beitreten, aber Alice hat ihn nicht eingeladen und lehnt seine Anfrage ab.
+	Sobald alle Gäste der Gruppe beigetreten sind, erstellt Alice einen neuen Termin mit dem Namen \glqq{}Feier\grqq{} und ihrem zu Hause als Ort, sowie dem Datum \glqq{}27.11.2016\grqq{} und die Uhrzeit \glqq{}21:00\grqq{}.
+	Bob und Carol sehen den Termin und klicken auf \glqq{}Teilnehmen\grqq{}.
+	%TODO Erinnerung: Um 12:15 erscheint auf allen Smartphones die Benachrichtigung, dass in 15 Minuten der Termin ansteht. Alle gehen kurz daraufhin los und können in der App sowohl ihren als auch den mittleren Gruppenstandort sehen.
+	Nachdem der Termin vorbei ist, wird er automatisch gelöscht.
+	Am nächsten Tag verlässt Bob die Gruppe und Alice löscht daraufhin die Gruppe, da sie nicht mehr gebraucht wird.	
+	\newline
+	\newline
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.9\textwidth]{Szenario3}
 	\end{figure}
 	\newpage
 	
@@ -466,7 +484,7 @@
 	\begin{figure}[h]
 		\includegraphics[width=.5\textwidth]{GUI_Start.jpg}
 		\includegraphics[width=.5\textwidth]{GUI_changeName.jpg}
-		\caption{Die Startseite zeigt den Namen des Benutzers und bietet eine übersicht über alle Gruppen in denen der Benutzer Mitglied ist. Außerdem lässt sich hier der eigene Anzeigename ändern.}
+		\caption{Die Startseite zeigt den Namen des Benutzers und bietet eine Übersicht über alle Gruppen in denen der Benutzer Mitglied ist. Außerdem lässt sich hier der eigene Anzeigename ändern.}
 	\end{figure}
 	
 	\newpage
