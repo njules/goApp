@@ -6,7 +6,7 @@
 \usepackage{graphicx}
 \usepackage[ngerman]{babel}
 \title{Android Go App - Pflichtenheft}
-\author{Jörn Klindworth, Katharina Riesterer, Julian Neubert,\\ Jonas Walter, Tobias Ohlsson, Eva-Maria Neumann}
+\author{Jörn Kussmaul, Katharina Riesterer, Julian Neubert,\\ Jonas Walter, Tobias Ohlsson, Eva-Maria Neumann}
 
 \begin{document}
 	\maketitle
@@ -14,19 +14,21 @@
 	
 	\tableofcontents
 	\newpage
-	
+	%TODO Google Services
 	\section{Zielbestimmung}
+	%TODO tobias
 	\subsection{Musskriterien}
 	\begin{itemize}
-		\item Anmeldung mit Googleservices
-		\item Ein User kann Mitglied mehrerer Gruppen sein und kann über diese Informationen abrufen.
+		\item Anmeldung mit Google Services
+		\item Ein User kann Mitglied mehrerer Gruppen sein und kann Name, Mitglieder, Gründer und Termine einsehen.
 		\item Gruppenverwaltung
 		\begin{itemize}
 			\item Erstellen neuer Gruppen.
 			\item Suche bestehender Gruppen.
-			\item Gründer, User Rollenstruktur.
+			\item Gründer-Benutzer-Rollenstruktur.
 			\item Mitglieder in die Gruppe aufnehmen, aus der Gruppe entfernen.
 			\item Gruppe löschen
+			\item Gruppenname ändern
 		\end{itemize}
 		\item Terminverwaltung
 		\begin{itemize}
@@ -38,22 +40,26 @@
 	\end{itemize}
 	\subsection{Wunschkriterien}
 	\begin{itemize}
-		\item \grqq{}Bin Los\grqq{} und \grqq{}Bin da\grqq{}
+		\item \grqq{}Bin Los\grqq{} und \grqq{}Bin da\grqq{} und \grqq{}Bin zu spät\grqq{}
 		\begin{itemize}
 			\item User können per Button signalisieren ob sie bereits zum Treffpunkt unterwegs sind oder diesen sogar schon erreicht haben.
 			\item Nur User die Unterwegs sind werden für den Gruppenmittelpunkt beachtet.
 			\item User die den Treffpunkt erreicht haben werden für die Berechnung der Gruppenmitte stärker fokussiert.
+			\item Benutzer können der Gruppe mitteilen, dass sie zu spät sind.
 		\end{itemize}
+		\item Gruppenmittelpunkt teilt sich bei Gruppenteilung.
+		\item Individuelle Erinnerung pro Benutzer und pro Termin.
 		\item Erinnerung an Termin auch bei geschlossener App.
-		\item Termine können gelöscht und geändert werden
+		\item Termine können gelöscht, geändert und wiederholt werden.
 		\item Statistiken über Teilnahme der User speichern.
-		\item QR-Code zum finden von Gruppen
+		\item QR-Code oder Link zum Finden von Gruppen.
 		\item Sprachwahl
 	\end{itemize}
 	\subsection{Abgrenzungskriterien}
 	\begin{itemize}
 		\item Kein Chat.
 		\item User können nicht die Standorte andere User abfragen.
+		\item Gründer kann keine neuen Mitglieder suchen.
 	\end{itemize}
 	
 	\newpage
@@ -62,12 +68,12 @@
 	
 	\section{Produkteinsatz}
 	\begin{itemize}	        
-		\item Das Produkt soll das spontane Organisieren von Treffen unterstützen. Dazu soll es dem Nutzer möglich sein in einer Gruppe einen Termin zu erstellen, bzw. bei Terminen zu- und abzusagen.
-		\item Kurz vor dem Termin wird dann der mittlere Standort der Gruppe angezeigt, um das Finden der anderen Gruppenmitglieder zu erleichtern.
+		\item Das Produkt soll das spontane Organisieren von Treffen unterstützen. Dazu soll es dem Nutzer möglich sein in einer Gruppe einen Termin zu erstellen, bzw. bei Terminen zu- oder abzusagen.
+		\item Kurz vor dem Termin wird dann der Gruppenmittelpunkt angezeigt, um das Finden der anderen Gruppenmitglieder zu erleichtern.
 	\end{itemize}
-	\subsection{Andwendungsbereich}
+	\subsection{Anwendungsbereich}
 	\begin{itemize}	        
-		\item Spontane Terminvereinbarung 
+		\item Spontane Terminvereinbarung von Gruppen
 	\end{itemize}
 	\subsection{Zielgruppe}
 	\begin{itemize}	        
@@ -76,6 +82,7 @@
 	\subsection{Betriebsbedingung}
 	\begin{itemize}	        
 		\item App kann überall eingesetzt werden
+		\item Für vollständigen Funktionsumfang benötigt man GPS und eine stabile Internetverbindung
 	\end{itemize}
 	
 	\newpage
@@ -84,31 +91,37 @@
 	\section{Produktumgebung}
 	\begin{itemize}	        
 		\item Eine Client-Server-Architektur
-		\item Der Client ist eine Android-App
-		\item Die App läuft parallel mit anderen Apps auf einem Android-Smartphone ohne mit diesen zu kommunizieren
+		\item Der Client ist ein Android-Gerät
+		\item Die Android-Go App läuft parallel mit anderen Apps auf einem Android-Gerät
 	\end{itemize}
 	\subsection{Software}
 	\begin{itemize}	        
-		\item Client: Android ab 4.0
-		\item Server: Tomcat 8
+		\item Client: Android ab 4.4
+		\item Server: Tomcat 8, MySQL
 	\end{itemize}	
 	\subsection{Orgware}
 	\begin{itemize}	        
-		\item Internetverbindung und GPS
+		\item Internetverbindung und Standortabfrage
 	\end{itemize}
 	\subsection{Produktschnittstelle}
 	\begin{itemize}	        
 		\item Google Maps
+		\item Google Services
+	\end{itemize}
+	\subsection{Referenzgerät}
+	\begin{itemize}
+		\item Samsung Galaxy S4
+		\item Android 5.0.1
 	\end{itemize}
 	\newpage
 	
 	
 	\section{Funktionale Anforderungen}
-	
+	%TODO WFA nicht FAW
 	
 	\subsection{Accountverwaltung}
 	\begin{itemize}
-		\item[FA10] Anmeldung eines Benutzers in der App über Googleservices.
+		\item[FA10] Anmeldung eines Benutzers in der App über Google Services.
 		\item[FA15W] Der Benutzer kann zwischen Sprachen wählen.
 		\item[FA20] Ersterfassung und Änderung des Benutzernamens.
 		
@@ -156,7 +169,7 @@
 		
 		\item[FA120] Der Termin wird jedem Gruppenmitglied angezeigt.
 		\item[FA130] Jedes Gruppenmitglied kann einem Termin zu- oder absagen.
-		\item[FA140] Jeder Teilnehmer wird vor Beginn des Termins benachrichtigt werden.
+		\item[FA140] Jeder Teilnehmer wird 30 Minuten vor Beginn des Termins benachrichtigt werden.
 		\item[FA145W] Teilnehmer werden auch bei geschlossener App benachrichtigt.
 		
 		
@@ -164,8 +177,8 @@
 	
 	\subsection{Terminablauf}
 	\begin{itemize}
-		\item[FA160] Jeder Teilnehmer kann den Gruppenstandort in einer Karte dartellen lassen.
-		\item[FA165W] Teilgruppen mit mindestens 2 Teilnehmer erhalten einen eigenen Standort. 
+		\item[FA160] Jeder Teilnehmer kann den Gruppenstandort ab 15 Minuten in einer Karte darstellen lassen.
+		\item[FA165W] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort. 
 		\item[FA170W] Teilnehmer können mittels eines Buttons Signale an die anderen Teilnehmer senden:
 		\begin{itemize}
 			\item Sie können signalisieren ob sie bereits unterwegs sind.
@@ -187,15 +200,17 @@
 			\newline Ein frei gewählter Name, der den anderen Nutzern der App angezeigt wird.
 			\item Standort
 			\newline Der aktuelle Standort der Person, damit der gemittelte Standort berechnet werden kann.
-			\item GoogleServices Informationen
-			\newline %TODO
+			\item Google Services Informationen
+			\newline Zur eindeutige Identifizierung der Benutzer
 		\end{itemize}
 		
 		\item [D20] \textit{Gruppendaten:}
 		Eine Gruppe hat die folgenden Eigenschaften:
 		\begin{itemize}
+			\item ID
+			\newline ID-Nummer zur eindeutigen internen Identifikation
 			\item Name
-			\newline Ein eindeutiger Name der Gruppe.
+			\newline Angezeigter Name der Gruppe.
 			\item Teilnehmer
 			\newline In einer Gruppe sind mehrere Nutzer.
 			\item Rechte
@@ -211,26 +226,27 @@
 			\newline Der Name des Termins.
 			\item Ziel
 			\newline Das Ziel ist der Standort, wo das Treffen stattfinden soll.
-			\item Teilnehmer
-			\newline An einem Termin können mehrere Teilnehmer der Gruppe beteiligt sein. Die Teilnehmer können entweder eingeladen sein oder schon beigetreten. Teilnehmer die abgelehnt haben, werden nicht mehr mit dem Termin gespeichert.
+			\item Teilnehmer Status
+			\newline Status des Teilnehmers, ob er zu- oder abgesagt oder noch nicht reagiert hat
 			\item Gruppe
 			\newline Der Termin gehört zu einer bestimmten Gruppe
 			\item Serverzeit
-			\newline Serverzeit des Treffens
+			\newline Datum und Uhrzeit des Treffens
 		\end{itemize}
 	\end{itemize}
 	
 	\newpage
 	
 	
-	\section{Qualitäts-Anforderungen}
-	\begin{itemize}[nosep] 
-		\item[QA10] Die App soll auf jede Anfrage in durchschnittlich 5 Sekunden reagieren.
-		\item[QA20] Die App fährt in durchschnittlich 10 Sekunden hoch.
+	\section{Qualitative Anforderungen}
+	\begin{itemize}
+		\item[QA10] Die App soll auf jede Anfrage in durchschnittlich unter 5 Sekunden reagieren.
+		\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch.
 		\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm zu erreichen.
-		\item[QA40] Die App fällt nicht aus, auch bei widrigen Bedingungen (keine Netzwerkverbindung, Standortungenauigkeit).
-		\item[QA50] Unterstützt bis zu 20 User pro Gruppe.
-		\item[QA60] Jeder User kann in bis zu 10 Gruppen Mitglied sein.
+		\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App.
+		\item[QA50] Unterstützt bis zu 50 User pro Gruppe.
+		\item[QA60] Jeder User kann in bis zu 20 Gruppen Mitglied sein.
+		\item[QA70] Die App unterstützt mindestens 30000 Benutzer.
 	\end{itemize}
 	
 	\newpage
@@ -241,13 +257,13 @@
 	Es muss überprüft werden ob folgende Funktionen wie gewünscht funktionieren.
 	
 	\subsection{Accountverwaltung}
-	\begin{itemize}[nosep] 
-		\item[T10] Registrieren: Eine bisher nicht regestrierte Person mit einem Google-Account regestriert sich mit diesem im System und wählt zusätzlich einen Benutzernamen.
+	\begin{itemize} 
+		\item[T10] Registrieren: Eine bisher nicht registrierte Person mit einem Google-Account registriert sich mit diesem im System und wählt zusätzlich einen Benutzernamen.
 		\item[T20] Namensänderung: Ein Benutzer ändert seinen Benutzernamen.
 	\end{itemize}	
 	
 	\subsection{Gruppenverwaltung}
-	\begin{itemize}[nosep] 
+	\begin{itemize}
 		\item[T30] Ein Benutzer erstellt eine neue Gruppe hierzu muss:
 			\begin{itemize}
 			\item ein Gruppenname eingegeben werden
@@ -255,7 +271,7 @@
 			\end{itemize}
 		\item[T40] Gruppenverwaltung aus Gründersicht:
 			\begin{itemize}
-			\item der Gründer wirft einige Mitglieder aus der Gruppe
+			\item der Gründer wirft Mitglieder aus der Gruppe
 			\item ändert den Gruppennamen
 			\item nimmt Beitrittsanfragen an
 			\item löscht Beitrittsanfragen
@@ -273,7 +289,7 @@
 	\end{itemize}	
 
 	\subsection{Terminverwaltung}
-	\begin{itemize}[nosep] 
+	\begin{itemize}
 		\item[T70] Ein beliebiges Gruppenmitglied erstellt einen neuen Termin hierzu muss:
 			\begin{itemize}
 			\item ein Terminname eingegeben werden
@@ -282,7 +298,7 @@
 			\item der entsprechende Benutzer als Terminadministrator und damit auch als Teilnehmer eingetragen werden
 			\item der Termin nachdem er vorüber ist gelöscht werden
 			\end{itemize}
-		\item[T80] Terminverwaltung durch den Terminadministrator:
+		\item[WT80] Terminverwaltung durch den Terminadministrator:
 			\begin{itemize}
 			\item der Terminadministrator ändert den Treffpunkt
 			\item den Terminnamen
@@ -299,14 +315,14 @@
 			\begin{itemize}
 			\item das Mitglied zum Teilnehmer
 			\item in die Teilnehmerliste aufgenommen
-			\item vor Beginn des Termins benarichtigt
+			\item vor Beginn des Termins benachrichtigt
 			\end{itemize}
 		\item[T110] Ein Mitglied sagt bei einem Termin ab woraufhin der Termin nicht mehr angezeigt wird. 
 	\end{itemize}
 
-	subsection{Standort}
-	\begin{itemize}[nosep] 
-		\item[T120] Der Server lokalisiert alle Teilnehmer eines Termins eine halbe Stunde vor Terminbeginn und berechnet den gemittelten Standort. 
+	\subsection{Standort}
+	\begin{itemize}
+		\item[T120] Der Server lokalisiert alle Teilnehmer eines Termins eine viertel Stunde vor Terminbeginn und berechnet den gemittelten Standort. 
 		\item[T130] Der Server löscht nach Ende des Termins alle Informationen über die Standorte der Teilnehmer. 
 	 \end{itemize}	
 	
@@ -324,7 +340,7 @@
 		\end{description}
 		\item \textbf{Kurzbeschreibung:}
 		\begin{description}
-			\item Der Nutzer registriert sich mit seinem Google Play Account.
+			\item Der Nutzer registriert sich mit seinem Google Account.
 		\end{description}
 		\item \textbf{Aktoren:}
 		\begin{description}
@@ -332,8 +348,8 @@
 		\end{description}
 		\item \textbf{Vorbedingungen:}
 		\begin{description}
-			\item Der Nutzer besitzt einen Google Play Account
-			\item Mit diesem Google Play Account ist noch kein Konto verknüpft
+			\item Der Nutzer besitzt einen Google Account
+			\item Mit diesem Google Account ist noch kein Konto verknüpft
 		\end{description}
 		\item \textbf{Ablauf:} \newline Für den Nutzer wird ein Konto auf der Datenbank erstellt und mit seinem Google Play Account verknüpft.
 		\item \textbf{Ergebnis:} \newline Der Nutzer besitzt ein Konto und kann somit zu Gruppen hinzugefügt werden oder selber Gruppen erstellen.
@@ -360,7 +376,7 @@
 			\item Der Nutzer hat sich zuvor erfolgreich registriert.
 		\end{description}
 		\item \textbf{Ablauf:} \newline Es wird eine Gruppe erstellt, für die der erstellende Nutzer als Gründer eingetragen wird. Der Nutzer muss einen Namen für seine Gruppe wählen. Damit erhält der Nutzer auch alle Rechte, die dem Gruppengründer zugestanden werden. 
-		\item \textbf{Ergebnis:} \newline Der Nutzer ist Gruppengründer einer Gruppe und kann Nutzer zu dieser Gruppe hinzufügen oder Mitglieder aus der Gruppe entfernen. Desweiteren hat die selben Rechte wie Mitglieder, er kann also auch Termine erstellen und and anderen Terminen innerhalb der Gruppe teilnehmen.
+		\item \textbf{Ergebnis:} \newline Der Nutzer ist Gruppengründer einer Gruppe und kann Nutzer zu dieser Gruppe hinzufügen oder Mitglieder aus der Gruppe entfernen. Des Weiteren hat er die selben Rechte wie Mitglieder, er kann also auch Termine erstellen und an anderen Terminen innerhalb der Gruppe teilnehmen.
 	\end{description}
 	
 	\newpage
@@ -385,7 +401,7 @@
 			\item Der Gruppengründer hat zuvor eine Gruppe gegründet und der Nutzer hat sich bereits registriert.
 		\end{description}
 		\item \textbf{Ablauf:} \newline Der Nutzer kann nach der Gruppe des Gruppengründers suchen und eine Beitrittsanfrage senden. Wurde die Anfrage gesendet kann der Gruppengründer sie einsehen und den Nutzer annehmen oder ablehnen. Hat der Gruppengründer den Nutzer angenommen ist der Nutzer nun Mitglied in der Gruppe und hat alle Rechte eines Mitglieds.
-		\item \textbf{Ergebnis:} \newline Der Nutzer ist Miglied einer Gruppe und kann Termine erstellen oder an von anderen Personen innerhalb der Gruppe erstellten Terminen teilnehmen.
+		\item \textbf{Ergebnis:} \newline Der Nutzer ist Mitglied einer Gruppe und kann Termine erstellen oder an von anderen Personen innerhalb der Gruppe erstellten Terminen teilnehmen.
 	\end{description}
 	
 	\newpage
@@ -406,9 +422,9 @@
 		\end{description}
 		\item \textbf{Vorbedingungen:}
 		\begin{description}
-			\item Das Mitglied ist mitglied einer Gruppe
+			\item Das Mitglied ist Mitglied einer Gruppe
 		\end{description}
-		\item \textbf{Ablauf:} \newline Das Mitglied erstellt innerhalb einer Gruppe einen Termin. Hierfür gibt er Namen, Uhrzeit und Ort für den Termin an. Das Mitglied, das den Termin erstellt nimmt automatisch an dem Termin teil. Der Termin ist and die Gruppe gebunden und alle anderen Mitglieder der Gruppe können die Informationen für diesen Termin einsehen und ihm beitreten.
+		\item \textbf{Ablauf:} \newline Das Mitglied erstellt innerhalb einer Gruppe einen Termin. Hierfür gibt er Namen, Uhrzeit und Ort für den Termin an. Das Mitglied, das den Termin erstellt nimmt automatisch an dem Termin teil. Der Termin ist und die Gruppe gebunden und alle anderen Mitglieder der Gruppe können die Informationen für diesen Termin einsehen und ihm beitreten.
 		\item \textbf{Ergebnis:} \newline Das Mitglied hat einen an die Gruppe gebunden, für alle Mitglieder sichtbaren Termin erstellt. Mitglieder können an dem Termin als Teilnehmer beitreten. Ein Teilnehmer wird eine gewisse Zeit vor dem Termin benachrichtigt. Wurde der Teilnehmer benachrichtigt kann er die Karte öffnen und den ungefähren Standort der anderen Teilnehmer dieses Termins einsehen.
 	\end{description}
 	
