@@ -69,7 +69,7 @@
 	
 	\section{Produkteinsatz}
 	\begin{itemize}	        
-		\item Das Produkt soll das spontane Organisieren von Treffen unterstützen. Dazu soll es dem Nutzer möglich sein in einer Gruppe einen Termin zu erstellen, bzw. bei Terminen zu- oder abzusagen.
+		\item Das Produkt soll das spontane Organisieren von Treffen unterstützen. Dazu soll es dem Benutzer möglich sein in einer Gruppe einen Termin zu erstellen, bzw. bei Terminen zu- oder abzusagen.
 		\item Kurz vor dem Termin wird dann der Gruppenmittelpunkt angezeigt, um das Finden der anderen Gruppenmitglieder zu erleichtern.
 	\end{itemize}
 	\subsection{Anwendungsbereich}
@@ -196,11 +196,11 @@
 	
 	\section{Produktdaten}
 	\begin{itemize}
-		\item [D10] \textit{Nutzerdaten:}
-		Für jeden Nutzer werden die folgenden Daten gespeichert bzw. erfasst:
+		\item [D10] \textit{Benutzerdaten:}
+		Für jeden Benutzer werden die folgenden Daten gespeichert bzw. erfasst:
 		\begin{itemize}
 			\item Benutzername
-			\newline Ein frei gewählter Name, der den anderen Nutzern der App angezeigt wird.
+			\newline Ein frei gewählter Name, der den anderen Benutzern der App angezeigt wird.
 			\item Standort
 			\newline Der aktuelle Standort der Person, damit der gemittelte Standort berechnet werden kann.
 			\item Google Services Informationen
@@ -215,7 +215,7 @@
 			\item Name
 			\newline Angezeigter Name der Gruppe.
 			\item Teilnehmer
-			\newline In einer Gruppe sind mehrere Nutzer.
+			\newline In einer Gruppe sind mehrere Benutzer.
 			\item Rechte
 			\newline Die Teilnehmer haben verschiedene Rechte. Der Gruppengründer hat mehr Rechte als die anderen Teilnehmer.
 			\item Termine
@@ -247,8 +247,8 @@
 		\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch.
 		\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm zu erreichen.
 		\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App.
-		\item[QA50] Unterstützt bis zu 50 User pro Gruppe.
-		\item[QA60] Jeder User kann in bis zu 20 Gruppen Mitglied sein.
+		\item[QA50] Unterstützt bis zu 50 Benutzer pro Gruppe.
+		\item[QA60] Jeder Benutzer kann in bis zu 20 Gruppen Mitglied sein.
 		\item[QA70] Die App unterstützt mindestens 30000 Benutzer.
 	\end{itemize}
 	
@@ -335,27 +335,27 @@
 	\section{Systemmodelle}
 	
 	\subsection{Anwendungsfälle}
-	\subsubsection{Nutzer Registrieren}
+	\subsubsection{Benutzer Registrieren}
 	\begin{description}
 		\item \textbf{Titel:}
 		\begin{description}
-			\item Nutzer Registrieren
+			\item Benutzer Registrieren
 		\end{description}
 		\item \textbf{Kurzbeschreibung:}
 		\begin{description}
-			\item Der Nutzer registriert sich mit seinem Google Account.
+			\item Der Benutzer registriert sich mit seinem Google Account.
 		\end{description}
 		\item \textbf{Aktoren:}
 		\begin{description}
-			\item Nutzer 
+			\item Benutzer 
 		\end{description}
 		\item \textbf{Vorbedingungen:}
 		\begin{description}
-			\item Der Nutzer besitzt einen Google Account
+			\item Der Benutzer besitzt einen Google Account
 			\item Mit diesem Google Account ist noch kein Konto verknüpft
 		\end{description}
-		\item \textbf{Ablauf:} \newline Für den Nutzer wird ein Konto auf der Datenbank erstellt und mit seinem Google Account verknüpft.
-		\item \textbf{Ergebnis:} \newline Der Nutzer besitzt ein Konto und kann somit zu Gruppen hinzugefügt werden oder selber Gruppen erstellen.
+		\item \textbf{Ablauf:} \newline Für den Benutzer wird ein Konto auf der Datenbank erstellt und mit seinem Google Account verknüpft.
+		\item \textbf{Ergebnis:} \newline Der Benutzer besitzt ein Konto und kann somit zu Gruppen hinzugefügt werden oder selber Gruppen erstellen.
 	\end{description}
 	
 	\newpage
@@ -368,43 +368,43 @@
 		\end{description}
 		\item \textbf{Kurzbeschreibung:}
 		\begin{description}
-			\item Der Nutzer erstellt eine Gruppe.
+			\item Der Benutzer erstellt eine Gruppe.
 		\end{description}
 		\item \textbf{Aktoren:}
 		\begin{description}
-			\item Nutzer 
+			\item Benutzer 
 		\end{description}
 		\item \textbf{Vorbedingungen:}
 		\begin{description}
-			\item Der Nutzer hat sich zuvor erfolgreich registriert.
+			\item Der Benutzer hat sich zuvor erfolgreich registriert.
 		\end{description}
-		\item \textbf{Ablauf:} \newline Es wird eine Gruppe erstellt, für die der erstellende Nutzer als Gründer eingetragen wird. Der Nutzer muss einen Namen für seine Gruppe wählen. Damit erhält der Nutzer auch alle Rechte, die dem Gruppengründer zugestanden werden. 
-		\item \textbf{Ergebnis:} \newline Der Nutzer ist Gruppengründer einer Gruppe und kann Nutzer zu dieser Gruppe hinzufügen oder Mitglieder aus der Gruppe entfernen. Des Weiteren hat er die selben Rechte wie Mitglieder, er kann also auch Termine erstellen und an anderen Terminen innerhalb der Gruppe teilnehmen.
+		\item \textbf{Ablauf:} \newline Es wird eine Gruppe erstellt, für die der erstellende Benutzer als Gründer eingetragen wird. Der Benutzer muss einen Namen für seine Gruppe wählen. Damit erhält der Benutzer auch alle Rechte, die dem Gruppengründer zugestanden werden. 
+		\item \textbf{Ergebnis:} \newline Der Benutzer ist Gruppengründer einer Gruppe und kann Benutzer zu dieser Gruppe hinzufügen oder Mitglieder aus der Gruppe entfernen. Des Weiteren hat er die selben Rechte wie Mitglieder, er kann also auch Termine erstellen und an anderen Terminen innerhalb der Gruppe teilnehmen.
 	\end{description}
 	
 	\newpage
 	
-	\subsubsection{Nutzer hinzufügen}
+	\subsubsection{Benutzer hinzufügen}
 	\begin{description}
 		\item \textbf{Titel:}
 		\begin{description}
-			\item Nutzer hinzufügen
+			\item Benutzer hinzufügen
 		\end{description}
 		\item \textbf{Kurzbeschreibung:}
 		\begin{description}
-			\item Der Gruppengründer fügt Nutzer hinzu.
+			\item Der Gruppengründer fügt Benutzer hinzu.
 		\end{description}
 		\item \textbf{Aktoren:}
 		\begin{description}
 			\item Gruppengründer
-			\item Nutzer
+			\item Benutzer
 		\end{description}
 		\item \textbf{Vorbedingungen:}
 		\begin{description}
-			\item Der Gruppengründer hat zuvor eine Gruppe gegründet und der Nutzer hat sich bereits registriert.
+			\item Der Gruppengründer hat zuvor eine Gruppe gegründet und der Benutzer hat sich bereits registriert.
 		\end{description}
-		\item \textbf{Ablauf:} \newline Der Nutzer kann nach der Gruppe des Gruppengründers suchen und eine Beitrittsanfrage senden. Wurde die Anfrage gesendet kann der Gruppengründer sie einsehen und den Nutzer annehmen oder ablehnen. Hat der Gruppengründer den Nutzer angenommen ist der Nutzer nun Mitglied in der Gruppe und hat alle Rechte eines Mitglieds.
-		\item \textbf{Ergebnis:} \newline Der Nutzer ist Mitglied einer Gruppe und kann Termine erstellen oder an von anderen Personen innerhalb der Gruppe erstellten Terminen teilnehmen.
+		\item \textbf{Ablauf:} \newline Der Benutzer kann nach der Gruppe des Gruppengründers suchen und eine Beitrittsanfrage senden. Wurde die Anfrage gesendet kann der Gruppengründer sie einsehen und den Benutzer annehmen oder ablehnen. Hat der Gruppengründer den Benutzer angenommen ist der Benutzer nun Mitglied in der Gruppe und hat alle Rechte eines Mitglieds.
+		\item \textbf{Ergebnis:} \newline Der Benutzer ist Mitglied einer Gruppe und kann Termine erstellen oder an von anderen Personen innerhalb der Gruppe erstellten Terminen teilnehmen.
 	\end{description}
 	
 	\newpage
