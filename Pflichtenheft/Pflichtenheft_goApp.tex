@@ -48,6 +48,7 @@
 			\item Benutzer können der Gruppe mitteilen, dass sie zu spät sind.
 		\end{itemize}
 		\item Gruppenmittelpunkt teilt sich bei Gruppenteilung.
+		\item Die Dauer eines Termins kann individuell festgelegt werden.
 		\item Individuelle Erinnerung pro Benutzer und pro Termin.
 		\item Erinnerung an Termin auch bei geschlossener App.
 		\item Termine können gelöscht, geändert und wiederholt werden.
@@ -117,12 +118,12 @@
 	
 	
 	\section{Funktionale Anforderungen}
-	%TODO WFA nicht FAW
-	
+	 \item In diesem Abschnitt sind die Aussagen über die zu efüllenden Eigenschaften und zu erbringende Leistung unserer 			App vermerkt. Die mit "[WFAxx]" gekenzeichneten Anforderungen beziehen sich auf die Wunschkriterien der App.
+	 
 	\subsection{Accountverwaltung}
 	\begin{itemize}
 		\item[FA10] Anmeldung eines Benutzers in der App über Google Services.
-		\item[FA15W] Der Benutzer kann zwischen Sprachen wählen.
+		\item[WFA15] Der Benutzer kann zwischen Sprachen wählen.
 		\item[FA20] Ersterfassung und Änderung des Benutzernamens.
 		
 	\end{itemize}
@@ -146,9 +147,9 @@
 		\item[FA60] Der Gruppengründer kann bestehende Mitglieder aus der Gruppe entfernen.
 		\item[FA70] Die Gruppe kann durch den Gruppengründer gelöscht werden.
 		\item[FA80] Mitglieder der Gruppen, ausgenommen des Gruppengründers, können die Gruppe verlassen.
-		\item[FA85W] Der Gruppengründer kann seinen Status als Gruppengründer an ein Mitglied übergeben.
+		\item[WFA85] Der Gruppengründer kann seinen Status als Gruppengründer an ein Mitglied übergeben.
 		\item[FA90] Gruppenmitglieder können andere Gruppenmitglieder anzeigen lassen.
-		\item[FA95W] Gruppenmitglieder können die Teilnahmequoten anderer Gruppenmitglieder ansehen.
+		\item[WFA95] Gruppenmitglieder können die Teilnahmequoten anderer Gruppenmitglieder ansehen.
 		
 	\end{itemize}
 	
@@ -157,20 +158,22 @@
 		\item[FA100] Jedes Mitglied einer Gruppe kann einen Termin erstellen.
 		\item[FA110] Der Terminersteller kann den von ihm erstellten Termin verwalten:
 		\begin{itemize}
-			\item Ersterfassung und Änderung des Terminzeitpunktes.
+			\item Ersterfassung von Terminnamen, Terminzeit und Terminort.
 		\end{itemize}
-		\begin{itemize}
-			\item Ersterfassung und Änderung des Terminortes.
+		
+		\begind{itemize}
 			\item Visuelle Darstellung des gewählten Terminortes. 
 		\end{itemize}
-		\begin{itemize}
-			\item Ersterfassung und Änderung des Terminnamens.
-		\end{itemize}
+		
+		
+		\item[WFA115] Der Terminersteller kann den Terminnamen, Terminzeit und Terminort nachträglich ändern oder 				gegebenenfalls löschen.
 		
 		\item[FA120] Der Termin wird jedem Gruppenmitglied angezeigt.
 		\item[FA130] Jedes Gruppenmitglied kann einem Termin zu- oder absagen.
 		\item[FA140] Jeder Teilnehmer wird 30 Minuten vor Beginn des Termins benachrichtigt werden.
-		\item[FA145W] Teilnehmer werden auch bei geschlossener App benachrichtigt.
+		\item[WFA145] Teilnehmer werden auch bei geschlossener App benachrichtigt.
+		\item[FA150] Der Termin löscht sich eine Stunde nach Ablauf des Terminzeitpunktes automatisch.
+		\item[WFA155] Der Zeitpunkt wann der Termin gelöscht wird kann vom Terminersteller beim erstellen des Termins 					bestimmt werden
 		
 		
 	\end{itemize}
@@ -494,6 +497,17 @@
 		\centering
 		\includegraphics[width=0.9\textwidth]{Szenario3}
 	\end{figure}
+	\newpage
+	
+	\subsubsection{Szenario 4 (Wunschszenario)}
+	
+	
+	
+	
+	
+	
+	
+	
 	\newpage
 	
 	\subsection{GUI}
