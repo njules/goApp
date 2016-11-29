@@ -1,14 +1,22 @@
 \documentclass{scrartcl}
 \usepackage[utf8]{inputenc}
-\usepackage[nonumberlist]{glossaries}
 \usepackage{verbatim}
 \usepackage{enumitem}
 \usepackage{graphicx}
 \usepackage[ngerman]{babel}
+\usepackage{hyperref}
+\usepackage[acronym,xindy,toc,nonumberlist]{glossaries} % nomain, if you define glossaries in a file, and you use \include{INP-00-glossary}
+\makeglossaries
+\usepackage[xindy]{imakeidx}
+\makeindex
+\loadglsentries[main]{INP-00-glossary}
 \title{Android Go App - Pflichtenheft}
 \author{Jörn Kussmaul, Katharina Riesterer, Julian Neubert,\\ Jonas Walter, Tobias Ohlsson, Eva-Maria Neumann}
 
 \begin{document}
+		
+	
+
 	\maketitle
 	\newpage
 	
@@ -554,57 +562,13 @@
 		\caption{In der Terminansicht erhält ein Mitglied alle Informationen über einen Termin, darunter sind eine Teilnehmerliste und eine Karte die den Treffpunkt und den eigenen Standort anzeigt. Sollte der Termin kurz bevorstehen wird zusätzlich der gemittelte Gruppenstandort angezeigt.}
 	\end{figure}
 	
-	\begin{comment}
-	\makeglossary
-	
-	\newglossaryentry{Client-Server-Architektur} 
-	{
-	name=Client-Server-Architektur,
-	description={Konzept zur Verteilung von Aufgaben in Netzwerken. }
-	}
-	
-	\newglossaryentry{Server} 
-	{
-	name=Server
-	description={Ein Server kommuniziert mit einem Client, um Aufgaben/Anfragen vom Client zu bearbeiten. }
-	}
-	
-	\newglossaryentry{Client} 
-	{
-	name=Client
-	description={Ein Client kann Aufgaben/Anfragen an einen Server schicken. }
-	}	
-	
-	\newglossaryentry{Tomcat} 
-	{
-	name=Tomcat
-	description={Tomcat führt in Java geschriebene Web-Anwendungen auf Servern aus. }
-	}	
-	
-	\newglossaryentry{Android} 
-	{
-	name=Android
-	description={Android ist ein weitverbreitetes Betriebssystem für Smartphones, welches von Google entwickelt wurde.}
-	}	
-	
-	\newglossaryentry{Gruppengründer} 
-	{
-	name=Gruppengründer,
-	description={Bezeichnet den Status des Mitglieds, das die Gruppe gegründet hat. }
-	}
-	
-	\newglossaryentry{Mitglied}
-	{
-	name=Miglied,
-	description={Benutzer der einer Gruppe angehört.}
-	}
-	
-	\newglossaryentry{Teilnehmer}
-	{
-	name=Teilnehmer,
-	description={Ein Mitglied, das an einem Termin teilnimmt}
-	}
-	\end{comment}
-	
+
+
+\appendix
+\bibliographystyle{plainnat}
+\bibliography{bibtex}
+\printindex
+\glsaddall
+\printglossaries
 	
 \end{document}
