@@ -267,78 +267,88 @@
 	
 	
 	\section{Globale Testfälle}
+%TODO Nummern der Funktionalen Anforderungen überprüfen
 
 	Es muss überprüft werden ob folgende Funktionen wie gewünscht funktionieren.
 	
 	\subsection{Accountverwaltung}
 	\begin{itemize} 
-		\item[T10] Registrieren: Eine bisher nicht registrierte Person mit einem Google-Account registriert sich mit diesem im System und wählt zusätzlich einen Benutzernamen.
-		\item[T20] Namensänderung: Ein Benutzer ändert seinen Benutzernamen.
-	\end{itemize}	
+		\item[T10] deckt ab FA10 \newline
+		Registrieren: Eine bisher nicht registrierte Person mit einem Google-Account registriert sich mit diesem im System 				und wählt zusätzlich einen Benutzernamen. \newline
+		Ergebnis: Der neue Benutzer mit seinem Google Konto und Benutzername ist in der Datenbank.
+
+		\item[T20] deckt ab FA20\newline
+		 Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
+		Ergebnis: Der neue Benutzername des Benutzers ist in der Datenbank. 
 	
 	\subsection{Gruppenverwaltung}
-	\begin{itemize}
-		\item[T30] Ein Benutzer erstellt eine neue Gruppe hierzu muss:
-			\begin{itemize}
-			\item ein Gruppenname eingegeben werden
-			\item der entsprechende Benutzer als Gruppengründer eingetragen werden
-			\end{itemize}
-		\item[T40] Gruppenverwaltung aus Gründersicht:
-			\begin{itemize}
-			\item der Gründer wirft Mitglieder aus der Gruppe
-			\item ändert den Gruppennamen
-			\item nimmt Beitrittsanfragen an
-			\item löscht Beitrittsanfragen
-			\item löscht die Gruppe
-			\end{itemize}
-		\item[T50] Einer existierende Gruppe beitreten:
-	 		\begin{itemize}
-			\item ein Benutzer sucht über den Gruppennamen nach einer Gruppe 
-			\item schickt der Gruppe eine Beitrittsanfrage
-			\item wartet auf eine Reaktion des Gruppengründers
-			\item bei einer Annahme ist der Benutzer dann Mitglied der Gruppe
-			\item bei einer Ablehnung wird die Beitrittsanfrage gelöscht 
-			\end{itemize}
-		\item[T60] Gruppe Verlassen: Ein Gruppenmitglied, nicht der Gründer, verlässt eine Gruppe.
-	\end{itemize}	
+	
+		\item[T30] deckt ab FA30, FA35\newline
+		 Ein beliebiger Benutzer erstellt eine neue Gruppe mit Name. \newline
+		Ergebnis: Eine neue Gruppe mit eindeutiger Id, dem angegebenen Namen und dem Benutzer als Gründer ist in der 			Datenbank
+
+		\item[T35] deckt ab FA35 \newline
+		Der Gründer ändert den Gruppennamen.\newline
+		Ergebnis: Der Name der entsprechenden Gruppe ist geändert.
+
+		\item[T40] deckt ab FA40, FA45  \newline
+		Suchen der Gruppe nach Namen und Beitrittsanfrage an eine gefundene Gruppe. \newline
+		Ergebnis: Alle GruppenIds der Gruppen die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
+		hinzugefügt.
+
+		\item[T50] deckt ab FA50  \newline
+		Der Gruppengründer bestätigt eine Anfrage. \newline
+		Ergebnis: Der Benutzer der Anfrage ist Mitglied der Gruppe und die Anfrage ist gelöscht.
+
+		\item[T55] deckt ab FA50  \newline
+		Der Gruppengründer lehnt eine Anfrage ab. \newline
+		Ergebnis: Die Anfrage ist gelöscht.
+
+		\item[T60] deckt ab FA60  \newline
+		Der Gruppengründer entfernt ein Mitglied.  \newline
+		Ergebnis: Der Benutzer ist nicht mehr Mitglied (Alle Assoziationen zwischen Gruppe und Benutzer sind getrennt).
+
+		\item[T70] deckt ab FA70  \newline
+		Der Gruppengründer löscht die Gruppe.  \newline
+		Ergebnis: Alle Mitgliedern sind entfernen (FA60) und die Gruppe aus der Datenbank gelöscht.
+
+		\item[T80] deckt ab FA80  \newline
+		Ein Gruppenmitglied verlässt die Gruppe.  \newline
+		Ergebnis: Der Benutzer ist nicht mehr Mitglied (siehe T60).
 
 	\subsection{Terminverwaltung}
-	\begin{itemize}
-		\item[T70] Ein beliebiges Gruppenmitglied erstellt einen neuen Termin hierzu muss:
-			\begin{itemize}
-			\item ein Terminname eingegeben werden
-			\item ein Treffpunkt festgelegt werden
-			\item das Datum und die Uhrzeit des Termins festgelegt werden
-			\item der entsprechende Benutzer als Terminadministrator und damit auch als Teilnehmer eingetragen werden
-			\item der Termin nachdem er vorüber ist gelöscht werden
-			\end{itemize}
-		\item[WT80] Terminverwaltung durch den Terminadministrator:
-			\begin{itemize}
-			\item der Terminadministrator ändert den Treffpunkt
-			\item den Terminnamen
-			\item die Uhrzeit des Termins
-			\end{itemize}
-		\item[T90] Ein Mitglied lässt sich einen Termin anzeigen und erhält folgende Informationen:
-			\begin{itemize}
-			\item Terminname, Treffpunkt und Zeitpunkt
-			\item wer den Termin gegründet hat
-			\item die Liste aller Teilnehmer
-			\item nur bei eigener Teilnahme und bei Terminstart: den Gruppenmittelpunkt
-			\end{itemize}
-		\item[T100] Ein Mitglied sagt bei einem Termin zu daraufhin wird:
-			\begin{itemize}
-			\item das Mitglied zum Teilnehmer
-			\item in die Teilnehmerliste aufgenommen
-			\item vor Beginn des Termins benachrichtigt
-			\end{itemize}
-		\item[T110] Ein Mitglied sagt bei einem Termin ab woraufhin der Termin nicht mehr angezeigt wird. 
-	\end{itemize}
+
+		\item[T90] deckt ab FA100, FA110, FA120  \newline
+		Ein beliebiges Mitglied erstellt einen Termin mit Name, Ort, Zeitpunkt.  \newline
+		Ergebnis: Es gibt einen Termin mit dem genanten Namen, Ort (Standort/Adresse), Zeitpunkt und dem Mitglied als 				Admin, in der Gruppe.
+		
+		\item [T100] deckt ab FA130  \newline
+		Ein Mitglied sagt ab.  \newline
+		Ergebnis: Der Termin ist für das Mitglied gelöscht.
+
+		\item[T105] deckt ab FA130  \newline
+		Ein Mitglied sagt zu.  \newline
+		Ergebnis: Das Mitglied ist Teilnehmer des Termins , der Termin ist auf dem Gerät des Teilnehmers gespeichert.
+
+	\subsection{Terminablauf}
+	
+		\item[T110] deckt ab FA140, FA150, FA160 \newline
+		Automatischer Ablauf eines Termins. \newline
+		Ergebnis: 30min vor dem Terminzeitpunkt werden alle Teilnehmer von dem Termin benachrichtigt  \newline
+			15min vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar  \newline
+			60min nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin weder auf 					dem Client noch auf dem Server)
 
 	\subsection{Standort}
-	\begin{itemize}
-		\item[T120] Der Server lokalisiert alle Teilnehmer eines Termins eine viertel Stunde vor Terminbeginn und berechnet den gemittelten Standort. 
-		\item[T130] Der Server löscht nach Ende des Termins alle Informationen über die Standorte der Teilnehmer. 
-	 \end{itemize}	
+%TODO Welche Funktionale Anforderung 
+		\item[T120] deckt ab: \newline
+		Standort Übertragung.  \newline
+		Ergebnis: Der Standort aller Teilnehmer ist auf dem Server gespeichert.
+
+		\item[T125]  deckt ab: \newline
+		Gruppenmittelpunkt der Teilnehmer. \newline
+		Ergebnis: Der Server sendet den Clients den Gruppenmittelpunkt.
+
+	\end{itemize}	
 	
 	\newpage
 	
