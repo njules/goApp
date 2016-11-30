@@ -28,7 +28,7 @@
 	\subsection{Musskriterien}
 	\begin{itemize}
 		\item Anmeldung mit Google Services
-		\item Ein User kann \gls{Mitglied} mehrerer Gruppen sein und kann Name, Mitglieder, Gründer und Termine einsehen.
+		\item Ein Benutzer kann \gls{Mitglied} mehrerer Gruppen sein und kann Name, Mitglieder, Gründer und Termine einsehen.
 		\item Gruppenverwaltung
 		\begin{itemize}
 			\item Erstellen neuer Gruppen.
@@ -41,18 +41,18 @@
 		\item Terminverwaltung
 		\begin{itemize}
 			\item Termine können mit Zeit, Ort, Name innerhalb einer Gruppe erstellt werden.
-			\item User können bei Terminen zu-/absagen.
-			\item User werden an ihren Termin erinnert.
+			\item Benutzer können bei Terminen zu-/absagen.
+			\item Benutzer werden an ihren Termin erinnert.
 		\end{itemize}
-		\item Ein User kann seinen eigenen Standort und den Gruppenmittelpunkt abrufen.	
+		\item Ein Benutzer kann seinen eigenen Standort und den Gruppenmittelpunkt abrufen.	
 	\end{itemize}
 	\subsection{Wunschkriterien}
 	\begin{itemize}
 		\item \grqq{}Bin Los\grqq{} und \grqq{}Bin da\grqq{} und \grqq{}Bin zu spät\grqq{}
 		\begin{itemize}
-			\item User können per Button signalisieren ob sie bereits zum Treffpunkt unterwegs sind oder diesen sogar schon erreicht haben.
-			\item Nur User die Unterwegs sind werden für den Gruppenmittelpunkt beachtet.
-			\item User die den Treffpunkt erreicht haben werden für die Berechnung der Gruppenmitte stärker fokussiert.
+			\item Benutzer können per Button signalisieren ob sie bereits zum Treffpunkt unterwegs sind oder diesen sogar schon erreicht haben.
+			\item Nur Benutzer die Unterwegs sind werden für den Gruppenmittelpunkt beachtet.
+			\item Benutzer die den Treffpunkt erreicht haben werden für die Berechnung der Gruppenmitte stärker fokussiert.
 			\item Benutzer können der Gruppe mitteilen, dass sie zu spät sind.
 		\end{itemize}
 		\item Gruppenmittelpunkt teilt sich bei Gruppenteilung.
@@ -60,14 +60,14 @@
 		\item Individuelle Erinnerung pro Benutzer und pro Termin.
 		\item Erinnerung an Termin auch bei geschlossener App.
 		\item Termine können gelöscht, geändert und wiederholt werden.
-		\item Statistiken über Teilnahme der User speichern.
+		\item Statistiken über Teilnahme der Benutzer speichern.
 		\item QR-Code oder Link zum Finden von Gruppen.
 		\item Sprachwahl
 	\end{itemize}
 	\subsection{Abgrenzungskriterien}
 	\begin{itemize}
 		\item Kein Chat.
-		\item User können nicht die Standorte andere User abfragen.
+		\item Benutzer können nicht die Standorte andere Benutzer abfragen.
 		\item Gründer kann keine neuen Mitglieder suchen.
 	\end{itemize}
 	
@@ -174,28 +174,27 @@
 		\end{itemize}
 		
 		
-		\item[WFA115] Der Terminersteller kann den Terminnamen, Terminzeit und Terminort nachträglich ändern oder 				gegebenenfalls löschen.
+		\item[WFA115] Der Terminersteller kann den Terminnamen, Terminzeit und Terminort nachträglich ändern oder gegebenenfalls löschen.
 		
 		\item[FA120] Der Termin wird jedem Gruppenmitglied angezeigt.
-		\item[FA130] Jedes Gruppenmitglied kann einem Termin zu- oder absagen.
-		\item[FA140] Jeder \gls{Teilnehmer} wird 30 Minuten vor Beginn des Termins benachrichtigt werden.
-		\item[WFA145] \gls{Teilnehmer} werden auch bei geschlossener App benachrichtigt.
-		\item[FA150] Der Termin löscht sich eine Stunde nach Ablauf des Terminzeitpunktes automatisch.
-		\item[WFA155] Der Zeitpunkt wann der Termin gelöscht wird kann vom Terminersteller beim erstellen des Termins 					bestimmt werden
-		
+		\item[FA130] Jedes Gruppenmitglied kann einem Termin zu- oder absagen.		
 		
 	\end{itemize}
 	
 	\subsection{Terminablauf}
 	\begin{itemize}
-		\item[FA160] Jeder \gls{Teilnehmer} kann den Gruppenstandort ab 15 Minuten in einer Karte darstellen lassen.
-		\item[FA165W] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort. 
-		\item[FA170W] \gls{Teilnehmer} können mittels eines Buttons Signale an die anderen Teilnehmer senden:
+		\item[FA140] Jeder \gls{Teilnehmer} wird 30 Minuten vor Beginn des Termins benachrichtigt werden.
+		\item[WFA145] \gls{Teilnehmer} werden auch bei geschlossener App benachrichtigt.
+		\item[FA150] Jeder \gls{Teilnehmer} kann den Gruppenstandort ab 15 Minuten in einer Karte darstellen lassen.
+		\item[FA155W] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort. 
+		\item[FA160W] \gls{Teilnehmer} können mittels eines Buttons Signale an die anderen Teilnehmer senden:
 		\begin{itemize}
 			\item Sie können signalisieren ob sie bereits unterwegs sind.
 			\item Sie können signalisieren ob sie zu spät kommen.
 			\item Sie können signalisieren ob sie schon am Terminort angekommen sind.
 		\end{itemize}
+		\item[FA170] Der Termin löscht sich eine Stunde nach Ablauf des Terminzeitpunktes automatisch.
+		\item[WFA175] Der Zeitpunkt, wann der Termin gelöscht wird, kann vom Terminersteller beim Erstellen des Termins bestimmt werden.
 	\end{itemize}
 		
 	
@@ -264,78 +263,88 @@
 	
 	
 	\section{Globale Testfälle}
+%TODO Nummern der Funktionalen Anforderungen überprüfen
 
 	Es muss überprüft werden ob folgende Funktionen wie gewünscht funktionieren.
 	
 	\subsection{Accountverwaltung}
 	\begin{itemize} 
-		\item[T10] Registrieren: Eine bisher nicht registrierte Person mit einem Google-Account registriert sich mit diesem im System und wählt zusätzlich einen Benutzernamen.
-		\item[T20] Namensänderung: Ein Benutzer ändert seinen Benutzernamen.
-	\end{itemize}	
+		\item[T10] deckt ab FA10 \newline
+		Registrieren: Eine bisher nicht registrierte Person mit einem Google-Account registriert sich mit diesem im System 				und wählt zusätzlich einen Benutzernamen. \newline
+		Ergebnis: Der neue Benutzer mit seinem Google Konto und Benutzername ist in der Datenbank.
+
+		\item[T20] deckt ab FA20\newline
+		 Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
+		Ergebnis: Der neue Benutzername des Benutzers ist in der Datenbank. 
 	
 	\subsection{Gruppenverwaltung}
-	\begin{itemize}
-		\item[T30] Ein Benutzer erstellt eine neue Gruppe hierzu muss:
-			\begin{itemize}
-			\item ein Gruppenname eingegeben werden
-			\item der entsprechende Benutzer als \gls{Gruppengrnder} eingetragen werden
-			\end{itemize}
-		\item[T40] Gruppenverwaltung aus Gründersicht:
-			\begin{itemize}
-			\item der Gründer wirft Mitglieder aus der Gruppe
-			\item ändert den Gruppennamen
-			\item nimmt Beitrittsanfragen an
-			\item löscht Beitrittsanfragen
-			\item löscht die Gruppe
-			\end{itemize}
-		\item[T50] Einer existierende Gruppe beitreten:
-	 		\begin{itemize}
-			\item ein Benutzer sucht über den Gruppennamen nach einer Gruppe 
-			\item schickt der Gruppe eine Beitrittsanfrage
-			\item wartet auf eine Reaktion des Gruppengründers
-			\item bei einer Annahme ist der Benutzer dann \gls{Mitglied} der Gruppe
-			\item bei einer Ablehnung wird die Beitrittsanfrage gelöscht 
-			\end{itemize}
-		\item[T60] Gruppe Verlassen: Ein Gruppenmitglied, nicht der Gründer, verlässt eine Gruppe.
-	\end{itemize}	
+	
+		\item[T30] deckt ab FA30, FA35\newline
+		 Ein beliebiger Benutzer erstellt eine neue Gruppe mit Name. \newline
+		Ergebnis: Eine neue Gruppe mit eindeutiger Id, dem angegebenen Namen und dem Benutzer als Gründer ist in der 			Datenbank
+
+		\item[T35] deckt ab FA35 \newline
+		Der Gründer ändert den Gruppennamen.\newline
+		Ergebnis: Der Name der entsprechenden Gruppe ist geändert.
+
+		\item[T40] deckt ab FA40, FA45  \newline
+		Suchen der Gruppe nach Namen und Beitrittsanfrage an eine gefundene Gruppe. \newline
+		Ergebnis: Alle GruppenIds der Gruppen die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
+		hinzugefügt.
+
+		\item[T50] deckt ab FA50  \newline
+		Der Gruppengründer bestätigt eine Anfrage. \newline
+		Ergebnis: Der Benutzer der Anfrage ist \gls{Mitglied} der Gruppe und die Anfrage ist gelöscht.
+
+		\item[T55] deckt ab FA50  \newline
+		Der \gls{Gruppengrnder} lehnt eine Anfrage ab. \newline
+		Ergebnis: Die Anfrage ist gelöscht.
+
+		\item[T60] deckt ab FA60  \newline
+		Der \gls{Gruppengrnder} entfernt ein Mitglied.  \newline
+		Ergebnis: Der Benutzer ist nicht mehr Mitglied (Alle Assoziationen zwischen Gruppe und Benutzer sind getrennt).
+
+		\item[T70] deckt ab FA70  \newline
+		Der \gls{Gruppengrnder} löscht die Gruppe.  \newline
+		Ergebnis: Alle Mitgliedern sind entfernen (FA60) und die Gruppe aus der Datenbank gelöscht.
+
+		\item[T80] deckt ab FA80  \newline
+		Ein Gruppenmitglied verlässt die Gruppe.  \newline
+		Ergebnis: Der Benutzer ist nicht mehr \gls{Mitglied} (siehe T60).
 
 	\subsection{Terminverwaltung}
-	\begin{itemize}
-		\item[T70] Ein beliebiges Gruppenmitglied erstellt einen neuen Termin hierzu muss:
-			\begin{itemize}
-			\item ein Terminname eingegeben werden
-			\item ein Treffpunkt festgelegt werden
-			\item das Datum und die Uhrzeit des Termins festgelegt werden
-			\item der entsprechende Benutzer als Terminadministrator und damit auch als \gls{Teilnehmer} eingetragen werden
-			\item der Termin nachdem er vorüber ist gelöscht werden
-			\end{itemize}
-		\item[WT80] Terminverwaltung durch den Terminadministrator:
-			\begin{itemize}
-			\item der Terminadministrator ändert den Treffpunkt
-			\item den Terminnamen
-			\item die Uhrzeit des Termins
-			\end{itemize}
-		\item[T90] Ein \gls{Mitglied} lässt sich einen Termin anzeigen und erhält folgende Informationen:
-			\begin{itemize}
-			\item Terminname, Treffpunkt und Zeitpunkt
-			\item wer den Termin gegründet hat
-			\item die Liste aller \gls{Teilnehmer}
-			\item nur bei eigener Teilnahme und bei Terminstart: den Gruppenmittelpunkt
-			\end{itemize}
-		\item[T100] Ein \gls{Mitglied} sagt bei einem Termin zu daraufhin wird:
-			\begin{itemize}
-			\item das Mitglied zum \gls{Teilnehmer}
-			\item in die Teilnehmerliste aufgenommen
-			\item vor Beginn des Termins benachrichtigt
-			\end{itemize}
-		\item[T110] Ein \gls{Mitglied} sagt bei einem Termin ab woraufhin der Termin nicht mehr angezeigt wird. 
-	\end{itemize}
+
+		\item[T90] deckt ab FA100, FA110, FA120  \newline
+		Ein beliebiges \gls{Mitglied} erstellt einen Termin mit Name, Ort, Zeitpunkt.  \newline
+		Ergebnis: Es gibt einen Termin mit dem genanten Namen, Ort (Standort/Adresse), Zeitpunkt und dem Mitglied als 				Admin, in der Gruppe.
+		
+		\item [T100] deckt ab FA130  \newline
+		Ein \gls{Mitglied} sagt ab.  \newline
+		Ergebnis: Der Termin ist für das Mitglied gelöscht.
+
+		\item[T105] deckt ab FA130  \newline
+		Ein Mitglied sagt zu.  \newline
+		Ergebnis: Das Mitglied ist \gls{Teilnehmer} des Termins , der Termin ist auf dem Gerät des Teilnehmers gespeichert.
+
+	\subsection{Terminablauf}
+	
+		\item[T110] deckt ab FA140, FA150, FA170 \newline
+		Automatischer Ablauf eines Termins. \newline
+		Ergebnis: 30min vor dem Terminzeitpunkt werden alle \gls{Teilnehmer} von dem Termin benachrichtigt  \newline
+			15min vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar  \newline
+			60min nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin weder auf 					dem \gls{Client} noch auf dem \gls{Server})
 
 	\subsection{Standort}
-	\begin{itemize}
-		\item[T120] Der \gls{Server} lokalisiert alle \gls{Teilnehmer} eines Termins eine viertel Stunde vor Terminbeginn und berechnet den gemittelten Standort. 
-		\item[T130] Der \gls{Server} löscht nach Ende des Termins alle Informationen über die Standorte der \gls{Teilnehmer}. 
-	 \end{itemize}	
+%TODO Welche Funktionale Anforderung 
+		\item[T120] deckt ab: FA150 \newline
+		Standort Übertragung der Clients an den \gls{Server}.  \newline
+		Ergebnis: Der Standort aller \gls{Teilnehmer} ist auf dem Server gespeichert.
+
+		\item[T125]  deckt ab: FA150 \newline
+		Gruppenmittelpunkt der \gls{Teilnehmer} ist berechnet. \newline
+		Ergebnis: Der \gls{Server} sendet den Clients den Gruppenmittelpunkt.
+
+	\end{itemize}	
 	
 	\newpage
 	
@@ -562,11 +571,14 @@
 		\caption{In der Terminansicht erhält ein \gls{Mitglied} alle Informationen über einen Termin, darunter sind eine Teilnehmerliste und eine Karte die den Treffpunkt und den eigenen Standort anzeigt. Sollte der Termin kurz bevorstehen wird zusätzlich der gemittelte Gruppenstandort angezeigt.}
 	\end{figure}
 	
+	
+\newpage
+	
 
 
 \appendix
-\bibliographystyle{plainnat}
-\bibliography{bibtex}
+%\bibliographystyle{plainnat}
+%\bibliography{bibtex}
 \printindex
 \glsaddall
 \printglossaries
