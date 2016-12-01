@@ -206,6 +206,8 @@
 	\section{Produktdaten}
 	%TODO Stimmen Speicherorte?
 	%TODO Nutzer auch ID?
+	%TODO Markierung von Wunschkriterien
+	Die mit W markierten Daten entsprechend Daten, die nur bei der Erfüllung der entsprechenden Wunschkriterien gespeichert werden.
 	\begin{itemize}
 		\item [D10] \textit{Benutzerdaten:}
 		Für jeden Benutzer werden die folgenden Daten gespeichert bzw. erfasst. Diese befinden sich auf dem Server, sowie lokal in der App.
@@ -213,9 +215,14 @@
 			\item Benutzername
 			\newline Ein frei gewählter Name, der den anderen Benutzern der App angezeigt wird.
 			\item Standort
-			\newline Der aktuelle Standort der Person, damit der gemittelte Standort berechnet werden kann.
+			\newline Der aktuelle Standort der Person, damit der gemittelte Standort berechnet werden kann. Dazu werden die aktuellen GPS Koordinaten des Geräts genutzt.
 			\item \gls{Google Services} Informationen
 			\newline ID zur eindeutige Identifizierung der Benutzer
+			\item W - Teilnahmen
+			\newline Um Statistiken zu Erstellen, werden die Teilnahmen gespeichert.
+			\item W - Sprache
+			\newline Die ausgewählte Sprache des Benutzers.
+			
 		\end{itemize}
 		
 		\item [D20] \textit{Gruppendaten:}
@@ -232,8 +239,13 @@
 			\newline Die \gls{Teilnehmer} haben verschiedene Rechte. Der \gls{Gruppengrnder} hat mehr Rechte als die anderen Teilnehmer und sein Name wird öffentlich in der Suche angezeigt.
 			\item Termine
 			\newline Eine Gruppe kann mehrere Termine haben.
+			\item W - Link
+			\newline Link zum Finden der Gruppe
+			\item W - QR-Code
+			\newline QR-Code zum Finden der Gruppe
 		\end{itemize}
 		
+		\newpage
 		\item [D30] \textit{Termindaten:}
 		In der App gibt es mehrere aktive Termine gleichzeitig. Jeder Termin beinhaltet die folgenden Daten.
 		Die Termine werden auf dem Server gespeichert, bis sie beendet sind. Zusätzlich dazu, sind Zugesagte Termine auch lokal auf dem Client gespeichert.
@@ -250,6 +262,14 @@
 			\newline Der Termin gehört zu einer bestimmten Gruppe
 			\item Serverzeit
 			\newline Datum und Uhrzeit des Treffens
+			\item W - Dauer
+			\newline Die Dauer des Termins.
+			\item W - Erinnerung
+			\newline Festlegung des Zeitpunktes, wann der Benutzer an diesen Termin erinnert werden möchte.
+			\item W - Wiederholung
+			\newline Wenn der Termin wiederholt werden soll, wird hier die Frequenz der Wiederholung gespeichert.
+			\item W - Buttonstatus 
+			\newline Das Signal der Benutzer durch die Button wird hier jeweils gespeichert.
 		\end{itemize}
 	\end{itemize}
 	
@@ -257,6 +277,7 @@
 	
 	
 	\section{Qualitative Anforderungen}
+	Die Qualitativen Anforderungen beziehen sich auf unser Referenzgerät.
 	\begin{itemize}
 		\item[QA10] Die App soll auf jede Anfrage in durchschnittlich unter 5 Sekunden reagieren.
 		\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch.
