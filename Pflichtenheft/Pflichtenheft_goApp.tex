@@ -22,9 +22,11 @@
 	
 	\tableofcontents
 	\newpage
-	%TODO Google Services
+	%TODO \gls{Google Services}
+	%TODO Form
+	%TODO: Termin in Vergangenheit anlegen ?
 	\section{Zielbestimmung}
-	Das Ziel ist es eine Android-Applikation zu entwickeln die Gruppen sozialaktiver Menschen eine Plattform bieten soll um kurzfristig Termine zu vereinbaren und bei diesen ein einfaches finden der Gruppe, ohne weitere Kommunikation zu ermöglichen.
+	Das Ziel ist es eine Android-Applikation zu entwickeln, die Gruppen sozialaktiver Menschen eine Plattform bieten soll, um kurzfristig Termine zu vereinbaren und bei diesen ein einfaches Finden der Gruppe, ohne weitere Kommunikation, zu ermöglichen.
 	\subsection{Musskriterien}
 	\begin{itemize}
 		\item Anmeldung mit Google Services
@@ -152,7 +154,7 @@
 		\begin{itemize}
 			\item Anfragen ignorieren, wodurch die Anfrage bestehen und sichtbar bleibt.
 		\end{itemize}
-		\item[FA60] Der gls{Gruppengrnder} kann bestehende Mitglieder aus der Gruppe entfernen.
+		\item[FA60] Der \gls{Gruppengrnder} kann bestehende Mitglieder aus der Gruppe entfernen.
 		\item[FA70] Die Gruppe kann durch den \gls{Gruppengrnder} gelöscht werden.
 		\item[FA80] Mitglieder der Gruppen, ausgenommen des Gruppengründers, können die Gruppe verlassen.
 		\item[WFA85] Der \gls{Gruppengrnder} kann seinen Status als Gruppengründer an ein \gls{Mitglied} übergeben.
@@ -202,20 +204,23 @@
 	
 	
 	\section{Produktdaten}
+	%TODO Stimmen Speicherorte?
+	%TODO Nutzer auch ID?
 	\begin{itemize}
 		\item [D10] \textit{Benutzerdaten:}
-		Für jeden Benutzer werden die folgenden Daten gespeichert bzw. erfasst:
+		Für jeden Benutzer werden die folgenden Daten gespeichert bzw. erfasst. Diese befinden sich auf dem Server, sowie lokal in der App.
 		\begin{itemize}
 			\item Benutzername
 			\newline Ein frei gewählter Name, der den anderen Benutzern der App angezeigt wird.
 			\item Standort
 			\newline Der aktuelle Standort der Person, damit der gemittelte Standort berechnet werden kann.
-			\item Google Services Informationen
-			\newline Zur eindeutige Identifizierung der Benutzer
+			\item \gls{Google Services} Informationen
+			\newline ID zur eindeutige Identifizierung der Benutzer
 		\end{itemize}
 		
 		\item [D20] \textit{Gruppendaten:}
-		Eine Gruppe hat die folgenden Eigenschaften:
+		Eine Gruppe hat die folgenden Eigenschaften.
+		Die Gruppen werden auf dem Server gespeichert.
 		\begin{itemize}
 			\item ID
 			\newline ID-Nummer zur eindeutigen internen Identifikation
@@ -224,14 +229,17 @@
 			\item \gls{Teilnehmer}
 			\newline In einer Gruppe sind mehrere Benutzer.
 			\item Rechte
-			\newline Die \gls{Teilnehmer} haben verschiedene Rechte. Der \gls{Gruppengrnder} hat mehr Rechte als die anderen Teilnehmer.
+			\newline Die \gls{Teilnehmer} haben verschiedene Rechte. Der \gls{Gruppengrnder} hat mehr Rechte als die anderen Teilnehmer und sein Name wird öffentlich in der Suche angezeigt.
 			\item Termine
 			\newline Eine Gruppe kann mehrere Termine haben.
 		\end{itemize}
 		
 		\item [D30] \textit{Termindaten:}
-		In der App gibt es mehrere aktive Termine gleichzeitig. Jeder Termin beinhaltet die folgenden Daten:
+		In der App gibt es mehrere aktive Termine gleichzeitig. Jeder Termin beinhaltet die folgenden Daten.
+		Die Termine werden auf dem Server gespeichert, bis sie beendet sind. Zusätzlich dazu, sind Zugesagte Termine auch lokal auf dem Client gespeichert.
 		\begin{itemize}
+			\item ID
+			\newline ID-Nummer zur eindeutigen internen Identifikation
 			\item Name
 			\newline Der Name des Termins.
 			\item Ziel
@@ -274,14 +282,14 @@
 		Ergebnis: Der neue Benutzer mit seinem Google Konto und Benutzername ist in der Datenbank.
 
 		\item[T20] deckt ab FA20\newline
-		 Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
+		Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
 		Ergebnis: Der neue Benutzername des Benutzers ist in der Datenbank. 
 	
 	\subsection{Gruppenverwaltung}
 	
 		\item[T30] deckt ab FA30, FA35\newline
 		 Ein beliebiger Benutzer erstellt eine neue Gruppe mit Name. \newline
-		Ergebnis: Eine neue Gruppe mit eindeutiger Id, dem angegebenen Namen und dem Benutzer als Gründer ist in der 			Datenbank
+		Ergebnis: Eine neue Gruppe, mit eindeutiger Id, dem angegebenen Namen und dem Benutzer als Gründer, ist in der 			Datenbank
 
 		\item[T35] deckt ab FA35 \newline
 		Der Gründer ändert den Gruppennamen.\newline
@@ -289,7 +297,7 @@
 
 		\item[T40] deckt ab FA40, FA45  \newline
 		Suchen der Gruppe nach Namen und Beitrittsanfrage an eine gefundene Gruppe. \newline
-		Ergebnis: Alle GruppenIds der Gruppen die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
+		Ergebnis: Alle GruppenIds der Gruppen, die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
 		hinzugefügt.
 
 		\item[T50] deckt ab FA50  \newline
@@ -306,7 +314,7 @@
 
 		\item[T70] deckt ab FA70  \newline
 		Der \gls{Gruppengrnder} löscht die Gruppe.  \newline
-		Ergebnis: Alle Mitgliedern sind entfernen (FA60) und die Gruppe aus der Datenbank gelöscht.
+		Ergebnis: Alle Mitgliedern sind entfernt (FA60) und die Gruppe aus der Datenbank gelöscht.
 
 		\item[T80] deckt ab FA80  \newline
 		Ein Gruppenmitglied verlässt die Gruppe.  \newline
@@ -332,7 +340,7 @@
 		Automatischer Ablauf eines Termins. \newline
 		Ergebnis: 30min vor dem Terminzeitpunkt werden alle \gls{Teilnehmer} von dem Termin benachrichtigt  \newline
 			15min vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar  \newline
-			60min nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin weder auf 					dem \gls{Client} noch auf dem \gls{Server})
+			60min nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf 					dem \gls{Client} noch auf dem \gls{Server})
 
 	\subsection{Standort}
 %TODO Welche Funktionale Anforderung 
@@ -420,7 +428,7 @@
 		\begin{description}
 			\item Der Gruppengründer hat zuvor eine Gruppe gegründet und der Benutzer hat sich bereits registriert.
 		\end{description}
-		\item \textbf{Ablauf:} \newline Der Benutzer kann nach der Gruppe des Gruppengründers suchen und eine Beitrittsanfrage senden. Wurde die Anfrage gesendet kann der Gruppengründer sie einsehen und den Benutzer annehmen oder ablehnen. Hat der Gruppengründer den Benutzer angenommen ist der Benutzer nun \gls{Mitglied} in der Gruppe und hat alle Rechte eines Mitglieds.
+		\item \textbf{Ablauf:} \newline Der Benutzer kann nach der Gruppe des Gruppengründers suchen und eine Beitrittsanfrage senden. Wurde die Anfrage gesendet kann der Gruppengründer sie einsehen und den Benutzer annehmen oder ablehnen. Hat der Gruppengründer den Benutzer angenommen, ist der Benutzer nun \gls{Mitglied} in der Gruppe und hat alle Rechte eines Mitglieds.
 		\item \textbf{Ergebnis:} \newline Der Benutzer ist \gls{Mitglied} einer Gruppe und kann Termine erstellen oder an von anderen Personen innerhalb der Gruppe erstellten Terminen teilnehmen.
 	\end{description}
 	
@@ -444,8 +452,8 @@
 		\begin{description}
 			\item Das Mitglied ist Mitglied einer Gruppe
 		\end{description}
-		\item \textbf{Ablauf:} \newline Das Mitglied erstellt innerhalb einer Gruppe einen Termin. Hierfür gibt er Namen, Uhrzeit und Ort für den Termin an. Das Mitglied, das den Termin erstellt nimmt automatisch an dem Termin teil. Der Termin ist und die Gruppe gebunden und alle anderen Mitglieder der Gruppe können die Informationen für diesen Termin einsehen und ihm beitreten.
-		\item \textbf{Ergebnis:} \newline Das Mitglied hat einen an die Gruppe gebunden, für alle Mitglieder sichtbaren Termin erstellt. Mitglieder können an dem Termin als \gls{Teilnehmer} beitreten. Ein Teilnehmer wird eine gewisse Zeit vor dem Termin benachrichtigt. Wurde der Teilnehmer benachrichtigt kann er die Karte öffnen und den ungefähren Standort der anderen Teilnehmer dieses Termins einsehen.
+		\item \textbf{Ablauf:} \newline Das Mitglied erstellt innerhalb einer Gruppe einen Termin. Hierfür gibt er Namen, Uhrzeit und Ort für den Termin an. Das Mitglied, das den Termin erstellt nimmt automatisch an dem Termin teil. Der Termin ist an die Gruppe gebunden und alle anderen Mitglieder der Gruppe können die Informationen für diesen Termin einsehen und ihm beitreten.
+		\item \textbf{Ergebnis:} \newline Das Mitglied hat einen an die Gruppe gebundenen, für alle Mitglieder sichtbaren, Termin erstellt. Mitglieder können an dem Termin als \gls{Teilnehmer} beitreten. Ein Teilnehmer wird eine gewisse Zeit vor dem Termin benachrichtigt. Wurde der Teilnehmer benachrichtigt kann er die Karte öffnen und den ungefähren Standort der anderen Teilnehmer dieses Termins einsehen.
 	\end{description}
 	
 	\newpage
@@ -458,6 +466,7 @@
 	\newpage
 	
 	\subsection{Szenarien}
+	%TODO: Stimmen Zeiten der Benachrichtigungen?
 	\subsubsection{Szenario 1}
 	Alice, Bob und Carol gehen oft gemeinsam in der Mensa essen. Zur besseren Koordination haben sie die App auf ihren Android-Smartphones installiert.
 	Nun startet jeder bei sich die App und gibt, nachdem er sich über sein Google Konto angemeldet hat, seinen Namen ein.
@@ -505,9 +514,9 @@
 	Jetzt erscheint die Nachfrage, ob sie der Gruppe beitreten wollen. Alice sieht nun, welche von ihren Gästen teilnehmen wollen und fügt diese hinzu. Dave möchte auch beitreten, aber Alice hat ihn nicht eingeladen und lehnt seine Anfrage ab.
 	Sobald alle Gäste der Gruppe beigetreten sind, erstellt Alice einen neuen Termin mit dem Namen \glqq{}Feier\grqq{} und ihrem zu Hause als Ort, sowie dem Datum \glqq{}27.11.2016\grqq{} und die Uhrzeit \glqq{}21:00\grqq{}.
 	Bob und Carol sehen den Termin und klicken auf \glqq{}Teilnehmen\grqq{}.
-	%TODO Erinnerung: Um 12:15 erscheint auf allen Smartphones die Benachrichtigung, dass in 15 Minuten der Termin ansteht. Alle gehen kurz daraufhin los und können in der App sowohl ihren als auch den mittleren Gruppenstandort sehen.
-	Nachdem der Termin vorbei ist, wird er automatisch gelöscht.
-	Am nächsten Tag verlässt Bob die Gruppe und Alice löscht daraufhin die Gruppe, da sie nicht mehr gebraucht wird.	
+	Um 20:30 erscheint auf allen Smartphones die Benachrichtigung, dass in 30 Minuten der Termin ansteht. Alle gehen kurz daraufhin los und können in der App sowohl ihren als auch den mittleren Gruppenstandort sehen.
+	Eine Stunde nachdem der Termin gestartet ist, wird er automatisch gelöscht.
+	Am nächsten Tag verlässt Bob die Gruppe und Alice löscht daraufhin die Gruppe, da diese nicht mehr gebraucht wird.	
 	\newline
 	\newline
 	\begin{figure}[h]
@@ -547,7 +556,7 @@
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=.5\textwidth]{GUI_Gruppe.jpg}
-		\caption{In einer Gruppe bekommt ein  \gls{Mitglied} die Termine der Gruppe angezeigt und kann bei diesen zu- oder absagen, mit einem wischen kann zwischen allen aktuellen Terminen gewechselt werden. Es kann ebenfalls ein eigener Termin erstellt und weitere Details sowohl über die Gruppe als auch die Termine abgerufen werden.}
+		\caption{In einer Gruppe bekommt ein  \gls{Mitglied} die Termine der Gruppe angezeigt und kann bei diesen zu- oder absagen. Mit einem Wischen kann zwischen allen aktuellen Terminen gewechselt werden. Es kann ebenfalls ein eigener Termin erstellt und weitere Details sowohl über die Gruppe als auch die Termine abgerufen werden.}
 	\end{figure}
 	
 	\newpage
@@ -561,14 +570,14 @@
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=.5\textwidth]{GUI_NeuerTermin.jpg}
-		\caption{Damit ein \gls{Mitglied} einen neuen Termin erstellen kann muss es dem Termin einen Namen geben und ihn mit Datum, Uhrzeit und einem Ort versehen.}
+		\caption{Damit ein \gls{Mitglied} einen neuen Termin erstellen kann, muss es dem Termin einen Namen geben und ihn mit Datum, Uhrzeit und einem Ort versehen.}
 	\end{figure}
 	
 	\newpage
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=.5\textwidth]{GUI_Termin.jpg}
-		\caption{In der Terminansicht erhält ein \gls{Mitglied} alle Informationen über einen Termin, darunter sind eine Teilnehmerliste und eine Karte die den Treffpunkt und den eigenen Standort anzeigt. Sollte der Termin kurz bevorstehen wird zusätzlich der gemittelte Gruppenstandort angezeigt.}
+		\caption{In der Terminansicht erhält ein \gls{Mitglied} alle Informationen über einen Termin. Darunter werden eine Teilnehmerliste und eine Karte, die den Treffpunkt sowie den eigenen Standort zeigt, angezeigt. Sollte der Termin kurz bevorstehen, ist zusätzlich der gemittelte Gruppenstandort zu Sehen.}
 	\end{figure}
 	
 	
