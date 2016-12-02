@@ -8,6 +8,7 @@
 \usepackage[acronym,xindy,toc,nonumberlist]{glossaries} % nomain, if you define glossaries in a file, and you use \include{INP-00-glossary}
 \makeglossaries
 \usepackage[xindy]{imakeidx}
+
 \makeindex
 \loadglsentries[main]{INP-00-glossary}
 \title{Android Go App - Pflichtenheft}
@@ -128,6 +129,7 @@
 	
 	
 	\section{Funktionale Anforderungen}
+	\renewcommand{\labelitemii}{$\bullet$}
 	 In diesem Abschnitt sind die Aussagen über die zu efüllenden Eigenschaften und zu erbringende Leistung unserer App vermerkt. Die mit "[WFAxx]" gekenzeichneten Anforderungen beziehen sich auf die Wunschkriterien der App.
 	 
 	\subsection{Accountverwaltung}
@@ -204,13 +206,14 @@
 	
 	
 	\section{Produktdaten}
+	
 	%TODO Stimmen Speicherorte?
 	%TODO Nutzer auch ID?
 	%TODO Markierung von Wunschkriterien
 	Die mit W markierten Daten entsprechend Daten, die nur bei der Erfüllung der entsprechenden Wunschkriterien gespeichert werden.
 	\begin{itemize}
-		\item [D10] \textit{Benutzerdaten:}
-		Für jeden Benutzer werden die folgenden Daten gespeichert bzw. erfasst. Diese befinden sich auf dem Server, sowie lokal in der App.
+		\item [D10] Benutzerdaten:
+		\newline Für jeden Benutzer werden die folgenden Daten gespeichert bzw. erfasst. Diese befinden sich auf dem Server, sowie lokal in der App.
 		\begin{itemize}
 			\item Benutzername
 			\newline Ein frei gewählter Name, der den anderen Benutzern der App angezeigt wird.
@@ -218,15 +221,20 @@
 			\newline Der aktuelle Standort der Person, damit der gemittelte Standort berechnet werden kann. Dazu werden die aktuellen GPS Koordinaten des Geräts genutzt.
 			\item \gls{Google Services} Informationen
 			\newline ID zur eindeutige Identifizierung der Benutzer
-			\item W - Teilnahmen
+		\end{itemize}
+		
+		\item [WD15] Benutzerdaten:
+		\begin{itemize}
+			\item Teilnahmen
 			\newline Um Statistiken zu Erstellen, werden die Teilnahmen gespeichert.
-			\item W - Sprache
+			\item Sprache
 			\newline Die ausgewählte Sprache des Benutzers.
 			
 		\end{itemize}
 		
-		\item [D20] \textit{Gruppendaten:}
-		Eine Gruppe hat die folgenden Eigenschaften.
+		
+		\item [D20] Gruppendaten:
+		\newline Eine Gruppe hat die folgenden Eigenschaften.
 		Die Gruppen werden auf dem Server gespeichert.
 		\begin{itemize}
 			\item ID
@@ -239,15 +247,19 @@
 			\newline Die \gls{Teilnehmer} haben verschiedene Rechte. Der \gls{Gruppengrnder} hat mehr Rechte als die anderen Teilnehmer und sein Name wird öffentlich in der Suche angezeigt.
 			\item Termine
 			\newline Eine Gruppe kann mehrere Termine haben.
-			\item W - Link
+		\end{itemize}
+		
+		
+		\item [WD25] Gruppendaten:
+		\begin{itemize}
+			\item Link
 			\newline Link zum Finden der Gruppe
-			\item W - QR-Code
+			\item QR-Code
 			\newline QR-Code zum Finden der Gruppe
 		\end{itemize}
 		
-		\newpage
-		\item [D30] \textit{Termindaten:}
-		In der App gibt es mehrere aktive Termine gleichzeitig. Jeder Termin beinhaltet die folgenden Daten.
+		\item [D30] Termindaten:
+		\newline In der App gibt es mehrere aktive Termine gleichzeitig. Jeder Termin beinhaltet die folgenden Daten.
 		Die Termine werden auf dem Server gespeichert, bis sie beendet sind. Zusätzlich dazu, sind Zugesagte Termine auch lokal auf dem Client gespeichert.
 		\begin{itemize}
 			\item ID
@@ -262,13 +274,17 @@
 			\newline Der Termin gehört zu einer bestimmten Gruppe
 			\item Serverzeit
 			\newline Datum und Uhrzeit des Treffens
-			\item W - Dauer
+		\end{itemize}
+		
+		\item [WD35] Termindaten:
+	 	\begin{itemize}
+			\item Dauer
 			\newline Die Dauer des Termins.
-			\item W - Erinnerung
+			\item Erinnerung
 			\newline Festlegung des Zeitpunktes, wann der Benutzer an diesen Termin erinnert werden möchte.
-			\item W - Wiederholung
+			\item Wiederholung
 			\newline Wenn der Termin wiederholt werden soll, wird hier die Frequenz der Wiederholung gespeichert.
-			\item W - Buttonstatus 
+			\item Buttonstatus 
 			\newline Das Signal der Benutzer durch die Button wird hier jeweils gespeichert.
 		\end{itemize}
 	\end{itemize}
