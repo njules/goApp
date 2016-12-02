@@ -84,11 +84,9 @@
 	
 	
 	
-	\section{Produkteinsatz}
-	\begin{itemize}	        
+	\section{Produkteinsatz}      
 		Das Produkt soll das spontane Organisieren von Treffen unterstützen. Dazu soll es dem Benutzer möglich sein in einer Gruppe einen Termin zu erstellen, bzw. bei Terminen zu- oder abzusagen. \newline
 		Kurz vor dem Termin wird dann der Gruppenmittelpunkt angezeigt, um das Finden der anderen Gruppenmitglieder zu erleichtern.
-	\end{itemize}
 	\subsection{Anwendungsbereich}
 	\begin{itemize}	        
 		\item Spontane Terminvereinbarung von Gruppen
@@ -216,47 +214,50 @@
 	%TODO Stimmen Speicherorte?
 	%TODO Nutzer auch ID?
 	%TODO Markierung von Wunschkriterien
-	Die mit W markierten Daten entsprechend Daten, die nur bei der Erfüllung der entsprechenden Wunschkriterien gespeichert werden.
+	Die mit \glqq WDxx\grqq gekennzeichneten Anforderungen beziehen sich auf die Wunschkriterien der App.
+	
 	\begin{itemize}
 		\item [D10] Benutzerdaten:
-		\newline Für jeden Benutzer werden die folgenden Daten gespeichert bzw. erfasst. Diese befinden sich auf dem Server, sowie lokal in der App.
+		\newline Für jeden Benutzer werden die folgenden Daten gespeichert bzw. erfasst. Diese befinden sich auf dem Server, sowie lokal auf dem Client.
 		\begin{itemize}
 			\item Benutzername
-			\newline Ein frei gewählter Name, der den anderen Benutzern der App angezeigt wird.
+			\newline Ein frei gewählter Name, der den anderen Benutzern der App angezeigt wird
 			\item Standort
-			\newline Der aktuelle Standort der Person, damit der Gruppenmittelpunkt berechnet werden kann. Dazu werden die aktuellen GPS Koordinaten des Geräts genutzt.
+			\newline Der aktuelle Standort der Person, damit der Gruppenmittelpunkt berechnet werden kann. Dazu werden die aktuellen GPS Koordinaten des Geräts genutzt
 			\item \gls{Google Services} Informationen
 			\newline ID zur eindeutige Identifizierung der Benutzer
 		\end{itemize}
 		
 		\item [WD15] Benutzerdaten:
+\newline Die Statistiken werden auf dem Server und die Sprache auf dem Client gespeichert.
 		\begin{itemize}
 			\item Teilnahmen
-			\newline Um Statistiken zu Erstellen, werden die Teilnahmen gespeichert.
+			\newline Um Statistiken zu Erstellen, werden die Teilnahmen gespeichert
 			\item Sprache
-			\newline Die ausgewählte Sprache des Benutzers.
+			\newline Die ausgewählte Sprache des Benutzers
 			
 		\end{itemize}
 		
 		
 		\item [D20] Gruppendaten:
 		\newline Eine Gruppe hat die folgenden Eigenschaften.
-		Die Gruppen werden auf dem Server gespeichert.
+		Die Gruppendaten werden auf dem Server gespeichert. Zusätzlich werden von allen Gruppen in denen man Mitglied ist die ID und der Name lokal auf dem Client gespeichert.
 		\begin{itemize}
 			\item ID
 			\newline ID-Nummer zur eindeutigen internen Identifikation
 			\item Name
 			\newline Angezeigter Name der Gruppe.
-			\item \gls{Teilnehmer}
-			\newline In einer Gruppe sind mehrere Benutzer.
+			\item Mitglieder
+			\newline In einer Gruppe sind mehrere Benutzer
 			\item Rechte
-			\newline Die \gls{Teilnehmer} haben verschiedene Rechte. Der \gls{Gruppengrnder} hat mehr Rechte als die anderen Teilnehmer und sein Name wird öffentlich in der Suche angezeigt.
+			\newline Die Mitglieder haben verschiedene Rechte. Der \gls{Gruppengrnder} hat mehr Rechte als die anderen Mitglieder und sein Name wird öffentlich in der Suche angezeigt.
 			\item Termine
-			\newline Eine Gruppe kann mehrere Termine haben.
+			\newline Eine Gruppe kann mehrere Termine haben
 		\end{itemize}
 		
 		
 		\item [WD25] Gruppendaten:
+		\newline Die Links und QR-Codes werden auf dem Server gespeichert
 		\begin{itemize}
 			\item Link
 			\newline Link zum Finden der Gruppe
@@ -266,14 +267,14 @@
 		
 		\item [D30] Termindaten:
 		\newline In der App gibt es mehrere aktive Termine gleichzeitig. Jeder Termin beinhaltet die folgenden Daten.
-		Die Termine werden auf dem Server gespeichert, bis sie beendet sind. Zusätzlich dazu, sind Zugesagte Termine auch lokal auf dem Client gespeichert.
+		Die Termine werden auf dem Server gespeichert, bis sie beendet sind. Zusätzlich dazu, sind zugesagte Termine auch lokal auf dem Client gespeichert.
 		\begin{itemize}
 			\item ID
 			\newline ID-Nummer zur eindeutigen internen Identifikation
 			\item Name
 			\newline Der Name des Termins.
 			\item Ziel
-			\newline Das Ziel ist der Standort, wo das Treffen stattfinden soll.
+			\newline Das Ziel ist der Standort, wo das Treffen stattfinden soll
 			\item \gls{Teilnehmer} Status
 			\newline Status des Teilnehmers, ob er zu- oder abgesagt oder noch nicht reagiert hat
 			\item Gruppe
@@ -282,7 +283,8 @@
 			\newline Datum und Uhrzeit des Treffens
 		\end{itemize}
 		
-		\item [WD35] Termindaten:
+		\item [WD35] Termindaten:%TODO Mitteilungen glossar
+Alle Termindaten werden auf dem Server gespeichert, außer der Erinnerung, diese wird auf dem Client gespeichert.
 	 	\begin{itemize}
 			\item Dauer
 			\newline Die Dauer des Termins.
@@ -290,8 +292,8 @@
 			\newline Festlegung des Zeitpunktes, wann der Benutzer an diesen Termin erinnert werden möchte.
 			\item Wiederholung
 			\newline Wenn der Termin wiederholt werden soll, wird hier die Frequenz der Wiederholung gespeichert.
-			\item Buttonstatus 
-			\newline Das Signal der Benutzer durch die Button wird hier jeweils gespeichert.
+			\item Mitteilung
+			\newline Die Nachrichten durch diese sich Teilnehmer mitteilen können
 		\end{itemize}
 	\end{itemize}
 	
@@ -303,11 +305,11 @@
 	\begin{itemize}
 		\item[QA10] Die App soll auf jede Anfrage in durchschnittlich unter 5 Sekunden reagieren
 		\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch
-		\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm zu erreichen
+		\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm der App zu erreichen
 		\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App
 		\item[QA50] Unterstützt bis zu 50 Benutzer pro Gruppe
 		\item[QA60] Jeder Benutzer kann in bis zu 20 Gruppen \gls{Mitglied} sein
-		\item[QA70] Die App unterstützt mindestens 30000 Benutzer
+		\item[QA70] Der Server unterstützt das Anlegen von mindestens 30000 Benutzern
 	\end{itemize}
 	
 	\newpage
@@ -315,8 +317,8 @@
 	
 	\section{Globale Testfälle}
 %TODO Nummern der Funktionalen Anforderungen überprüfen
-
-	Es muss überprüft werden ob folgende Funktionen wie gewünscht funktionieren.
+Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
+	Die folgenden Testfälle stellen sicher, dass die genannten Funktionalen Anforderungen erfüllt sind.
 	
 	\subsection{Kontoverwaltung}
 	\begin{itemize} 
@@ -331,16 +333,16 @@
 	\subsection{Gruppenverwaltung}
 	
 		\item[T30] deckt ab FA30, FA35\newline
-		 Ein beliebiger Benutzer erstellt eine neue Gruppe mit Name. \newline
-		Ergebnis: Eine neue Gruppe, mit eindeutiger Id, dem angegebenen Namen und dem Benutzer als Gründer, ist in der 			Datenbank
+		 Ein beliebiger Benutzer erstellt eine neue Gruppe mit Namen. \newline
+		Ergebnis: Eine neue Gruppe, mit eindeutiger Id, dem angegebenen Namen und dem Benutzer als Gründer, ist in der 			Datenbank.
 
 		\item[T35] deckt ab FA35 \newline
 		Der Gründer ändert den Gruppennamen.\newline
-		Ergebnis: Der Name der entsprechenden Gruppe ist geändert.
+		Ergebnis: Auf dem Server ist bei der Gruppe der neue Name eingetragen. 
 
 		\item[T40] deckt ab FA40, FA45  \newline
-		Suchen der Gruppe nach Namen und Beitrittsanfrage an eine gefundene Gruppe. \newline
-		Ergebnis: Alle GruppenIds der Gruppen, die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
+		Suchen der Gruppe nach Namen und eine Beitrittsanfrage an eine gefundene Gruppe stellen. \newline
+		Ergebnis: Alle Gruppen-IDs der Gruppen, die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
 		hinzugefügt.
 
 		\item[T50] deckt ab FA50  \newline
@@ -367,7 +369,7 @@
 
 		\item[T90] deckt ab FA100, FA110, FA120  \newline
 		Ein beliebiges \gls{Mitglied} erstellt einen Termin mit Name, Ort, Zeitpunkt.  \newline
-		Ergebnis: Es gibt einen Termin mit dem genanten Namen, Ort (Standort/Adresse), Zeitpunkt und dem Mitglied als 				Admin, in der Gruppe.
+		Ergebnis: Es gibt einen Termin mit dem genannten Namen, Ort und Zeitpunkt in der Gruppe.
 		
 		\item [T100] deckt ab FA130  \newline
 		Ein \gls{Mitglied} sagt ab.  \newline
@@ -375,15 +377,15 @@
 
 		\item[T105] deckt ab FA130  \newline
 		Ein Mitglied sagt zu.  \newline
-		Ergebnis: Das Mitglied ist \gls{Teilnehmer} des Termins , der Termin ist auf dem Gerät des Teilnehmers gespeichert.
+		Ergebnis: Das Mitglied ist \gls{Teilnehmer} des Termins und der Termin ist auf dem Gerät des Teilnehmers gespeichert.
 
 	\subsection{Terminablauf}
 	
 		\item[T110] deckt ab FA140, FA150, FA170 \newline
 		Automatischer Ablauf eines Termins. \newline
-		Ergebnis: 30min vor dem Terminzeitpunkt werden alle \gls{Teilnehmer} von dem Termin benachrichtigt  \newline
-			15min vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar  \newline
-			60min nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf 					dem \gls{Client} noch auf dem \gls{Server})
+		Ergebnis: 30 Minuten vor dem Termin werden alle \gls{Teilnehmer} von dem Termin benachrichtigt.  \newline
+			15 Minuten vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar.  \newline
+			60 Minuten nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf 					dem \gls{Client} noch auf dem \gls{Server}).
 
 	\subsection{Standort}
 %TODO Welche Funktionale Anforderung 
@@ -391,9 +393,9 @@
 		Standort Übertragung der Clients an den \gls{Server}.  \newline
 		Ergebnis: Der Standort aller \gls{Teilnehmer} ist auf dem Server gespeichert.
 
-		\item[T125]  deckt ab FA150 \newline
-		Gruppenmittelpunkt der \gls{Teilnehmer} ist berechnet. \newline
-		Ergebnis: Der \gls{Server} sendet den Clients den Gruppenmittelpunkt.
+		\item[T130]  deckt ab FA150 \newline
+		Der Server sendet den berechneten Gruppenmittelpunkt an den \gls{Teilnehmer}. \newline
+		Ergebnis: Der Client hat den aktuellen Gruppenmittelpunkt.
 
 	\end{itemize}	
 	
@@ -403,11 +405,11 @@
 	\section{Systemmodelle}
 	
 	\subsection{Anwendungsfälle}
-	\subsubsection{Benutzer Registrieren}
+	\subsubsection{Benutzer registrieren}
 	\begin{description}
 		\item \textbf{Titel:}
 		\begin{description}
-			\item Benutzer Registrieren
+			\item Benutzer registrieren
 		\end{description}
 		\item \textbf{Kurzbeschreibung:}
 		\begin{description}
@@ -446,8 +448,8 @@
 		\begin{description}
 			\item Der Benutzer hat sich zuvor erfolgreich registriert.
 		\end{description}
-		\item \textbf{Ablauf:} \newline Es wird eine Gruppe erstellt, für die der erstellende Benutzer als Gründer eingetragen wird. Der Benutzer muss einen Namen für seine Gruppe wählen. Damit erhält der Benutzer auch alle Rechte, die dem \gls{Gruppengrnder} zugestanden werden. 
-		\item \textbf{Ergebnis:} \newline Der Benutzer ist \gls{Gruppengrnder} einer Gruppe und kann Benutzer zu dieser Gruppe hinzufügen oder Mitglieder aus der Gruppe entfernen. Des Weiteren hat er die selben Rechte wie Mitglieder, er kann also auch Termine erstellen und an anderen Terminen innerhalb der Gruppe teilnehmen.
+		\item \textbf{Ablauf:} \newline Es wird eine Gruppe erstellt, für die der erstellende Benutzer als Gruppengründer eingetragen wird. Der Benutzer muss einen Namen für seine Gruppe wählen. Damit erhält der Benutzer auch alle Rechte, die dem \gls{Gruppengrnder} zugestanden werden. 
+		\item \textbf{Ergebnis:} \newline Der Benutzer ist \gls{Gruppengrnder} einer Gruppe und kann Benutzer zu dieser Gruppe hinzufügen oder Mitglieder aus der Gruppe entfernen. Des Weiteren hat er dieselben Rechte wie Mitglieder, er kann also auch Termine erstellen und an anderen Terminen innerhalb der Gruppe teilnehmen.
 	\end{description}
 	
 	\newpage
@@ -497,7 +499,7 @@
 			\item Der Gruppengründer hat zuvor eine Gruppe gegründet und das Mitglied wurde vom Gruppengründer in die Gruppe aufgenommen.
 		\end{description}
 		\item \textbf{Ablauf:} \newline Der Gruppengründer wählt in der Gruppenansicht das Mitglied aus, welches aus der Gruppe entfernt werden soll. Das Mitglied wird aus der Gruppe entfernt und wird zu einem normalen Nutzer der App.
-		\item \textbf{Ergebnis:} \newline Das Mitglied gehört nicht mehr zu der Gruppe und kann somit keine Termine mehr einsehen oder ihnen beitreten, Terminen an denen das Mitglied bereits teilnimmt, entfernen das Mitglied aus der Teilnehmerliste. Das Mitglied kann auch keine Informationen der Gruppe einsehen und wird als Nutzer betrachtet.
+		\item \textbf{Ergebnis:} \newline Das Mitglied gehört nicht mehr zu der Gruppe und kann somit keine Termine mehr einsehen oder ihnen beitreten. Termine an denen das Mitglied bereits teilnimmt, entfernen das Mitglied aus der Teilnehmerliste. Das Mitglied kann auch keine Informationen der Gruppe einsehen und wird als Nutzer betrachtet.
 	\end{description}
 	
 	\newpage
@@ -521,7 +523,7 @@
 			\item Das Mitglied ist Mitglied einer Gruppe
 		\end{description}
 		\item \textbf{Ablauf:} \newline Das Mitglied erstellt innerhalb einer Gruppe einen Termin. Hierfür gibt er Namen, Uhrzeit und Ort für den Termin an. Das Mitglied, das den Termin erstellt nimmt automatisch an dem Termin teil. Der Termin ist an die Gruppe gebunden und alle anderen Mitglieder der Gruppe können die Informationen für diesen Termin einsehen und ihm beitreten.
-		\item \textbf{Ergebnis:} \newline Das Mitglied hat einen an die Gruppe gebundenen, für alle Mitglieder sichtbaren, Termin erstellt. Mitglieder können an dem Termin als \gls{Teilnehmer} beitreten. Ein Teilnehmer wird eine gewisse Zeit vor dem Termin benachrichtigt. Wurde der Teilnehmer benachrichtigt kann er die Karte öffnen und den ungefähren Standort der anderen Teilnehmer dieses Termins einsehen.
+		\item \textbf{Ergebnis:} \newline Das Mitglied hat einen an die Gruppe gebundenen, für alle Mitglieder sichtbaren, Termin erstellt. Mitglieder können an dem Termin als \gls{Teilnehmer} beitreten. Ein Teilnehmer wird eine halbe Stunde vor dem Termin benachrichtigt. Eine weitere viertel Stunde später kann er die Karte öffnen und den ungefähren Standort der anderen Teilnehmer dieses Termins einsehen.
 	\end{description}
 	
 	\newpage
