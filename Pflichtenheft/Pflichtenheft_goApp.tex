@@ -5,12 +5,19 @@
 \usepackage{graphicx}
 \usepackage[ngerman]{babel}
 \usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
 \usepackage[acronym,xindy,toc,nonumberlist]{glossaries} % nomain, if you define glossaries in a file, and you use \include{INP-00-glossary}
 \makeglossaries
 \usepackage[xindy]{imakeidx}
 \makeindex
 \loadglsentries[main]{INP-00-glossary}
-\title{Android Go App - Pflichtenheft}
+\title{Android goApp - Pflichtenheft}
 \author{Jörn Kussmaul, Katharina Riesterer, Julian Neubert,\\ Jonas Walter, Tobias Ohlsson, Eva-Maria Neumann}
 
 \begin{document}
@@ -22,55 +29,54 @@
 	
 	\tableofcontents
 	\newpage
-	%TODO \gls{Google Services}
 	%TODO Form
-	%TODO: Termin in Vergangenheit anlegen ?
+	%TODO Termin in Vergangenheit anlegen ?
 	\section{Zielbestimmung}
-	Das Ziel ist es eine Android-Applikation zu entwickeln, die Gruppen sozialaktiver Menschen eine Plattform bieten soll, um kurzfristig Termine zu vereinbaren und bei diesen ein einfaches Finden der Gruppe, ohne weitere Kommunikation, zu ermöglichen.
+	Das Ziel ist es eine Android Applikation für Gruppen sozial aktiver Menschen zu entwickeln. Diese ermöglicht es kurzfristig sich in einer Gruppe zu treffen. Hierfür können Termine erstellt werden, um das schnelle informieren der Gruppe zu gewährleisten.
 	\subsection{Musskriterien}
 	\begin{itemize}
 		\item Anmeldung mit Google Services
-		\item Ein Benutzer kann \gls{Mitglied} mehrerer Gruppen sein und kann Name, Mitglieder, Gründer und Termine einsehen.
+		\item Ein Benutzer kann \gls{Mitglied} mehrerer Gruppen sein und kann Name, Mitglieder, Gründer und Termine einsehen
 		\item Gruppenverwaltung
 		\begin{itemize}
-			\item Erstellen neuer Gruppen.
-			\item Suche bestehender Gruppen.
-			\item Gründer-Benutzer-Rollenstruktur.
-			\item Mitglieder in die Gruppe aufnehmen, aus der Gruppe entfernen.
+			\item Erstellen neuer Gruppen
+			\item Suche bestehender Gruppen
+			\item Gründer-Benutzer-Rollenstruktur
+			\item Mitglieder in die Gruppe aufnehmen, aus der Gruppe entfernen
 			\item Gruppe löschen
 			\item Gruppenname ändern
 		\end{itemize}
 		\item Terminverwaltung
 		\begin{itemize}
-			\item Termine können mit Zeit, Ort, Name innerhalb einer Gruppe erstellt werden.
-			\item Benutzer können bei Terminen zu-/absagen.
-			\item Benutzer werden an ihren Termin erinnert.
+			\item Termine können mit Zeit, Ort, Name innerhalb einer Gruppe erstellt werden
+			\item Benutzer können bei Terminen zu-/absagen
+			\item Benutzer werden an ihren Termin erinnert
 		\end{itemize}
-		\item Ein Benutzer kann seinen eigenen Standort und den Gruppenmittelpunkt abrufen.	
+		\item Ein Benutzer kann seinen eigenen Standort und den Gruppenmittelpunkt abrufen
 	\end{itemize}
 	\subsection{Wunschkriterien}
 	\begin{itemize}
-		\item \grqq{}Bin Los\grqq{} und \grqq{}Bin da\grqq{} und \grqq{}Bin zu spät\grqq{}
+		\item \glqq{}Bin los\grqq{} und \glqq{}Bin da\grqq{} und \glqq{}Bin zu spät\grqq{}
 		\begin{itemize}
-			\item Benutzer können per Button signalisieren ob sie bereits zum Treffpunkt unterwegs sind oder diesen sogar schon erreicht haben.
-			\item Nur Benutzer die Unterwegs sind werden für den Gruppenmittelpunkt beachtet.
-			\item Benutzer die den Treffpunkt erreicht haben werden für die Berechnung der Gruppenmitte stärker fokussiert.
-			\item Benutzer können der Gruppe mitteilen, dass sie zu spät sind.
+			\item Benutzer können per Button signalisieren, ob sie bereits zum Treffpunkt unterwegs sind oder diesen sogar schon erreicht haben
+			\item Nur Benutzer, die unterwegs sind, werden für den Gruppenmittelpunkt beachtet
+			\item Benutzer, die den Treffpunkt erreicht haben, werden für die Berechnung des Gruppenmittelpunktes stärker beachtet
+			\item Benutzer können der Gruppe mitteilen, dass sie zu spät sind
 		\end{itemize}
-		\item Gruppenmittelpunkt teilt sich bei Gruppenteilung.
-		\item Die Dauer eines Termins kann individuell festgelegt werden.
-		\item Individuelle Erinnerung pro Benutzer und pro Termin.
-		\item Erinnerung an Termin auch bei geschlossener App.
-		\item Termine können gelöscht, geändert und wiederholt werden.
-		\item Statistiken über Teilnahme der Benutzer speichern.
-		\item QR-Code oder Link zum Finden von Gruppen.
+		\item Der Gruppenmittelpunkt teilt sich bei Gruppenteilung
+		\item Die Dauer eines Termins kann individuell festgelegt werden
+		\item Individuelle Erinnerung pro Benutzer und pro Termin
+		\item Erinnerung an Termine auch bei geschlossener App
+		\item Termine können gelöscht, geändert und wiederholt werden
+		\item Statistiken über die Teilnahme der Benutzer können eingesehen werden
+		\item QR-Code oder Link zum Finden von Gruppen
 		\item Sprachwahl
 	\end{itemize}
 	\subsection{Abgrenzungskriterien}
 	\begin{itemize}
-		\item Kein Chat.
-		\item Benutzer können nicht die Standorte andere Benutzer abfragen.
-		\item Gründer kann keine neuen Mitglieder suchen.
+		\item Kein Chat
+		\item Benutzer können nicht die Standorte andere Benutzer abfragen
+		\item Der Gruppengründer kann keine neuen Mitglieder suchen
 	\end{itemize}
 	
 	\newpage
@@ -79,8 +85,8 @@
 	
 	\section{Produkteinsatz}
 	\begin{itemize}	        
-		\item Das Produkt soll das spontane Organisieren von Treffen unterstützen. Dazu soll es dem Benutzer möglich sein in einer Gruppe einen Termin zu erstellen, bzw. bei Terminen zu- oder abzusagen.
-		\item Kurz vor dem Termin wird dann der Gruppenmittelpunkt angezeigt, um das Finden der anderen Gruppenmitglieder zu erleichtern.
+		Das Produkt soll das spontane Organisieren von Treffen unterstützen. Dazu soll es dem Benutzer möglich sein in einer Gruppe einen Termin zu erstellen, bzw. bei Terminen zu- oder abzusagen. \newline
+		Kurz vor dem Termin wird dann der Gruppenmittelpunkt angezeigt, um das Finden der anderen Gruppenmitglieder zu erleichtern.
 	\end{itemize}
 	\subsection{Anwendungsbereich}
 	\begin{itemize}	        
@@ -103,16 +109,17 @@
 	\begin{itemize}	        
 		\item Eine \gls{Client-Server-Architektur}
 		\item Der \gls{Client} ist ein Android-Gerät
-		\item Die Android-Go App läuft parallel mit anderen Apps auf einem Android-Gerät
+		\item Die goApp läuft parallel mit anderen Apps auf einem Android-Gerät
 	\end{itemize}
 	\subsection{Software}
 	\begin{itemize}	        
 		\item \gls{Client}: \gls{Android} ab 4.4
-		\item \gls{Server}: \gls{Tomcat} 8, MySQL
+		\item \gls{Server}: CentOS 6.8, \gls{Tomcat} 8, MySQL
 	\end{itemize}	
 	\subsection{Orgware}
 	\begin{itemize}	        
-		\item Internetverbindung und Standortabfrage
+		\item Internetverbindung
+		\item Standortabfrage
 	\end{itemize}
 	\subsection{Produktschnittstelle}
 	\begin{itemize}	        
@@ -121,82 +128,80 @@
 	\end{itemize}
 	\subsection{Referenzgerät}
 	\begin{itemize}
-		\item Samsung Galaxy S4
+		\item Samsung Galaxy S4 (GT-I9505)
 		\item \gls{Android} 5.0.1
 	\end{itemize}
 	\newpage
 	
 	
 	\section{Funktionale Anforderungen}
-	 In diesem Abschnitt sind die Aussagen über die zu efüllenden Eigenschaften und zu erbringende Leistung unserer App vermerkt. Die mit "[WFAxx]" gekenzeichneten Anforderungen beziehen sich auf die Wunschkriterien der App.
+	 In diesem Abschnitt sind die Aussagen über die zu efüllenden Eigenschaften und zu erbringende Leistung unserer App vermerkt. Die mit \glqq WFAxx\grqq gekennzeichneten Anforderungen beziehen sich auf die Wunschkriterien der App.
 	 
-	\subsection{Accountverwaltung}
+	\subsection{Kontoverwaltung}
 	\begin{itemize}
-		\item[FA10] Anmeldung eines Benutzers in der App über Google Services.
-		\item[WFA15] Der Benutzer kann zwischen Sprachen wählen.
-		\item[FA20] Ersterfassung und Änderung des Benutzernamens.
+		\item[FA10] Anmeldung eines Benutzers in der App über \gls{Google Services}
+		\item[WFA15] Der Benutzer kann zwischen Sprachen wählen
+		\item[FA20] Ersterfassung und Änderung des Benutzernamens
 		
 	\end{itemize}
 	
 	\subsection{Gruppenverwaltung}
 	\begin{itemize}
-		\item[FA30] Jeder Benutzer kann eine Gruppe erstellen.
-		\item[FA35] Ersterfassung und spätere Änderung des Gruppennamens durch den \gls{Gruppengrnder}.
-		\item[FA40] Gruppen können über den Gruppennamen gesucht werden.
-		\item[FA45] Benutzer können Beitrittsanfragen an eine Gruppe senden.
-		\item[FA50] Der \gls{Gruppengrnder} kann Beitrittsanfragen zu der Gruppe verwalten:
+		\item[FA30] Jeder Benutzer kann eine Gruppe erstellen
+		\item[FA35] Ersterfassung und spätere Änderung des Gruppennamens durch den \gls{Gruppengrnder}
+		\item[FA40] Gruppen können über den Gruppennamen gesucht werden
+		\item[FA45] Benutzer können Beitrittsanfragen an eine Gruppe senden
+		\item[FA50] Der \gls{Gruppengrnder} kann Beitrittsanfragen der Gruppe verwalten:
 		\begin{itemize}
-			\item Anfragen bestätigen, wodurch der Anfragende \gls{Mitglied} der Gruppe wird und die Anfrage gelöscht wird.
+			\item Anfragen bestätigen, wodurch der Anfragende ein \gls{Mitglied} der Gruppe wird und die Anfrage gelöscht wird
 		\end{itemize}
 		\begin{itemize}
-			\item Anfragen ablehnen, wodurch die Anfrage gelöscht wird.
+			\item Anfragen ablehnen, wodurch die Anfrage gelöscht wird
 		\end{itemize}
 		\begin{itemize}
-			\item Anfragen ignorieren, wodurch die Anfrage bestehen und sichtbar bleibt.
+			\item Anfragen ignorieren, wodurch die Anfrage bestehen und sichtbar bleibt
 		\end{itemize}
-		\item[FA60] Der \gls{Gruppengrnder} kann bestehende Mitglieder aus der Gruppe entfernen.
-		\item[FA70] Die Gruppe kann durch den \gls{Gruppengrnder} gelöscht werden.
-		\item[FA80] Mitglieder der Gruppen, ausgenommen des Gruppengründers, können die Gruppe verlassen.
-		\item[WFA85] Der \gls{Gruppengrnder} kann seinen Status als Gruppengründer an ein \gls{Mitglied} übergeben.
-		\item[FA90] Gruppenmitglieder können andere Gruppenmitglieder anzeigen lassen.
-		\item[WFA95] Gruppenmitglieder können die Teilnahmequoten anderer Gruppenmitglieder ansehen.
+		\item[FA60] Der \gls{Gruppengrnder} kann Mitglieder aus der Gruppe entfernen
+		\item[FA70] Die Gruppe kann durch den \gls{Gruppengrnder} gelöscht werden
+		\item[FA80] Mitglieder der Gruppen, ausgenommen des Gruppengründers, können die Gruppe verlassen
+		\item[WFA85] Der \gls{Gruppengrnder} kann seinen Status als Gruppengründer an ein \gls{Mitglied} übergeben
+		\item[FA90] Gruppenmitglieder können sich andere Gruppenmitglieder anzeigen lassen
+		\item[WFA95] Gruppenmitglieder können die Teilnahmequoten anderer Gruppenmitglieder einsehen
 		
 	\end{itemize}
 	
 	\subsection{Terminverwaltung}
 	\begin{itemize}
-		\item[FA100] Jedes \gls{Mitglied} einer Gruppe kann einen Termin erstellen.
-		\item[FA110] Der Terminersteller kann den von ihm erstellten Termin verwalten:
+		\item[FA100] Jedes \gls{Mitglied} einer Gruppe kann einen Termin erstellen
+		
 		\begin{itemize}
-			\item Ersterfassung von Terminnamen, Terminzeit und Terminort.
+			\item Ersterfassung von Terminnamen, Terminzeit (in der Zukunft) und Terminort
 		\end{itemize}
 		
 		\begin{itemize}
-			\item Visuelle Darstellung des gewählten Terminortes. 
+			\item Visuelle Darstellung des gewählten Terminortes
 		\end{itemize}
-		
-		
-		\item[WFA115] Der Terminersteller kann den Terminnamen, Terminzeit und Terminort nachträglich ändern oder gegebenenfalls löschen.
-		
-		\item[FA120] Der Termin wird jedem Gruppenmitglied angezeigt.
-		\item[FA130] Jedes Gruppenmitglied kann einem Termin zu- oder absagen.		
+		\item[WFA105] Der Terminersteller kann den Terminnamen, Terminzeit und Terminort nachträglich ändern oder gegebenenfalls löschen
+		\item[FA110] Der Gruppenmittelpunkt wird anhand der Standorte aller Teilnehmer berechnet		
+		\item[FA120] Jeder Termin wird jedem Gruppenmitglied angezeigt
+		\item[FA130] Jedes Gruppenmitglied kann bei einem Termin zu- oder absagen
 		
 	\end{itemize}
 	
 	\subsection{Terminablauf}
 	\begin{itemize}
-		\item[FA140] Jeder \gls{Teilnehmer} wird 30 Minuten vor Beginn des Termins benachrichtigt werden.
-		\item[WFA145] \gls{Teilnehmer} werden auch bei geschlossener App benachrichtigt.
-		\item[FA150] Jeder \gls{Teilnehmer} kann den Gruppenstandort ab 15 Minuten in einer Karte darstellen lassen.
-		\item[FA155W] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort. 
-		\item[FA160W] \gls{Teilnehmer} können mittels eines Buttons Signale an die anderen Teilnehmer senden:
+		\item[FA140] Jeder \gls{Teilnehmer} wird 30 Minuten vor Beginn des Termins benachrichtigt
+		\item[WFA145] \gls{Teilnehmer} werden auch bei geschlossener App benachrichtigt
+		\item[FA150] Jeder \gls{Teilnehmer} kann den Gruppenmittelpunkt ab 15 Minuten vor Beginn des Termins in einer Karte darstellen lassen
+		\item[WFA155] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort 
+		\item[WFA160] \gls{Teilnehmer} können in der App anderen Teilnehmern mitteilen,
 		\begin{itemize}
-			\item Sie können signalisieren ob sie bereits unterwegs sind.
-			\item Sie können signalisieren ob sie zu spät kommen.
-			\item Sie können signalisieren ob sie schon am Terminort angekommen sind.
+			\item dass sie bereits unterwegs sind
+			\item dass sie zu spät kommen
+			\item dass sie schon am Terminort angekommen sind
 		\end{itemize}
-		\item[FA170] Der Termin löscht sich eine Stunde nach Ablauf des Terminzeitpunktes automatisch.
-		\item[WFA175] Der Zeitpunkt, wann der Termin gelöscht wird, kann vom Terminersteller beim Erstellen des Termins bestimmt werden.
+		\item[FA170] Der Termin löscht sich nach der Dauer des Termins (standardmäßig 60 Minuten)
+		\item[WFA175] Die Dauer des Termins kann individuell festgelegt werden
 	\end{itemize}
 		
 	
@@ -215,7 +220,7 @@
 			\item Benutzername
 			\newline Ein frei gewählter Name, der den anderen Benutzern der App angezeigt wird.
 			\item Standort
-			\newline Der aktuelle Standort der Person, damit der gemittelte Standort berechnet werden kann. Dazu werden die aktuellen GPS Koordinaten des Geräts genutzt.
+			\newline Der aktuelle Standort der Person, damit der Gruppenmittelpunkt berechnet werden kann. Dazu werden die aktuellen GPS Koordinaten des Geräts genutzt.
 			\item \gls{Google Services} Informationen
 			\newline ID zur eindeutige Identifizierung der Benutzer
 			\item W - Teilnahmen
@@ -279,13 +284,13 @@
 	\section{Qualitative Anforderungen}
 	Die Qualitativen Anforderungen beziehen sich auf unser Referenzgerät.
 	\begin{itemize}
-		\item[QA10] Die App soll auf jede Anfrage in durchschnittlich unter 5 Sekunden reagieren.
-		\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch.
-		\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm zu erreichen.
-		\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App.
-		\item[QA50] Unterstützt bis zu 50 Benutzer pro Gruppe.
-		\item[QA60] Jeder Benutzer kann in bis zu 20 Gruppen \gls{Mitglied} sein.
-		\item[QA70] Die App unterstützt mindestens 30000 Benutzer.
+		\item[QA10] Die App soll auf jede Anfrage in durchschnittlich unter 5 Sekunden reagieren
+		\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch
+		\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm zu erreichen
+		\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App
+		\item[QA50] Unterstützt bis zu 50 Benutzer pro Gruppe
+		\item[QA60] Jeder Benutzer kann in bis zu 20 Gruppen \gls{Mitglied} sein
+		\item[QA70] Die App unterstützt mindestens 30000 Benutzer
 	\end{itemize}
 	
 	\newpage
@@ -296,11 +301,11 @@
 
 	Es muss überprüft werden ob folgende Funktionen wie gewünscht funktionieren.
 	
-	\subsection{Accountverwaltung}
+	\subsection{Kontoverwaltung}
 	\begin{itemize} 
 		\item[T10] deckt ab FA10 \newline
-		Registrieren: Eine bisher nicht registrierte Person mit einem Google-Account registriert sich mit diesem im System 				und wählt zusätzlich einen Benutzernamen. \newline
-		Ergebnis: Der neue Benutzer mit seinem Google Konto und Benutzername ist in der Datenbank.
+		Registrieren: Eine bisher nicht registrierte Person mit einem Google Account registriert sich mit diesem im System 				und wählt zusätzlich einen Benutzernamen. \newline
+		Ergebnis: Der neue Benutzer mit seinem Google Account und Benutzername ist in der Datenbank.
 
 		\item[T20] deckt ab FA20\newline
 		Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
@@ -365,11 +370,11 @@
 
 	\subsection{Standort}
 %TODO Welche Funktionale Anforderung 
-		\item[T120] deckt ab: FA150 \newline
+		\item[T120] deckt ab FA150 \newline
 		Standort Übertragung der Clients an den \gls{Server}.  \newline
 		Ergebnis: Der Standort aller \gls{Teilnehmer} ist auf dem Server gespeichert.
 
-		\item[T125]  deckt ab: FA150 \newline
+		\item[T125]  deckt ab FA150 \newline
 		Gruppenmittelpunkt der \gls{Teilnehmer} ist berechnet. \newline
 		Ergebnis: Der \gls{Server} sendet den Clients den Gruppenmittelpunkt.
 
@@ -515,7 +520,7 @@
 	%TODO: Stimmen Zeiten der Benachrichtigungen?
 	\subsubsection{Szenario 1}
 	Alice, Bob und Carol gehen oft gemeinsam in der Mensa essen. Zur besseren Koordination haben sie die App auf ihren Android-Smartphones installiert.
-	Nun startet jeder bei sich die App und gibt, nachdem er sich über sein Google Konto angemeldet hat, seinen Namen ein.
+	Nun startet jeder bei sich die App und gibt, nachdem er sich über sein Google Account angemeldet hat, seinen Namen ein.
 	Alice gründet nun eine neue Gruppe mit dem Namen ABC-Mensa. Danach geben Bob und Carol in das Suchfeld ABC-Mensa ein und klicken auf die entsprechende Gruppe.
 	Es erscheint nun auf dem Display die Nachfrage ob sie der Gruppe beitreten wollen. Sobald sie dies bestätigt haben klickt Alice auf die Gruppe,
 	sieht die Namen Bob und Carol als Bewerber, und fügt beide hinzu.
@@ -573,7 +578,7 @@
 	
 	\subsubsection{Szenario 4 (Wunschszenario)}
 	Alice, Bob, Carol und Dave wollen sich am Abend im Restaurant \glqq{}Oxford\grqq{} in Karlsruhe zum Essen treffen. 
-	Da sie alle die Android Go App installiert haben und einer gemeinsamen Gruppe angehören, erstellt Alice in der App 		einen Termin names \glqq{}Oxford\grqq{}, dem die drei anderen zusagen. Alice trifft Bob pünktlich um 8:00 Uhr im 		\glqq{}Oxford Pub\grqq{} kann jedoch Carol und Dave nicht finden, die in der App durch den \glqq{}Bin da\grqq{}-Button 		jedoch schon signalisiert haben vor Ort zu sein. Deshalb öffnet Alice die Go App und versucht über den Gruppenstandort 		mehr Information zu erhalten. Carol und Dave haben sich inzwischen in dem 200 Meter entfernten \glqq{}Oxford 			\grqq{} getroffen. Alice erkennt in der Karte der App durch die Clusteringanalyse neben dem Standort von ihr und 		Bob einen zweiten Standort, der zu Carol und Dave gehören muss. Sie bemerkt dadurch das Missverständnis zwischen 		\glqq{}Oxford Pub\grqq{} und \glqq{}Oxford Cafe\grqq{} sofort und macht sich mit Bob in Richtung \glqq{}Oxford 			Cafe\grqq{} auf.    \newline
+	Da sie alle die goApp installiert haben und einer gemeinsamen Gruppe angehören, erstellt Alice in der App 		einen Termin names \glqq{}Oxford\grqq{}, dem die drei anderen zusagen. Alice trifft Bob pünktlich um 8:00 Uhr im 		\glqq{}Oxford Pub\grqq{} kann jedoch Carol und Dave nicht finden, die in der App durch den \glqq{}Bin da\grqq{}-Button 		jedoch schon signalisiert haben vor Ort zu sein. Deshalb öffnet Alice die goApp und versucht über den Gruppenstandort 		mehr Information zu erhalten. Carol und Dave haben sich inzwischen in dem 200 Meter entfernten \glqq{}Oxford 			\grqq{} getroffen. Alice erkennt in der Karte der App durch die Clusteringanalyse neben dem Standort von ihr und 		Bob einen zweiten Standort, der zu Carol und Dave gehören muss. Sie bemerkt dadurch das Missverständnis zwischen 		\glqq{}Oxford Pub\grqq{} und \glqq{}Oxford Cafe\grqq{} sofort und macht sich mit Bob in Richtung \glqq{}Oxford 			Cafe\grqq{} auf.    \newline
 	\newline
 	\newline
 	
@@ -626,7 +631,7 @@
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=.5\textwidth]{GUI_Termin.jpg}
-		\caption{In der Terminansicht erhält ein \gls{Mitglied} alle Informationen über einen Termin. Darunter werden eine Teilnehmerliste und eine Karte, die den Treffpunkt sowie den eigenen Standort zeigt, angezeigt. Sollte der Termin kurz bevorstehen, ist zusätzlich der gemittelte Gruppenstandort zu Sehen.}
+		\caption{In der Terminansicht erhält ein \gls{Mitglied} alle Informationen über einen Termin. Darunter werden eine Teilnehmerliste und eine Karte, die den Treffpunkt sowie den eigenen Standort zeigt, angezeigt. Sollte der Termin kurz bevorstehen, ist zusätzlich der Gruppenmittelpunkt zu sehen.}
 	\end{figure}
 	
 	
