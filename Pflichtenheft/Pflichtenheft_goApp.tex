@@ -12,7 +12,9 @@
     citecolor={blue!50!black},
     urlcolor={blue!80!black}
 }
+
 \usepackage[acronym,xindy,toc,nonumberlist]{glossaries} % nomain, if you define glossaries in a file, and you use \include{INP-00-glossary}
+\glossarystyle{altlist}
 \makeglossaries
 \usepackage[xindy]{imakeidx}
 
@@ -79,14 +81,16 @@
 		\item Benutzer können nicht die Standorte andere Benutzer abfragen
 		\item Der Gruppengründer kann keine neuen Mitglieder suchen
 	\end{itemize}
-	
+
 	\newpage
 	
 	
 	
+
 	\section{Produkteinsatz}      
 		Das Produkt soll das spontane Organisieren von Treffen unterstützen. Dazu soll es dem Benutzer möglich sein in einer Gruppe einen Termin zu erstellen, bzw. bei Terminen zu- oder abzusagen. \newline
 		Kurz vor dem Termin wird dann der Gruppenmittelpunkt angezeigt, um das Finden der anderen Gruppenmitglieder zu erleichtern.
+
 	\subsection{Anwendungsbereich}
 	\begin{itemize}	        
 		\item Spontane Terminvereinbarung von Gruppen
@@ -210,11 +214,6 @@
 	
 	
 	\section{Produktdaten}
-	
-	%TODO Stimmen Speicherorte?
-	%TODO Nutzer auch ID?
-	%TODO Markierung von Wunschkriterien
-	Die mit \glqq WDxx\grqq gekennzeichneten Anforderungen beziehen sich auf die Wunschkriterien der App.
 	
 	\begin{itemize}
 		\item [D10] Benutzerdaten:
