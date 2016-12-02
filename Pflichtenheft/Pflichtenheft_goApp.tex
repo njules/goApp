@@ -254,7 +254,7 @@
 			\newline Eine Gruppe kann mehrere Termine haben
 		\end{itemize}
 		
-		
+		\newpage
 		\item [WD25] Gruppendaten:
 		\newline Die Links und QR-Codes werden auf dem Server gespeichert
 		\begin{itemize}
@@ -282,7 +282,7 @@
 			\newline Datum und Uhrzeit des Treffens
 		\end{itemize}
 		
-		\item [WD35] Termindaten:%TODO Mitteilungen glossar
+		\item [WD35] Termindaten:
 Alle Termindaten werden auf dem Server gespeichert, außer der Erinnerung, diese wird auf dem Client gespeichert.
 	 	\begin{itemize}
 			\item Dauer
@@ -315,7 +315,6 @@ Alle Termindaten werden auf dem Server gespeichert, außer der Erinnerung, diese
 	
 	
 	\section{Globale Testfälle}
-%TODO Nummern der Funktionalen Anforderungen überprüfen
 Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
 	Die folgenden Testfälle stellen sicher, dass die genannten Funktionalen Anforderungen erfüllt sind.
 	
@@ -366,7 +365,7 @@ Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindu
 
 	\subsection{Terminverwaltung}
 
-		\item[T90] deckt ab FA100, FA110, FA120  \newline
+		\item[T90] deckt ab FA100, FA120  \newline
 		Ein beliebiges \gls{Mitglied} erstellt einen Termin mit Name, Ort, Zeitpunkt.  \newline
 		Ergebnis: Es gibt einen Termin mit dem genannten Namen, Ort und Zeitpunkt in der Gruppe.
 		
@@ -387,12 +386,11 @@ Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindu
 			60 Minuten nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf 					dem \gls{Client} noch auf dem \gls{Server}).
 
 	\subsection{Standort}
-%TODO Welche Funktionale Anforderung 
-		\item[T120] deckt ab FA150 \newline
+		\item[T120] deckt ab FA110, FA150 \newline
 		Standort Übertragung der Clients an den \gls{Server}.  \newline
 		Ergebnis: Der Standort aller \gls{Teilnehmer} ist auf dem Server gespeichert.
 
-		\item[T130]  deckt ab FA150 \newline
+		\item[T130]  deckt ab FA110, FA150 \newline
 		Der Server sendet den berechneten Gruppenmittelpunkt an den \gls{Teilnehmer}. \newline
 		Ergebnis: Der Client hat den aktuellen Gruppenmittelpunkt.
 
@@ -468,10 +466,7 @@ Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindu
 			\item \gls{Gruppengrnder}
 			\item Benutzer
 		\end{description}
-		\item \textbf{Vorbedingungen:}
-		\begin{description}
-			\item Der Gruppengründer hat zuvor eine Gruppe gegründet und der Benutzer hat sich bereits registriert.
-		\end{description}
+		\item \textbf{Vorbedingungen:} \newline Der Gruppengründer hat zuvor eine Gruppe gegründet und der Benutzer hat sich bereits registriert.
 		\item \textbf{Ablauf:} \newline Der Benutzer kann nach der Gruppe des Gruppengründers suchen und eine Beitrittsanfrage senden. Wurde die Anfrage gesendet kann der Gruppengründer sie einsehen und den Benutzer annehmen oder ablehnen. Hat der Gruppengründer den Benutzer angenommen, ist der Benutzer nun \gls{Mitglied} in der Gruppe und hat alle Rechte eines Mitglieds.
 		\item \textbf{Ergebnis:} \newline Der Benutzer ist \gls{Mitglied} einer Gruppe und kann Termine erstellen oder an von anderen Personen innerhalb der Gruppe erstellten Terminen teilnehmen.
 	\end{description}
@@ -493,10 +488,7 @@ Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindu
 			\item Gruppengründer
 			\item Mitglied
 		\end{description}
-		\item \textbf{Vorbedingungen:}
-		\begin{description}
-			\item Der Gruppengründer hat zuvor eine Gruppe gegründet und das Mitglied wurde vom Gruppengründer in die Gruppe aufgenommen.
-		\end{description}
+		\item \textbf{Vorbedingungen:} \newline Der Gruppengründer hat zuvor eine Gruppe gegründet und das Mitglied wurde vom Gruppengründer in die Gruppe aufgenommen.
 		\item \textbf{Ablauf:} \newline Der Gruppengründer wählt in der Gruppenansicht das Mitglied aus, welches aus der Gruppe entfernt werden soll. Das Mitglied wird aus der Gruppe entfernt und wird zu einem normalen Nutzer der App.
 		\item \textbf{Ergebnis:} \newline Das Mitglied gehört nicht mehr zu der Gruppe und kann somit keine Termine mehr einsehen oder ihnen beitreten. Termine an denen das Mitglied bereits teilnimmt, entfernen das Mitglied aus der Teilnehmerliste. Das Mitglied kann auch keine Informationen der Gruppe einsehen und wird als Nutzer betrachtet.
 	\end{description}
@@ -535,7 +527,6 @@ Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindu
 	\newpage
 	
 	\subsection{Szenarien}
-	%TODO: Stimmen Zeiten der Benachrichtigungen?
 	\subsubsection{Szenario 1}
 	Alice, Bob und Carol gehen oft gemeinsam in der Mensa essen. Zur besseren Koordination haben sie die App auf ihren Android-Smartphones installiert.
 	Nun startet jeder bei sich die App und gibt, nachdem er sich über sein Google Account angemeldet hat, seinen Namen ein.
@@ -544,7 +535,7 @@ Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindu
 	sieht die Namen Bob und Carol als Bewerber, und fügt beide hinzu.
 	Bob bekommt nun Hunger, klickt auf die Gruppe und erstellt einen neuen Termin mit dem Namen Mensa, dem entsprechenden Datum, der Uhrzeit 12:30 und dem Ort der Mensa.
 	Kurze Zeit darauf schauen Alice und Carol auf ihr Smartphone, sehen den Termin und klicken beide auf \glqq{}Teilnehmen\grqq{}.
-	Um 12:15 erscheint auf allen Smartphones die Benachrichtigung, dass in 15 Minuten der Termin ansteht.
+	Um 12:00 erscheint auf allen Smartphones die Benachrichtigung, dass in 30 Minuten der Termin ansteht.
 	Alle gehen kurz daraufhin los und können in der App sowohl ihren als auch den mittleren Gruppenstandort sehen.
 	Nachdem der Termin vorbei ist, wird er automatisch gelöscht.
 	\newline
@@ -566,7 +557,7 @@ Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindu
 	Dave erstellt später einen neuen Termin \glqq{}Mensa 12:30\grqq{} in der Gruppe.
 	Um 12:30 hat Eve auch Zeit und klickt auf \glqq{}Teilnehmen\grqq{}.
 	Da Alice, Bob und Carol schon früher in die Mensa gehen klicken sie auf \glqq{}Nicht Teilnehmen\grqq{}.
-	Um 11:45 werden Alice, Bob und Carol an ihren Termin erinnert und um 12:15 Dave und Eve.
+	Um 11:30 werden Alice, Bob und Carol an ihren Termin erinnert und um 12:00 Dave und Eve.
 	Der mittlere Gruppenstandort bezieht sich immer ausschließlich auf die Personen, die an dem Termin teilnehmen.
 	So sieht Alice den mittleren Standort von sich, Bob und Carol.	
 	\newline
