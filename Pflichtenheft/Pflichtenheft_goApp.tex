@@ -144,18 +144,26 @@
 	 
 	\subsection{Kontoverwaltung}
 	\begin{itemize}
+	\hypertarget{FA10}{}
 		\item[FA10] Anmeldung eines Benutzers in der App über \gls{Google Services}
+		\hypertarget{WFA15}{}
 		\item[WFA15] Der Benutzer kann zwischen Sprachen wählen
+		\hypertarget{FA20}{}
 		\item[FA20] Ersterfassung und Änderung des Benutzernamens
 		
 	\end{itemize}
 	
 	\subsection{Gruppenverwaltung}
 	\begin{itemize}
+	\hypertarget{FA30}{}
 		\item[FA30] Jeder Benutzer kann eine Gruppe erstellen
+		\hypertarget{FA35}{}
 		\item[FA35] Ersterfassung und spätere Änderung des Gruppennamens durch den \gls{Gruppengrnder}
+		\hypertarget{FA40}{}
 		\item[FA40] Gruppen können über den Gruppennamen gesucht werden
+		\hypertarget{FA45}{}
 		\item[FA45] Benutzer können Beitrittsanfragen an eine Gruppe senden
+		\hypertarget{FA50}{}
 		\item[FA50] Der Gruppengründer kann Beitrittsanfragen der Gruppe verwalten:
 		\begin{itemize}
 			\item Anfragen bestätigen, wodurch der Anfragende ein \gls{Mitglied} der Gruppe wird und die Anfrage gelöscht wird
@@ -166,17 +174,24 @@
 		\begin{itemize}
 			\item Anfragen ignorieren, wodurch die Anfrage bestehen und sichtbar bleibt
 		\end{itemize}
+		\hypertarget{FA60}{}
 		\item[FA60] Der Gruppengründer kann Mitglieder aus der Gruppe entfernen
+		\hypertarget{FA70}{}
 		\item[FA70] Die Gruppe kann durch den Gruppengründer gelöscht werden
+		\hypertarget{FA80}{}
 		\item[FA80] Mitglieder der Gruppen, ausgenommen des Gruppengründers, können die Gruppe verlassen
+		\hypertarget{WFA85}{}
 		\item[WFA85] Der Gruppengründer kann seinen Status als Gruppengründer an ein Mitglied übergeben
+		\hypertarget{FA90}{}
 		\item[FA90] Gruppenmitglieder können sich andere Gruppenmitglieder anzeigen lassen
+		\hypertarget{WFA95}{}
 		\item[WFA95] Gruppenmitglieder können die Teilnahmequoten anderer Gruppenmitglieder einsehen
 		
 	\end{itemize}
 	
 	\subsection{Terminverwaltung}
 	\begin{itemize}
+	\hypertarget{FA100}{}
 		\item[FA100] Jedes \gls{Mitglied} einer Gruppe kann einen Termin erstellen
 		
 		\begin{itemize}
@@ -186,26 +201,37 @@
 		\begin{itemize}
 			\item Visuelle Darstellung des gewählten Terminortes
 		\end{itemize}
+		\hypertarget{WFA105}{}
 		\item[WFA105] Der Terminersteller kann den Terminnamen, Terminzeit und Terminort nachträglich ändern oder gegebenenfalls löschen
+		\hypertarget{FA110}{}
 		\item[FA110] Der Gruppenmittelpunkt wird anhand der Standorte aller \gls{Teilnehmer} berechnet		
+		\hypertarget{FA120}{}
 		\item[FA120] Jeder Termin wird jedem Gruppenmitglied angezeigt
+		\hypertarget{FA130}{}
 		\item[FA130] Jedes Gruppenmitglied kann bei einem Termin zu- oder absagen
 		
 	\end{itemize}
 	
 	\subsection{Terminablauf}
 	\begin{itemize}
+	\hypertarget{FA140}{}
 		\item[FA140] Jeder \gls{Teilnehmer} wird 30 Minuten vor Beginn des Termins benachrichtigt
+		\hypertarget{WFA145}{}
 		\item[WFA145] Teilnehmer werden auch bei geschlossener App benachrichtigt
+		\hypertarget{FA150}{}
 		\item[FA150] Jeder Teilnehmer kann den Gruppenmittelpunkt ab 15 Minuten vor Beginn des Termins in einer Karte darstellen lassen
+		\hypertarget{WFA155}{}
 		\item[WFA155] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort 
+		\hypertarget{WFA160}{}
 		\item[WFA160] Teilnehmer können in der App anderen Teilnehmern mitteilen,
 		\begin{itemize}
 			\item dass sie bereits unterwegs sind
 			\item dass sie zu spät kommen
 			\item dass sie schon am Terminort angekommen sind
 		\end{itemize}
+		\hypertarget{FA170}{}
 		\item[FA170] Der Termin löscht sich nach der Dauer des Termins (standardmäßig 60 Minuten)
+		\hypertarget{WFA175}{}
 		\item[WFA175] Die Dauer des Termins kann individuell festgelegt werden
 	\end{itemize}
 		
@@ -320,77 +346,77 @@ Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindu
 	
 	\subsection{Kontoverwaltung}
 	\begin{itemize} 
-		\item[T10] deckt ab FA10 \newline
+		\item[T10] deckt ab \hyperlink{FA10}{FA10} \newline
 		Registrieren: Eine bisher nicht registrierte Person mit einem Google Account registriert sich mit diesem im System 				und wählt zusätzlich einen Benutzernamen. \newline
 		Ergebnis: Der neue Benutzer mit seinem Google Account und Benutzername ist in der Datenbank.
 
-		\item[T20] deckt ab FA20\newline
+		\item[T20] deckt ab \hyperlink{FA20}{FA20}\newline
 		Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
 		Ergebnis: Der neue Benutzername des Benutzers ist in der Datenbank. 
 	
 	\subsection{Gruppenverwaltung}
 	
-		\item[T30] deckt ab FA30, FA35\newline
+		\item[T30] deckt ab \hyperlink{FA30}{FA30}, \hyperlink{FA35}{FA35}\newline
 		 Ein beliebiger Benutzer erstellt eine neue Gruppe mit Namen. \newline
-		Ergebnis: Eine neue Gruppe, mit eindeutiger Id, dem angegebenen Namen und dem Benutzer als Gründer, ist in der 			Datenbank.
+		Ergebnis: Eine neue Gruppe, mit eindeutiger ID, dem angegebenen Namen und dem Benutzer als Gründer, ist in der 			Datenbank.
 
-		\item[T35] deckt ab FA35 \newline
+		\item[T35] deckt ab \hyperlink{FA35}{FA35} \newline
 		Der Gründer ändert den Gruppennamen.\newline
 		Ergebnis: Auf dem \gls{Server} ist bei der Gruppe der neue Name eingetragen. 
 
-		\item[T40] deckt ab FA40, FA45  \newline
+		\item[T40] deckt ab \hyperlink{FA40}{FA40}, \hyperlink{FA45}{FA45}  \newline
 		Suchen der Gruppe nach Namen und eine Beitrittsanfrage an eine gefundene Gruppe stellen. \newline
 		Ergebnis: Alle Gruppen-IDs der Gruppen, die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
 		hinzugefügt.
 
-		\item[T50] deckt ab FA50  \newline
+		\item[T50] deckt ab \hyperlink{FA50}{FA50}  \newline
 		Der \gls{Gruppengrnder} bestätigt eine Anfrage. \newline
 		Ergebnis: Der Benutzer der Anfrage ist \gls{Mitglied} der Gruppe und die Anfrage ist gelöscht.
 
-		\item[T55] deckt ab FA50  \newline
+		\item[T55] deckt ab \hyperlink{FA50}{FA50}  \newline
 		Der Gruppengründer lehnt eine Anfrage ab. \newline
 		Ergebnis: Die Anfrage ist gelöscht.
 
-		\item[T60] deckt ab FA60  \newline
+		\item[T60] deckt ab \hyperlink{FA60}{FA60}  \newline
 		Der \gls{Gruppengrnder} entfernt ein \gls{Mitglied}.  \newline
 		Ergebnis: Der Benutzer ist nicht mehr Mitglied (Alle Assoziationen zwischen Gruppe und Benutzer sind getrennt).
 
-		\item[T70] deckt ab FA70  \newline
+		\item[T70] deckt ab \hyperlink{FA70}{FA70}  \newline
 		Der Gruppengründer löscht die Gruppe.  \newline
-		Ergebnis: Alle Mitgliedern sind entfernt (FA60) und die Gruppe aus der Datenbank gelöscht.
+		Ergebnis: Alle Mitgliedern sind entfernt (\hyperlink{FA60}{FA60}) und die Gruppe aus der Datenbank gelöscht.
 
-		\item[T80] deckt ab FA80  \newline
+		\item[T80] deckt ab \hyperlink{FA80}{FA80}  \newline
 		Ein Gruppenmitglied verlässt die Gruppe.  \newline
 		Ergebnis: Der Benutzer ist nicht mehr Mitglied (siehe T60).
 
 	\subsection{Terminverwaltung}
 
-		\item[T90] deckt ab FA100, FA120  \newline
+		\item[T90] deckt ab \hyperlink{FA100}{FA100}, \hyperlink{FA120}{FA120}  \newline
 		Ein beliebiges \gls{Mitglied} erstellt einen Termin mit Name, Ort, Zeitpunkt.  \newline
 		Ergebnis: Es gibt einen Termin mit dem genannten Namen, Ort und Zeitpunkt in der Gruppe.
 		
-		\item [T100] deckt ab FA130  \newline
+		\item [T100] deckt ab \hyperlink{FA130}{FA130}  \newline
 		Ein Mitglied sagt ab.  \newline
 		Ergebnis: Der Termin ist für das Mitglied gelöscht.
 
-		\item[T105] deckt ab FA130  \newline
+		\item[T105] deckt ab \hyperlink{FA130}{FA130}  \newline
 		Ein Mitglied sagt zu.  \newline
 		Ergebnis: Das Mitglied ist \gls{Teilnehmer} des Termins und der Termin ist auf dem Gerät des Teilnehmers gespeichert.
 
 	\subsection{Terminablauf}
 	
-		\item[T110] deckt ab FA140, FA150, FA170 \newline
+		\item[T110] deckt ab \hyperlink{FA140}{FA140}, \hyperlink{FA150}{FA150}, \hyperlink{FA170}{FA170} \newline
 		Automatischer Ablauf eines Termins. \newline
 		Ergebnis: 30 Minuten vor dem Termin werden alle \gls{Teilnehmer} von dem Termin benachrichtigt.  \newline
 			15 Minuten vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar.  \newline
 			60 Minuten nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf 					dem \gls{Client} noch auf dem \gls{Server}).
 
 	\subsection{Standort}
-		\item[T120] deckt ab FA110, FA150 \newline
+		\item[T120] deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
 		Standort Übertragung der Clients an den \gls{Server}.  \newline
 		Ergebnis: Der Standort aller \gls{Teilnehmer} ist auf dem Server gespeichert.
 
-		\item[T130]  deckt ab FA110, FA150 \newline
+		\item[T130]  deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
 		Der \gls{Server} sendet den berechneten Gruppenmittelpunkt an den \gls{Teilnehmer}. \newline
 		Ergebnis: Der \gls{Client} hat den aktuellen Gruppenmittelpunkt.
 
