@@ -1,5 +1,17 @@
-\documentclass{report}
+\documentclass{scrartcl}
 \usepackage[utf8]{inputenc}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[ngerman]{babel}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!65!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
 \title{goApp Entwurf}
 \author{Jörn Kussmaul, Katharina Riesterer, Julian Neubert,\\ Jonas Walter, Tobias Ohlsson, Eva-Maria Neumann}
 \begin{document}
@@ -7,32 +19,67 @@
 	\newpage
 	\tableofcontents
 	\newpage
-	\section{Pakete}
-	%TODO Überleitung vom Pflichtenheft und Beschreibung aller Pakete
+
+	\section{Entwurfsentscheidungen}
 	\subsection{Einleitung}
-	\subsection{Paketdiagramm}
-	\newpage
-	\section{Klassen}
-	%TODO detallierte Beschreibung aller Klassen  (JavaDoc Beschreibungen zu allen Methoden, Konstruktoren, Packages und Klassen)
-	\subsection{Klassen des Clients}
+	Im folgenden Dokument stellen wir ...
+	\subsection{Paketstruktur}
+	 \includegraphics[width=1\textwidth]{Packages.png}
+	\subsection{Server}
 	\subsubsection{Model}
-	\subsubsection{View}
-	\subsubsection{Controller}
-	\subsection{Klassen des Servers}
+	\subsubsection{DatabaseAdapter}
+	\subsubsection{Database}
+	\subsubsection{Clustering-Algorithm}
 	\subsubsection{Servlets}
-	\subsubsection{Database management}
+	\subsection{Client}
+	\subsubsection{ServerAdapter}
+	\subsubsection{Services}
+	\subsubsection{Activities}
+	\subsubsection{Model}
 	\newpage
+
+	\section{JSON-RPC: Kommunikation Server \& Client}
+	\subsection{Motivation}
+	\subsection{HTTP-Protokoll}
+	\subsection{ServiceAdapter}
+	\subsection{Servlets}
+	\subsubsection{Status}
+	%TODO Jedes Servlet als Subsubsection mit sinnvoller Bennenung.
+	\subsubsection{GroupServlet}
+	\newpage
+
+	\section{Server}
+	%TODO Jedes Package (mit Ausnahme der Servlets) als Subsection mit sinnvoller Bennenung und in diesen alle Klassen beschreiben.
+	\subsection{Model}
+	\subsection{DatabaseAdapter}
+	\subsection{Database}
+	\subsection{Clustering-Algorithm}
+	\newpage
+
+	\section{Client} 
+	%TODO Jedes Package als subsection mit sinnvoller Bennenung und in diesen als subssubsection alle Klassen beschreiben.
+	\subsection{Services}
+	\subsection{Activities}
+	\subsection{Model}
+	%TODO bei Datenbank auf Clienten die entsprechenden Packages eintragen.
+	\newpage
+
 	\section{Sequenzdiagramme}
-	%TODO characteristische Abläufe z.B. Testszenarien
 	\newpage
+
 	\section{Änderungen zum Pflichtenheft}
 	%TODO realisierte Wunschkriterien, gestrichene Kriterien (möglichst klein halten)
+	\subsection{Zusätzliche Funktionalität gegenüber dem Pflichtenheft}
+	\subsubsection{GO-Button}
+		Benutzer müssen wenn Sie an einem Termin teilnehmen den Go-Button drücken sobald Sie sich auf den Weg machen um vom Cluster-Algorithmus erfasst zu werden. 
+		\newline
+		Vorteile:
+		\begin{itemize}
+		\item Teilnehmer die sich noch Zuhause (oder andersweitig) befinden verzerren nicht den Mittelpunkt der Gruppe.
+		\item Teilnehmer können sehen ob und welche anderen Benutzer bereits unterwegs sind und ihre Entscheidung davon abhängig machen.
+		\end{itemize}
+	\subsection{gestrichene Funktionalität gegenüber dem Pflichtenheft}
 	\newpage
-	\section{Klassendiagramm}
-	%TODO vollständiges Klassendiagramm als Anhang
-	\newpage
-	\section{Entwurfsmuster}
-	%TODO reicht Tomcat/der Server als Fassade zwischen Client und Server?
-	%TODO verwendete Entwurfsmuster beschreiben (Model-View-Controller)
-	\newpage
+	
+	\section{Klassendiagramm}	
 \end{document}
