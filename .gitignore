@@ -13,9 +13,9 @@ Pflichtenheft/Pflichtenheft_goApp.pdf
 *.toc
 *.xdy
 *.vux
-*.log
 *.acn
 *.gls
 *.out
 *.synctex.gz
 *.bak_*
+*.lck
