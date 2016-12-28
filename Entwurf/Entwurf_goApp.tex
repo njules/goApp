@@ -27,15 +27,56 @@
 	 \includegraphics[width=1\textwidth]{Packages.png}
 	\subsection{Server}
 	\subsubsection{Model}
+	Das Model versucht die Realität auf die Daten des Servers und der Applikation abzubilden und ist von dem Controller und der View unabhängig. Das Modell ist das zu beobachtende Subjekt nach dem Entwurfsmuster "Beobachter".
+Im Model werden Benutzer, Gruppen und Events direkt aus der Realität auf die entsprechende Klasse abgebildet und zusätzlich existieren Klassen die den Standort und Gruppenbeitrittsanfragen der Benutzer darstellen.
+Ein Benutzer kann Mitglied in bis zu 20 Gruppen sein, und in jeder Gruppe darf es bis zu 50 Mitglieder geben sowie genau einen Gründer. Bevor ein Benutzer Mitglied einer Gruppe werden kann muss eine Beitrittsanfrage erstellt werden.
+Pro Benutzer können bis zu 20 Anfragen gleichzeitig exisitieren, diese werden mit jeweils einer Gruppe assoziiert.
+An eine Gruppe können jedoch beliebig viele Anfragen gestellt werden.
+Ebenso können in einer Gruppe beliebig viele Events existieren an denen jeweils alle Gruppenmitglieder teilnehmen können.
+Damit die Teilnehmer eines Events sich finden können exisiert die Location Klasse, eine Location kann entweder genau einem Benutzer oder genau einem Termin zugeordnet sein. 
+Eine genaue Beschreibung aller Klassen des Models mitsamt ihren Mehtoden findet sich im Kapitel 3.1.
+-Hier Model Bild einfügen-
+
 	\subsubsection{DatabaseAdapter}
+	Die Klassen des Database Adapters sorgen für den Zugriff auf die MySQL Datenbank.
+Sie nehmen entweder die Anfragen der Servlets oder des Clustering-Algorithm entgegen, durchsuchen die Datenbank nach den entsprechenden Daten und geben die Daten wieder zurück.  
+Oder sie speichern die gegebenen Daten auf der Datenbank.
+TODO: Hier bitte noch etwas genauer beschreiben aber ich weiß immernoch nicht wie genau das Funktioniert :D
+Eine genaue Beschreibung aller Klassen des DatabaseAdapters mitsamt ihren Methoden findet sich im Kapitel 3.2.
+-Hier database.management Bild einfügen-
+
 	\subsubsection{Database}
+	In der Datenbank werden für alle Elemente und Objekte die entsprechenden Daten gespeichert und bei Bedarf ausgelesen. Hierzu wird für jede Klasse des Models sowie für bestimmte Beziehungen eine Tabelle angelegt.
+Identifiziert werden die jeweiligen Objekte durch eine eindeutige ID welche bei der Erstellung des Eintrags vergeben wird.
+Für Benutzer kommt diese ID von Google für die anderen Klassen wird die ID direkt von unserem Server vergeben.
+TODO: Hier vielleicht noch ein UML-Diagramm erstellen auf dem alle Tabellen sind die wir speichern werden (also auch die Zwischentabellen) und was jeweils gespeichert wird.
+
 	\subsubsection{Clustering-Algorithm}
+	TODO: Keine ahnung was ich hier schreiben soll
+
 	\subsubsection{Servlets}
+	Die Servlets nehmen die Anfragen der Clienten entgegen. Diese ist immer ein JSON-String welcher von den Servlets ausgelesen und danach entsprechend behandelt wird. Die Servlets leiten die erhaltenden Anfragen entweder an die Datenbankverwaltung oder an den Algorithmus weiter und schicken das Ergebnis an den Clienten.
+Die Servlets fungieren so als Schnittstelle zwischen den Anfragen des Clienten und der eigentlichen Arbeit die auf dem Server vollbracht wird. 
+Die Servlets sind in ihren Aufgabenbereichen unabhängig von einander und intuitiv auf das Modell angepasst, so gibt es ein Servlet was alle Anfragen bezüglich eines Events beantwortet und ein weiteres welches sich um die Handhabung der Gruppenbeitrittsanfragen kümmert.
+Die Servlets sind auf die Services des Clienten zugeschnitten, ein Servlet beantwortet also nur Anfragen von genau einem Service.
+Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem neuem Servlet unabhängig von allen anderen erstellt werden was den Entwurf einfach erweiterbar macht.   
+-Hier servlet Bild einfügen-
+
 	\subsection{Client}
-	\subsubsection{ServerAdapter}
+	Der Client implementiert das Entwurfsmuster Model-View-Controller was unseren Entwurf flexibel und austauschbar macht.
 	\subsubsection{Services}
+	Die Services sind der Controller des Clienten und steuern damit die Benutzereingaben, von ihnen gehen außerdem die Kommunikationsanfragen zum Server aus.
+Sie sind wie die Servlets so entworfen dass jeder Service seinen eigenen Aufgabenbereich übernimmt.
+Von unserer App werden folgende Services implementiert:
+\newline
+TODO: Hier alle Services mit Funktion auflisten.
+-Hier services Bild einfügen-
+
 	\subsubsection{Activities}
+	
+	--Hier view Bild einfügen-
 	\subsubsection{Model}
+	\subsubsection{ServerAdapter}
 	\newpage
 
 	\section{JSON-RPC: Kommunikation Server \& Client}
