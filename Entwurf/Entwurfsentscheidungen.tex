@@ -1,0 +1,122 @@
+% !TEX root = Entwurf_goApp.tex
+
+\section{Entwurfsentscheidungen}
+	\subsection{Einleitung}
+	Im folgenden Dokument stellen wir ...
+	\subsection{Paketstruktur}
+	 \includegraphics[width=1\textwidth]{Packages.png}
+	\subsection{Server}
+	\subsubsection{Model}
+Im Model werden Benutzer, Gruppen und Events direkt aus der Realität auf die entsprechende Klasse abgebildet und zusätzlich existieren Klassen die den Standort und Gruppenbeitrittsanfragen der Benutzer darstellen.
+Ein Benutzer kann Mitglied in bis zu 20 Gruppen sein, und in jeder Gruppe darf es bis zu 50 Mitglieder geben sowie genau einen Gründer. Bevor ein Benutzer Mitglied einer Gruppe werden kann muss eine Beitrittsanfrage erstellt werden.
+Pro Benutzer können bis zu 20 Anfragen gleichzeitig exisitieren, diese werden mit jeweils einer Gruppe assoziiert.
+An eine Gruppe können jedoch beliebig viele Anfragen gestellt werden.
+Ebenso können in einer Gruppe beliebig viele Events existieren an denen jeweils alle Gruppenmitglieder teilnehmen können.
+Damit die Teilnehmer eines Events sich finden können exisiert die Location Klasse, eine Location kann entweder genau einem Benutzer oder genau einem Termin zugeordnet sein. 
+Eine genaue Beschreibung aller Klassen des Models mitsamt ihren Mehtoden findet sich im Kapitel 3.1.
+-Hier Model Bild einfügen-
+
+	\subsubsection{DatabaseAdapter}
+	Die Klassen des Database Adapters sorgen für den Zugriff auf die MySQL Datenbank.
+Sie nehmen entweder die Anfragen der Servlets oder des Clustering-Algorithm entgegen, durchsuchen die Datenbank nach den entsprechenden Daten und geben die Daten wieder zurück.  
+Oder sie speichern die gegebenen Daten auf der Datenbank.
+TODO: Hier bitte noch etwas genauer beschreiben(Eva) aber ich weiß immernoch nicht wie genau das Funktioniert :D
+Eine genaue Beschreibung aller Klassen des DatabaseAdapters mitsamt ihren Methoden findet sich im Kapitel 3.2.
+-Hier database.management Bild einfügen-
+
+	\subsubsection{Database}
+	In der Datenbank werden für alle Elemente und Objekte die entsprechenden Daten gespeichert und bei Bedarf ausgelesen. Hierzu wird für jede Klasse des Models sowie für bestimmte Beziehungen eine Tabelle angelegt.
+Identifiziert werden die jeweiligen Objekte durch eine eindeutige ID welche bei der Erstellung des Eintrags vergeben wird.
+Für Benutzer kommt diese ID von Google für die anderen Klassen wird die ID direkt von unserem Server vergeben.
+TODO: Hier vielleicht noch ein UML-Diagramm erstellen auf dem alle Tabellen sind die wir speichern werden (also auch die Zwischentabellen) und was jeweils gespeichert wird.
+
+	\subsubsection{Clusteringalgorithmus}
+	Das Clusteralgorithmuspaket gruppiert Standorte und kann den Mittelpunkt mehrerer Standorte berechnen . Wir haben uns dabei dazu entschieden das Entwutfsmuster Strategie zu verwenden um es zu ermöglichen die Implementierung der Clusteranalyse, sowie der Mittelpunktberechnung abzukapseln und somit für die jeweiligen Bedürfnisse austauschbar zu machen.
+
+	\subsubsection{Servlets}
+	Die Servlets nehmen die Anfragen der Clienten entgegen. Diese ist immer ein JSON-String welcher von den Servlets ausgelesen und danach entsprechend behandelt wird. Die Servlets leiten die erhaltenden Anfragen entweder an die Datenbankverwaltung oder an den Algorithmus weiter und schicken das Ergebnis an den Clienten.
+Die Servlets fungieren so als Schnittstelle zwischen den Anfragen des Clienten und der eigentlichen Arbeit die auf dem Server vollbracht wird. 
+Die Servlets sind in ihren Aufgabenbereichen unabhängig von einander und intuitiv auf das Modell angepasst, so gibt es ein Servlet was alle Anfragen bezüglich eines Events beantwortet und ein weiteres welches sich um die Handhabung der Gruppenbeitrittsanfragen kümmert.
+Die Servlets sind auf die Services des Clienten zugeschnitten, ein Servlet beantwortet also nur Anfragen von genau einem Service.
+Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem neuem Servlet unabhängig von allen anderen erstellt werden was den Entwurf einfach erweiterbar macht.   
+-Hier servlet Bild einfügen-
+
+	\subsection{Client}
+	Der Client implementiert das Entwurfsmuster Model-View-Controller was unseren Entwurf flexibel und austauschbar macht.
+	\subsubsection{Services}
+	Die Services sind der Controller des Clienten und damit für die Steuerung zuständig. Hauptaufgabe ist es die Kommunikation zwischen der View und dem Server zu gewährleisten, aber auch Hintergrundprozesse anderer Art wie das erstellen eines Timers gehören in ihren Aufgabenbereich.
+Sie sind wie die Servlets so entworfen dass jeder Service seinen eigenen Aufgabenbereich übernimmt.
+Von unserer App werden folgende Services implementiert:
+\newline
+GroupService:
+\begin{itemize}
+\item Erstellen einer Gruppe
+\item Löschen einer Gruppe
+\item Namen einer Gruppe ändern
+\item Mitglieder entfernen
+\item Mitglieder auflisten
+\item Anfragen auflisten
+\end{itemize}
+UserService:
+\begin{itemize}
+\item Namen eines Benutzers ändern
+\end{itemize}
+LoginService:
+\begin{itemize}
+\item Erstanmeldung
+\item Anmelden
+\end{itemize}
+RequestService:
+\begin{itemize}
+\item Anfrage erstellen
+\item Anfrage akzeptieren
+\item Anfrage ablehnen
+\end{itemize}
+ParticipateService:
+\begin{itemize}
+\item Teilnehmer eines Termins auflisten
+\item an einem Termin teilnehmen
+\item Termin absagen
+\end{itemize}
+EventService:
+\begin{itemize}
+\item Termin erstellen
+\item Termin löschen
+\end{itemize}
+NotificationService:
+\begin{itemize}
+\item Termin Teilnehmer benarichtigen
+\end{itemize}
+LocationService:
+\begin{itemize}
+\item Standort schicken
+\item nach Cluser fragen
+\end{itemize}
+GroupSearchService:
+\begin{itemize}
+\item Gruppen sortiert nach Namen listen
+\item Gruppen sortiert nach Mitgliedschaft listen
+\end{itemize}
+TimerService:
+\begin{itemize}
+\item Timer erstellen
+\item Timer löschen
+\end{itemize}
+GoService:
+\begin{itemize}
+\item GO - User läuft los
+\item GO entfernen
+\item Losgelaufene Teilnehmer auflisten
+\end{itemize}
+-Hier services Bild einfügen-
+
+	\subsubsection{Activities}
+	Alle Activities setzten sich aus XML-Dateien zusammen und bilden gemeinsam die View des Useres.
+Sie nehmen als erstes Benutzerinteraktionen entgegen, leiten diese an den entsprechenden Service weiter und geben dem User entsprechendes Feedback.
+	--Hier view Bild einfügen-
+	\subsubsection{Model}
+Das Model versucht die Realität auf die Daten des Servers und der Applikation abzubilden und ist von dem Controller und der View unabhängig. Das Modell ist das zu beobachtende Subjekt nach dem Entwurfsmuster "Beobachter".
+Das Model auf dem Client entspricht dem Model des Servers.
+	\subsubsection{ServerAdapter}
+-Jonas kannst du das hier schreiben?-
+	\newpage
