@@ -51,8 +51,8 @@ Identifiziert werden die jeweiligen Objekte durch eine eindeutige ID welche bei 
 Für Benutzer kommt diese ID von Google für die anderen Klassen wird die ID direkt von unserem Server vergeben.
 TODO: Hier vielleicht noch ein UML-Diagramm erstellen auf dem alle Tabellen sind die wir speichern werden (also auch die Zwischentabellen) und was jeweils gespeichert wird.
 
-	\subsubsection{Clustering-Algorithm}
-	TODO: Keine ahnung was ich hier schreiben soll
+	\subsubsection{Clusteringalgorithmus}
+	Das Clusteralgorithmuspaket gruppiert Standorte und kann den Mittelpunkt mehrerer Standorte berechnen . Wir haben uns dabei dazu entschieden das Entwutfsmuster Strategie zu verwenden um es zu ermöglichen die Implementierung der Clusteranalyse, sowie der Mittelpunktberechnung abzukapseln und somit für die jeweiligen Bedürfnisse austauschbar zu machen.
 
 	\subsubsection{Servlets}
 	Die Servlets nehmen die Anfragen der Clienten entgegen. Diese ist immer ein JSON-String welcher von den Servlets ausgelesen und danach entsprechend behandelt wird. Die Servlets leiten die erhaltenden Anfragen entweder an die Datenbankverwaltung oder an den Algorithmus weiter und schicken das Ergebnis an den Clienten.
