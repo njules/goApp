@@ -111,12 +111,15 @@ GoService:
 -Hier services Bild einfügen-
 
 	\subsubsection{Activities}
-	Alle Activities setzten sich aus XML-Dateien zusammen und bilden gemeinsam die View des Useres.
+	Alle Activities setzten sich aus XML-Dateien zusammen und bilden gemeinsam die View des Users.
 Sie nehmen als erstes Benutzerinteraktionen entgegen, leiten diese an den entsprechenden Service weiter und geben dem User entsprechendes Feedback.
 	--Hier view Bild einfügen-
 	\subsubsection{Model}
 Das Model versucht die Realität auf die Daten des Servers und der Applikation abzubilden und ist von dem Controller und der View unabhängig. Das Modell ist das zu beobachtende Subjekt nach dem Entwurfsmuster "Beobachter".
+%TODO Implementieren wir wirklich das Entwurfsmuster Beobachter?
 Das Model auf dem Client entspricht dem Model des Servers.
 	\subsubsection{ServerAdapter}
--Jonas kannst du das hier schreiben?-
+	Der ServerAdapter bildet die Schnittstelle zwischen dem Server und dem Client. Die Services schicken Anfragen an den ServerAdapter, welcher diese über eine HTTP-Verbindung an die entsprechenden Servlets des Servers weiterleitet und dessen Antwort wieder an den Service zurückgibt.
+
+
 	\newpage
