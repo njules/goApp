@@ -27,7 +27,6 @@
 	 \includegraphics[width=1\textwidth]{Packages.png}
 	\subsection{Server}
 	\subsubsection{Model}
-	Das Model versucht die Realität auf die Daten des Servers und der Applikation abzubilden und ist von dem Controller und der View unabhängig. Das Modell ist das zu beobachtende Subjekt nach dem Entwurfsmuster "Beobachter".
 Im Model werden Benutzer, Gruppen und Events direkt aus der Realität auf die entsprechende Klasse abgebildet und zusätzlich existieren Klassen die den Standort und Gruppenbeitrittsanfragen der Benutzer darstellen.
 Ein Benutzer kann Mitglied in bis zu 20 Gruppen sein, und in jeder Gruppe darf es bis zu 50 Mitglieder geben sowie genau einen Gründer. Bevor ein Benutzer Mitglied einer Gruppe werden kann muss eine Beitrittsanfrage erstellt werden.
 Pro Benutzer können bis zu 20 Anfragen gleichzeitig exisitieren, diese werden mit jeweils einer Gruppe assoziiert.
@@ -41,7 +40,7 @@ Eine genaue Beschreibung aller Klassen des Models mitsamt ihren Mehtoden findet 
 	Die Klassen des Database Adapters sorgen für den Zugriff auf die MySQL Datenbank.
 Sie nehmen entweder die Anfragen der Servlets oder des Clustering-Algorithm entgegen, durchsuchen die Datenbank nach den entsprechenden Daten und geben die Daten wieder zurück.  
 Oder sie speichern die gegebenen Daten auf der Datenbank.
-TODO: Hier bitte noch etwas genauer beschreiben aber ich weiß immernoch nicht wie genau das Funktioniert :D
+TODO: Hier bitte noch etwas genauer beschreiben(Eva) aber ich weiß immernoch nicht wie genau das Funktioniert :D
 Eine genaue Beschreibung aller Klassen des DatabaseAdapters mitsamt ihren Methoden findet sich im Kapitel 3.2.
 -Hier database.management Bild einfügen-
 
@@ -65,18 +64,81 @@ Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem 
 	\subsection{Client}
 	Der Client implementiert das Entwurfsmuster Model-View-Controller was unseren Entwurf flexibel und austauschbar macht.
 	\subsubsection{Services}
-	Die Services sind der Controller des Clienten und steuern damit die Benutzereingaben, von ihnen gehen außerdem die Kommunikationsanfragen zum Server aus.
+	Die Services sind der Controller des Clienten und damit für die Steuerung zuständig. Hauptaufgabe ist es die Kommunikation zwischen der View und dem Server zu gewährleisten, aber auch Hintergrundprozesse anderer Art wie das erstellen eines Timers gehören in ihren Aufgabenbereich.
 Sie sind wie die Servlets so entworfen dass jeder Service seinen eigenen Aufgabenbereich übernimmt.
 Von unserer App werden folgende Services implementiert:
 \newline
-TODO: Hier alle Services mit Funktion auflisten.
+GroupService:
+\begin{itemize}
+\item Erstellen einer Gruppe
+\item Löschen einer Gruppe
+\item Namen einer Gruppe ändern
+\item Mitglieder entfernen
+\item Mitglieder auflisten
+\item Anfragen auflisten
+\end{itemize}
+UserService:
+\begin{itemize}
+\item Namen eines Benutzers ändern
+\end{itemize}
+LoginService:
+\begin{itemize}
+\item Erstanmeldung
+\item Anmelden
+\end{itemize}
+RequestService:
+\begin{itemize}
+\item Anfrage erstellen
+\item Anfrage akzeptieren
+\item Anfrage ablehnen
+\end{itemize}
+ParticipateService:
+\begin{itemize}
+\item Teilnehmer eines Termins auflisten
+\item an einem Termin teilnehmen
+\item Termin absagen
+\end{itemize}
+EventService:
+\begin{itemize}
+\item Termin erstellen
+\item Termin löschen
+\end{itemize}
+NotificationService:
+\begin{itemize}
+\item Termin Teilnehmer benarichtigen
+\end{itemize}
+LocationService:
+\begin{itemize}
+\item Standort schicken
+\item nach Cluser fragen
+\end{itemize}
+GroupSearchService:
+\begin{itemize}
+\item Gruppen sortiert nach Namen listen
+\item Gruppen sortiert nach Mitgliedschaft listen
+\end{itemize}
+TimerService:
+\begin{itemize}
+\item Timer erstellen
+\item Timer löschen
+\end{itemize}
+GoService:
+\begin{itemize}
+\item GO - User läuft los
+\item GO entfernen
+\item Losgelaufene Teilnehmer auflisten
+\end{itemize}
 -Hier services Bild einfügen-
 
 	\subsubsection{Activities}
-	
+	Alle Activities setzten sich aus XML-Dateien zusammen und bilden gemeinsam die View des Useres.
+Sie nehmen als erstes Benutzerinteraktionen entgegen, leiten diese an den entsprechenden Service weiter und geben dem User entsprechendes Feedback.
 	--Hier view Bild einfügen-
 	\subsubsection{Model}
+Das Model versucht die Realität auf die Daten des Servers und der Applikation abzubilden und ist von dem Controller und der View unabhängig. Das Modell ist das zu beobachtende Subjekt nach dem Entwurfsmuster "Beobachter".
+Das Model auf dem Client entspricht dem Model des Servers.
 	\subsubsection{ServerAdapter}
+-Jonas kannst du das hier schreiben?-
 	\newpage
 
 	\section{JSON-RPC: Kommunikation Server \& Client}
