@@ -1,8 +1,24 @@
+
 % !TEX root = Entwurf_goApp.tex
 
 \section{Entwurfsentscheidungen}
 	\subsection{Einleitung}
-	Im folgenden Dokument stellen wir ...
+	Das folgende Dokument beschreibt den Entwurf der goApp und ist nach dem Prinzip top-down aufgebaut.
+	Zunächst die Entscheidungen bezüglich der Architektur und welche Entwurfsmuster zum Einsatz kommen.
+	\subsection{Architektur}
+	Die Architektur der goApp ist die Client-Server Architektur. Diese zeichnet sich dadurch aus, das ein passiver Server Anfragen der aktiven Clients entgegennimmt, bearbeitet und eine Antwort zurück übermittelt. Die Architektur bietet sich in diesem Fall an, da die goApp mehrere Nutzer hat und diese auf die gleichen Daten und Services zugreifen können müssen auch gleichzeitig. 
+	Der Entwurf verwirklicht die Client-Server-Architektur dadurch, dass der Client, in diesem Fall das Androidgerät des Endbenutzers, Http Anfragen an den Server, ein Linux Webserver, schickt. Der Server stellt den Zugriff auf wichtige Nutzer, Gruppen und Termin Daten zur Verfügung. Diese Daten sind in der Datenbank auf dem Server gespeichert, da alle Nutzer die z.B in der gleichen Gruppe sind darauf zugreifen können müssen.  Zusätzlich zur Bereitstellung von Daten können diese Daten über Anfragen des Clients auch geändert werden. Zudem stellt der Server noch die Berechnung des Gruppenmittelpunktes in Form eines Clustering-Algorithmus zur Verfügung. 
+	
+	\subsection{Entwurfsmuster}
+	Als Entwurfsmuster auf dem Client werden Model-View-Controler benutzt, um einen Modularen und flexibles System zu erhalten.
+	In diesem System kann durch das Entwurfsmuster die View, hier das Activity Paket, das Model, hier das Model Paket, und der Controler, hier das Service Paket, unabhängig von einander verwendet und auch modifiziert werden. Das wird erreicht da die drei Teile des Entwurfes auf dem Client als einzelne Pakete implementiert werden die eine strikte Trennung der Daten, der Benutzeroberfläche und der Funktionen darstellen. 
+	\newline
+	Beobachter
+	\newline
+	Auf dem Server:
+	3-Schichten
+	\newline
+	Strategie
 	\subsection{Paketstruktur}
 	 \includegraphics[width=1\textwidth]{Packages.png}
 	\subsection{Server}
