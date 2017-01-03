@@ -4,32 +4,35 @@
 \section{Entwurfsentscheidungen}
 	\subsection{Einleitung}
 	Das folgende Dokument beschreibt den Entwurf der goApp und ist nach dem Prinzip top-down aufgebaut.
-	Zunächst die Entscheidungen bezüglich der Architektur und welche Entwurfsmuster zum Einsatz kommen.
+	Zunächst werden die Entscheidungen bezüglich der Architektur und welche Entwurfsmuster zum Einsatz kommen erläutert.
+	Darauf folgen Beschreibungen zu jedem Package und schlussendlich wird auf jede Klasse im einzelnen eingegangen.
+	Im Kapitel Sequenzdiagramme werden interne Abläufe graphisch dargestellt.
+	Im Anhang findet sich ein großformatiges Diagramm mit allen Klassen.
 	\subsection{Architektur}
-	Die Architektur der goApp ist die Client-Server Architektur. Diese zeichnet sich dadurch aus, das ein passiver Server Anfragen der aktiven Clients entgegennimmt, bearbeitet und eine Antwort zurück übermittelt. Die Architektur bietet sich in diesem Fall an, da die goApp mehrere Nutzer hat und diese auf die gleichen Daten und Services zugreifen können müssen auch gleichzeitig. 
-	Der Entwurf verwirklicht die Client-Server-Architektur dadurch, dass der Client, in diesem Fall das Androidgerät des Endbenutzers, Http Anfragen an den Server, ein Linux Webserver, schickt. Der Server stellt den Zugriff auf wichtige Nutzer, Gruppen und Termin Daten zur Verfügung. Diese Daten sind in der Datenbank auf dem Server gespeichert, da alle Nutzer die z.B in der gleichen Gruppe sind darauf zugreifen können müssen.  Zusätzlich zur Bereitstellung von Daten können diese Daten über Anfragen des Clients auch geändert werden. Zudem stellt der Server noch die Berechnung des Gruppenmittelpunktes in Form eines Clustering-Algorithmus zur Verfügung. 
+	Die Architektur der goApp ist die Client-Server Architektur. Diese zeichnet sich dadurch aus, das ein passiver Server Anfragen der aktiven Clients entgegennimmt, bearbeitet und eine Antwort zurück übermittelt. Die Architektur bietet sich in diesem Fall an, da die goApp mehrere Nutzer hat und diese gleichzeitig auf die selben Daten und Services zugreifen können müssen. 
+	Ein Client ist in diesem Fall ein Androidgerät und der Server ein auf Linux basierender Webserver.
+	Der Entwurf verwirklicht die Client-Server-Architektur dadurch, dass der Client Http-Anfragen an den Server schickt. Der Server stellt auf Anfrage den Zugriff auf entsprechende Nutzer, Gruppen und Termin Daten zur Verfügung. Diese Daten sind in der Datenbank auf dem Server gespeichert, zusätzlich zur Bereitstellung von Daten können diese Daten über Anfragen des Clients auch geändert werden. Zudem stellt der Server noch die Berechnung des Gruppenmittelpunktes in Form eines Clustering-Algorithmus zur Verfügung. 
+	 
+	3-Schichten?
 	
-	\subsection{Entwurfsmuster}
-	Als Entwurfsmuster auf dem Client werden Model-View-Controler benutzt, um einen Modularen und flexibles System zu erhalten.
-	In diesem System kann durch das Entwurfsmuster die View, hier das Activity Paket, das Model, hier das Model Paket, und der Controler, hier das Service Paket, unabhängig von einander verwendet und auch modifiziert werden. Das wird erreicht da die drei Teile des Entwurfes auf dem Client als einzelne Pakete implementiert werden die eine strikte Trennung der Daten, der Benutzeroberfläche und der Funktionen darstellen. 
-	\newline
-	Beobachter
-	\newline
-	Auf dem Server:
-	3-Schichten
-	\newline
-	Strategie
+	
 	\subsection{Paketstruktur}
-	 \includegraphics[width=1\textwidth]{Packages.png}
+	 \includegraphics[width=1.1\textwidth]{Packages.png}
+
+	\subsection{Server \& Client Kommunikation}
+	Wir verwenden JavaScript Object Notation Remote Procedure Call (kurz: JSON-RPC) für die Kommunikation zwischen den Clienten und dem Server.
+	Ein JSON-RPC-Call besteht aus einem JSON-Objekt, das vom Client an einen Server geschickt wird und wird auch mit einem JSON-Objekt beantwortet.
+	Durch die Nutzung von JSON-RPC versprechen wir uns eine flexible aber vor allem eine einfache Kommunikation welche wir genau auf unsere 		Anforderungen anpassen können. 
+	
 	\subsection{Server}
 	\subsubsection{Model}
 Im Model werden Benutzer, Gruppen und Events direkt aus der Realität auf die entsprechende Klasse abgebildet und zusätzlich existieren Klassen die den Standort und Gruppenbeitrittsanfragen der Benutzer darstellen.
 Ein Benutzer kann Mitglied in bis zu 20 Gruppen sein, und in jeder Gruppe darf es bis zu 50 Mitglieder geben sowie genau einen Gründer. Bevor ein Benutzer Mitglied einer Gruppe werden kann muss eine Beitrittsanfrage erstellt werden.
-Pro Benutzer können bis zu 20 Anfragen gleichzeitig exisitieren, diese werden mit jeweils einer Gruppe assoziiert.
+Pro Benutzer können bis zu 20 Anfragen gleichzeitig existieren, diese werden mit jeweils einer Gruppe assoziiert.
 An eine Gruppe können jedoch beliebig viele Anfragen gestellt werden.
 Ebenso können in einer Gruppe beliebig viele Events existieren an denen jeweils alle Gruppenmitglieder teilnehmen können.
-Damit die Teilnehmer eines Events sich finden können exisiert die Location Klasse, eine Location kann entweder genau einem Benutzer oder genau einem Termin zugeordnet sein. 
-Eine genaue Beschreibung aller Klassen des Models mitsamt ihren Mehtoden findet sich im Kapitel 3.1.
+Damit die Teilnehmer eines Events sich finden können existiert die Location Klasse, eine Location kann entweder genau einem Benutzer oder genau einem Termin zugeordnet sein. 
+Eine genaue Beschreibung aller Klassen des Models mitsamt ihren Methoden findet sich im Kapitel 3.1.
 -Hier Model Bild einfügen-
 
 	\subsubsection{DatabaseAdapter}
@@ -63,67 +66,7 @@ Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem 
 	Die Services sind der Controller des Clienten und damit für die Steuerung zuständig. Hauptaufgabe ist es die Kommunikation zwischen der View und dem Server zu gewährleisten, aber auch Hintergrundprozesse anderer Art wie das erstellen eines Timers gehören in ihren Aufgabenbereich.
 Sie sind wie die Servlets so entworfen dass jeder Service seinen eigenen Aufgabenbereich übernimmt.
 Von unserer App werden folgende Services implementiert:
-\newline
-GroupService:
-\begin{itemize}
-\item Erstellen einer Gruppe
-\item Löschen einer Gruppe
-\item Namen einer Gruppe ändern
-\item Mitglieder entfernen
-\item Mitglieder auflisten
-\item Anfragen auflisten
-\end{itemize}
-UserService:
-\begin{itemize}
-\item Namen eines Benutzers ändern
-\end{itemize}
-LoginService:
-\begin{itemize}
-\item Erstanmeldung
-\item Anmelden
-\end{itemize}
-RequestService:
-\begin{itemize}
-\item Anfrage erstellen
-\item Anfrage akzeptieren
-\item Anfrage ablehnen
-\end{itemize}
-ParticipateService:
-\begin{itemize}
-\item Teilnehmer eines Termins auflisten
-\item an einem Termin teilnehmen
-\item Termin absagen
-\end{itemize}
-EventService:
-\begin{itemize}
-\item Termin erstellen
-\item Termin löschen
-\end{itemize}
-NotificationService:
-\begin{itemize}
-\item Termin Teilnehmer benarichtigen
-\end{itemize}
-LocationService:
-\begin{itemize}
-\item Standort schicken
-\item nach Cluser fragen
-\end{itemize}
-GroupSearchService:
-\begin{itemize}
-\item Gruppen sortiert nach Namen listen
-\item Gruppen sortiert nach Mitgliedschaft listen
-\end{itemize}
-TimerService:
-\begin{itemize}
-\item Timer erstellen
-\item Timer löschen
-\end{itemize}
-GoService:
-\begin{itemize}
-\item GO - User läuft los
-\item GO entfernen
-\item Losgelaufene Teilnehmer auflisten
-\end{itemize}
+
 -Hier services Bild einfügen-
 
 	\subsubsection{Activities}
