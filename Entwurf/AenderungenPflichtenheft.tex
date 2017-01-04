@@ -10,5 +10,11 @@
 		\item Teilnehmer die sich noch Zuhause (oder andersweitig) befinden verzerren nicht den Mittelpunkt der Gruppe.
 		\item Teilnehmer können sehen ob und welche anderen Benutzer bereits unterwegs sind und ihre Entscheidung davon abhängig machen.
 		\end{itemize}
-	\subsection{gestrichene Funktionalität gegenüber dem Pflichtenheft}
+	\subsection{Herabstufung von Funktionalitäten aus dem Pflichtenheft}
+	\subsubsection{SQLite auf dem Clienten}
+	Im Pflichtenheft wurde im Kapitel 5.Produktdaten festgelegt, dass einige Informationen über Gruppen in denen man Mitglied ist sowie Termine bei denen man teilnimmt lokal auf dem Client gespeichert werden. Ein Benutzer der goApp sollte dadurch in der Lage sein alle seine Termine nachzuschlagen auch wenn sein Smartphone offline ist. Weitere Funktionalität sollte durch diese auf dem Gerät liegende Datenbank nicht unterstützt werden.
+	\newline Dies ist auch der Hauptgrund warum wir beschriebene Anforderung in ihrer Priorität herabsenken. Es ist uns wichtiger im gegebenen Zeitrahmen einen Entwurf für ein in sich funktionierendes System fertig zustellen, welches in der Implementierungsphase implementiert wird, als viele Features zu versprechen die in der Implementierung dann unter Umständen nicht umgesetzt werden können.
+	\newline Das soll allerdings nicht heißen das wir eine Erweiterung des Entwurfes mit einer zusätzlichen Datenbank auf dem Clienten ausschließen. Unser Entwurf ist so gestaltet dass er sich sinnvoll in diese Richtung, und viele andere, erweitern lässt.
+	Da sich besagte Datenbank nur mit den Daten des Servers updaten müsste und ein Nutzer nicht direkt Daten hinzufügen, sondern nur lesen kann, müsste auf der Serverseite keine zusätzliche Funktion implementiert werden um die Anforderung doch noch zu erfüllen.
+	\newline Sollten wir in der Implementierungsphase also schneller als geplant voran kommen werden wir diese Anforderung dennoch umsetzten, ansonsten bei einem erfolgreichem Launch der App schnellstmöglich als Update liefern.  
 	\newpage
