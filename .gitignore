@@ -18,5 +18,6 @@ Pflichtenheft/Pflichtenheft_goApp.pdf
 *.out
 *.synctex.gz
 *.bak_*
+*.vbak
 *.lck
 Entwurf/Entwurf_goApp.pdf
