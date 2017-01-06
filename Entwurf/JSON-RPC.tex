@@ -1,7 +1,35 @@
 % !TEX root = Entwurf_goApp.tex
 
 \section{JSON-RPC: Kommunikation Server \& Client}
-	\subsection{HTTP-Protokoll}
+Für die Kommunikation zwischen Server und Client benutzen wir JSON-RPC und das HTTP-Protokoll.
+
+\subsection{JSON}
+JSON (JavaScript Object Notation) ist ein Datenformat mit welchem man zwar kompakt, aber dennoch lesbar Daten codieren und über das HTTP-Protokoll austauschen kann.
+Zum codieren und decodieren unserer JSON-Strings haben wir uns dazu entschieden org.JSON zu verwenden.
+JSON Beispiel:
+{
+  "ID": "1"
+  "method": "create"	
+  "UserID": "1234",
+  "GroupName": "KIT Mensa",
+}
+
+\subsection{RPC}
+RPC (Remote Procedure Call) ermöglicht es Methoden auf einem entfernten Rechner/Server aufzurufen. Wir verwenden es um unser Client-Server-Modell zu implementieren.
+Wir rufen vom Client (Android-Smartphone) eine Methode eines Servlets auf dem Server auf. Diese bearbeitet dann die Anfrage und schickt eine Antwort zurück.
+Welche Methode aufgerufen werden soll codieren wir in der Anfrage durch Angabe des Methodennamens. Das Servlet kann dadurch den richtigen Methodenaufruf initiieren.
+Der Parameter der Methode ist der JSON-String vom Client und der Rückgabewert ist der Antwort-JSON-String, welcher zum Client zurück geschickt wird.
+
+
+\subsection{HTTP-Protokoll}
+Das HTTP-Protokoll beinhaltet verschiedene Anfragemethoden.
+Wir verwenden allerdings nur GET und POST, welches die zwei wichtigsten sind.
+Wir teilen die aufrufbaren Methoden auf die 2 Anfragemethoden auf:
+1. GET-Requests: Anfragen die nur Daten abfragen ohne dabei Daten zu verändern.
+2. POST-Requests: Anfragen die Daten bearbeiten/verändern.
+
+Daher gilt, dass man GET-Requests beliebig oft ausführen kann ohne einen Fehler zu erzeugen, da keine Daten verändert werden.
+
 	\subsection{ServiceAdapter}
 	\subsection{Servlets}
 	\subsubsection{Status}
