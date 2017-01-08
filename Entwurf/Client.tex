@@ -7,16 +7,44 @@
 	Sie alle erben von der Klasse IntentService weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent).
 	Weil diese Methode bei allen unserern Services je nach Intent entscheidet welche privat Methode aufgerufen wird und sonst keine weiter Funktionalität besitzt haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt. 
 	\subsubsection {LoginService}
-	\subsubsection {UserService}
-	\subsubsection {GroupService}
-	\subsubsection {GroupSearchService}
-	\subsubsection {RequestService}
+
+	\subsubsection {UserService extends IntentService}
+	\subsubsection {GroupService extends IntentService}
+	\subsubsection {GroupSearchService extends IntentService}
+	\subsubsection {RequestService extends IntentService}
 	\subsubsection {RequestSearchService}
-	\subsubsection {ParticipateService}
-	\subsubsection {LocationService}
-	\subsubsection {EventService}
-	\subsubsection {GoService}
-	\subsubsection {NotificationService}
+	\subsubsection {ParticipateService extends IntentService}
+	\subsubsection {LocationService extends IntentService }
+	\newline Methods:
+	\begin{itemize}
+		\begin{description}
+		\end{description}
+	\end{itemize}
+	\subsubsection {public class EventService extends IntentService}
+	This Service provides methods to handle a single Event.
+	\newline Methods:
+	\begin{itemize}
+	\item private void create(String name, Location destination, User eventAdmin, Time time)
+		\begin{description}
+		\item  creates an event
+		\item @param name
+	 	\item @param destination
+	 	\item @param eventAdmin
+	 	\item @param time
+		\end{description}
+	\item private void getEvent(Event event)
+		\begin{description}
+		\item gets the event from the server database
+	 	\item @param event
+		\end{description}
+	\item public void change(Event event)
+		\begin{description}
+		\item
+		\item @param event
+		\end{description}
+	\end{itemize}
+	\subsubsection {GoService extends IntentService}
+	\subsubsection {NotificationService extends IntentService}
 	
 	\subsection{Activities}
 	In diesem Abschnitt werden die Activities der goApp und ihre Interaktionen mit den Services sowie die Übergänge zu anderen Activities vorgestellt.
@@ -134,5 +162,5 @@
 	 \end{itemize}
 	
 	\subsection{Model}
-	%TODO bei Datenbank auf Clienten die entsprechenden Packages eintragen.
+	Das Model entspricht dem Model des Servers (siehe Kapitel 3.1) ist aber natürlich auch auf dem Clienten zu implementieren, eine zusätzliche Beschreibung ist an dieser Stelle aber nicht nötig.
 	\newpage

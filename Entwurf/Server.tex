@@ -3,6 +3,133 @@
 \section{Server}
 	%TODO Jedes Package (mit Ausnahme der Servlets) als Subsection mit sinnvoller Bennenung und in diesen alle Klassen beschreiben.
 	\subsection{Model}
+
+	\subsubsection{public class Request}
+	A request is created whenever a user wants to join a new group and deleted as soon as the founder adds or rejects the user.
+	\newline Attributes:
+	
+	\subsubsection{public class Group}
+	A group is a composition of several users of the goApp, in which the users can create events.
+	\newline Attributes:
+	\begin{itemize}
+	\item int Id : The Id is used to identify each group and is therefore unique.
+	\item String name : The name of a group is given by the founder and can be changed.
+	\end{itemize}
+	Methods:
+	\begin{itemize}
+	\item public Group(int id, String name)
+		\begin{description}
+		\item @param id The Id of the group.
+		\item @param name The name of the group.
+		\end{description}
+	\item public void setName(String name)
+		\begin{description}
+		\item Sets the name of the group.
+	 	\item @param name The new name of the group.
+		\end{description}
+	\item public String getName()
+		\begin{description}
+		\item Returns the name of the group.
+	 	\item @return The name of the group.
+		\end{description}
+	\item public int getId()
+		\begin{description}
+		\item Returns the Id of the Group.
+	 	\item @return The Id of the Group.
+		\end{description}
+	\end{itemize}
+
+	\subsubsection{public class Event}
+	An event is created by a user within a specific group.
+	\newline Attributes:
+	\begin{itemize}
+	\item int Id : The Id is used to identify each event and is therefore unique.
+	\item String name : The name of an event is given by the creator.
+	\item Time time : The time of an event tells when the event is starting and set by the creator of the event.
+	\end{itemize}
+	Methods:
+	\begin{itemize}
+	\item public Event(int id, String name, Time time)
+		\begin{description}
+		\item @param id The Id of the event.
+		\item @param name The name of the event.
+		\item @param time The time of the event.
+		\end{description}
+	\item public synchronized void setTime(Time time)
+		\begin{description}
+		\item Sets the time of the event.
+	 	\item @param time The new time of the event.
+		\end{description}
+	\item public void setName(String name)
+		\begin{description}
+		\item Sets the name of the event.
+	 	\item @param name The new name of the event.
+		\end{description}
+	\item public Time getTime()
+		\begin{description}
+		\item Returns the time of the event.
+	 	\item @return The time of the event.
+		\end{description}
+	\item public String getName()
+		\begin{description}
+		\item Returns the name of the event.
+	 	\item @return The name of the event.
+		\end{description}
+	\item public int getId()
+		\begin{description}
+		\item Returns the Id of the event
+	 	\item @return The Id of the event.
+		\end{description}
+	\end{itemize}
+
+	\subsubsection{public class Location}
+	An event is created by a user within a specific group.
+	\newline Attributes:
+	\begin{itemize}
+	\item int longitude : The longitude value of the position.
+	\item int latitude : The latitude value of the position.
+	\item String name : The name of a location helps the user to identify if the location is a center point of the group or the original meeting point.
+	\end{itemize}
+	Methods:
+	\begin{itemize}
+	\item public Location(int longitude, int latitude, String name)
+		\begin{description}
+		\item @param longitude The longitude value of the position.
+		\item @param latitude The latitude value of the position.
+		\item @param name The name of the location.
+		\end{description}
+	\item public void setName(String name)
+		\begin{description}
+		\item Sets the name of a location.
+	 	\item @param name The new name of the location.
+		\end{description}
+	\item public void setLatitude(int latitude)
+		\begin{description}
+		\item Sets the latitude of the location.
+	 	\item @param latitude The new latitude value.
+		\end{description}
+	\item public void setLongitude(int longitude)
+		\begin{description}
+		\item Sets the longitude value of the location.
+	 	\item @param longitude The new longitude value.
+		\end{description}
+	\item public String getName()
+		\begin{description}
+		\item Returns the name of the location.
+	 	\item @return The name of the location.
+		\end{description}
+	\item public int getLatitude()
+		\begin{description}
+		\item Returns the latitude value of the location.
+	 	\item @return The latitude value of the location.
+		\end{description}
+	\item public int getLongitude()
+		\begin{description}
+		\item Returns the longitude value of the location.
+	 	\item @return The longitude value of the location.
+		\end{description}
+	\end{itemize}
+
 	\subsection{DatabaseAdapter}
 	\subsection{Database}
 	\subsection{Clustering-Algorithm}
