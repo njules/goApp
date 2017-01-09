@@ -10,6 +10,6 @@ public interface AsyncResponse {
 	 * This method is responsible for handling the response.
 	 * @param answer The JSONObject to the JSON-string send back from the servlet.
 	 */
-	void httpRequestExecuted(JSONObject answer);
+	public void httpRequestExecuted(JSONObject answer);
 
 }

@@ -20,7 +20,7 @@ public class HTTPConnection {
 	 * @param JSON The String which should be send to the server.
 	 * @param response The AsyncResponse that should be executed after receiving the answer from the server.
 	 */
-	public void sendGetRequest(String JSON, pse.goApp.client.controler.ServerConnection.AsyncResponse response) {
+	public void sendGetRequest(String JSON,AsyncResponse response) {
 		// TODO - implement HTTPConnection.sendGetRequest
 		throw new UnsupportedOperationException();
 	}
@@ -30,7 +30,7 @@ public class HTTPConnection {
 	 * @param JSON The String which should be send to the server.
 	 * @param response The AsyncResponse that should be executed after receiving the answer from the server.
 	 */
-	public void sendPostRequest(String JSON, pse.goApp.client.controler.ServerConnection.AsyncResponse response) {
+	public void sendPostRequest(String JSON, AsyncResponse response) {
 		// TODO - implement HTTPConnection.sendPostRequest
 		throw new UnsupportedOperationException();
 	}

@@ -1,7 +1,7 @@
 package pse.goApp.client.controler.ServerConnection;
 
 /**
- * Enumerations with all possible parameter-types for the JSON-strings.
+ * Enumeration with all possible parameter-types for the JSON-strings.
  */
 public enum JSONParameter {
 	/**
@@ -43,6 +43,7 @@ public enum JSONParameter {
 
 	/**
 	 * Gives the corresponding name to an enum literal. Normally the enum literal name.
+	 * @return The corresponding name.
 	 */
 	public String toString() {
 		// TODO - implement JSONParameter.toString
@@ -51,7 +52,8 @@ public enum JSONParameter {
 
 	/**
 	 * Gives the corresponding enum literal to a string.
-	 * @param s
+	 * @param s The string to the searched enum literal.
+	 * @return The corresponding enum literal.
 	 */
 	public static JSONParameter fromString(String s) {
 		// TODO - implement JSONParameter.fromString
