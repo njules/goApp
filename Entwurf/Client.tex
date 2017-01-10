@@ -164,43 +164,7 @@
  	Dieses stellt die Schnittstelle zum Server dar. Das Paket benutzt von org.json die Klassen JSONObject und JSONArray.
  	JSONObject repräsentiert einen JSON-String, hat einen Konstruktor dem man einen JSON-String übergeben kann und besitzt die Methoden get und put um Elemente aus dem JSON-String auszulesen bzw. Elemente einem JSON-String hinzuzufügen. 
  	Ein JSONArray ist eine Menge von Objekten des gleichen Typs welche zu einem JSONObject gehören.
- 	ServerConnection benutzt zusätzlich von android.os die Klasse AsyncTask um die Serveranfrage im Hintergrund auszuführen.
-	\subsubsection{public interface AsyncResponse}
-This interface is used by the services to define what should be done with the response of the server.
-\newline Methods:
-\begin{itemize}
-	\item public void httpRequestExecuted(JSONObject answer)
-		\begin{description}
-		\item The code in this method is executed after the server send his response back to the 			        AsyncTask. This method is responsible for handling the response.
-	 \item @param answer The JSONObject to the JSON-string send back from the servlet.
-		\end{description}
-	\end{itemize}
-	
-	\subsubsection{public class GetRequest extends AsyncTask}
-This Class is responsible for sending a get-request to the server and calling the httpRequestExecuted method on the AsyncResponse object. GetRequest extends android.os.AsyncTask.
-	\newline Methods:
-	\begin{itemize}
-	\item public GetRequest(String JSON, AsyncResponse response)
-		\begin{description}
-		\item Constructor which expects a JSON-string and an AsyncResponse of the server request.
-	 \item @param JSON The String which should be send to the server
-	 \item @param response The AsyncResponse that should be executed after receiving the answer from the server.
-		\end{description}
-	\end{itemize}
-	
-	\subsubsection{public class PostRequest extends AsyncTask}
-This Class is responsible for sending a get-request to the server and calling the httpRequestExecuted method on the AsyncResponse object. GetRequest extends android.os.AsyncTask.
-	\newline Methods:
-	\begin{itemize}
-	\item public PostRequest(String JSON, AsyncResponse response)
-		\begin{description}
-		\item Constructor which expects a JSON-string and an AsyncResponse of the server request.
-	 \item @param JSON The String which should be send to the server
-	 \item @param response The AsyncResponse that should be executed after receiving the answer from the server.
-		\end{description}
-	\end{itemize}
-	
-	
+ 	
 	\subsubsection{public class HTTPConnection}
 If a service wants to communicate with the server, the service has to create a HTTPConnection object and must call the sendGet/PostRequest method.
 For later requests the service can use the same HTTPConnection object.
@@ -212,18 +176,18 @@ For later requests the service can use the same HTTPConnection object.
 	 \item @param nameOfServlet The name of the servlet, the service wants to communicate with.
 		\end{description}
 		
-		\item public void sendGetRequest(String JSON,AsyncResponse response)
+		\item public void sendGetRequest(String JSON)
 		\begin{description}
 \item Method that handles a get request.
 	 \item @param JSON The String which should be send to the server.
-	 \item @param response The AsyncResponse that should be executed after receiving the answer from the server.
+	 \item @return The JSONObject of the JSON-String which was sent back from the Server
 		\end{description}
 		
-		\item public void sendPostRequest(String JSON,AsyncResponse response)
+		\item public void sendPostRequest(String JSON)
 		\begin{description}
 \item Method that handles a post request.
 	 \item @param JSON The String which should be send to the server.
-	 \item @param response The AsyncResponse that should be executed after receiving the answer from the server.
+	 \item @return The JSONObject of the JSON-String which was sent back from the Server
 		\end{description}
 	\end{itemize}
 	
