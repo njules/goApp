@@ -4,16 +4,55 @@
 	%TODO Jedes Package (mit Ausnahme der Servlets) als Subsection mit sinnvoller Bennenung und in diesen alle Klassen beschreiben.
 	\subsection{Model}
 
+	\subsubsection{public class User}
+	An user describes an user of the goApp.
+	\newline Attributes:
+	\begin{itemize}
+	\item private int Id : The Id is used to identify each user and is therefore unique.
+	\item private String name : The name of an user is selectable by the user and can also be changed.
+	\end{itemize}
+	Methods: 
+	\begin{itemize}
+	\item public User(int id, String name)
+		\begin{description}
+		\item Sets the name of the user.
+	 	\item @param name The new name of the user.
+		\end{description}
+	\item public void setName(String name)
+		\begin{description}
+		\item @param id The Id of the user.
+	 	\item @param name The name of the user.
+		\end{description}
+	\item public String getName()
+		\begin{description}
+		\item Returns the name of the user.
+	 	\item @return The name of the user.
+		\end{description}
+	\item public int getId()
+		\begin{description}
+		\item  Returns the Id of the user.
+	 	\item @return The Id of the user.
+		\end{description}
+	\end{itemize}
+
 	\subsubsection{public class Request}
 	A request is created whenever a user wants to join a new group and deleted as soon as the founder adds or rejects the user.
-	\newline Attributes:
+	\newline
+	Methods: 
+	\begin{itemize}
+	\item public Request(User user, Group group)
+		\begin{description}
+		\item @param user The user who creates the request.
+		\item @param group The group which the user wants to join.
+		\end{description}
+	\end{itemize}
 	
 	\subsubsection{public class Group}
 	A group is a composition of several users of the goApp, in which the users can create events.
 	\newline Attributes:
 	\begin{itemize}
-	\item int Id : The Id is used to identify each group and is therefore unique.
-	\item String name : The name of a group is given by the founder and can be changed.
+	\item private int Id : The Id is used to identify each group and is therefore unique.
+	\item private String name : The name of a group is given by the founder and can be changed.
 	\end{itemize}
 	Methods:
 	\begin{itemize}
@@ -43,9 +82,9 @@
 	An event is created by a user within a specific group.
 	\newline Attributes:
 	\begin{itemize}
-	\item int Id : The Id is used to identify each event and is therefore unique.
-	\item String name : The name of an event is given by the creator.
-	\item Time time : The time of an event tells when the event is starting and set by the creator of the event.
+	\item private  int Id : The Id is used to identify each event and is therefore unique.
+	\item private String name : The name of an event is given by the creator.
+	\item private Time time : The time of an event tells when the event is starting and set by the creator of the event.
 	\end{itemize}
 	Methods:
 	\begin{itemize}
@@ -86,9 +125,9 @@
 	An event is created by a user within a specific group.
 	\newline Attributes:
 	\begin{itemize}
-	\item int longitude : The longitude value of the position.
-	\item int latitude : The latitude value of the position.
-	\item String name : The name of a location helps the user to identify if the location is a center point of the group or the original meeting point.
+	\item private  int longitude : The longitude value of the position.
+	\item private  int latitude : The latitude value of the position.
+	\item private String name : The name of a location helps the user to identify if the location is a center point of the group or the original meeting point.
 	\end{itemize}
 	Methods:
 	\begin{itemize}
