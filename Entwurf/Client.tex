@@ -5,21 +5,15 @@
 	\subsection{Services}
 	Im folgenden Kapitel werden alle Services die von unserer App implementiert werden beschrieben.
 	Sie alle erben von der Klasse IntentService weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent).
-	Weil diese Methode bei allen unserern Services je nach Intent entscheidet welche privat Methode aufgerufen wird und sonst keine weiter Funktionalität besitzt haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt. 
-	\subsubsection {LoginService}
-
+	Weil diese Methode bei allen unseren Services je nach Intent entscheidet, welche private Methode aufgerufen wird und sonst keine weitere Funktionalität besitzt, haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt. 
+	\subsubsection {LoginService extends IntentService}
 	\subsubsection {UserService extends IntentService}
 	\subsubsection {GroupService extends IntentService}
 	\subsubsection {GroupSearchService extends IntentService}
 	\subsubsection {RequestService extends IntentService}
-	\subsubsection {RequestSearchService}
+	\subsubsection {RequestSearchService extends IntentService}
 	\subsubsection {ParticipateService extends IntentService}
 	\subsubsection {LocationService extends IntentService }
-	\newline Methods:
-	\begin{itemize}
-		\begin{description}
-		\end{description}
-	\end{itemize}
 	\subsubsection {public class EventService extends IntentService}
 	This Service provides methods to handle a single Event.
 	\newline Methods:
@@ -48,7 +42,7 @@
 	
 	\subsection{Activities}
 	In diesem Abschnitt werden die Activities der goApp und ihre Interaktionen mit den Services sowie die Übergänge zu anderen Activities vorgestellt.
-	Da die Activities die GUI des Benutzers bilden werden hier ebenfalls die GUI-Ausschnitte aus dem Pflichtenheft, mit zusätzlichen Erweiterungen, den entsprechenden Activities durch welche sie dargestellt werden zugeordnet.  
+	Da die Activities die GUI des Benutzers bilden, werden hier ebenfalls die GUI-Ausschnitte aus dem Pflichtenheft, mit zusätzlichen Erweiterungen, den entsprechenden Activities durch welche sie dargestellt werden zugeordnet.  
 	\subsubsection {LoginActivity}
 	Die LoginActivity wird mit der App gestartet, hier kann sich ein Benutzer registrieren.
 	\newline
@@ -103,7 +97,7 @@
 	\end{itemize} 
 	
 	\subsubsection {GroupInfoActivity}
-	Die GroupInfoActivity zeigt einem Mitglied der Gruppe deren Mitglieder an und bietet die Möglichkeit aus der Gruppe auszutreten. Der Gruppengründer sieht zusätzliche Beitrittsanfragen an die Gruppe und kann diese bearbeiten, er kann auch Mitglieder entfernen und die Gruppe löschen.
+	Die GroupInfoActivity zeigt einem Mitglied der Gruppe deren Mitglieder an und bietet die Möglichkeit aus der Gruppe auszutreten. Der Gruppengründer sieht zusätzlich Beitrittsanfragen an die Gruppe und kann diese bearbeiten, er kann auch Mitglieder entfernen und die Gruppe löschen.
 	\newline
 	\includegraphics[width=.3\textwidth]{GUI_GruppeInfoGruender.jpg}
 	\includegraphics[width=.3\textwidth]{GUI_GruppeInfoNormal.jpg}
@@ -162,17 +156,15 @@
 	 \end{itemize}
 	 
 	
-	\subsection{Model}
-	Das Model entspricht dem Model des Servers (siehe Kapitel 3.1) ist aber natürlich auch auf dem Clienten zu implementieren, eine zusätzliche Beschreibung ist an dieser Stelle aber nicht nötig.
-	\newpage
-	
+	\subsection{Modell}
+	Das Modell entspricht dem Modell des Servers (siehe Kapitel 3.1) ist aber natürlich auch auf dem Clienten zu implementieren, eine zusätzliche Beschreibung ist an dieser Stelle aber nicht nötig.
 	
 	\subsection{ServerConnection}
  	Nachfolgend werden die Klassen des Paketes ServerConnection näher erläutert.
- 	Dieses stellt die Schnittstelle zum Server dar. Das Paket benützt von org.json die Klassen JSONObject und JSONArray.
+ 	Dieses stellt die Schnittstelle zum Server dar. Das Paket benutzt von org.json die Klassen JSONObject und JSONArray.
  	JSONObject repräsentiert einen JSON-String, hat einen Konstruktor dem man einen JSON-String übergeben kann und besitzt die Methoden get und put um Elemente aus dem JSON-String auszulesen bzw. Elemente einem JSON-String hinzuzufügen. 
- 	Ein JSONArray ist ein Menge von Objekten des gleichen Typs welche zu einem JSONObject gehören.
- 	ServerConnection benützt zusätzlich von android.os die Klasse AsyncTask um die Serveranfrage im Hintergrund auszuführen.
+ 	Ein JSONArray ist eine Menge von Objekten des gleichen Typs welche zu einem JSONObject gehören.
+ 	ServerConnection benutzt zusätzlich von android.os die Klasse AsyncTask um die Serveranfrage im Hintergrund auszuführen.
 	\subsubsection{public interface AsyncResponse}
 This interface is used by the services to define what should be done with the response of the server.
 \newline Methods:
@@ -285,6 +277,7 @@ Enumeration with all possible parameter-types for the JSON-strings.
 	\item The name of the method which should be executed on the server. For example the create method of the GroupServlet.
 \end{description}
 	 
+	%TODO
 	\item and further ones
 \end{itemize}
 
