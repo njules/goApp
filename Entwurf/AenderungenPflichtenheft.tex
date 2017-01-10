@@ -10,6 +10,13 @@
 		\item Teilnehmer die sich noch Zuhause (oder andersweitig) befinden verzerren nicht den Mittelpunkt der Gruppe.
 		\item Teilnehmer können sehen ob und welche anderen Benutzer bereits unterwegs sind und ihre Entscheidung davon abhängig machen.
 		\end{itemize}
+	\subsubsection{Clustering-Algorithm}
+	Anstatt bei einem Termin nur einen einzigen, ungenauen Mittelpunkt der Gruppe anzuzeigen wie im Pflichtenheft beschrieben wird unsere App die Standorte der Teilnehmer clustern um den Benutzern Häufungspunkte der Teilnehmer anzuzeigen.
+		\newline
+		Vorteile:
+		\begin{itemize}
+		\item Kommen Teilnehmer aus unterschiedlichen Richtungen zum Treffpunkt so können sie sehen aus welchen Richtungen sich Gruppen nähern. Dadurch können sie sich mit anderen Teilnehmern die aus der selben Richtung kommen bereits auf dem Weg zum eigentlichen Termin treffen.. 
+		\end{itemize}
 	\subsection{Herabstufung von Funktionalitäten aus dem Pflichtenheft}
 	\subsubsection{SQLite auf dem Clienten}
 	Im Pflichtenheft wurde im Kapitel 5.Produktdaten festgelegt, dass einige Informationen über Gruppen in denen man Mitglied ist sowie Termine bei denen man teilnimmt lokal auf dem Client gespeichert werden. Ein Benutzer der goApp sollte dadurch in der Lage sein alle seine Termine nachzuschlagen auch wenn sein Smartphone offline ist. Weitere Funktionalität sollte durch diese auf dem Gerät liegende Datenbank nicht unterstützt werden.
