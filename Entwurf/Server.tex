@@ -169,6 +169,58 @@
 		\end{description}
 	\end{itemize}
 
-	\subsection{DatabaseManagement}
+	\subsection{DatabaseManagement}	
+	%TODO: Kurzer Beschreibungstext
+	
+	%TODO: Hinterher Löschen - Vorlage
+	%	\newline Attributes:	
+	\begin{itemize}
+		\item 
+		\begin{description}
+			\item 
+		\end{description}
+	\end{itemize}
+	%\newline Methods:
+	\begin{itemize}
+		\item 
+		\begin{description}
+			\item 
+		\end{description}
+	\end{itemize}
+	%TODO bis hier
+	\subsubsection{DatabaseInitializer}
+	Factory for creating Session Factory for DB communication.
+	\newline Methods:
+	\begin{itemize}
+		\item public SessionFactory getFactory()
+		\begin{description}
+			\item Factory Method
+			\item @return SessionFactory Object from Hibernate Library
+		\end{description}
+	\end{itemize}
+	
+	\subsubsection{Interface Management}
+	Interface to use from all DB Management Classes
+	\newline Methods:
+	\begin{itemize} 
+		\item public boolean delete(int ID)			
+		\begin{description}
+			\item Delete an entry with ID in DB
+			\item @param ID ID from Entry to delete
+			\item @return true, if deletion was successfull, otherwise false
+		\end{description}
+		
+		\item void Management(DatabaseInitializer dbInitializer);
+		\begin{description}
+			\item Constructor which initializes a DB Session
+			\item @param dbInitializer DataBaseInitializier Object - Created from Factory
+		\end{description}
+	\end{itemize}
+	\subsubsection{GroupManagement}
+	\subsubsection{UserManagement}
+	\subsubsection{EventManagement}
+	\subsubsection{EventUserManagement}
+	\subsubsection{GroupUserManagement}
+	\subsubsection{RequestManagement}
 	\subsection{Clustering-Algorithm}
 	\newpage
