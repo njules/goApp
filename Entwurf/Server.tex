@@ -227,140 +227,55 @@
   
   	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.server.algorithm}
 	
-	\subsubsection{Cluster}
-	
-	%TODO: Kurzer Beschreibungstext
-	
-	%TODO: Hinterher Löschen - Vorlage
-	%	\newline Attributes:	
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%\newline Methods:
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%TODO bis hier
-	
-	
 	
 	\subsubsection{CusterFacade}
 	
 	%TODO: Kurzer Beschreibungstext
-	
+	Facade Class which communicates with the servlet and the database.
 	%TODO: Hinterher Löschen - Vorlage
-	%	\newline Attributes:	
+	\newline Attributes:
+	\newline Methods:
 	\begin{itemize}
-		\item 
+		\item public List<Point> getClusteredCentralPoints(Event event) :
 		\begin{description}
-			\item 
+			\item This method fetches all locations from the database which belong to the event and calls the cluster algorithm to get it clustered. After that it calls the MidpointAlgo to get the midpoints from the calculated clusters.
+			\item @param the event which midpoint should be calculated.
+			\item @return central points of the calculated clusters
 		\end{description}
 	\end{itemize}
-	%\newline Methods:
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%TODO bis hier
 	
 	
-	
-	
-	\subsubsection{abstract Clusterer}
-	
-	%TODO: Kurzer Beschreibungstext
-	
-	%TODO: Hinterher Löschen - Vorlage
-	%	\newline Attributes:	
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%\newline Methods:
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%TODO bis hier
-	
+
 	
 	
 	\subsubsection{abstract MidPointAlgo}
 	
-	%TODO: Kurzer Beschreibungstext
-	
-	%TODO: Hinterher Löschen - Vorlage
-	%	\newline Attributes:	
+	This is the abstract class with the method to calculate the central of a cluster.
+
+	\newline Methods:
 	\begin{itemize}
-		\item 
+		\item public Point calculateCentralPoint(CentroidCluster cluster) 
 		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%\newline Methods:
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
+			\item This is the abstract method for calculating a clusters central point.
+			\item param the cluster which midpoint should be calculated.
+			\item return the midpoint.
 		\end{description}
 	\end{itemize}
 	%TODO bis hier
 	
 	
 	
-	\subsubsection{SimpleCentral implements MidPointAlgo}
+	\subsubsection{SimpleCentral extends MidPointAlgo}
 	
-	%TODO: Hinterher Löschen - Vorlage
-	%	\newline Attributes:	
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%\newline Methods:
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%TODO bis hier
+	This is the class which calculates the arithmetic midpoint. It extends the class MidPointAlgo and overwrites its methods.	
+	
+	\newline
 	
 	
 	
 	
-	\subsubsection{ImportantMidPointCentral implements MidPointAlgo}
+	\subsubsection{ImportantMidPointCentral extends MidPointAlgo}
 	
-	%TODO: Kurzer Beschreibungstext
-	
-	%TODO: Hinterher Löschen - Vorlage
-	%	\newline Attributes:	
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%\newline Methods:
-	\begin{itemize}
-		\item 
-		\begin{description}
-			\item 
-		\end{description}
-	\end{itemize}
-	%TODO bis hier
+	This class is for calculating the midpoint of a cluster but not every point is weighted the same especially the midpoint of the cluster is more important than the other points. It overwrites the method calculateCentralPoint from its super class MidPointAlgo. 	
 	
 	\newpage
