@@ -9,7 +9,7 @@
 	An user describes an user of the goApp.
 	\newline Attributes:
 	\begin{itemize}
-	\item private int Id : The Id is used to identify each user and is therefore unique.
+	\item private int Id : The Id is used to identify each user and is therefore unique and can not be changed.
 	\item private String name : The name of an user is selectable by the user and can also be changed.
 	\end{itemize}
 	Methods: 
@@ -52,7 +52,7 @@
 	A group is a composition of several users of the goApp, in which the users can create events.
 	\newline Attributes:
 	\begin{itemize}
-	\item private int Id : The Id is used to identify each group and is therefore unique.
+	\item private int Id : The Id is used to identify each group and is therefore unique and can not be changed.
 	\item private String name : The name of a group is given by the founder and can be changed.
 	\end{itemize}
 	Methods:
@@ -83,9 +83,9 @@
 	An event is created by a user within a specific group.
 	\newline Attributes:
 	\begin{itemize}
-	\item private  int Id : The Id is used to identify each event and is therefore unique.
+	\item private  int Id : The Id is used to identify each event and is therefore unique and can not be changed.
 	\item private String name : The name of an event is given by the creator.
-	\item private Time time : The time of an event tells when the event is starting and set by the creator of the event.
+	\item private Time time : The time of an event tells when the event is starting and is set by the creator of the event.
 	\end{itemize}
 	Methods:
 	\begin{itemize}
@@ -126,8 +126,8 @@
 	An event is created by a user within a specific group.
 	\newline Attributes:
 	\begin{itemize}
-	\item private  int longitude : The longitude value of the position.
-	\item private  int latitude : The latitude value of the position.
+	\item private  double longitude : The longitude value of the position in degrees, range[-180,180). 
+	\item private  double latitude : The latitude value of the position in degrees, range [-90,90].
 	\item private String name : The name of a location helps the user to identify if the location is a center point of the group or the original meeting point.
 	\end{itemize}
 	Methods:
@@ -143,12 +143,12 @@
 		\item Sets the name of a location.
 	 	\item @param name The new name of the location.
 		\end{description}
-	\item public void setLatitude(int latitude)
+	\item public void setLatitude(double latitude)
 		\begin{description}
 		\item Sets the latitude of the location.
 	 	\item @param latitude The new latitude value.
 		\end{description}
-	\item public void setLongitude(int longitude)
+	\item public void setLongitude(double longitude)
 		\begin{description}
 		\item Sets the longitude value of the location.
 	 	\item @param longitude The new longitude value.
@@ -158,12 +158,12 @@
 		\item Returns the name of the location.
 	 	\item @return The name of the location.
 		\end{description}
-	\item public int getLatitude()
+	\item public double getLatitude()
 		\begin{description}
 		\item Returns the latitude value of the location.
 	 	\item @return The latitude value of the location.
 		\end{description}
-	\item public int getLongitude()
+	\item public double getLongitude()
 		\begin{description}
 		\item Returns the longitude value of the location.
 	 	\item @return The longitude value of the location.
