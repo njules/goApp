@@ -5,11 +5,28 @@
 	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.controler.service}
 	Im folgenden Kapitel werden alle Services die von unserer App implementiert werden beschrieben.
 	Sie alle erben von der Klasse IntentService weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent).
-	Weil diese Methode bei allen unseren Services je nach Intent entscheidet, welche private Methode aufgerufen wird und sonst keine weitere Funktionalität besitzt, haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt. 
+	Weil diese Methode bei allen unseren Services nur je nach Intent entscheidet, welche private Methode aufgerufen wird und das Ergebnis weiterleitet, haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt. 
 	\subsubsection {LoginService extends IntentService}
 	\subsubsection {UserService extends IntentService}
 	\subsubsection {GroupService extends IntentService}
 	\subsubsection {GroupSearchService extends IntentService}
+		This Service is needed to list various Groups at once.
+	\newline Methods:
+	\begin{itemize}
+	\item private List<Group> getGroupsByMember(User user)
+		\begin{description}
+		\item finds all groups which the user is a member of
+	 	\item @param user
+	 	\item @return all groups the user is member of or null
+		\end{description}
+	\item private List<Group> getGroupsByName(String name) {
+		\begin{description}
+		\item finds all groups which name includes the given string
+	 	\item @param name
+	 	\item @return all groups the name is included in the group name or null
+		\end{description}
+	\end{itemize}
+	
 	\subsubsection {RequestService extends IntentService}
 	\subsubsection {RequestSearchService extends IntentService}
 	\subsubsection {ParticipateService extends IntentService}
@@ -26,19 +43,40 @@
 	 	\item @param eventAdmin
 	 	\item @param time
 		\end{description}
-	\item private void getEvent(Event event)
+	\item private Event getEvent(Event event)
 		\begin{description}
 		\item gets the event from the server database
 	 	\item @param event
+	 	\item @return the event with the given id or null
 		\end{description}
-	\item public void change(Event event)
+	\item private boolean change(Event event)
 		\begin{description}
 		\item
 		\item @param event
+		\item @return the event with the given id or null
 		\end{description}
 	\end{itemize}
+	
 	\subsubsection {GoService extends IntentService}
-	\subsubsection {NotificationService extends IntentService}
+		This Service provides methods to handle if the user already left for the destination of the event.
+	\newline Methods:
+	\begin{itemize}
+	\item private boolean setGo(User user, Event event)
+		\begin{description}
+		\item adds the user to the list of users who are on their way to the event
+	 	\item @param user
+	 	\item @param event
+	 	\item return true, if method was successful, otherwise false
+		\end{description}
+	\item private List<User> getStartedParticipants(Event event) {
+		\begin{description}
+		\item finds all user who already signaled the app that they have started
+	 	\item @param event
+	 	\item @return all user who's started value is true. This indicates that they are on the way to the event.
+		\end{description}
+	\end{itemize}
+	
+	 \subsubsection {NotificationService extends IntentService}
 	
 	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.view}
 	In diesem Abschnitt werden die Activities der goApp und ihre Interaktionen mit den Services sowie die Übergänge zu anderen Activities vorgestellt.
