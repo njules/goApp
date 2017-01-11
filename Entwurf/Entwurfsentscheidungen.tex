@@ -92,5 +92,17 @@ Das Modell auf dem Client entspricht dem Modell des Servers.
 		\newline
 		\includegraphics[width=1\textwidth]{HTTPClientClass Diagram.jpg}
 
+	\subsection{Fehlerbehandlung}
+Wenn auf dem Server ein Fehler auftritt wird dieser vom Servlet abgefangen und in dem JSONObjekten der Antwort eingetragen. Dafür gibt es extra ein Errorcode Parameter des JSONObjektes. Durch diesen Fehlecodein der Serverantwort wird dem Client der Fehler mitgeteilt.\par
+
+Da auf dem Client keine wichtigen Daten gespeichert sind werden hier die auftretenden Fehlerl nur an den Benutzer mit einer aussagekräftigen Meldung weiter gegeben. Auserdem werden alle Infomationen atomar übergeben und können zusätzlich noch neu vom Server geladen bzw. an den Server geschickt werden. \par
+
+Unsere Kommunikation beinhaltet keine sensiblen Daten die expizit nur einmal gesendet werden sollen, wodurch wir keine zustandsichernden Masnahmen brauchen zu auf Zuständen vor dem Fehler zurück kehren zukönnen und z.B. gescheiterte Kommunikation automatisch fortzusetzen.
+	
+
+
+
+		
+
 
 	\newpage
