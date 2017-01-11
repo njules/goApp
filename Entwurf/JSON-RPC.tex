@@ -32,7 +32,7 @@ Daher gilt, dass man GET-Requests beliebig oft ausführen kann ohne einen Fehler
 
 
 \hypertarget{ServerConnection}{}
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.controler.ServerConnection}
+	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.controler.serverConnection}
 	 	Nachfolgend werden die Klassen des Paketes ServerConnection näher erläutert.
  	Dieses stellt die Schnittstelle zum Server dar. Das Paket benutzt von org.json die Klassen JSONObject und JSONArray.
  	JSONObject repräsentiert einen JSON-String, hat einen Konstruktor dem man einen JSON-String übergeben kann und besitzt die Methoden get und put um Elemente aus dem JSON-String auszulesen bzw. Elemente einem JSON-String hinzuzufügen. 
@@ -133,7 +133,219 @@ Methods:
      \item @return The corresponding enum literal.
 		\end{description}
 \end{itemize}
+
+\hypertarget{Servlets}{}
 	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.server.servlet}
+\subsubsection{public class EventServlet}
+This servlet is used to create, view and edit events within a given group.
+
+Methods:
+\begin{itemize}
+\item private String create(JSONObject json) 
+		\begin{description}
+\item Any user, that is a member of a group may create an event within this group. The member that 		creates this event will be registered as the event admin. The admin has the right to change 		data about his event. Each member of a group may only be admin of one event within this group.
+\item @param json This JSON object contains all information about the new event such as event time, 		location, event name and the user creating this event.
+\item @return A JSON string containing the previously created event is returned.
+\end{description}
+
+\item private String getEvent(JSONObject json) 
+		\begin{description}	
+	 \item A method used to access information about an event. Every user, that can see this event may request information about it. Users that are not a member of the group may not view the groups events. Accessible information includes name, location, admin and time.
+	  \item @param json A JSON object containing the event about which the information is requested.
+	  \item @return A JSON string containing all information about the given event is returned.
+\end{description}
+
+ \item	private String change(JSONObject json)
+		\begin{description}
+	 \item This method may only be invoked by an event admin and he may only change the event, he administrates. He may update all information such as name, location and date. He may also elect a new admin for this event or delete it.
+	  \item @param json The JSON object contains an event with the updated information.
+	  \item @return A JSON string containing the updated information about the event is returned.
+\end{description}
+\end{itemize}
+
+\subsubsection{public class RequestSearchServlet}
+  This servlet returns active requests from a group or a user.
+Methods:
+\begin{itemize}
+\item private String getRequestsByUser(JSONObject json)
+	\begin{description}
+	\item
+	  This method fetches all active join requests from a given user. Only the user himself may view all of his active join requests.
+	  \item @param json The JSON object contains the user that is asking for the list of his join requests
+	  \item @return Returns a JSON string containing a list of all join requests issued by the given user.
+	  \end{description}
+
+
+\item private String getRequestsByGroup(JSONObject json)
+	\begin{description}
+	\item
+	  This method fetches all active join requests for a given group. Join requests may only be viewed by the group founder.
+	  \item @param json The JSON object contains the ID of the group from which the join requests shall be fetched.
+	  \item @return Returns a JSON string containing a list of all active join requests for the given group.
+	  \end{description}
+		  \end{itemize}  
+\subsubsection{public class RequestServlet}	  
+	   Methods in this class exist so that a user can request to join a group and the group founder may then accept or reject the join request.
+
+ Methods:
+\begin{itemize}
+	 \item private String create(JSONObject json)
+		\begin{description}
+	 \item This method creates a join request from a user to a group. The user may not have reached the group limit already and the group may not have reached the user limit. Also the user may not already be a member of this group.
+	 \item @param json The JSON Object contains the user that posts the join request and the ID of the group the request is posted to.
+	 \item @return Returns a JSON string containing information about the success of this operation.
+	  \end{description}
+	 
+
+	
+	\item private String accept(JSONObject json)
+	\begin{description}
+	 \item This method accepts a users join request. Only a group founder may accept join requests. After a request has been accepted, the user is a new member of the group and the request is no longer valid.
+	 \item @param json The JSON object contains the request that is to be accepted.
+	 \item @return Returns a JSON string containing information about the success of this operation.
+	  \end{description}
+	
+	\item private String reject(JSONObject json)
+	\begin{description}
+	 \item This method rejects a users join request. Only a group founder may reject join requests. After a request has been rejected it is no longer valid.
+	 \item @param json The JSON object contains the request that is to be rejected.
+	 \item @return Returns a JSON string containing information about the success of this operation.
+	  \end{description}
+\end{itemize}	                              
+	
+	\subsubsection{public class LoginServlet}
+This servlet is used to register users that start the app for the first time and login returning users.
+ 
+
+
+	
+	 Methods:
+\begin{itemize}
+\item private String register(JSONObject json) 
+\begin{description}
+	 \item Invoking this method creates a new user and registers his ID to the database. The new user may then join groups. A user can register only once, if he returns to the app he must use the login function.
+	 \item @param json The JSON object contains a user ID to which the user shall be registered.
+	 \item @return Returns a JSON string containing the user that just registered.
+	 \end{description}
+
+\item private String login(JSONObject json)
+\begin{description}
+	 \item If a user has already registered to the database but his client is currently not logged in, he can call this method to regain access to the functions of this app. A user may only login if he isn't already logged in and has registered himself previously at any point.
+	 \item @param json This JSON object contains the user that wants to login.
+	 \item @return Returns a JSON string containing the user that just logged in.
+	
+	\end{description}
+	\end{itemize}
+	
+	
+	\subsubsection{public class LocationServlet}
+	 This servlet can be used buy event participants to update their location and view the current clustered location of other participants that are on the move.
+	 
+	 Methods:
+		 \begin{itemize}
+
+\item private String setGPS(JSONObject json)
+\begin{description}	
+	 \item A user may update his current gps location if his status is "go" for at least one event. The updated gps location will be used for the next clustering to update the groups location.
+	 \item @param json The JSON object must contain the next location of the user.
+	 \item @return Returns a JSON string containing information about the success of this operation.
+	\end{description}	
+	
+	\item private String getCluster(JSONObject json)
+	\begin{description}
+	 \item A user that participates in an event may request the clustered locations of all other participants whose status is set to "go" if his own status is also set to "go" for this specific event.
+	 \item @param json The JSON object contains the event for which the user requests the cluster.
+	 \item @return Returns a JSON string containing the results of the clustering algorithm.
+	 
+	\end{description}
+	\end{itemize}
+	
+	
+	\subsubsection{public class GroupSearchServlet}
+	This servlet offers methods to search for groups with a specific name or in which a given user is the member.
+
+	 Methods:
+		 \begin{itemize}
+	\item private String getGroupsByName(JSONObject json)
+\begin{description}
+	 \item Searches for all groups whose name begins with the given string.
+	 \item @param json The JSON object contains the string that is searched for in the groups names.
+	 \item @return Returns a JSON string containing a list of all the groups associated with this name.
+	 
+	\end{description}
+
+\item private String getGroupsByMember(JSONObject json)
+	\begin{description}	
+	 \item Searches for all groups the given user is a member of.
+	 \item @param json The JSON object contains the user that is a member in the groups searched for.
+	 \item @return Returns a JSON string containing a list of all the groups in which the given user is a member.
+	 
+	\end{description}
+	\end{itemize}
+	
+	\subsubsection{public class GoServlet}
+	This servlets functions revolve around the go button and allow users to signal they started approaching the events location and view the status of other participants in this event.
+	
+	 Methods:
+		 \begin{itemize}
+\item private String getStartedParticpants(JSONObject json)
+\begin{description}
+	 \item A participant that has previously set his status to "go" may request a list of fellow participants that are also on the way.
+	 \item @param json JSON object containing the event the participant list is requested for.
+	 \item @return Returns a JSON string containing a list with all participants of this event that have set their status to "go".
+	 
+	\end{description}
+
+\item private String setStarted(JSONObject json)
+	\begin{description}
+	 \item Allows the participant of an event to set his status to "go" which enables position tracking and viewing of other participants positions. The participant must have previously accepted the invitation to this event.
+	 \item @param json The JSON object contains the user that updates his status and the event he updates it for.
+	 \item @return Returns a JSON string containing information about the success of this operation.
+	 
+	\end{description}
+	\end{itemize}
+	
+	\subsubsection{public class UserServlet}
+	This servlet is used by users to access and manage information about them.
+
+	 Methods:
+		 \begin{itemize}
+\item private String changeName(JSONObject json)
+\begin{description}
+	 \item This method allows a user to change his name to a string value of his choice. A user may only change his own name.
+	 \item @param json The JSON object contains the user that wants to change his name and the string with the name the user wants to change it to.
+	 \item @return Returns a JSON string containing information about the success of this operation.
+	 
+	\end{description}
+	 
+	 \item private String getUser(JSONObject json)
+	\begin{description}	
+	 \item A user can invoke this to retrieve any information about a given user such as groups he is a member of and events he wants to participate or is invited to.
+	 \item @param json This JSON object contains the user about whom the information shall be released.
+	 \item @return Returns a JSON string containing information about the success of this operation.
+	  
+	\end{description}
+	\end{itemize}
+	
+	\subsubsection{public class ParticipateServlet}
+	Users can access methods in this servlet to indicate whether they want to participate in an event from the group.
+	
+	 Methods:
+		 \begin{itemize}
+\item private String accept(JSONObject json)
+\begin{description}
+	 \item A user may accept an invitation to any event in a group he is a member of. He may accept or reject any event only once and can not invoke any of these two methods again later on for the same event.
+	 \item @param json A JSON object that contains the user wanting to accept the invite and the event he wants to participate in.
+	 \item @return Returns a JSON string containing information about the success of this operation.
+	 \end{description}
+	 
+	 \item private String reject(JSONObject json)
+	\begin{description}	
+	 \item A user may reject an invitation to any event in a group he is a member of. He may accept or reject any event only once and can not invoke any of these two methods again later on for the same event.
+	 \item @param json A JSON object that contains the user wanting to decline the invite and the event he wants to abstain from.
+	 \item @return Returns a JSON string containing information about the success of this operation.
+	 \end{description}
+	\end{itemize}
 	\subsubsection{Status}
 	%TODO Jedes Servlet als Subsubsection mit sinnvoller Bennenung.
 	\subsubsection{GroupServlet}
