@@ -5,7 +5,8 @@
 	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.controler.service}
 	Im folgenden Kapitel werden alle Services die von unserer App implementiert werden beschrieben.
 	Sie alle erben von der Klasse IntentService weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent).
-	Weil diese Methode bei allen unseren Services nur je nach Intent entscheidet, welche private Methode aufgerufen wird und das Ergebnis weiterleitet, haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt. 
+	Weil diese Methode bei all unseren Services nur je nach Intent entscheidet, welche private Methode aufgerufen wird und das Ergebnis weiterleitet, haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt. 
+	
 	\subsubsection {LoginService extends IntentService}
 	\subsubsection {UserService extends IntentService}
 	\subsubsection {GroupService extends IntentService}
@@ -81,6 +82,7 @@
 	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.view}
 	In diesem Abschnitt werden die Activities der goApp und ihre Interaktionen mit den Services sowie die Übergänge zu anderen Activities vorgestellt.
 	Da die Activities die GUI des Benutzers bilden, werden hier ebenfalls die GUI-Ausschnitte aus dem Pflichtenheft, mit zusätzlichen Erweiterungen, den entsprechenden Activities durch welche sie dargestellt werden zugeordnet.  
+	
 	\subsubsection {LoginActivity}
 	Die LoginActivity wird mit der App gestartet, hier kann sich ein Benutzer registrieren.
 	\newline
@@ -191,6 +193,18 @@
 	Von dieser Activity kann ein Benutzer zu folgenden Activities navigieren:
 	\begin{itemize} 
 	 \item GroupActivity
+	 \end{itemize}
+	 
+	 \subsubsection{Fragments}
+	 Fragments sind Teile einer Activity, welche unabhängig voneinander und unabhängig vom Layout geladen und mit Funktionalität bestückt werden können.  
+	 Sie können nur innerhalb von Activities existieren, sind aber leicht austauschbar und ein Fragment kann auch in mehreren Activities eingesetzt werden. 
+	 Sie bilden somit die Grundlage für ein dynamisches Layout. \newline
+	 Unser Ziel ist es alle Activities in möglichst agile Fragments zu unterteilen um eben ein Anpassungsfähiges Layout zu erhalten, welches sich auch leichter auf weitere Geräte wie zum Beispiel Tablets übertragen lässt.
+	 \newline Einige Fragments welche wir einsetzten werden:
+	 \begin{itemize}
+	 \item Maps Fragment: Ein Fragment in dem den Nutzern die Karte mit allen Standorten bereitgestellt wird. Wird in der NewEventActivity und der EventActivity benötigt.
+	 \item FounderFragment: In der GroupInfoActivity werden dem Gründer der Gruppe mehr Informationen als einem normalen Mitglied bereitgestellt. Dies ermöglichen wir in dem wir ein anderes Fragment(dieses hier) in die selbe Activity laden.
+	 \item MemberFragment: Das Gegenstück zum FounderFragment. Wird für ein normales Mitglied in die GroupInfoActivity geladen.
 	 \end{itemize}
 	 
 	
