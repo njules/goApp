@@ -1,9 +1,9 @@
 % !TEX root = Entwurf_goApp.tex
 
 \section{Server}
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.server.servlet}
 	
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.server.database.model}
+	\hypertarget{ServerModel}{}
+	\subsection{edu.kit.pse.gruppe1.goApp.server.database.model}
 
 	\subsubsection{public class User}
 	An user describes an user of the goApp.
@@ -170,7 +170,7 @@
 		\end{description}
 	\end{itemize}
 
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.server.database.management}	
+	\subsection{edu.kit.pse.gruppe1.goApp.server.database.management}	
 	%TODO: Kurzer Beschreibungstext
 
 	\subsubsection{DatabaseInitializer}
@@ -350,7 +350,7 @@
 			\begin{description}
 				\item gets Event with given eventID
 				\item  @param eventID ID of event
-				\item  @return matching  Event
+				\item  @return matching  Event
 			\end{description}
 			\item public int getUser(int eventID)
 			\begin{description}
@@ -471,7 +471,7 @@
 		\end{itemize}
   
   
-  	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.server.algorithm}
+  	\subsection{edu.kit.pse.gruppe1.goApp.server.algorithm}
 	
 	
 	\subsubsection{CusterFacade}
@@ -526,6 +526,6 @@
 	
 	
 
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.server.servlet}	
-	\hyperlink{Servlets}{Siehe JSON-RPC}
+	\subsection{edu.kit.pse.gruppe1.goApp.server.servlet}
+	Das Package servlet nimmt auf dem Server alle Anfragen der Clienten entgegen wertet sie aus und leitet diese entsprechend weiter. Eine Beschreibung aller Servlets findet sich \hyperlink{Servlets}{hier}, weil sie thematisch besser in das Kapitel Kommunikation Server \& Client passt.
 	\newpage

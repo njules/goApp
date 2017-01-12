@@ -2,7 +2,7 @@
 
 \section{Client} 
 	%TODO Jedes Package als subsection mit sinnvoller Bennenung und in diesen als subssubsection alle Klassen beschreiben.
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.controler.service}
+	\subsection{edu.kit.pse.gruppe1.goApp.client.controler.service}
 	Im folgenden Kapitel werden alle Services die von unserer App implementiert werden beschrieben.
 	Sie alle erben von der Klasse IntentService weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent).
 	Weil diese Methode bei all unseren Services nur je nach Intent entscheidet, welche private Methode aufgerufen wird und das Ergebnis weiterleitet, haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt. 
@@ -79,7 +79,7 @@
 	
 	 \subsubsection {NotificationService extends IntentService}
 	
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.view}
+	\subsection{edu.kit.pse.gruppe1.goApp.client.view}
 	In diesem Abschnitt werden die Activities der goApp und ihre Interaktionen mit den Services sowie die Übergänge zu anderen Activities vorgestellt.
 	Da die Activities die GUI des Benutzers bilden, werden hier ebenfalls die GUI-Ausschnitte aus dem Pflichtenheft, mit zusätzlichen Erweiterungen, den entsprechenden Activities durch welche sie dargestellt werden zugeordnet.  
 	
@@ -208,8 +208,8 @@
 	 \end{itemize}
 	 
 	
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.model}
-	Das Modell entspricht dem Modell des Servers (siehe Kapitel 3.1) ist aber natürlich auch auf dem Clienten zu implementieren, eine zusätzliche Beschreibung ist an dieser Stelle aber nicht nötig.
+	\subsection{edu.kit.pse.gruppe1.goApp.client.model}
+	Das Modell entspricht \hyperlink{ServerModel}{dem Modell des Servers} ist aber natürlich auch auf dem Clienten zu implementieren, eine zusätzliche Beschreibung ist an dieser Stelle aber nicht nötig.
 	
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.controler.serverConnection}
-	\hyperlink{ServerConnection}{Siehe JSON-RPC}
+	\subsection{edu.kit.pse.gruppe1.goApp.client.controler.serverConnection}
+	Das Package serverConnection wird vom Clienten benötigt um die Anfragen der Services weiterzuleiten und so eine Kommunikation zum Server herzustellen. Es ist demnach auf dem Clienten implementiert eine Beschreibung der Klassen findet sich aber \hyperlink{ServerConnection}{hier}, da sie thematisch besser in das Kapitel Kommunikation Server \& Client passt.
