@@ -32,7 +32,7 @@ Daher gilt, dass man GET-Requests beliebig oft ausführen kann ohne einen Fehler
 
 
 \hypertarget{ServerConnection}{}
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.client.controler.serverConnection}
+	\subsection{edu.kit.pse.gruppe1.goApp.client.controler.serverConnection}
 	 	Nachfolgend werden die Klassen des Paketes ServerConnection näher erläutert.
  	Dieses stellt die Schnittstelle zum Server dar. Das Paket benutzt von org.json die Klassen JSONObject und JSONArray.
  	JSONObject repräsentiert einen JSON-String, hat einen Konstruktor dem man einen JSON-String übergeben kann und besitzt die Methoden get und put um Elemente aus dem JSON-String auszulesen bzw. Elemente einem JSON-String hinzuzufügen. 
@@ -63,7 +63,7 @@ For later requests the service can use the same HTTPConnection object.
 	 \item @return The JSONObject of the JSON-String which was sent back from the Server
 		\end{description}
 	\end{itemize}
-	\hypertarget{JSONParameter}{}
+	
 	\subsubsection{public enum JSONParameter}
 Enumeration with all possible parameter-types for the JSON-strings.
 	\newline Enum literals:
@@ -135,10 +135,7 @@ Methods:
 \end{itemize}
 
 \hypertarget{Servlets}{}
-	\subsection{edu.kit.sdqweb.pse.gruppe1.goApp.server.servlet}
-	
-	\subsubsection{public enum JSONParameter}
-	\hyperlink{JSONParameter}{siehe oben}
+	\subsection{edu.kit.pse.gruppe1.goApp.server.servlet}
 \subsubsection{public class EventServlet}
 This servlet is used to create, view and edit events within a given group.
 
@@ -349,64 +346,6 @@ This servlet is used to register users that start the app for the first time and
 	 \item @return Returns a JSON string containing information about the success of this operation.
 	 \end{description}
 	\end{itemize}
-
-\subsubsection{public class GroupServlet}	
- This servlet contains all methods to create, manipulate and delete groups. 
-
- Methods:
-	 \begin{itemize}
-	 \item private String create(JSONObject json)
-	 \begin{description}
-	 \item This method creates a new group. A user can create a new group if has not yet reached the group limit. By creating a group his group count is incremented by one. He is also registered as the groups founder.
-	 \item @param json This JSON objects contains information about the group that is to be created such as the Name and the founding member.
-	 \item @return Returns a JSON string containing the ID of the created group.
-			 \end{description}
-	
-	 \item private String delete(JSONObject json)
-	 \begin{description}
-	 \item This method may be called by a founder to delete his group. The group will be removed from the database as well as all events and the users are removed from this group. The group count of all users in this group is reduced by one.
-	 \item @param json JSON object containing the ID of the group that is to be deleted.
-	 \item @return Returns a JSON string containing information about the success of this operation.
-			 \end{description}
-	
-	 \item private String setName(JSONObject json)
-	 \begin{description}
-	 \item This method may change the name of a given group. Only a groups founder may change its name.
-	 \item @param json JSON object containing the ID of the group on which the name change shall be executed and the new name of the group in a string.
-	 \item @return Returns a JSON string containing information about the success of this operation.
-			 \end{description}
-	
-	 \item private String deleteMember(JSONObject json)
-	 \begin{description}
-	 \item A founder may call this method in order to remove members from his group. They will also be removed from all events in this group and their group count is decremented by one.
-	 \item @param json JSON object containing the ID of the group from which the member shall be removed and the user that should be removed.
-	 \item @return Returns a JSON string containing information about the success of this operation.
-			 \end{description}
-	
-	 \item private String getEvents(JSONObject json)
-	 \begin{description}
-	 \item Any user may request a list of events from any group he is a member of.
-	 \item @param json JSON object containing the ID of the group from which the events are requested.
-	 \item @return Returns a JSON string containing a List with all Events within that group.
-			 \end{description}
-	
-	 \item private String getGroup(JSONObject json)
-	 \begin{description}
-	 \item This method returns all relevant information about a given group and may be invoked by any member of that group.
-	 \item @param json JSON object containing the ID of the group about which the information is requested.
-	 \item @return Returns a JSON string containing information about the group such as members, events, the founder and users that have sent unanswered requests to this group.
-			 \end{description}
-	
-
-	 
-	 \item private String setFounder(JSONObject json)
-	 \begin{description}
-	 \item If a founder wishes to resign, he can call this method to transfer his rights to another user. Only a founder may invoke this method on his group. If a founder leaves his group this method is called automatically. Only a user that is currently a member in this group may be elected as the new groups founder.
-	 \item @param json JSON object containing the ID of the group whose founder shall be changed and the member of the group that is to become the founder.
-	 \item @return Returns a JSON string containing information about the success of this operation.
-			 \end{description}
-		\end{itemize}	
-	
 	\subsubsection{Status}
 	%TODO Jedes Servlet als Subsubsection mit sinnvoller Bennenung.
 	\subsubsection{GroupServlet}
