@@ -36,8 +36,11 @@ An eine Gruppe können jedoch beliebig viele Anfragen gestellt werden.
 Ebenso können in einer Gruppe beliebig viele Events existieren, an denen jeweils alle Gruppenmitglieder teilnehmen können.
 Damit die Teilnehmer eines Events sich finden können existiert die Klasse Location, eine Location kann entweder genau einem Benutzer oder genau einem Termin zugeordnet sein. 
 Eine genaue Beschreibung aller Klassen des Modells mitsamt ihren Methoden findet sich im Kapitel 3.1.
+\begin{figure}
+\centering
+\makebox[0pt]{\includegraphics[width=\paperwidth]{ModelClassDiagram.jpg}}
+\end{figure}
 
-\includegraphics[width=1.1\textwidth]{ModelClassDiagram.jpg}
 
 	\subsubsection{DatabaseManagement}
 	Die Klassen des DatabaseManagement sorgen für den Zugriff auf die Datenbank.
@@ -45,7 +48,11 @@ Eine genaue Beschreibung aller Klassen des Modells mitsamt ihren Methoden findet
 	Dies ist unsere einzige Schnittstelle zur Datenbank.	
 	Eine genaue Beschreibung aller Klassen des DatabaseAdapters mitsamt ihren Methoden findet sich im Kapitel 3.2.
 
-\includegraphics[width=1.1\textwidth]{ManagementClassDiagram.jpg}
+\begin{figure}
+\centering
+\makebox[0pt]{\includegraphics[width=\paperwidth]{ManagementClassDiagram.jpg}}
+\end{figure}
+
 
 
 	\subsubsection{Hibernate}
@@ -63,7 +70,10 @@ Das Clusteralgorithmuspaket gruppiert Standorte und kann den Mittelpunkt mehrere
 Der KMEANS-Algorithmus ist einer der am meisten genutzten Algorithmen zur Clusteranalyse und hat im Gegensatz zum DBSCAN-Algorithmus den Vorteil, dass er Cluster unterschiedlicher Dichte erkennen kann. Zudem bietet er ein signifikant besseres Laufzeitverhalten. Das Problem, dass in unserem Fall die Zahl der Cluster vor der Berechnung noch nicht feststeht, kann durch Evaluationsalgorithmen gelöst werden. Die Evaluationsalgorithmen werden in der Apache Bibliothek erst ab Version 4.0 angeboten, welche noch nicht offiziell veröffentlicht wurde, deren Clusterbibliothek jedoch schon gut getestet online verfügbar ist.
 Wir werden in der Implementierungsphase entscheiden ob wir die Apache Commons Math Bibliothek 4.0 oder 3.6.1 verwenden, da doch ein enormer Mehrwert durch die Version 4.0 entsteht.
   \newline
-	\includegraphics[width=1.1\textwidth]{AlgorithmClassDiagram.jpg}
+  \begin{figure}
+\centering
+\makebox[0pt]{\includegraphics[width=\paperwidth]{AlgorithmClassDiagram.jpg}}
+\end{figure}
 
 	\subsubsection{Servlets}
 
@@ -73,7 +83,10 @@ Die Servlets sind in ihren Aufgabenbereichen unabhängig voneinander und auf das
 Die Servlets sind auf die Services des Clients zugeschnitten, ein Servlet beantwortet also nur Anfragen von genau einem Service.
 Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem neuem Servlet unabhängig von allen anderen erstellt werden was den Entwurf erweiterbar macht.   
 
-\includegraphics[width=1.1\textwidth]{ServletsClassDiagram.jpg}
+\begin{figure}
+\centering
+\makebox[0pt]{\includegraphics[width=\paperwidth]{ServletsClassDiagram.jpg}}
+\end{figure}
 
 
 	\subsection{Client}
@@ -84,13 +97,19 @@ Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem 
 Sie sind, wie die Servlets, so entworfen, dass jeder Service seinen eigenen Aufgabenbereich übernimmt.
 Von unserer App werden folgende Services implementiert:
 \newline
-\includegraphics[width=1.1\textwidth]{Controler.jpg}
+\begin{figure}
+\centering
+\makebox[0pt]{\includegraphics[width=\paperwidth]{Controler.jpg}}
+\end{figure}
 
 	\subsubsection{Activities}
 	Alle Activities setzten sich aus XML-Dateien zusammen und bilden gemeinsam die View des Users.
 Sie nehmen als erstes Benutzerinteraktionen entgegen, leiten diese an den entsprechenden Service weiter und geben dem User entsprechendes Feedback.
 	\newline
-	\includegraphics[width=1.1\textwidth]{ViewClassDiagram.jpg}
+	\begin{figure}
+\centering
+\makebox[0pt]{\includegraphics[width=\paperwidth]{ViewClassDiagram.jpg}}
+\end{figure}
 	
 	\subsubsection{Modell}
 Das Modell versucht die Realität auf die Daten des Servers und der Applikation abzubilden und ist von dem Controller und der View unabhängig. 
@@ -100,7 +119,10 @@ Das Modell auf dem Client entspricht dem Modell des Servers.
 	\subsubsection{ServerConnection}
 	Die Klasse HTTPConnection bildet die Schnittstelle zwischen dem Server und dem Client. Die Services schicken Anfragen an sie. Diese werden über eine HTTP-Verbindung an die entsprechenden Servlets des Servers weitergeleitet und deren Antwort gibt HTTPConnection wieder an den Service zurück.
 		\newline
-		\includegraphics[width=1\textwidth]{HTTPClientClassDiagram.jpg}
+		\begin{figure}
+\centering
+\makebox[0pt]{\includegraphics[width=\paperwidth]{HTTPClientClassDiagram.jpg}}
+\end{figure}
 
 	\subsection{Fehlerbehandlung}
 Wenn auf dem Server ein Fehler auftritt wird dieser vom Servlet abgefangen und in dem JSON-String der Antwort eingetragen. Dafür gibt es extra ein Errorcode Parameter in der Klasse JSONParameter. Durch diesen Fehlercode in der Serverantwort wird dem Client der Fehler mitgeteilt.\par
