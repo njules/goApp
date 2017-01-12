@@ -22,7 +22,7 @@
 	\subsection{Server \& Client Kommunikation}
 	Wir verwenden JavaScript Object Notation Remote Procedure Call (kurz: JSON-RPC) für die Kommunikation zwischen den Clienten und dem Server.
 	Ein JSON-RPC-Call besteht aus einem JSON-Objekt, das vom Client an einen Server geschickt wird und wird auch mit einem JSON-Objekt beantwortet.
-	Durch die Nutzung von JSON-RPC versprechen wir uns eine flexible aber vor allem eine einfache Kommunikation, welche wir genau auf unsere 		Anforderungen anpassen können.
+	Durch die Nutzung von JSON-RPC versprechen wir uns eine flexible aber vor allem eine einfache Kommunikation, welche wir genau auf unsere Anforderungen anpassen können.
 Durch das explizite angeben der Methode in der Anfrage ist man frei bei der Wahl der Methoden für ein Servlet. Bei alternativen wie z.B. REST sind die Methoden eines Servlets gebunden an die Methoden (GET, POST, PUT, Delete...) des HTTP-Protkolls. Deshalb ist man nicht so frei bei der Gestaltung der Servlets und ist gezwungen seine Methoden anzupassen.
 	
 	\subsection{Server}
@@ -34,14 +34,16 @@ An eine Gruppe können jedoch beliebig viele Anfragen gestellt werden.
 Ebenso können in einer Gruppe beliebig viele Events existieren an denen jeweils alle Gruppenmitglieder teilnehmen können.
 Damit die Teilnehmer eines Events sich finden können existiert die Location Klasse, eine Location kann entweder genau einem Benutzer oder genau einem Termin zugeordnet sein. 
 Eine genaue Beschreibung aller Klassen des Modells mitsamt ihren Methoden findet sich im Kapitel 3.1.
--Hier Modell Bild einfügen-
+
+\includegraphics[width=1.1\textwidth]{ModelClassDiagram.jpg}
 
 	\subsubsection{DatabaseManagement}
 	Die Klassen des DatabaseManagement sorgen für den Zugriff auf die Datenbank.
 	Mittels Hibernate werden die gewünschten Daten aus der Datenbank abgerufen, geändert oder eingefügt und eine entsprechende Meldung an den Aufrufer gegeben.
 	Dies ist unsere einzige Schnittstelle zur Datenbank.	
 	Eine genaue Beschreibung aller Klassen des DatabaseAdapters mitsamt ihren Methoden findet sich im Kapitel 3.2.
--Hier database.management Bild einfügen-
+
+\includegraphics[width=1.1\textwidth]{ManagementClassDiagram.jpg}
 
 
 	\subsubsection{Hibernate}
@@ -59,7 +61,7 @@ Das Clusteralgorithmuspaket gruppiert Standorte und kann den Mittelpunkt mehrere
 Der KMEANS-Algorithmus ist einer der am meisten genutzen Algorithmen zur Clusteranalyse und hat im Gegensatz zum DBSCAN-Algorithmus den Vorteil, dass er Cluster unterschiedlicher Dichte erkennen kann. Zudem bietet er signifikante besseres Laufzeitverhalten. Das Problem, dass in unserem Fall die Zahl der Cluster vor der Berechnung noch nicht feststeht, kann durch Evaluationsalgorithmen gelöst werden. Die Evaluationsalgorithmen werden in der Apache Bibliothek erst ab Version 4.0 angeboten, welche noch nicht offiziell veröffentlicht wurde, deren Clusterbibliothek jedoch schon gut getestet online verfügbar ist.
 Wir werden in der Implementierungsphase entscheiden ob wir die Apache Commons Math Bibliothek 4.0 oder 3.6.1 verwenden, da doch ein enormer Mehrwert durch die Version 4.0 entsteht.
   \newline
-	\includegraphics[width=1\textwidth]{AlgorithmClassDiagram.jpg}
+	\includegraphics[width=1.1\textwidth]{AlgorithmClassDiagram.jpg}
 
 	\subsubsection{Servlets}
 	Die Servlets nehmen die Anfragen der Clienten entgegen. Diese ist immer ein JSON-String welcher von den Servlets ausgelesen und danach entsprechend behandelt wird. Die Servlets leiten die erhaltenden Anfragen entweder an die Datenbankverwaltung oder an den Algorithmus weiter und schicken das Ergebnis an den Clienten.
@@ -67,7 +69,8 @@ Die Servlets fungieren so als Schnittstelle zwischen den Anfragen des Clienten u
 Die Servlets sind in ihren Aufgabenbereichen unabhängig voneinander und auf das Modelll angepasst, so gibt es z.B. ein Servlet was alle Anfragen bezüglich eines Events beantwortet und ein weiteres welches sich um die Handhabung der Gruppenbeitrittsanfragen kümmert.
 Die Servlets sind auf die Services des Clienten zugeschnitten, ein Servlet beantwortet also nur Anfragen von genau einem Service.
 Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem neuem Servlet unabhängig von allen anderen erstellt werden was den Entwurf erweiterbar macht.   
--Hier servlet Bild einfügen-
+
+\includegraphics[width=1.1\textwidth]{ServletsClassDiagram.jpg}
 
 	\subsection{Client}
 %TODO
@@ -76,23 +79,24 @@ Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem 
 	Die Services sind der Controller des Clienten und damit für die Steuerung zuständig. Hauptaufgabe ist es die Kommunikation zwischen der View und dem Server zu gewährleisten, aber auch Hintergrundprozesse anderer Art wie das erstellen eines Timers gehören in ihren Aufgabenbereich.
 Sie sind wie die Servlets so entworfen dass jeder Service seinen eigenen Aufgabenbereich übernimmt.
 Von unserer App werden folgende Services implementiert:
-
--Hier services Bild einfügen-
+\newline
+\includegraphics[width=1.1\textwidth]{Controler.jpg}
 
 	\subsubsection{Activities}
 	Alle Activities setzten sich aus XML-Dateien zusammen und bilden gemeinsam die View des Users.
 Sie nehmen als erstes Benutzerinteraktionen entgegen, leiten diese an den entsprechenden Service weiter und geben dem User entsprechendes Feedback.
 	\newline
-	\includegraphics[width=1\textwidth]{ViewClassDiagram.jpg}
+	\includegraphics[width=1.1\textwidth]{ViewClassDiagram.jpg}
 	
 	\subsubsection{Modell}
 Das Modell versucht die Realität auf die Daten des Servers und der Applikation abzubilden und ist von dem Controller und der View unabhängig. 
 %TODO Entwurfsmuster ?
 Das Modell auf dem Client entspricht dem Modell des Servers.
-	\subsubsection{ServerAdapter}
+	\
+	subsubsection{ServerAdapter}
 	Der ServerAdapter bildet die Schnittstelle zwischen dem Server und dem Client. Die Services schicken Anfragen an den ServerAdapter, welcher diese über eine HTTP-Verbindung an die entsprechenden Servlets des Servers weiterleitet und dessen Antwort wieder an den Service zurückgibt.
 		\newline
-		\includegraphics[width=1\textwidth]{HTTPClientClass Diagram.jpg}
+		\includegraphics[width=1\textwidth]{HTTPClientClassDiagram.jpg}
 
 	\subsection{Fehlerbehandlung}
 Wenn auf dem Server ein Fehler auftritt wird dieser vom Servlet abgefangen und in dem JSONObjekten der Antwort eingetragen. Dafür gibt es extra ein Errorcode Parameter des JSONObjektes. Durch diesen Fehlecodein der Serverantwort wird dem Client der Fehler mitgeteilt.\par
