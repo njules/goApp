@@ -9,8 +9,11 @@
 	An user describes an user of the goApp.
 	\newline Attributes:
 	\begin{itemize}
-	\item private int Id : The Id is used to identify each user and is therefore unique and can not be changed.
+	\item private int id : The id is used to identify each user and is therefore unique and readonly.
 	\item private String name : The name of an user is selectable by the user and can also be changed.
+	\item private List<Group> groups : All groups the user is a member of.
+	\item private Location location : The current location of the user
+	\item private List<Event> events : all events the user has not rejected
 	\end{itemize}
 	Methods: 
 	\begin{itemize}
@@ -19,25 +22,19 @@
 		\item @param id The Id of the user. 
 	 	\item @param name The name of the user.
 		\end{description}
-	\item public void setName(String name)
-		\begin{description}
-		\item Sets the name of the user
-	 	\item @param name The new name of the user.
-		\end{description}
-	\item public String getName()
-		\begin{description}
-		\item Returns the name of the user.
-	 	\item @return The name of the user.
-		\end{description}
-	\item public int getId()
-		\begin{description}
-		\item  Returns the Id of the user.
-	 	\item @return The Id of the user.
-		\end{description}
+	\item public getter of all attributes
+	\item public setter of name and location
+	\item public add of elemts to groups and events
+	\item public delete of elemnts of groups and events
 	\end{itemize}
 
 	\subsubsection{public class Request}
 	A request is created whenever a user wants to join a new group and deleted as soon as the founder adds or rejects the user.
+	\newline Attributes:
+	\begin{itemize}
+	\item private Group group : readonly
+	\item private User user : readonly
+	\end{itemize}
 	\newline
 	Methods: 
 	\begin{itemize}
@@ -46,14 +43,37 @@
 		\item @param user The user who creates the request.
 		\item @param group The group which the user wants to join.
 		\end{description}
+	\item public getter of all attributes
 	\end{itemize}
+	
+
+
+\subsubsection {public class Participant} 
+ the Participant class describes the status of a participant during the event.
+
+\newline Attributes:
+\begin{itemize}
+\item	private int status : can be: not participate, not seen, participate, started
+\end{itemize}
+	\newline
+	Methods: 
+	\begin{itemize}
+	\item getter and setter of status
+	\end{itemize}
+
+}
 	
 	\subsubsection{public class Group}
 	A group is a composition of several users of the goApp, in which the users can create events.
 	\newline Attributes:
 	\begin{itemize}
-	\item private int Id : The Id is used to identify each group and is therefore unique and can not be changed.
+	\item private int Id : The Id is used to identify each group and is therefore unique and readonly.
 	\item private String name : The name of a group is given by the founder and can be changed.
+	\item private User founder : created the group and can change name, members and can delete the group
+	\item private List<User> members : all user in the group
+	\item private List<Event> events : all events in the group
+	\item private List<Request> requests  : all requests of the group
+	
 	\end{itemize}
 	Methods:
 	\begin{itemize}
@@ -62,30 +82,24 @@
 		\item @param id The Id of the group.
 		\item @param name The name of the group.
 		\end{description}
-	\item public void setName(String name)
-		\begin{description}
-		\item Sets the name of the group.
-	 	\item @param name The new name of the group.
-		\end{description}
-	\item public String getName()
-		\begin{description}
-		\item Returns the name of the group.
-	 	\item @return The name of the group.
-		\end{description}
-	\item public int getId()
-		\begin{description}
-		\item Returns the Id of the Group.
-	 	\item @return The Id of the Group.
-		\end{description}
+	\item public getter of all attributes
+	\item public setter of name and founder
+	\item public add of elements of members, events and requests
+	\item public delete of elements of members, events and requests
 	\end{itemize}
 
 	\subsubsection{public class Event}
 	An event is created by a user within a specific group.
 	\newline Attributes:
 	\begin{itemize}
-	\item private  int Id : The Id is used to identify each event and is therefore unique and can not be changed.
+	\item private  int Id : The Id is used to identify each event and is therefore unique and readonly.
 	\item private String name : The name of an event is given by the creator.
 	\item private Time time : The time of an event tells when the event is starting and is set by the creator of the event.
+	\item private Group group : The event is in the group. Readonly
+	\item private Location destination : destination of the event
+	\item private User admin : the creator of the events. The admin participates automatically . Readonly
+	\item private List<User> participants : all member of the group who haven't rejected the event jet
+	\item private List<Location> groupLocations : The locations which were calculated by the clustering algorithm
 	\end{itemize}
 	Methods:
 	\begin{itemize}
@@ -95,31 +109,10 @@
 		\item @param name The name of the event.
 		\item @param time The time of the event.
 		\end{description}
-	\item public synchronized void setTime(Time time)
-		\begin{description}
-		\item Sets the time of the event.
-	 	\item @param time The new time of the event.
-		\end{description}
-	\item public void setName(String name)
-		\begin{description}
-		\item Sets the name of the event.
-	 	\item @param name The new name of the event.
-		\end{description}
-	\item public Time getTime()
-		\begin{description}
-		\item Returns the time of the event.
-	 	\item @return The time of the event.
-		\end{description}
-	\item public String getName()
-		\begin{description}
-		\item Returns the name of the event.
-	 	\item @return The name of the event.
-		\end{description}
-	\item public int getId()
-		\begin{description}
-		\item Returns the Id of the event
-	 	\item @return The Id of the event.
-		\end{description}
+	\item public getter of all attributes
+	\item public setter of name, time and destination
+	\item public add of participants and groupLocations
+	\item public delete of participants and groupLocations
 	\end{itemize}
 
 	\subsubsection{public class Location}
@@ -138,36 +131,8 @@
 		\item @param latitude The latitude value of the position.
 		\item @param name The name of the location.
 		\end{description}
-	\item public void setName(String name)
-		\begin{description}
-		\item Sets the name of a location.
-	 	\item @param name The new name of the location.
-		\end{description}
-	\item public void setLatitude(double latitude)
-		\begin{description}
-		\item Sets the latitude of the location.
-	 	\item @param latitude The new latitude value.
-		\end{description}
-	\item public void setLongitude(double longitude)
-		\begin{description}
-		\item Sets the longitude value of the location.
-	 	\item @param longitude The new longitude value.
-		\end{description}
-	\item public String getName()
-		\begin{description}
-		\item Returns the name of the location.
-	 	\item @return The name of the location.
-		\end{description}
-	\item public double getLatitude()
-		\begin{description}
-		\item Returns the latitude value of the location.
-	 	\item @return The latitude value of the location.
-		\end{description}
-	\item public double getLongitude()
-		\begin{description}
-		\item Returns the longitude value of the location.
-	 	\item @return The longitude value of the location.
-		\end{description}
+	\item getter of all attributes
+	\item setter of all attributes
 	\end{itemize}
 
 	\subsection{edu.kit.pse.gruppe1.goApp.server.database.management}	
