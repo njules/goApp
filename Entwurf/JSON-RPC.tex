@@ -41,7 +41,15 @@ Daher gilt, dass man GET-Requests beliebig oft ausführen kann ohne einen Fehler
 	\subsubsection{public class HTTPConnection}
 If a service wants to communicate with the server, the service has to create a HTTPConnection object and must call the sendGet/PostRequest method.
 For later requests the service can use the same HTTPConnection object.
-\newline Methods:
+\newline 
+Attributs:
+\begin{itemize}
+\item private static final String SERVER{\_}URL
+		\begin{description}
+		\item URL-adress of the Server
+		\end{description}
+\end{itemize}
+Methods:
 \begin{itemize}
 	\item public HTTPConnection(String nameOfServlet)
 		\begin{description}
