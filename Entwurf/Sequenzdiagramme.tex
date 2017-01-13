@@ -54,7 +54,7 @@ Diese sendet dann die Anfrage an den Server, welcher die Anfrage bearbeitet (\hy
 
 \includegraphics[width=1.1\textwidth]{Servlet_MAnagement.jpg}
 Wenn bei einem Servlet die doPost Methode aufgerufen wird, erstellt es ein JSONObject zu dem übergebenen JSON-String.
-Von diesem holt es sich den Namen der Methode und ruft die entsprechende Methode mit dem JSONObject als Parameter bei sich auf. Die accept-Methode liest dann aus dem JSONObject die GroupId und die UserId aus und erstellt ein GroupManagement Objekt dem es sein DatabaseInitializer mitgibt. Diesen benötigt jede Management Klasse um Sessions für die Datenbank zu bekommen.
+Von diesem holt es sich den Namen der Methode und ruft die entsprechende Methode mit dem JSONObject als Parameter bei sich auf. Die accept-Methode liest dann aus dem JSONObject die GroupId und die UserId aus und erstellt ein GroupManagement Objekt.
 Nun ruft das Servlet die addMember-Methode von dem GroupManagement auf. Diese Methode fügt in den User zur Gruppe hinzu. Zusätzlich erstellt das Servlet ein RequestManagement Objekt, bei welchem es die Methode delete aufruft. Diese löscht die Gruppenanfrage aus der Datenbank. Die accept-Methode erstellt dann ein JSONObject und fügt ihm eine AnfrageId und einen ErrorCode, welcher angibt ob ein Fehler auftrat, hinzu. Danach erstellt die Methode den JSON-String aus dem JSONObject und gibt diesen an die doPost-Methode zurück. Diese sendet den JSON-String zurück an den Client.
 
 \subsection{Clustering Algorithmus}

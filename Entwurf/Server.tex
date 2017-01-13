@@ -140,11 +140,19 @@
 
 	\subsubsection{DatabaseInitializer}
 	Factory for creating Session Factory for DB communication.
-	\newline Methods:
+	\newline 
+	Attributes:
 	\begin{itemize}
-		\item public SessionFactory getFactory()
+		\item private static SessionFactory factory;
 		\begin{description}
-			\item Factory Method
+			\item This is the only SessionFactory on the Server
+		\end{description}
+	\end{itemize}
+	Methods:
+	\begin{itemize}
+		\item public static SessionFactory getFactory()
+		\begin{description}
+			\item Method returns the attribute factory and initialize factory if it is null
 			\item @return SessionFactory Object from Hibernate Library
 		\end{description}
 	\end{itemize}
@@ -159,13 +167,6 @@
 			\item @param ID ID from Entry to delete
 			\item @return true, if deletion was successfull, otherwise false
 		\end{description}
-		
-		\item void Management(DatabaseInitializer dbInitializer);
-		\begin{description}
-			\item Constructor which initializes a DB Session
-			\item @param dbInitializer DataBaseInitializier Object - Created from Factory
-		\end{description}
-	\end{itemize}
 	
 	\subsubsection{GroupManagement}
 	Manages Group Table
