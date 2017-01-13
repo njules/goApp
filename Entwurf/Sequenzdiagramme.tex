@@ -27,6 +27,7 @@ Die folgenden Diagramme, Activity-Service Kommunikation, Service-ServerConnectio
 	
 
 \subsubsection{Service-ServerConnection Kommunikation}
+
 Wenn bei dem RequestService die accept Methode aufgerufen wird, erstellt dieser zunächst ein JSONObject, in dem die Serveranfrage codiert wird. Er fügt dem JSONObject
 \begin{itemize}
 \item  die ID der Anfrage,
@@ -43,11 +44,8 @@ Diese sendet dann die Anfrage an den Server, welcher die Anfrage bearbeitet (\hy
 
 %Der RequestService erstellt daraufhin einen JSONString und leitet diesen an die Klasse %HTTPConnection weiter, diese Klasse liegt im  Package serverConnection und ist der einzige %Kommunikationsweg der App mit dem Server.
 %HTTPConnection wählt das Request Servlet aus und startet auf diesem die passende Methode.
-%Von hier werden 
-
-
+%Von hier werden
 \hyperlink{ServletDatenbank}{}
-
 \subsubsection{Servlet-Datenbankmanagement Kommunikation}
 
 \includegraphics[width=1.1\textwidth]{Servlet_MAnagement.jpg}
