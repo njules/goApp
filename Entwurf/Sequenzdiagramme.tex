@@ -1,17 +1,44 @@
 % !TEX root = Entwurf_goApp.tex
 \section{Sequenzdiagramme}
 
+\subsection{Benutzer zur einer Gruppe hinzufügen}
+Im folgenden werden wir anhand einer Beispiel Funktionalität der goApp interne Abläufe vorstellen.
+Im Beispiel geht es darum einen Benutzer der zuvor eine Beitrittsanfrage an eine Gruppe gestellt hat in die Gruppe aufzunehmen.
+Hierzu muss der Gründer der Gruppe von der Startseite (StartActivity) zur Gruppeninformationsansicht (GroupInfoActivity) navigieren und dort mit einem Klick die Anfrage bestätigen.
+Innerhalb der Datenbank muss hierfür der anfragende Benutzer in die Gruppe hinzugefügt werden und die Beitrittsanfrage anschließend gelöscht werden.
+\ \\
+\ \\
+\ \\
 \includegraphics[width=1.1\textwidth]{addMemberSequenceDiagram.jpg}
+\ \\
+\ \\
+Obiges Diagramm veranschaulicht grob wie diese Funktionalität in unserer App umgesetzt wird.
+Der Gruppengründer befindet sich hier schon in der GroupInfoActivity und drückt dort den Button um die Anfrage anzunehmen.
+Die GroupInfoActivity startet daraufhin mit einem Intent den RequestService, welcher sich um jegliche Bearbeitung von Anfragen kümmert.
+Der RequestService schickt mithilfe der Klasse HTTPConnection die Anfrage an das RequestServlet, welches das Gegenstück zum RequestService auf dem Server darstellt.
+Die Anfrage wird hier ausgewertet und mithilfe der Klassen welche für die Datenbankverwaltung zuständig sind umgesetzt, in diesem Fall fügt die Klasse GroupManagement den Benutzer in die Gruppe hinzu und die Klasse RequestManagement löscht die Anfrage da diese nicht mehr benötigt wird.
+Das RequestServlet antwortet daraufhin dem Clienten und der RequestService sorgt dafür dass der Benutzer über die View ein Feedback bekommt. \newline
+Dieses Diagramm zeigt nicht alle Feinheiten der internen Abläufe sondern vereinfacht vieles, es eignet sich aber um einen ersten Überblick zu erhalten.
+Die folgenden Diagramme, Activity-Service Kommunikation, Service-ServerConnection Kommunikation und Servlet-Datenbankmanagement Kommunikation illustieren deshalb die selbe Anfrage, einen Benutzer der zuvor eine Beitrittsanfrage an eine Gruppe gestellt hat in die Gruppe aufzunehmen, detallierter und spezifisch auf die jeweilige Kommunikation.
 
 \subsubsection{Activity-Service Kommunikation}
-	\includegraphics[width=1.1\textwidth]{Activity_Service.jpg}
+
+\includegraphics[width=1.1\textwidth]{Activity_Service.jpg}
 	
+
 \subsubsection{Service-ServerConnection Kommunikation}
+
 \includegraphics[width=1.1\textwidth]{Service_ServerConnection.jpg}
 
+Der RequestService erstellt daraufhin einen JSONString und leitet diesen an die Klasse HTTPConnection weiter, diese Klasse liegt im  Package serverConnection und ist der einzige Kommunikationsweg der App mit dem Server.
+HTTPConnection wählt das Request Servlet aus und startet auf diesem die passende Methode.
+Von hier werden 
+
 \subsubsection{Servlet-Datenbankmanagement Kommunikation}
+
 \includegraphics[width=1.1\textwidth]{Servlet_MAnagement.jpg}
 
-\subsubsection{Clustering Algorithmus}
+
+\subsection{Clustering Algorithmus}
 	
 	\newpage
