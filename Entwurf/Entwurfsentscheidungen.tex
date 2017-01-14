@@ -18,7 +18,9 @@ Zudem berechnet der Server mithilfe eines Clustering-Algorithmus die Gruppenmitt
 Der Aufbau des Servers basiert auf einer Schichtenarchitektur und hat somit eine geringere Kopplung bei gleichzeitig hoher Kohäsion der einzelnen Schichten.
 	
 	\subsection{Paketstruktur}
-	 \includegraphics[width=1.1\textwidth]{Packages.png}
+	\begin {center}
+\makebox[0pt]{\includegraphics[width=0.99\paperwidth]{Packages.png}}
+\end {center}
 	\subsection{Server \& Client Kommunikation}
 
 	Wir verwenden JavaScript Object Notation Remote Procedure Call (kurz: JSON-RPC) für die Kommunikation zwischen den Clients und dem Server.
@@ -112,7 +114,7 @@ Von unserer App werden folgende Services implementiert:
 
 
 \begin {center}
-\makebox[0pt]{\includegraphics[width=\paperwidth]{Controler.jpg}}
+\makebox[0pt]{\includegraphics[width=0.9\paperwidth]{Controler.jpg}}
 \end {center}
 Siehe Paketbeschreibung \hyperlink{controler.service}{Services}.
 
@@ -126,13 +128,13 @@ Sie nehmen als erstes Benutzerinteraktionen entgegen, leiten diese an den entspr
 \item Sie wird vom Betriebssystem beendet, die aktive Activity kann nicht beendet werden.  Um die Activity dann wieder anzuzeigen muss sie neugestartet werden und Daten müssen erneut geladen werden.
 \end{itemize}
 Eine Activity hat folgenden Lebenszyklus:\newline
-\includegraphics[width=.8\textwidth]{activity_lifecycle.png}
+\includegraphics[width=.9\textwidth]{activity_lifecycle.png}
 \textit{Quelle: https://developer.android.com/reference/android/app/Activity.html}
 Unsere App besitzt folgende Activities:
 \newline
 
 \begin {center}
-\makebox[0pt]{\includegraphics[width=\paperwidth]{ViewClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=0.95\paperwidth]{ViewClassDiagram.jpg}}
 \end {center}
 
 Siehe Paketbeschreibung \hyperlink{view}{Activities}.
@@ -147,7 +149,7 @@ Das Modell auf dem Client entspricht dem Modell des Servers.
 Siehe Paketbeschreibung \hyperlink{controler.serverConnection}{ServerConnection}.
 
 \begin {center}
-\makebox[0pt]{\includegraphics[width=\paperwidth]{HTTPClientClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=\textwidth]{HTTPClientClassDiagram.jpg}}
 \end {center}
 
 	\subsection{Fehlerbehandlung}

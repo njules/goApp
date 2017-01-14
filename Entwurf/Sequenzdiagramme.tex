@@ -9,7 +9,9 @@ Innerhalb der Datenbank muss hierfür der anfragende Benutzer in die Gruppe hinz
 \ \\
 \ \\
 \ \\
-\includegraphics[width=1.1\textwidth]{addMemberSequenceDiagram.jpg}
+\begin {center}
+\makebox[0pt]{\includegraphics[width=\paperwidth]{addMemberSequenceDiagram.jpg}}
+\end {center}
 \ \\
 \ \\
 Obiges Diagramm veranschaulicht grob wie diese Funktionalität in unserer App umgesetzt wird.
@@ -23,7 +25,9 @@ Die folgenden Diagramme, Activity-Service Kommunikation, Service-ServerConnectio
 
 \subsubsection{Activity-Service Kommunikation}
 
-\includegraphics[width=1.1\textwidth]{Activity_Service.jpg}
+\begin {center}
+\makebox[0pt]{\includegraphics[width=\paperwidth]{Activity_Service.jpg}}
+\end {center}
 	Wenn der Gruppengründer auf die Gruppe klickt, wechselt die Ansicht zu der GroupActivity. Dort klickt er auf Info was ihn zur GroupInfoActivity führt. Bei dieser werden ihm alle Gruppenanfragen angezeigt. Da er den Anfragesteller zur Gruppe  hinzufügen will klickt er auf Anfrage annehmen. Dadurch wird die Methode OnClickButton der GroupInfoActivity aufgerufen. Diese erstellt einen Intent in dem enthalten ist, welche Methode des Services ausgeführt werden soll und die dafür nötigen Parameter. 
 Dieser Intent wird dann bei der Methode startService an den RequestService übergeben. Dieser stellt eine Anfrage an den Server (\hyperlink{ServiceServerConnection}{siehe Service-ServerConnection Kommunikation}). Und erstellt einen Intent in dem die Informationen, die die Activty benötigt stehen. In diesem Fall also ob auf dem Server ein Fehler aufgetreten ist.
 Der Intent wird über den LocalBroadcastManager des Andoidsystems an alle registrierten Klassen der App gesendet. Dadurch empfängt die GroupInfoActivity den Intent und kann die Benutzeroberfläche aktualisieren.
@@ -31,7 +35,9 @@ Der Intent wird über den LocalBroadcastManager des Andoidsystems an alle regist
 
 \hypertarget{ServiceServerConnection}{}
 \subsubsection{Service-ServerConnection Kommunikation}
-\includegraphics[width=1.1\textwidth]{Service_ServerConnection.jpg}
+\begin {center}
+\makebox[0pt]{\includegraphics[width=0.9\paperwidth]{Service_ServerConnection.jpg}}
+\end {center}
 
 Wenn bei dem RequestService die accept Methode aufgerufen wird, erstellt dieser zunächst ein JSONObject, in dem die Serveranfrage codiert wird. Er fügt dem JSONObject
 \begin{itemize}
@@ -51,8 +57,9 @@ Diese sendet dann die Anfrage an den Server, welcher die Anfrage bearbeitet (\hy
 %Von hier werden
 \hypertarget{ServletDatenbank}{}
 \subsubsection{Servlet-Datenbankmanagement Kommunikation}
-
-\includegraphics[width=1.1\textwidth]{Servlet_MAnagement.jpg}
+\begin {center}
+\makebox[0pt]{\includegraphics[width=\paperwidth]{Servlet_MAnagement.jpg}}
+\end {center}
 Wenn bei einem Servlet die doPost Methode aufgerufen wird, erstellt es ein JSONObject zu dem übergebenen JSON-String.
 Von diesem holt es sich den Namen der Methode und ruft die entsprechende Methode mit dem JSONObject als Parameter bei sich auf. Die accept-Methode liest dann aus dem JSONObject die GroupId und die UserId aus und erstellt ein GroupManagement Objekt.
 Nun ruft das Servlet die addMember-Methode von dem GroupManagement auf. Diese Methode fügt in den User zur Gruppe hinzu. Zusätzlich erstellt das Servlet ein RequestManagement Objekt, bei welchem es die Methode delete aufruft. Diese löscht die Gruppenanfrage aus der Datenbank. Die accept-Methode erstellt dann ein JSONObject und fügt ihm eine AnfrageId und einen ErrorCode, welcher angibt ob ein Fehler auftrat, hinzu. Danach erstellt die Methode den JSON-String aus dem JSONObject und gibt diesen an die doPost-Methode zurück. Diese sendet den JSON-String zurück an den Client.
