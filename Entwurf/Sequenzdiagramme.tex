@@ -2,7 +2,7 @@
 \section{Sequenzdiagramme}
 
 \subsection{Benutzer zur einer Gruppe hinzufügen}
-Im folgenden werden wir anhand einer Beispiel Funktionalität der goApp interne Abläufe vorstellen.
+Im Folgenden werden wir anhand einer Beispiel Funktionalität der goApp interne Abläufe vorstellen.
 Im Beispiel geht es darum einen Benutzer der zuvor eine Beitrittsanfrage an eine Gruppe gestellt hat in die Gruppe aufzunehmen.
 Hierzu muss der Gründer der Gruppe von der Startseite (StartActivity) zur Gruppeninformationsansicht (GroupInfoActivity) navigieren und dort mit einem Klick die Anfrage bestätigen.
 Innerhalb der Datenbank muss hierfür der anfragende Benutzer in die Gruppe hinzugefügt werden und die Beitrittsanfrage anschließend gelöscht werden.
@@ -64,6 +64,13 @@ Wenn bei einem Servlet die doPost Methode aufgerufen wird, erstellt es ein JSONO
 Von diesem holt es sich den Namen der Methode und ruft die entsprechende Methode mit dem JSONObject als Parameter bei sich auf. Die accept-Methode liest dann aus dem JSONObject die GroupId und die UserId aus und erstellt ein GroupManagement Objekt.
 Nun ruft das Servlet die addMember-Methode von dem GroupManagement auf. Diese Methode fügt in den User zur Gruppe hinzu. Zusätzlich erstellt das Servlet ein RequestManagement Objekt, bei welchem es die Methode delete aufruft. Diese löscht die Gruppenanfrage aus der Datenbank. Die accept-Methode erstellt dann ein JSONObject und fügt ihm eine AnfrageId und einen ErrorCode, welcher angibt ob ein Fehler auftrat, hinzu. Danach erstellt die Methode den JSON-String aus dem JSONObject und gibt diesen an die doPost-Methode zurück. Diese sendet den JSON-String zurück an den Client.
 
-\subsection{Clustering Algorithmus}
+\subsection{Clusterbildung von Standorten}
+
+
+\begin {center}
+\makebox[0pt]{\includegraphics[width=\paperwidth]{AlgorithmSequence.jpg}}
+\end {center}
+
+In diesem Kapitel wird die Funktionsweise des Clusteralgorithmuspakets anhand eines Sequenzdiagrammes veranschaulicht. Dabei erhält die Klasse ClusterFacade, die auch als Fassade des Paketes fungiert, einen Aufruf der Methode getClusteredCentralPoints. Hierbei wird das gewünschte Event als Parameter übergeben, dessen zugehörige Daten verarbeitet werden sollen. Hierzu spricht die Klasse ClusterFacade die Klasse DatabaseManagement an, die alle dem Event zugehörige Standorte zurückgibt. Nachfolgend ruft die ClusterFacade Klasse den Clusterer auf, wobei es irrelevant ist um welchen Clusteralgorithmus es sich dabei handelt, sobald er von der Klasse Clusterer erbt. Dem Clusterer werden alle Standorte als Liste von Punkten übergeben, die der Clusterer nun nach jeweiligem Algorithmus clustert. Die geclusterten Punkte werden der Klasse ClusterFacade als Liste an CentroidCluster, eine Clusterstruktur mit explizitem mittleren Punkt, zurückgegeben. Danach ruft ClusterFacade für jedes CentroidCluster der Liste die Methode getCentralPoint der Klasse CentralPointAlgo auf. Die jeweilige Realisierung der abstrakten Klasse CentralPointAlgo berechnet den Kernpunkt des übergebenen Clusters und gibt diesen zurück. ClusterFacade speichert die Kernpunkte in einer Liste und gibt diese letztlich an den Aufrufer der Methode getClusteredCentralPoints zurück. 
 	
 	\newpage
