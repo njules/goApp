@@ -35,7 +35,8 @@ Daher gilt, dass man GET-Requests beliebig oft ausführen kann ohne einen Fehler
 	\subsection{edu.kit.pse.gruppe1.goApp.client.controler.serverConnection}
 	 	Nachfolgend werden die Klassen des Paketes ServerConnection näher erläutert.
  	Dieses stellt die Schnittstelle zum Server dar. Das Paket benutzt von org.json die Klassen JSONObject und JSONArray.
- 	JSONObject repräsentiert einen JSON-String, hat einen Konstruktor dem man einen JSON-String übergeben kann und besitzt die Methoden get und put um Elemente aus dem JSON-String auszulesen bzw. Elemente einem JSON-String hinzuzufügen. 
+ 	JSONObject repräsentiert einen JSON-String, hat einen Konstruktor dem man einen JSON-String übergeben kann und besitzt die Methoden get und put um Elemente aus dem JSON-String auszulesen bzw. Elemente einem JSON-String hinzuzufügen.
+ 	Zusätzlich besteht die Möglichkeit dem Konstruktor ein Objekt zu übergeben, welches dieser dann serialisiert.
  	Ein JSONArray ist eine Menge von Objekten des gleichen Typs welche zu einem JSONObject gehören.
  	
 	\subsubsection{public class HTTPConnection}
@@ -144,9 +145,12 @@ Methods:
 
 \hypertarget{Servlets}{}
 	\subsection{edu.kit.pse.gruppe1.goApp.server.servlet}
+	Im Servlet Package liegen die Servlets, welche alle von der Klasse HttpServlet erben.
+	Wenn eine Nachricht an den Server geschickt wird, leidet Tomcat die Nachricht an das in der URL angegebene Servlet weiter.
+	Dazu ruft es die doGet bzw. doPost Methode bei dem Servlet auf, welche dann den Inhalt der Nachricht auslesen und eine Antwort zurück schicken kann.
 	\subsubsection{public enum JSONParameter}
 	\hyperlink{JSONParameter}{siehe oben}
-\subsubsection{public class EventServlet}
+\subsubsection{public class EventServlet extends HttpServlet}
 This servlet is used to create, view and edit events within a given group.
 
 Methods:
@@ -173,7 +177,7 @@ Methods:
 \end{description}
 \end{itemize}
 
-\subsubsection{public class RequestSearchServlet}
+\subsubsection{public class RequestSearchServlet extends HttpServlet}
   This servlet returns active requests from a group or a user.
 Methods:
 \begin{itemize}
@@ -194,7 +198,7 @@ Methods:
 	  \item @return Returns a JSON string containing a list of all active join requests for the given group.
 	  \end{description}
 		  \end{itemize}  
-\subsubsection{public class RequestServlet}	  
+\subsubsection{public class RequestServlet extends HttpServlet}	  
 	   Methods in this class exist so that a user can request to join a group and the group founder may then accept or reject the join request.
 
  Methods:
@@ -223,7 +227,7 @@ Methods:
 	  \end{description}
 \end{itemize}	                              
 	
-	\subsubsection{public class LoginServlet}
+	\subsubsection{public class LoginServlet extends HttpServlet}
 This servlet is used to register users that start the app for the first time and login returning users.
  
 
@@ -248,7 +252,7 @@ This servlet is used to register users that start the app for the first time and
 	\end{itemize}
 	
 	
-	\subsubsection{public class LocationServlet}
+	\subsubsection{public class LocationServlet extends HttpServlet}
 	 This servlet can be used buy event participants to update their location and view the current clustered location of other participants that are on the move.
 	 
 	 Methods:
@@ -271,7 +275,7 @@ This servlet is used to register users that start the app for the first time and
 	\end{itemize}
 	
 	
-	\subsubsection{public class GroupSearchServlet}
+	\subsubsection{public class GroupSearchServlet extends HttpServlet}
 	This servlet offers methods to search for groups with a specific name or in which a given user is the member.
 
 	 Methods:
@@ -293,7 +297,7 @@ This servlet is used to register users that start the app for the first time and
 	\end{description}
 	\end{itemize}
 	
-	\subsubsection{public class GoServlet}
+	\subsubsection{public class GoServlet extends HttpServlet}
 	This servlets functions revolve around the go button and allow users to signal they started approaching the events location and view the status of other participants in this event.
 	
 	 Methods:
@@ -315,7 +319,7 @@ This servlet is used to register users that start the app for the first time and
 	\end{description}
 	\end{itemize}
 	
-	\subsubsection{public class UserServlet}
+	\subsubsection{public class UserServlet extends HttpServlet}
 	This servlet is used by users to access and manage information about them.
 
 	 Methods:
@@ -337,7 +341,7 @@ This servlet is used to register users that start the app for the first time and
 	\end{description}
 	\end{itemize}
 	
-	\subsubsection{public class ParticipateServlet}
+	\subsubsection{public class ParticipateServlet extends HttpServlet}
 	Users can access methods in this servlet to indicate whether they want to participate in an event from the group.
 	
 	 Methods:
@@ -357,7 +361,7 @@ This servlet is used to register users that start the app for the first time and
 	 \end{description}
 	\end{itemize}
 	
-	\subsubsection{public class GroupServlet}	
+	\subsubsection{public class GroupServlet extends HttpServlet}	
  This servlet contains all methods to create, manipulate and delete groups. 
 
  Methods:
@@ -413,5 +417,4 @@ This servlet is used to register users that start the app for the first time and
 	 \item @return Returns a JSON string containing information about the success of this operation.
 			 \end{description}
 		\end{itemize}	
-	\subsubsection{Status}
 	\newpage

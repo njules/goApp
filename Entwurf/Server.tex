@@ -28,6 +28,7 @@
 	\item public delete of elemnts of groups and events
 	\end{itemize}
 
+
 	\subsubsection{public class Request}
 	A request is created whenever a user wants to join a new group and deleted as soon as the founder adds or rejects the user.
 	\newline Attributes:
@@ -35,7 +36,7 @@
 	\item private Group group : readonly
 	\item private User user : readonly
 	\end{itemize}
-	\newline
+	
 	Methods: 
 	\begin{itemize}
 	\item public Request(User user, Group group)
@@ -51,17 +52,16 @@
 \subsubsection {public class Participant} 
  the Participant class describes the status of a participant during the event.
 
-\newline Attributes:
+Attributes:
 \begin{itemize}
 \item	private int status : can be: not participate, not seen, participate, started
 \end{itemize}
-	\newline
+
 	Methods: 
 	\begin{itemize}
 	\item getter and setter of status
 	\end{itemize}
 
-}
 	
 	\subsubsection{public class Group}
 	A group is a composition of several users of the goApp, in which the users can create events.
@@ -167,6 +167,7 @@
 			\item @param ID ID from Entry to delete
 			\item @return true, if deletion was successfull, otherwise false
 		\end{description}
+		\end{itemize}
 	
 	\subsubsection{GroupManagement}
 	Manages Group Table
