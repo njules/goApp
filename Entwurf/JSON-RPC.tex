@@ -317,7 +317,6 @@ This servlet is used to register users that start the app for the first time and
 	 
 	\end{description}
 	\end{itemize}
-	
 	\subsubsection{public class UserServlet extends HttpServlet}
 	This servlet is used by users to access and manage information about them.
 
@@ -339,7 +338,7 @@ This servlet is used to register users that start the app for the first time and
 	  
 	\end{description}
 	\end{itemize}
-	
+	\newpage
 	\subsubsection{public class ParticipateServlet extends HttpServlet}
 	Users can access methods in this servlet to indicate whether they want to participate in an event from the group.
 	
@@ -359,7 +358,7 @@ This servlet is used to register users that start the app for the first time and
 	 \item @return Returns a JSON string containing information about the success of this operation.
 	 \end{description}
 	\end{itemize}
-	
+	\newpage
 	\subsubsection{public class GroupServlet extends HttpServlet}	
  This servlet contains all methods to create, manipulate and delete groups. 
 
@@ -392,7 +391,7 @@ This servlet is used to register users that start the app for the first time and
 	 \item @param json JSON object containing the ID of the group from which the member shall be removed and the user that should be removed.
 	 \item @return Returns a JSON string containing information about the success of this operation.
 			 \end{description}
-	
+	\newpage
 	 \item private String getEvents(JSONObject json)
 	 \begin{description}
 	 \item Any user may request a list of events from any group he is a member of.
