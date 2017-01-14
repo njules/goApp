@@ -139,7 +139,7 @@ Attributes:
 
 \hypertarget{database.management}{}
 	\subsection{edu.kit.pse.gruppe1.goApp.server.database.management}	
-	%TODO: Kurzer Beschreibungstext
+	Dies sind die Verwaltungsklasse der Datenbank. Nur über diese wird der Zugriff realisiert.
 
 	\subsubsection{DatabaseInitializer}
 	Factory for creating Session Factory for DB communication.
@@ -208,13 +208,13 @@ Attributes:
 				\item  @param groupID ID of Group to get
 				\item  @return a Group
 			\end{description}
-			\item public List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.Group> getGroupsByMember(String member)
+			\item public List<Group> getGroupsByMember(String member)
 			\begin{description}
 				\item get all Groups with given Member
 				\item @param member Name of Member
 				\item @return List of Groups
 			\end{description}
-			\item public List<pse.goApp.client.model.Group> getGroupsByName(String searchName)
+			\item public List<Group> getGroupsByName(String searchName)
 			\begin{description}
 				\item get all Groups with given Name
 				\item @param searchName name to search for
@@ -234,7 +234,7 @@ Attributes:
 				\item @param memberID ID of member to delete
 				\item @return true, if deletion was successfull, otherwise false
 			\end{description}
-			\item public List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.Event> getEvents(int groupID)
+			\item public List<Event> getEvents(int groupID)
 			\begin{description}
 				\item return all Events which are connected with given Group
 				\item  @param groupID GroupID to search Events for
@@ -340,7 +340,7 @@ Attributes:
 				\item  @param eventId eventID to combine with user
 				\item  @param userId userID to combine with Event
 			\end{description}
-			\item public boolean updateStatus(int eventID, int userID, boolean newStatus)
+			\item public boolean updateStatus(int eventID, int userID, int newStatus)
 			\begin{description}
 				\item updates Status of given user and eventID
 				\item  @param eventID eventID to upate
@@ -355,19 +355,19 @@ Attributes:
 				\item  @param userID userID to remove
 				\item  @return true, if update was successfull, otherwise false
 			\end{description}
-			\item public List<pse.goApp.client.model.Event> getEvents(int userID)
+			\item public List<Event> getEvents(int userID)
 			\begin{description}
 				\item get all events in which given user participates
 				\item @param userID ID of user
 				\item @return List of matching Events
 			\end{description}
-			\item public List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.User> getUsers(int eventID)
+			\item public List<User> getUsers(int eventID)
 			\begin{description}
 				\item get all users which participate in given Event
 				\item  @param eventID ID of event
 				\item  @return List of matching User
 			\end{description}
-			\item public List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.User> getUserByStatus(String status, int eventID)
+			\item public List<User> getUserByStatus(String status, int eventID)
 			\begin{description}
 				\item get all User with given Status from an Event
 				\item @param status status to search for
@@ -387,13 +387,13 @@ Attributes:
 				\item  @param userID userID to combine with group
 				\item  @return ID of new entry
 			\end{description}
-			\item public List<pse.goApp.client.model.User> getUsers(int gruopID)
+			\item public List<User> getUsers(int gruopID)
 			\begin{description}
 				\item get all User to given Gruop
 				\item  @param gruopID ID of group
 				\item @return List of matching User
 			\end{description}
-			\item public List<pse.goApp.client.model.Group> getGroups(int userID)
+			\item public List<Group> getGroups(int userID)
 			\begin{description}
 				\item get all groups to given User
 				\item @param userID ID of User
@@ -419,13 +419,13 @@ Attributes:
 				\item @param userID userID to combine with group
 				\item @return ID of new entry
 			\end{description}
-			\item public List<pse.goApp.client.model.User> getRequestByGroup(int gruopID)
+			\item public List<User> getRequestByGroup(int gruopID)
 			\begin{description}
 				\item get all User to given Gruop
 				\item @param gruopID ID of group
 				\item @return List of matching Users
 			\end{description}
-			\item public List<pse.goApp.client.model.Group> getRequestByUser(int userID)
+			\item public List<Group> getRequestByUser(int userID)
 			\begin{description}
 				\item get all groups to given User
 				\item @param userID ID of User
