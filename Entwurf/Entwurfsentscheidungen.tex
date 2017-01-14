@@ -39,12 +39,13 @@ Ebenso können in einer Gruppe beliebig viele Events existieren, an denen jeweil
 Damit die Teilnehmer eines Events sich finden können, existiert die Klasse Location. Eine Location kann entweder genau einem Benutzer oder genau einem Termin zugeordnet sein. 
 \newline
 Siehe Paketbeschreibung \hyperlink{database.model}{Modell}.
+\newpage
 \begin {center}
-\makebox[0pt]{\includegraphics[width=0.95\paperwidth]{ModelClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=0.9\paperwidth]{ModelClassDiagram.jpg}}
 \end {center}
+Ein Objektdiagramm zur Veranschaulichung des Modells mit Beispiel Objekten findet sich im \hyperlink{ModelExample}{Anhang}.
 
-
-
+\newpage
 	\subsubsection{DatabaseManagement}
 	Die Klassen des DatabaseManagement sorgen für den Zugriff auf die Datenbank.
 	Mittels Hibernate werden die gewünschten Daten aus der Datenbank abgerufen, geändert oder eingefügt und eine entsprechende Meldung an den Aufrufer gegeben.
@@ -53,7 +54,7 @@ Siehe Paketbeschreibung \hyperlink{database.model}{Modell}.
 Siehe Paketbeschreibung \hyperlink{database.management}{DatabaseManagement}.
 
 \begin {center}
-\makebox[0pt]{\includegraphics[width=0.95\paperwidth]{ManagementClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=0.92\paperwidth]{ManagementClassDiagram.jpg}}
 \end {center}
 
 
@@ -79,7 +80,7 @@ Siehe Paketbeschreibung \hyperlink{algorithm}{Clusteringalgorithmus}.
 \begin {center}
 \makebox[0pt]{\includegraphics[width=0.95\paperwidth]{AlgorithmClassDiagram.jpg}}
 \end {center}
-
+\newpage
 	\subsubsection{Servlets}
 
 	Die Servlets nehmen die Anfragen der Clients entgegen. Diese ist ein JSON-String, welcher von den Servlets ausgelesen und danach entsprechend behandelt wird. Die Servlets leiten die erhaltenden Anfragen entweder an die Datenbankverwaltung oder an den Algorithmus weiter und schicken das Ergebnis an den Clienten.
@@ -118,7 +119,7 @@ Von unserer App werden folgende Services implementiert:
 \makebox[0pt]{\includegraphics[width=0.9\paperwidth]{Controler.jpg}}
 \end {center}
 Siehe Paketbeschreibung \hyperlink{controler.service}{Services}.
-
+\newpage
 	\subsubsection{Activities}
 Alle Activities setzten sich aus aus einer Java Klasse für die Logik, sowie einer XML-Datei für das Design der View zusammen. Eine Activity kann mehrere Fragments enthalten.
 Sie nehmen als erstes Benutzerinteraktionen entgegen, leiten diese an den entsprechenden Service weiter und geben dem User entsprechendes Feedback.
@@ -139,7 +140,7 @@ Unsere App besitzt folgende Activities:
 \end {center}
 
 Siehe Paketbeschreibung \hyperlink{view}{Activities}.
-	
+	\newpage
 	\subsubsection{Modell}
 Das Modell versucht die Realität auf die Daten des Servers und der Applikation abzubilden und ist von dem Controller und der View unabhängig. 
 Das Modell auf dem Client entspricht dem Modell des Servers.
@@ -152,7 +153,7 @@ Siehe Paketbeschreibung \hyperlink{controler.serverConnection}{ServerConnection}
 \begin {center}
 \makebox[0pt]{\includegraphics[width=0.95\textwidth]{HTTPClientClassDiagram.jpg}}
 \end {center}
-
+\newpage
 	\subsection{Fehlerbehandlung}
 Wenn auf dem Server ein Fehler auftritt wird dieser vom Servlet abgefangen und in dem JSON-String der Antwort eingetragen. Dafür gibt es einen ErrorCode Parameter in der Klasse JSONParameter. Durch diesen Fehlercode in der Serverantwort wird dem Client der Fehler mitgeteilt.\par
 
