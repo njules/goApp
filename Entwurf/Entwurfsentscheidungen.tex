@@ -8,7 +8,7 @@
 	Darauf folgen Beschreibungen zu jedem Package und schlussendlich wird auf jede Klasse im einzelnen eingegangen.
 	Im Kapitel Sequenzdiagramme werden interne Abläufe graphisch dargestellt und sollen das Zusammenspiel unserer Komponenten verdeutlichen. 
 	Im Anhang findet sich ein großformatiges Diagramm mit allen Klassen.
-	
+	i
 \subsection{Architektur}
 	Die Architektur der goApp ist die Client-Server Architektur. Diese zeichnet sich dadurch aus, dass ein passiver Server Anfragen der aktiven Clients entgegennimmt, bearbeitet und eine Antwort zurück übermittelt. Die Architektur bietet sich in diesem Fall an, da die goApp mehrere Benutzer hat und diese gleichzeitig auf die selben Daten und Services zugreifen können müssen. Durch eine Client-Server Architektur ergeben sich weitere Vorteile wie Portabilität und unabhängige Entwicklung der Komponenten.
 Ein Client ist in diesem Fall ein Androidgerät und der Server ein auf Linux basierender Webserver.
@@ -19,7 +19,7 @@ Der Aufbau des Servers basiert auf einer Schichtenarchitektur und hat somit eine
 	
 	\subsection{Paketstruktur}
 	\begin {center}
-\makebox[0pt]{\includegraphics[width=0.99\paperwidth]{Packages.png}}
+\makebox[0pt]{\includegraphics[width=0.95\paperwidth]{Packages.png}}
 \end {center}
 	\subsection{Server \& Client Kommunikation}
 
@@ -40,7 +40,7 @@ Damit die Teilnehmer eines Events sich finden können existiert die Klasse Locat
 \newline
 Siehe Paketbeschreibung \hyperlink{database.model}{Modell}.
 \begin {center}
-\makebox[0pt]{\includegraphics[width=\paperwidth]{ModelClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=0.95\paperwidth]{ModelClassDiagram.jpg}}
 \end {center}
 
 
@@ -53,7 +53,7 @@ Siehe Paketbeschreibung \hyperlink{database.model}{Modell}.
 Siehe Paketbeschreibung \hyperlink{database.management}{DatabaseManagement}.
 
 \begin {center}
-\makebox[0pt]{\includegraphics[width=\paperwidth]{ManagementClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=0.95\paperwidth]{ManagementClassDiagram.jpg}}
 \end {center}
 
 
@@ -76,7 +76,7 @@ Siehe Paketbeschreibung \hyperlink{algorithm}{Clusteringalgorithmus}.
   \newline
  
 \begin {center}
-\makebox[0pt]{\includegraphics[width=\paperwidth]{AlgorithmClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=0.95\paperwidth]{AlgorithmClassDiagram.jpg}}
 \end {center}
 
 	\subsubsection{Servlets}
@@ -90,7 +90,7 @@ Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem 
 Siehe Paketbeschreibung \hyperlink{servlet}{Servlets}.
 
 \begin {center}
-\makebox[0pt]{\includegraphics[width=\paperwidth]{ServletsClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=0.95\paperwidth]{ServletsClassDiagram.jpg}}
 \end {center}
 
 
@@ -134,7 +134,7 @@ Unsere App besitzt folgende Activities:
 \newline
 
 \begin {center}
-\makebox[0pt]{\includegraphics[width=0.95\paperwidth]{ViewClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=0.9\paperwidth]{ViewClassDiagram.jpg}}
 \end {center}
 
 Siehe Paketbeschreibung \hyperlink{view}{Activities}.
@@ -149,7 +149,7 @@ Das Modell auf dem Client entspricht dem Modell des Servers.
 Siehe Paketbeschreibung \hyperlink{controler.serverConnection}{ServerConnection}.
 
 \begin {center}
-\makebox[0pt]{\includegraphics[width=\textwidth]{HTTPClientClassDiagram.jpg}}
+\makebox[0pt]{\includegraphics[width=0.95\textwidth]{HTTPClientClassDiagram.jpg}}
 \end {center}
 
 	\subsection{Fehlerbehandlung}
