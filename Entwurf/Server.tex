@@ -294,6 +294,7 @@ Attributes:
 				\item @param time Date and Time, when Event takes place
 				\item @param userId ID of User who created the Event
 				\item @param groupID ID of Group to which Event is related to
+				\item @return created Event
 			\end{description}
 			\item public boolean update(Event chEvent)
 			\begin{description}
@@ -339,6 +340,7 @@ Attributes:
 				\item adds new entry to table
 				\item  @param eventId eventID to combine with user
 				\item  @param userId userID to combine with Event
+				\item  @return true, if adding was successfull, otherwise false
 			\end{description}
 			\item public boolean updateStatus(int eventID, int userID, int newStatus)
 			\begin{description}
