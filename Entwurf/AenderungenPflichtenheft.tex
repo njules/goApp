@@ -1,27 +1,27 @@
 % !TEX root = Entwurf_goApp.tex
 \section{Änderungen zum Pflichtenheft}
-	%TODO realisierte Wunschkriterien, gestrichene Kriterien (möglichst klein halten)
 	\subsection{Zusätzliche Funktionalität gegenüber dem Pflichtenheft}
 	\subsubsection{GO-Button}
-		Benutzer müssen wenn Sie an einem Termin teilnehmen den Go-Button drücken sobald Sie sich auf den Weg machen um vom Cluster-Algorithmus erfasst zu werden. 
+		Benutzer müssen wenn Sie an einem Termin teilnehmen den Go-Button drücken, sobald sie sich auf den Weg machen, um vom Cluster-Algorithmus erfasst zu werden. 
 		\newline
 		Vorteile:
 		\begin{itemize}
-		\item Teilnehmer die sich noch Zuhause (oder andersweitig) befinden verzerren nicht den Mittelpunkt der Gruppe.
-		\item Teilnehmer können sehen ob und welche anderen Benutzer bereits unterwegs sind und ihre Entscheidung davon abhängig machen.
+		\item Teilnehmer die sich noch Zuhause (oder wo anders) befinden, verzerren nicht den Mittelpunkt der Gruppe.
+		\item Teilnehmer können sehen, ob und welche anderen Benutzer bereits unterwegs sind und ihre Entscheidung davon abhängig machen.
 		\end{itemize}
 	\subsubsection{Clustering-Algorithm}
-	Anstatt bei einem Termin nur einen einzigen, ungenauen Mittelpunkt der Gruppe anzuzeigen wie im Pflichtenheft beschrieben wird unsere App die Standorte der Teilnehmer clustern um den Benutzern Häufungspunkte der Teilnehmer anzuzeigen.
+	Anstatt bei einem Termin nur einen einzigen, ungenauen Mittelpunkt der Gruppe anzuzeigen wie im Pflichtenheft beschrieben, wird unsere App die Standorte der Teilnehmer clustern um den Benutzern Häufungspunkte der Teilnehmer anzuzeigen.
 		\newline
 		Vorteile:
 		\begin{itemize}
-		\item Kommen Teilnehmer aus unterschiedlichen Richtungen zum Treffpunkt so können sie sehen aus welchen Richtungen sich Gruppen nähern. Dadurch können sie sich mit anderen Teilnehmern die aus der selben Richtung kommen bereits auf dem Weg zum eigentlichen Termin treffen.. 
+		\item Kommen Teilnehmer aus unterschiedlichen Richtungen zum Treffpunkt, so können sie sehen aus welchen Richtungen sich Gruppen nähern. Dadurch können sie sich mit anderen Teilnehmern die aus der selben Richtung kommen bereits auf dem Weg zum eigentlichen Termin treffen.
+		\item Teilnehmer, die zum Zeitpunkt an dem sie losgehen, weit vom Rest der Gruppe entfernt sind, verzerren den Gruppenstandort nicht.
 		\end{itemize}
 	\subsection{Herabstufung von Funktionalitäten aus dem Pflichtenheft}
 	\subsubsection{SQLite auf dem Clienten}
-	Im Pflichtenheft wurde im Kapitel 5.Produktdaten festgelegt, dass einige Informationen über Gruppen in denen man Mitglied ist sowie Termine bei denen man teilnimmt lokal auf dem Client gespeichert werden. Ein Benutzer der goApp sollte dadurch in der Lage sein alle seine Termine nachzuschlagen auch wenn sein Smartphone offline ist. Weitere Funktionalität sollte durch diese auf dem Gerät liegende Datenbank nicht unterstützt werden.
-	\newline Dies ist auch der Hauptgrund warum wir beschriebene Anforderung in ihrer Priorität herabsenken. Es ist uns wichtiger im gegebenen Zeitrahmen einen Entwurf für ein in sich funktionierendes System fertig zustellen, welches in der Implementierungsphase implementiert wird, als viele Features zu versprechen die in der Implementierung dann unter Umständen nicht umgesetzt werden können.
-	\newline Das soll allerdings nicht heißen das wir eine Erweiterung des Entwurfes mit einer zusätzlichen Datenbank auf dem Clienten ausschließen. Unser Entwurf ist so gestaltet dass er sich sinnvoll in diese Richtung, und viele andere, erweitern lässt.
-	Da sich besagte Datenbank nur mit den Daten des Servers updaten müsste und ein Nutzer nicht direkt Daten hinzufügen, sondern nur lesen kann, müsste auf der Serverseite keine zusätzliche Funktion implementiert werden um die Anforderung doch noch zu erfüllen.
+	Im Pflichtenheft wurde in den Produktdaten festgelegt, dass Informationen über eigene Gruppen und Termine lokal gespeichert werden. Ein Benutzer der goApp sollte dadurch in der Lage sein, alle seine Termine nachzuschlagen, auch wenn sein Smartphone offline ist. Weitere Funktionalität sollte durch diese, auf dem Gerät liegende Datenbank nicht unterstützt werden.
+	\newline Dies ist auch der Hauptgrund, warum wir beschriebene Anforderung in ihrer Priorität herabsenken. Es ist uns wichtiger, im gegebenen Zeitrahmen einen Entwurf für ein funktionierendes System fertigzustellen, welches in der Implementierungsphase implementiert wird, als viele Features zu versprechen, die in der Implementierung dann unter Umständen nicht umgesetzt werden können.
+	\newline Das soll allerdings nicht heißen das wir eine Erweiterung des Entwurfes mit einer zusätzlichen Datenbank auf dem Client ausschließen. Unser Entwurf ist so gestaltet dass er sich sinnvoll in diese und viele andere Richtungen, erweitern lässt.
+	Da diese Datenbank keine direkte Nutzerinteraktion zulässt und sonst nur von Daten des Servers aktualisiert werden kann, müsste auf der Serverseite keine zusätzliche Funktionalität implementiert werden um die Anforderung doch noch zu erfüllen.
 	\newline Sollten wir in der Implementierungsphase also schneller als geplant voran kommen werden wir diese Anforderung dennoch umsetzten, ansonsten bei einem erfolgreichem Launch der App schnellstmöglich als Update liefern.  
 	\newpage
