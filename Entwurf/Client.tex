@@ -35,6 +35,7 @@
 	\subsubsection {GroupService extends IntentService}
 		This Service provides methods to handle a single group.
 	\newline Methods:
+	\newpage
 	\begin{itemize}
 	\item private boolean create(String name, User founder)
 		\begin{description}
@@ -235,6 +236,7 @@
 		\end{description}
 	\end{itemize}
 	
+	\newpage
 		\hypertarget{view}{}
 	\subsection{edu.kit.pse.gruppe1.goApp.client.view}
 	In diesem Abschnitt werden die Activities der goApp und ihre Interaktionen mit den Services sowie die Übergänge zu anderen Activities vorgestellt.
@@ -254,6 +256,7 @@
 	 \item StartActivity
 	\end{itemize}
 	
+	\newpage
 	\subsubsection {StartActivity}
 	Die StartActivity gibt dem Benutzer eine Übersicht über alle Gruppen in denen er Mitglied ist und denen er eine Beitrittsanfrage geschickt hat.
 	Außerdem kann hier der Benutzername geändert werden.
@@ -273,7 +276,7 @@
 	\item GroupActivity
 	\item NewGroupActivity
 	\end{itemize} 
-	
+	\newpage
 	\subsubsection {GroupActivity}
 	Die GroupActivity zeigt dem Benutzer alle anstehenden Termine einer Gruppe, bei denen er nicht abgesagt hat, an.
 	\newline
@@ -292,7 +295,7 @@
 	 \item EventActivity
 	 \item NewEventActivity
 	\end{itemize} 
-	
+	\newpage
 	\subsubsection {GroupInfoActivity}
 	Die GroupInfoActivity zeigt einem Mitglied der Gruppe deren Mitglieder an und bietet die Möglichkeit aus der Gruppe auszutreten. Der Gruppengründer sieht zusätzlich Beitrittsanfragen an die Gruppe und kann diese bearbeiten, er kann auch Mitglieder entfernen und die Gruppe löschen.
 	\newline
@@ -309,7 +312,7 @@
 	\begin{itemize} 
 	 \item GroupActivity
 	 \end{itemize}
-	 
+	 \newpage
 	\subsubsection {NewGroupActivity}
 	Die NewGroupActivity ermöglicht es einem Benutzer nach Gruppen zu suchen um diesen Beitrittsanfragen zu schicken und neue Gruppen zu erstellen.
 	\newline
@@ -327,7 +330,7 @@
 	 \item StartActivity
 	 \item GroupActivity
 	 \end{itemize}
-	 
+	 \newpage
 	\subsubsection {EventActivity}
 	Die EventActivity lässt einen Benutzer alle Informationen zu einem Termin einsehen und bindet eine dynamische Karte ein.
 	\newline
@@ -351,7 +354,7 @@
 	\begin{itemize} 
 	 \item GroupActivity
 	 \end{itemize}
-	 
+	 \newpage
 	 \subsubsection{Fragments}
 	 Fragments sind Teile einer Activity, welche unabhängig voneinander und vom Layout geladen und mit Funktionalität bestückt werden können.  
 	 Sie können nur innerhalb von Activities existieren, sind aber leicht austauschbar und ein Fragment kann auch in mehreren Activities eingesetzt werden. 
@@ -364,7 +367,6 @@
 	 \item MemberFragment: Das Gegenstück zum FounderFragment. Wird für ein normales Mitglied in die GroupInfoActivity geladen.
 	 \end{itemize}
 	 
-	
 	\subsection{edu.kit.pse.gruppe1.goApp.client.model}
 	Das Modell entspricht \hyperlink{ServerModel}{dem Modell des Servers} ist aber natürlich auch auf dem Clienten zu implementieren, eine zusätzliche Beschreibung ist an dieser Stelle aber nicht nötig.
 	
