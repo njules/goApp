@@ -15,16 +15,15 @@ JSON Beispiel:
 }
 
 \subsection{RPC}
-RPC (Remote Procedure Call) ermöglicht es Methoden auf einem entfernten Rechner/Server aufzurufen. Wir verwenden es um unser Client-Server-Modell zu implementieren.
-Wir rufen vom Client (Android-Smartphone) eine Methode eines Servlets auf dem Server auf. Diese bearbeitet dann die Anfrage und schickt eine Antwort zurück.
-Welche Methode aufgerufen werden soll codieren wir in der Anfrage durch Angabe des Methodennamens. Das Servlet kann dadurch den richtigen Methodenaufruf initiieren.
+RPC (Remote Procedure Call) ermöglicht es, Methoden auf einem entfernten Rechner/Server aufzurufen. Wir verwenden es um unser Client-Server-Modell zu implementieren.
+Wir rufen vom Client (Android-Smartphone) eine Methode eines Servlets auf dem Server auf, welche dann die Anfrage bearbeiter und eine Antwort zurück schickt.
+Welche Methode aufgerufen werden soll, codieren wir in der Anfrage durch Angabe des Methodennamens. Das Servlet kann dadurch den richtigen Methodenaufruf initiieren.
 Der Parameter der Methode ist der JSON-String vom Client und der Rückgabewert ist der Antwort-JSON-String, welcher zum Client zurück geschickt wird.
 
 
 \subsection{HTTP-Protokoll}
 Das HTTP-Protokoll beinhaltet verschiedene Anfragemethoden.
-Wir verwenden allerdings nur GET und POST, welches die zwei wichtigsten sind.
-Wir teilen die aufrufbaren Methoden auf die 2 Anfragemethoden auf:
+Wir verwenden allerdings nur GET und POST, welches die zwei wichtigsten sind und teilen die aufrufbaren Methoden auf diese auf:
 1. GET-Requests: Anfragen die nur Daten abfragen ohne dabei Daten zu verändern.
 2. POST-Requests: Anfragen die Daten bearbeiten/verändern.
 
@@ -62,14 +61,14 @@ Methods:
 		\begin{description}
 \item Method that handles a get request.
 	 \item @param JSON The String which should be send to the server.
-	 \item @return The JSONObject of the JSON-String which was sent back from the Server
+	 \item @return The JSONObject of the JSON-String which was sent back from the Server.
 		\end{description}
 		
 		\item public void sendPostRequest(String JSON)
 		\begin{description}
 \item Method that handles a post request.
 	 \item @param JSON The String which should be send to the server.
-	 \item @return The JSONObject of the JSON-String which was sent back from the Server
+	 \item @return The JSONObject of the JSON-String which was sent back from the Server.
 		\end{description}
 	\end{itemize}
 	\hypertarget{JSONParameter}{}
@@ -122,8 +121,7 @@ Enumeration with all possible parameter-types for the JSON-strings.
 	\begin{description}
 	\item The name of the method which should be executed on the server. For example the create method of the GroupServlet.
 \end{description}
-	 
-	%TODO
+
 	\item and further ones
 \end{itemize}
 
@@ -147,8 +145,8 @@ Methods:
 \hypertarget{Servlets}{}
 	\subsection{edu.kit.pse.gruppe1.goApp.server.servlet}
 	Im Servlet Package liegen die Servlets, welche alle von der Klasse HttpServlet erben.
-	Wenn eine Nachricht an den Server geschickt wird, leidet Tomcat die Nachricht an das in der URL angegebene Servlet weiter.
-	Dazu ruft es die doGet bzw. doPost Methode bei dem Servlet auf, welche dann den Inhalt der Nachricht auslesen und eine Antwort zurück schicken kann.
+	Wenn eine Nachricht an den Server geschickt wird, leitet Tomcat die Nachricht an das in der URL angegebene Servlet weiter.
+	Dazu ruft es die doGet bzw. doPost Methode bei dem Servlet auf, welche dann den Inhalt der Nachricht ausliest und eine Antwort zurück schicken kann.
 	\subsubsection{public enum JSONParameter}
 	\hyperlink{JSONParameter}{siehe oben}
 \subsubsection{public class EventServlet extends HttpServlet}
@@ -254,7 +252,7 @@ This servlet is used to register users that start the app for the first time and
 	
 	
 	\subsubsection{public class LocationServlet extends HttpServlet}
-	 This servlet can be used buy event participants to update their location and view the current clustered location of other participants that are on the move.
+	 This servlet can be used by event participants to update their location and view the current clustered location of other participants that are on the move.
 	 
 	 Methods:
 		 \begin{itemize}
@@ -369,8 +367,8 @@ This servlet is used to register users that start the app for the first time and
 	 \begin{itemize}
 	 \item private String create(JSONObject json)
 	 \begin{description}
-	 \item This method creates a new group. A user can create a new group if has not yet reached the group limit. By creating a group his group count is incremented by one. He is also registered as the groups founder.
-	 \item @param json This JSON objects contains information about the group that is to be created such as the Name and the founding member.
+	 \item This method creates a new group. A user can create a new group if has not yet reached the group limit. By creating a group, his group count is incremented by one. He is also registered as the groups founder.
+	 \item @param json This JSON objects contains information about the group that is to be created such as the name and the founding member.
 	 \item @return Returns a JSON string containing the ID of the created group.
 			 \end{description}
 	
@@ -399,7 +397,7 @@ This servlet is used to register users that start the app for the first time and
 	 \begin{description}
 	 \item Any user may request a list of events from any group he is a member of.
 	 \item @param json JSON object containing the ID of the group from which the events are requested.
-	 \item @return Returns a JSON string containing a List with all Events within that group.
+	 \item @return Returns a JSON string containing a list with all Events within that group.
 			 \end{description}
 	
 	 \item private String getGroup(JSONObject json)
