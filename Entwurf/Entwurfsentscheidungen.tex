@@ -35,7 +35,8 @@ Pro Benutzer können bis zu 20 Anfragen gleichzeitig existieren. Diese gehören 
 An eine Gruppe können jedoch beliebig viele Anfragen gestellt werden.
 Ebenso können in einer Gruppe beliebig viele Events existieren, an denen jeweils alle Gruppenmitglieder teilnehmen können.
 Damit die Teilnehmer eines Events sich finden können existiert die Klasse Location, eine Location kann entweder genau einem Benutzer oder genau einem Termin zugeordnet sein. 
-
+\newline
+Siehe Paketbeschreibung \hyperlink{database.model}{Modell}.
 \begin {center}
 \makebox[0pt]{\includegraphics[width=\paperwidth]{ModelClassDiagram.jpg}}
 \end {center}
@@ -46,7 +47,8 @@ Damit die Teilnehmer eines Events sich finden können existiert die Klasse Locat
 	Die Klassen des DatabaseManagement sorgen für den Zugriff auf die Datenbank.
 	Mittels Hibernate werden die gewünschten Daten aus der Datenbank abgerufen, geändert oder eingefügt und eine entsprechende Meldung an den Aufrufer gegeben.
 	Dies ist unsere einzige Schnittstelle zur Datenbank.	
-	Eine genaue Beschreibung aller Klassen des DatabaseAdapters mitsamt ihren Methoden findet sich im Kapitel 3.2.
+	\newline
+Siehe Paketbeschreibung \hyperlink{database.management}{DatabaseManagement}.
 
 \begin {center}
 \makebox[0pt]{\includegraphics[width=\paperwidth]{ManagementClassDiagram.jpg}}
@@ -67,6 +69,8 @@ Damit die Teilnehmer eines Events sich finden können existiert die Klasse Locat
 Das Clusteralgorithmuspaket gruppiert Standorte und kann den Mittelpunkt mehrerer Standorte berechnen. Wir haben uns dabei dazu entschieden das Entwurfsmuster Strategie zu verwenden, um es zu ermöglichen die Implementierung der Clusteranalyse, sowie der Mittelpunktberechnung abzukapseln und somit für die jeweiligen Bedürfnisse austauschbar zu machen. Einzelne Klassen aus dem Clusteralgorithmuspaket sind aus der Apache Commons Mathematics Bibliothek und müssen somit nicht mehr von uns implementiert werden. Wir verwenden Teile dieser Bibliothek, da sie unter der Apache License steht, gut getestet ist und perfekt zu unserem Projekt passt. Außerdem soll unser Projekt einen Mehrwert generieren und nicht darin bestehen vorhandene Software nachzubauen. Das Clusteralgorithmuspaket kommuniziert direkt mit dem Package database.management und bekommt die Daten nicht von dem Servlet übergeben. Dies hat den Vorteil, dass die benötigten Daten nur von dem Algorithmus abhängig sind, was die Austauschbarkeit unterstützt. Neben den Klassen aus der Apache Bibliothek besteht dieses Paket aus eigenen Algorithmen zur Berechnung des Mittelpunkts bei der Punkte unterschiedlich gewichtet werden, um einen möglichst sinnvollen Mittelpunkt zu erhalten. Da eine wichtige Funktionalität unserer App darin liegt, Standorte der Gruppe auf einer Karte anzeigen zu lassen, legen wir auch einen besonderen Wert auf eine sinnvolle Berechnung der Cluster. Da unsere Erfahrung im Umgang mit Clusteralgorithmen noch nicht sehr groß ist wollen wir noch offen lassen welchen Clusteralgorithmus wir verwenden werden. Wir konnten unsere Auswahl bis jetzt auf den sogenannten DBSCAN-Algorithmus, bzw. den KMEANS-Algorithmus beschränken. Der DBSCAN-Algorithmus ist ein dichtebasierter Clusteralgorithmus und hat gegenüber dem KMEANS-Algorithmus den Vorteil, dass nicht vor der Berechnung klar sein muss wie viele Cluster entstehen sollen. Außerdem arbeitet er mit "Rauschen", bedeutet Punkte die keinem Cluster zugeordnet werden können, werden separat ausgegeben. Dabei arbeitet der Algorithmus mit einem Maximalabstand den Punkte zueinander haben dürfen. 
 Der KMEANS-Algorithmus ist einer der am meisten genutzten Algorithmen zur Clusteranalyse und hat im Gegensatz zum DBSCAN-Algorithmus den Vorteil, dass er Cluster unterschiedlicher Dichte erkennen kann. Zudem bietet er ein signifikant besseres Laufzeitverhalten. Das Problem, dass in unserem Fall die Zahl der Cluster vor der Berechnung noch nicht feststeht, kann durch Evaluationsalgorithmen gelöst werden. Die Evaluationsalgorithmen werden in der Apache Bibliothek erst ab Version 4.0 angeboten, welche noch nicht offiziell veröffentlicht wurde, deren Clusterbibliothek jedoch schon gut getestet online verfügbar ist.
 Wir werden in der Implementierungsphase entscheiden ob wir die Apache Commons Math Bibliothek 4.0 oder 3.6.1 verwenden, da doch ein enormer Mehrwert durch die Version 4.0 entsteht.
+\newline
+Siehe Paketbeschreibung \hyperlink{algorithm}{Clusteringalgorithmus}.
   \newline
  
 \begin {center}
@@ -80,7 +84,8 @@ Die Servlets fungieren so als Schnittstelle zwischen den Anfragen des Clients un
 Die Servlets sind in ihren Aufgabenbereichen unabhängig voneinander und auf das Modell angepasst, so gibt es z.B. ein Servlet was alle Anfragen bezüglich eines Events beantwortet und ein weiteres welches sich um die Handhabung der Gruppenbeitrittsanfragen kümmert.
 Die Servlets sind auf die Services des Clients zugeschnitten, ein Servlet beantwortet also nur Anfragen von genau einem Service.
 Für eine weitere Funktionalität kann also einfach ein neuer Service mit einem neuem Servlet unabhängig von allen anderen erstellt werden was den Entwurf erweiterbar macht.   
-
+\newline
+Siehe Paketbeschreibung \hyperlink{servlet}{Servlets}.
 
 \begin {center}
 \makebox[0pt]{\includegraphics[width=\paperwidth]{ServletsClassDiagram.jpg}}
@@ -101,12 +106,15 @@ Sie sind, wie die Servlets, so entworfen, dass jeder Service seinen eigenen Aufg
 \item sie haben eine FIFO-queue implementiert um mehrere Anfragen an den selben Service zu speichern und diese sequentiell abzuarbeiten
 \item sie beenden sich automatisch wenn sie ihre Aufgabe erledigt haben
 \end{itemize}
+
 Von unserer App werden folgende Services implementiert:
 \newline
+
 
 \begin {center}
 \makebox[0pt]{\includegraphics[width=\paperwidth]{Controler.jpg}}
 \end {center}
+Siehe Paketbeschreibung \hyperlink{controler.service}{Services}.
 
 	\subsubsection{Activities}
 Alle Activities setzten sich aus XML-Dateien, beispielsweise Fragments, zusammen und bilden gemeinsam die View des Users.
@@ -121,12 +129,13 @@ Eine Activity hat folgenden Lebenszyklus:\newline
 \includegraphics[width=.8\textwidth]{activity_lifecycle.png}
 \textit{Quelle: https://developer.android.com/reference/android/app/Activity.html}
 Unsere App besitzt folgende Activities:
-
+\newline
 
 \begin {center}
 \makebox[0pt]{\includegraphics[width=\paperwidth]{ViewClassDiagram.jpg}}
 \end {center}
 
+Siehe Paketbeschreibung \hyperlink{view}{Activities}.
 	
 	\subsubsection{Modell}
 Das Modell versucht die Realität auf die Daten des Servers und der Applikation abzubilden und ist von dem Controller und der View unabhängig. 
@@ -134,7 +143,8 @@ Das Modell auf dem Client entspricht dem Modell des Servers.
 
 	\subsubsection{ServerConnection}
 	Die Klasse HTTPConnection bildet die Schnittstelle zwischen dem Server und dem Client. Die Services schicken Anfragen an sie. Diese werden über eine HTTP-Verbindung an die entsprechenden Servlets des Servers weitergeleitet und deren Antwort gibt HTTPConnection wieder an den Service zurück.
-		\newline
+\newline
+Siehe Paketbeschreibung \hyperlink{controler.serverConnection}{ServerConnection}.
 
 \begin {center}
 \makebox[0pt]{\includegraphics[width=\paperwidth]{HTTPClientClassDiagram.jpg}}

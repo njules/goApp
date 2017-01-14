@@ -1,7 +1,7 @@
 % !TEX root = Entwurf_goApp.tex
 
 \section{Client} 
-	%TODO Jedes Package als subsection mit sinnvoller Bennenung und in diesen als subssubsection alle Klassen beschreiben.
+	\hypertarget{controler.service}{}
 	\subsection{edu.kit.pse.gruppe1.goApp.client.controler.service}
 	Im folgenden Kapitel werden alle Services die von unserer App implementiert werden beschrieben.
 	Sie alle erben von der Klasse IntentService weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent).
@@ -235,6 +235,7 @@
 		\end{description}
 	\end{itemize}
 	
+		\hypertarget{view}{}
 	\subsection{edu.kit.pse.gruppe1.goApp.client.view}
 	In diesem Abschnitt werden die Activities der goApp und ihre Interaktionen mit den Services sowie die Übergänge zu anderen Activities vorgestellt.
 	Da die Activities die GUI des Benutzers bilden, werden hier ebenfalls die GUI-Ausschnitte aus dem Pflichtenheft, mit zusätzlichen Erweiterungen, den entsprechenden Activities durch welche sie dargestellt werden zugeordnet.  
