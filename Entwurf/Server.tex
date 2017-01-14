@@ -30,7 +30,7 @@ Nachfolgend werden die Klassen des Modells mitsamt ihrer Attribute und Methoden 
 	\item public methods for deleting elements from the group and event list
 	\end{itemize}
 
-
+	\newpage
 	\subsubsection{public class Request}
 	A request is created whenever an user wants to join a new group and deleted as soon as the founder adds or rejects the user.
 	
@@ -65,7 +65,7 @@ Attributes:
 	\item getter and setter of status
 	\end{itemize}
 
-	
+	\newpage
 	\subsubsection{public class Group}
 	A group is a composition of several users of the goApp, in which the users can create events.
 
@@ -92,6 +92,7 @@ Attributes:
 	\item public methods for deleting elements from the member, event and request list
 	\end{itemize}
 
+\newpage
 	\subsubsection{public class Event}
 	An event is created by a user within a specific group.
 	\newline Attributes:
@@ -118,12 +119,12 @@ Attributes:
 	\item public methods for adding elements to the participant and groupLocation list.
 	\item public methods for deleting elements from the participant and groupLocation list.
 	\end{itemize}
-
+	\newpage
 	\subsubsection{public class Location}
 	The location is used to display something on the Map, whatever it is, an user or the center of the group.
 	\newline Attributes:
 	\begin{itemize}
-	\item private  double longitude : The longitude value of the position in degrees, range[-180,180). 
+	\item private  double longitude : The longitude value of the position in degrees, range [-180, 180). 
 	\item private  double latitude : The latitude value of the position in degrees, range [-90,90].
 	\item private String name : The name of a location helps the user to identify if the location is a central point of the group or the original meeting point.
 	\end{itemize}
@@ -139,7 +140,7 @@ Attributes:
 	\item setters of all attributes
 	\end{itemize}
 
-
+\newpage
 \hypertarget{database.management}{}
 	\subsection{edu.kit.pse.gruppe1.goApp.server.database.management}	
 	Dies sind die Verwaltungsklasse der Datenbank. Nur über diese wird der Zugriff realisiert.
@@ -189,6 +190,7 @@ This class manages the access to the group table.
 				\item  @param chGroup Group with changed attributes
 				\item  @return true, if update was successfull, otherwise false
 			\end{description}
+			\newpage
 			\item public boolean updateName(int groupID, String newName)
 			\begin{description}
 				\item updates the name of the entry
@@ -234,6 +236,7 @@ This class manages the access to the group table.
 				\item @param memberID ID of the member to delete
 				\item @return true, if deletion was successfull, otherwise false
 			\end{description}
+			\newpage
 			\item public List<Event> getEvents(int groupID)
 			\begin{description}
 				\item return all Events which are connected with the given Group
@@ -410,6 +413,7 @@ This class manages the access to the Event-User table.
 			\end{description}
 		\end{itemize}
 		
+		\newpage
 	\subsubsection{RequestManagement}
 This class manages the access to the Request table.
 		\newline Methods:
@@ -442,6 +446,7 @@ This class manages the access to the Request table.
 			\end{description}
 		\end{itemize}
   
+  \newpage
   \hypertarget{algorithm}{}
   	\subsection{edu.kit.pse.gruppe1.goApp.server.algorithm}
 	
