@@ -4,7 +4,7 @@
 	\hypertarget{controler.service}{}
 	\subsection{edu.kit.pse.gruppe1.goApp.client.controler.service}
 	Im folgenden Kapitel werden alle Services die von unserer App implementiert werden beschrieben.
-	Sie alle erben von der Klasse IntentService weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent).
+	Sie alle erben von der Klasse IntentService, weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent).
 	Weil diese Methode bei all unseren Services nur je nach Intent entscheidet, welche private Methode aufgerufen wird und das Ergebnis weiterleitet, haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt. 
 	
 	\subsubsection {LoginService extends IntentService}
@@ -13,19 +13,19 @@
 	\begin{itemize}
 	\item private User login(Int userID)
 		\begin{description}
-		\item checks if the user is already registered and gets the users data from the server database.
-	 	\item @param userID the id of the user which has to be found in the server database.
-	 	\item @return the user who is now logged in.
+		\item Checks if the user is already registered and gets the users data from the server database.
+	 	\item @param UserID the id of the user which has to be found in the server database.
+	 	\item @return The user who is now logged in.
 		\end{description}
 	\end{itemize}
 	
 	\subsubsection {UserService extends IntentService}
-		This Service provides methods to handle a single User.
+		This Service provides methods to handle a single user.
 	\newline Methods:
 	\begin{itemize}
 	\item private boolean changeName(User user, String name)
 		\begin{description}
-		\item changes the old name into the new name of a user
+		\item Changes the old name into the new name of a user.
 	 	\item @param user The user who changes his name
 	 	\item @param name The new name
 	 	\item @return true, if method was successful, otherwise false
@@ -33,45 +33,45 @@
 	\end{itemize}
 	
 	\subsubsection {GroupService extends IntentService}
-		This Service provides methods to handle a single Group.
+		This Service provides methods to handle a single group.
 	\newline Methods:
 	\begin{itemize}
 	\item private boolean create(String name, User founder)
 		\begin{description}
-		\item creates a new Group.
+		\item Creates a new Group.
 	 	\item @param name The name of the new group.
 	 	\item @param founder The user who creates the group.
-	 	\item @return true, if method was successful, otherwise false.
+	 	\item @return true, if method was successful, otherwise false
 		\end{description}
 	\item private boolean delete(Group group) 
 		\begin{description}
-		\item deletes a group.
+		\item Deletes a group.
 	 	\item @param group The group to be deleted.
-	 	\item @return true, if methode was successful, otherwise false.
+	 	\item @return true, if methode was successful, otherwise false
 		\end{description}
 	\item private boolean deleteMember(Group group, User user) 
 		\begin{description}
-		\item removes a member from the group.
+		\item Removes a member from the group.
 	 	\item @param group The group in which the user currently is but will be deleted from.
 	 	\item @param user The user who will be removed from the group.
 	 	\item @return true, if method was successful, otherwise false.
 		\end{description}
 	\item private boolean setName(Group group, String newName) 
 		\begin{description}
-		\item changes the name of the group.
+		\item Changes the name of the group.
 	 	\item @param group The group which's name will be changed.
 	 	\item @param newName The new name of the group.
 	 	\item @return true, if method was successful, otherwise false.
 		\end{description}	
 	\item private Group getGroup(int groupID)
 		\begin{description}
-		\item gets the group from the server database.
+		\item Gets the group from the server database.
 	 	\item @param groupID The unique id of the group.
-	 	\item @return the group with the given id or null if it doesn't exist.
+	 	\item @return The group with the given id or null if it doesn't exist.
 		\end{description}	
 	\item private boolean setFounder(Group group, User newFounder)
 		\begin{description}
-		\item changes the founder of the group.
+		\item Changes the founder of the group.
 	 	\item @param group The group which founder changes.
 	 	\item @param newFounder The user who gets the rights of the founder.
 	 	\item @return true, if method was successful, otherwise false.
@@ -85,20 +85,20 @@
 	\end{itemize}
 	
 	\subsubsection {GroupSearchService extends IntentService}
-		This Service is needed to list various Groups at once.
+		This Service is needed to list various groups at once.
 	\newline Methods:
 	\begin{itemize}
 	\item private List<Group> getGroupsByMember(User user)
 		\begin{description}
-		\item finds all groups which the user is a member of. This is used to present the groups in the StartActivity.
-	 	\item @param user the user whose groups are returned.
-	 	\item @return all groups the user is member of or null.
+		\item Finds all groups which the user is a member of. This is used to present the groups in the StartActivity.
+	 	\item @param user The user whose groups are returned.
+	 	\item @return All groups the user is member of or null.
 		\end{description}
 	\item private List<Group> getGroupsByName(String name)
 		\begin{description}
-		\item finds all groups which name include the given string to show the results of a search request by the user using the search function of the NewGroupActivity.
-	 	\item @param name the string which the user typed in the NewGroupActivity to find a new group he wants to be member of.
-	 	\item @return all groups where the name is included in the group name or null.
+		\item Finds all groups which name include the given String to show the results of a search request by the user using the search function of the NewGroupActivity.
+	 	\item @param name The String which the user typed in the NewGroupActivity to find a new group he wants to be member of.
+	 	\item @return All groups where the name is included in the group name or null.
 		\end{description}
 	\end{itemize}
 	
@@ -108,20 +108,20 @@
 	\begin{itemize}
 	\item private boolean create(User user, Group group)
 		\begin{description}
-		\item creates a new Request.
-	 	\item @param user the user who sends the request.
-	 	\item @param group the group the user wants to be a member of.
-	 	\item @return true, if method was successful, otherwise false.
+		\item Creates a new Request.
+	 	\item @param user The user who sends the request.
+	 	\item @param group The group the user wants to be a member of.
+	 	\item @return true, if method was successful, otherwise false
 		\end{description}
 	\item private private boolean accept(Request request)
 		\begin{description}
-		\item adds the user to the group and deletes the Request if the founder of the group allows the user to join in the group.
-	 	\item @param request the request the founder has made a decision about.
-	 	\item @return true, if method was successful, otherwise false.
+		\item Adds the user to the group and deletes the Request if the founder of the group allows the user to join in the group.
+	 	\item @param request The request the founder has made a decision about.
+	 	\item @return true, if method was successful, otherwise false
 		\end{description}
 	\item private boolean reject(Request request)
 		\begin{description}
-		\item deletes the request if the founder decided that the user will not join in the group.
+		\item Deletes the request if the founder decides that the user will not join in the group.
 	 	\item @param request the request the founder has made a decision about.
 	 	\item @return true, if method was successful, otherwise false.
 		\end{description}
@@ -133,15 +133,15 @@
 	\begin{itemize}
 	\item private List<Group> getRequestsByUser(User user) 
 		\begin{description}
-		\item finds all requests of a given user. This is used to show all the requests to this user in the StartActivity.
-	 	\item @param user the user who created the requests.
-	 	\item @return all groups where the user requested to join or null.
+		\item Finds all requests of a given user. This is used to show all the requests to this user in the StartActivity.
+	 	\item @param user The user who created the requests.
+	 	\item @return All groups where the user requested to join or null.
 		\end{description}
 	\item private List<User> getRequestsByGroup(Group group) 
 		\begin{description}
-		\item finds all access requests to a given group. This is used to present the requests to the founder of the group to let him decide about them in the GrouInfoActivity.
-	 	\item @param group the existing group which founder wants to access the requests.
-	 	\item @return all users who want to join the group or null.
+		\item Finds all access requests to a given group. This is used to present the requests to the founder of the group to let him decide about them in the GrouInfoActivity.
+	 	\item @param group The existing group which founder wants to access the requests.
+	 	\item @return All users who want to join the group or null.
 		\end{description}
 	\end{itemize}
 	
@@ -151,17 +151,17 @@
 	\begin{itemize}
 	\item private private boolean accept(Event event, User user)
 		\begin{description}
-		\item The user is added to the event as a participant this includes starting a Timer for the Notification Broadcast. This method is used if the user wants to participate and enters this decision in the GroupActivity.
-	 	\item @param event the event where the user want to participate in. User and event have to be in the same group.
-	 	\item @param user the user who wants to participate and is in the same group as the event.
-	 	\item @return true, if method was successful, otherwise false.
+		\item The user is added to the event as a participant this includes starting a timer for the notification broadcast. This method is used if the user wants to participate and enters this decision in the GroupActivity.
+	 	\item @param event The event where the user wants to participate in. User and event have to be in the same group.
+	 	\item @param user The user who wants to participate and is in the same group as the event.
+	 	\item @return true, if method was successful, otherwise false
 		\end{description}
 	\item private boolean reject(Event event, User user)
 		\begin{description}
-		\item the connection between the user and the event is deleted.
-	 	\item @param event the event which the user doesn't want to join.
-	 	\item @param user the user who doesn't want to participate.
-	 	\item @return true, if method was successful, otherwise false.
+		\item The connection between the user and the event is deleted.
+	 	\item @param event The event which the user doesn't want to join.
+	 	\item @param user The user who doesn't want to participate.
+	 	\item @return true, if method was successful, otherwise false
 		\end{description}
 	\end{itemize}
 		
@@ -171,38 +171,38 @@
 	\begin{itemize}
 	\item private boolean syncLocation(User user, Event event)
 		\begin{description}
-		\item sends the clients current location to the server and updates the group location of the event on the client. This method is started at a specific time and is performed periodically.
-	 	\item @param user the user whose location is updated.
-	 	\item @param event the event which's group locations are returned.
-	 	\item @return true, if method was successful, otherwise false.
+		\item Sends the clients current location to the server and updates the group location of the event on the client. This method is started at a specific time and is performed periodically.
+	 	\item @param user The user whose location is updated.
+	 	\item @param event The event which's group locations are returned.
+	 	\item @return true, if method was successful, otherwise false
 		\end{description}
 	\end{itemize}
 	
 	\subsubsection {public class EventService extends IntentService}
-	This Service provides methods to handle a single Event.
+	This Service provides methods to handle a single event.
 	\newline Methods:
 	\begin{itemize}
 	\item private boolean create(String name, Location destination, User eventAdmin, Time time, Group group)
 		\begin{description}
-		\item  creates an event.
-		\item @param name the name of the event chosen freely by a member of the group.
-	 	\item @param destination the location which the user choose on a map to let his event take place.
-	 	\item @param eventAdmin the user who creates the event and is a group member.
-	 	\item @param time the time when the event is going to take place. This time can not be in the past.
-		\item @param group the group in which the event is created and which members are all invited.
-	 	\item @return true, if method was successful, otherwise false.
+		\item  Creates an event.
+		\item @param name The name of the event chosen freely by a member of the group.
+	 	\item @param destination The location which the user choose on a map to let his event take place.
+	 	\item @param eventAdmin The user who creates the event and is a group member.
+	 	\item @param time The time when the event is going to take place. This time can not be in the past.
+		\item @param group The group in which the event is created and which members are all invited.
+	 	\item @return true, if method was successful, otherwise false
 		\end{description}
 	\item private Event getEvent(int eventID)
 		\begin{description}
-		\item gets the event from the server database.
-	 	\item @param eventID the id to identify which event to get.
-	 	\item @return an event object with attributes.
+		\item Gets the event from the server database.
+	 	\item @param eventID The id to identify which event to get.
+	 	\item @return An event object with attributes.
 		\end{description}
 	\item private boolean change(Event event)
 		\begin{description}
 		\item if the event admin whishes to change the event. Only time, destination and name can be changed.
-		\item @param event the new instance of the event with the wanted attributes changed which will replace the old event.
-		\item @return true, if method was successful, otherwise false.
+		\item @param event The new instance of the event with the wanted attributes changed which will replace the old event.
+		\item @return true, if method was successful, otherwise false
 		\end{description}
 	\end{itemize}
 	
@@ -212,26 +212,26 @@
 	\begin{itemize}
 	\item private boolean setGo(User user, Event event)
 		\begin{description}
-		\item adds the user to the list of users who are on their way to the event.
-	 	\item @param user the user who starts. This user has to be a member of the group in which the event is and has to be a participant of this event.
-	 	\item @param event the event on which the user participates.
-	 	\item return true, if method was successful, otherwise false.
+		\item Adds the user to the list of users who are on their way to the event.
+	 	\item @param user The user who starts. This user has to be a member of the group in which the event is and has to be a participant of this event.
+	 	\item @param event The event on which the user participates.
+	 	\item return true, if method was successful, otherwise false
 		\end{description}
 	\item private List<User> getStartedParticipants(Event event) 
 		\begin{description}
-		\item finds all participants of an event who have started. This is used by the EventActivity to show which participants are on their way.
-	 	\item @param event the event you want to know about.
-	 	\item @return every user who's started value is true. This indicates that they are on the way to the event.
+		\item Finds all participants of an event whom have started. This is used by the EventActivity to show which participants are on their way.
+	 	\item @param event The event you want to know about.
+	 	\item @return Every user who's status indicates started, which means that they are on the way to the event.
 		\end{description}
 	\end{itemize}
 	
 	 \subsubsection {NotificationService extends IntentService}
-		This Service is used to notify an User that an event has started even when the Application is closed via the Notificationbar.
+		This Service is used to notify an user that an event has started, even when the Application is closed via the Notificationbar.
 	\newline Methods:
 	\begin{itemize}
-	\item private private void notify()
+	\item private void notify()
 		\begin{description}
-		\item send a notification to the user that the event is going to start.
+		\item Send a notification to the user that the event is going to start.
 		\end{description}
 	\end{itemize}
 	
@@ -353,14 +353,14 @@
 	 \end{itemize}
 	 
 	 \subsubsection{Fragments}
-	 Fragments sind Teile einer Activity, welche unabhängig voneinander und unabhängig vom Layout geladen und mit Funktionalität bestückt werden können.  
+	 Fragments sind Teile einer Activity, welche unabhängig voneinander und vom Layout geladen und mit Funktionalität bestückt werden können.  
 	 Sie können nur innerhalb von Activities existieren, sind aber leicht austauschbar und ein Fragment kann auch in mehreren Activities eingesetzt werden. 
 	 Sie bilden somit die Grundlage für ein dynamisches Layout. \newline
-	 Unser Ziel ist es alle Activities in möglichst agile Fragments zu unterteilen um eben ein Anpassungsfähiges Layout zu erhalten, welches sich auch leichter auf weitere Geräte wie zum Beispiel Tablets übertragen lässt.
-	 \newline Einige Fragments welche wir einsetzten werden:
+	 Unser Ziel ist es, Activities in agile Fragments zu unterteilen, um ein möglichst anpassungsfähiges Layout zu erhalten, welches sich auch leichter auf weitere Geräte, wie zum Beispiel Tablets übertragen lässt.
+	 \newline Einige Fragments welche wir einsetzen werden:
 	 \begin{itemize}
-	 \item Maps Fragment: Ein Fragment in dem den Nutzern die Karte mit allen Standorten bereitgestellt wird. Wird in der NewEventActivity und der EventActivity benötigt.
-	 \item FounderFragment: In der GroupInfoActivity werden dem Gründer der Gruppe mehr Informationen als einem normalen Mitglied bereitgestellt. Dies ermöglichen wir in dem wir ein anderes Fragment(dieses hier) in die selbe Activity laden.
+	 \item Maps Fragment: Ein Fragment, in dem den Nutzern die Karte mit allen Standorten bereitgestellt wird. Wird in der NewEventActivity und der EventActivity benötigt.
+	 \item FounderFragment: In der GroupInfoActivity werden dem Gründer der Gruppe mehr Informationen als einem normalen Mitglied bereitgestellt. Dies ermöglichen wir in dem dieses spezifische Fragment in die selbe Activity geladen wird.
 	 \item MemberFragment: Das Gegenstück zum FounderFragment. Wird für ein normales Mitglied in die GroupInfoActivity geladen.
 	 \end{itemize}
 	 
@@ -369,4 +369,4 @@
 	Das Modell entspricht \hyperlink{ServerModel}{dem Modell des Servers} ist aber natürlich auch auf dem Clienten zu implementieren, eine zusätzliche Beschreibung ist an dieser Stelle aber nicht nötig.
 	
 	\subsection{edu.kit.pse.gruppe1.goApp.client.controler.serverConnection}
-	Das Package serverConnection wird vom Clienten benötigt um die Anfragen der Services weiterzuleiten und so eine Kommunikation zum Server herzustellen. Es ist demnach auf dem Clienten implementiert eine Beschreibung der Klassen findet sich aber \hyperlink{ServerConnection}{hier}, da sie thematisch besser in das Kapitel Kommunikation Server \& Client passt.
+	Das Package serverConnection wird vom Clienten benötigt um die Anfragen der Services weiterzuleiten und so eine Kommunikation zum Server herzustellen. Es ist demnach auf dem Clienten implementiert. Eine Beschreibung der Klassen findet sich aber \hyperlink{ServerConnection}{hier}, da sie thematisch besser in das Kapitel Kommunikation Server \& Client passt.
