@@ -5,16 +5,17 @@
 	\hypertarget{database.model}{}
 	\hypertarget{ServerModel}{}
 	\subsection{edu.kit.pse.gruppe1.goApp.server.database.model}
-
+Nachfolgend werden die Klassen des Modells mitsamt ihrer Attribute und Methoden detailliert vorgestellt.
 	\subsubsection{public class User}
 	An user describes an user of the goApp.
-	\newline Attributes:
+	
+	Attributes:
 	\begin{itemize}
 	\item private int id : The id is used to identify each user and is therefore unique and readonly.
 	\item private String name : The name of an user is selectable by the user and can also be changed.
 	\item private List<Group> groups : All groups the user is a member of.
-	\item private Location location : The current location of the user
-	\item private List<Event> events : all events the user has not rejected
+	\item private Location location : The current location of the user.
+	\item private List<Event> events : all events the user has not rejected.
 	\end{itemize}
 	Methods: 
 	\begin{itemize}
@@ -23,19 +24,20 @@
 		\item @param id The Id of the user. 
 	 	\item @param name The name of the user.
 		\end{description}
-	\item public getter of all attributes
-	\item public setter of name and location
-	\item public add of elemts to groups and events
-	\item public delete of elemnts of groups and events
+	\item public getters of all attributes
+	\item public setters of name and location
+	\item public methods for adding elements to the group and event list
+	\item public methods for deleting elements from the group and event list
 	\end{itemize}
 
 
 	\subsubsection{public class Request}
-	A request is created whenever a user wants to join a new group and deleted as soon as the founder adds or rejects the user.
-	\newline Attributes:
+	A request is created whenever an user wants to join a new group and deleted as soon as the founder adds or rejects the user.
+	
+	Attributes:
 	\begin{itemize}
-	\item private Group group : readonly
-	\item private User user : readonly
+	\item private Group group : The group the user wants to join. This attribute is readonly because the request can't be modified.
+	\item private User user : The user who wants to join the group. This attribute is readonly because the request can't be modified.
 	\end{itemize}
 	
 	Methods: 
@@ -45,13 +47,13 @@
 		\item @param user The user who creates the request.
 		\item @param group The group which the user wants to join.
 		\end{description}
-	\item public getter of all attributes
+	\item public getters of all attributes
 	\end{itemize}
 	
 
 
 \subsubsection {public class Participant} 
- the Participant class describes the status of a participant during the event.
+ The Participant class describes the status of a participant during the event.
 
 Attributes:
 \begin{itemize}
@@ -66,12 +68,13 @@ Attributes:
 	
 	\subsubsection{public class Group}
 	A group is a composition of several users of the goApp, in which the users can create events.
-	\newline Attributes:
+
+Attributes:
 	\begin{itemize}
-	\item private int Id : The Id is used to identify each group and is therefore unique and readonly.
+	\item private int id : The id is used to identify each group and is therefore unique and readonly.
 	\item private String name : The name of a group is given by the founder and can be changed.
-	\item private User founder : created the group and can change name, members and can delete the group
-	\item private List<User> members : all user in the group
+	\item private User founder : The founder created the group and can change the name and members. He can also delete the group.
+	\item private List<User> members : all users in the group
 	\item private List<Event> events : all events in the group
 	\item private List<Request> requests  : all requests of the group
 	
@@ -80,49 +83,49 @@ Attributes:
 	\begin{itemize}
 	\item public Group(int id, String name)
 		\begin{description}
-		\item @param id The Id of the group.
+		\item @param id The id of the group.
 		\item @param name The name of the group.
 		\end{description}
-	\item public getter of all attributes
-	\item public setter of name and founder
-	\item public add of elements of members, events and requests
-	\item public delete of elements of members, events and requests
+	\item public getters of all attributes
+	\item public setters of name and founder
+	\item public methods for adding elements to the member, event and request list
+	\item public methods for deleting elements from the member, event and request list
 	\end{itemize}
 
 	\subsubsection{public class Event}
 	An event is created by a user within a specific group.
 	\newline Attributes:
 	\begin{itemize}
-	\item private  int Id : The Id is used to identify each event and is therefore unique and readonly.
+	\item private  int id : The id is used to identify each event and is therefore unique and readonly.
 	\item private String name : The name of an event is given by the creator.
-	\item private Time time : The time of an event tells when the event is starting and is set by the creator of the event.
-	\item private Group group : The event is in the group. Readonly
+	\item private Time time : The time of an event indicates when the event is starting and is set by the creator of the event.
+	\item private Group group : The group in which the event has been created. The attribute is readonly.
 	\item private Location destination : destination of the event
-	\item private User admin : the creator of the events. The admin participates automatically . Readonly
-	\item private List<User> participants : all member of the group who haven't rejected the event jet
-	\item private List<Location> groupLocations : The locations which were calculated by the clustering algorithm
+	\item private User admin : The creator of the event. The admin participates automatically. This attribute is readonly.
+	\item private List<User> participants : All members of the group who haven't rejected the event yet.
+	\item private List<Location> groupLocations : The locations which were calculated by the clustering algorithm.
 	\end{itemize}
 	Methods:
 	\begin{itemize}
 	\item public Event(int id, String name, Time time)
 		\begin{description}
-		\item @param id The Id of the event.
+		\item @param id The id of the event.
 		\item @param name The name of the event.
 		\item @param time The time of the event.
 		\end{description}
-	\item public getter of all attributes
-	\item public setter of name, time and destination
-	\item public add of participants and groupLocations
-	\item public delete of participants and groupLocations
+	\item public getters of all attributes
+	\item public setters of name, time and destination
+	\item public methods for adding elements to the participant and groupLocation list.
+	\item public methods for deleting elements from the participant and groupLocation list.
 	\end{itemize}
 
 	\subsubsection{public class Location}
-	An event is created by a user within a specific group.
+	The location is used to display something on the Map, whatever it is, an user or the center of the group.
 	\newline Attributes:
 	\begin{itemize}
 	\item private  double longitude : The longitude value of the position in degrees, range[-180,180). 
 	\item private  double latitude : The latitude value of the position in degrees, range [-90,90].
-	\item private String name : The name of a location helps the user to identify if the location is a center point of the group or the original meeting point.
+	\item private String name : The name of a location helps the user to identify if the location is a central point of the group or the original meeting point.
 	\end{itemize}
 	Methods:
 	\begin{itemize}
@@ -132,8 +135,8 @@ Attributes:
 		\item @param latitude The latitude value of the position.
 		\item @param name The name of the location.
 		\end{description}
-	\item getter of all attributes
-	\item setter of all attributes
+	\item getters of all attributes
+	\item setters of all attributes
 	\end{itemize}
 
 
@@ -142,21 +145,18 @@ Attributes:
 	Dies sind die Verwaltungsklasse der Datenbank. Nur über diese wird der Zugriff realisiert.
 
 	\subsubsection{DatabaseInitializer}
-	Factory for creating Session Factory for DB communication.
+	Factory for creating Session Factory for DB (=Database) communication.
 	\newline 
 	Attributes:
 	\begin{itemize}
-		\item private static SessionFactory factory;
-		\begin{description}
-			\item This is the only SessionFactory on the Server
-		\end{description}
+		\item private static SessionFactory factory : This is the only SessionFactory on the Server.
 	\end{itemize}
 	Methods:
 	\begin{itemize}
 		\item public static SessionFactory getFactory()
 		\begin{description}
-			\item Method returns the attribute factory and initialize factory if it is null
-			\item @return SessionFactory Object from Hibernate Library
+			\item Method returns the attribute factory and initialize factory if it is null.
+			\item @return SessionFactory object which can create sessions to change the DB.
 		\end{description}
 	\end{itemize}
 	
@@ -166,212 +166,212 @@ Attributes:
 	\begin{itemize} 
 		\item public boolean delete(int ID)			
 		\begin{description}
-			\item Delete an entry with ID in DB
-			\item @param ID ID from Entry to delete
-			\item @return true, if deletion was successfull, otherwise false
+			\item Deletes an entry with the given ID in the DB
+			\item @param ID ID from the entry to delete
+			\item @return true, if deletion was successfull and otherwise false
 		\end{description}
 		\end{itemize}
 	
 	\subsubsection{GroupManagement}
-	Manages Group Table
+This class manages the access to the group table.
 		\newline Methods:
 		\begin{itemize}
 			\item public Group add(String name, User founder)
 			\begin{description}
-				\item creates new Group and adds new entry to table
-				\item  @param name Name of Group
-				\item  @param founder Founder of Group (User)
+				\item creates an new group and adds an new entry to table
+				\item  @param name Name of the group
+				\item  @param founder Founder of the Group
 				\item  @return created Group
 			\end{description}
 			\item public boolean update(Group chGroup)
 			\begin{description}
-				\item updates entry in table
+				\item updates the entry in the table
 				\item  @param chGroup Group with changed attributes
 				\item  @return true, if update was successfull, otherwise false
 			\end{description}
 			\item public boolean updateName(int groupID, String newName)
 			\begin{description}
-				\item updates name of entry
-				\item @param groupID ID of entry to change
-				\item @param newName Name to set
+				\item updates the name of the entry
+				\item @param groupID ID of the entry to change
+				\item @param newName Name to set in the DB
 				\item @return true, if update was successfull, otherwise false
 			\end{description}
 			\item public boolean updateFounder(int groupID, User newFounder)
 			\begin{description}
-				\item updates founder of given entry
-				\item  @param groupID ID of entry to change
-				\item  @param newFounder Founder to set
+				\item updates founder of the given entry
+				\item  @param groupID ID of the entry to change
+				\item  @param newFounder Founder to set in the DB
 			\end{description}
 			\item public Group getGroup(int groupID)
 			\begin{description}
-				\item returns Group with given GruopID
-				\item  @param groupID ID of Group to get
+				\item returns Group with the given GroupID
+				\item  @param groupID ID of the group which should be returned
 				\item  @return a Group
 			\end{description}
 			\item public List<Group> getGroupsByMember(String member)
 			\begin{description}
-				\item get all Groups with given Member
-				\item @param member Name of Member
-				\item @return List of Groups
+				\item get all Groups with the given Member
+				\item @param member Name of the Member
+				\item @return List of the Groups
 			\end{description}
 			\item public List<Group> getGroupsByName(String searchName)
 			\begin{description}
-				\item get all Groups with given Name
+				\item get all Groups with the given Name
 				\item @param searchName name to search for
-				\item @return List of matching Groups
+				\item @return List of the matching Groups
 			\end{description}
 			\item public boolean addMember(int groupID, int memberId)
 			\begin{description}
-				\item add Member to Group
-				\item @param groupID ID of group to add a new member to
-				\item @param memberId ID of User to add to group
+				\item add Member to the Group
+				\item @param groupID ID of the Group to which the new member should be added
+				\item @param memberId ID of the User to add to the Group
 				\item @return true, if adding was successfull, otherwise false
 			\end{description}
 			\item public boolean deleteMember(int groupID, int memberID)
 			\begin{description}
-				\item delete member from group
-				\item @param groupID ID of group to delete member from
-				\item @param memberID ID of member to delete
+				\item delete member from the Group
+				\item @param groupID ID of Group to delete the member from
+				\item @param memberID ID of the member to delete
 				\item @return true, if deletion was successfull, otherwise false
 			\end{description}
 			\item public List<Event> getEvents(int groupID)
 			\begin{description}
-				\item return all Events which are connected with given Group
+				\item return all Events which are connected with the given Group
 				\item  @param groupID GroupID to search Events for
-				\item  @return List of Events
+				\item  @return List of the Events
 			\end{description}
 		\end{itemize}
 		
 	\subsubsection{UserManagement}
-	Manages User Table
+	This class manages the access to the user table.
 		\newline Methods:
 		\begin{itemize}
-			\item public User add(String name, int googleId)public User add(String name, int googleId)
+			\item public User add(String name, int googleId)
 			\begin{description}
-				\item creates new User and adds new entry to table
-				\item  @param name name of User
-				\item  @param googleId googleID of User
-				\item  @return userID of entry
+				\item creates a new User and adds a new entry to the table
+				\item  @param name name of the User
+				\item  @param googleId googleID of the User
+				\item  @return userID of the entry
 			\end{description}
 			\item public boolean update(User chUser)
 			\begin{description}
-				\item changes entry in table
-				\item  @param chUser User Object with changes
+				\item changes the entry in the table
+				\item  @param chUser User object with changes
 				\item  @return true, if change was successfull, otherwise false
 			\end{description}
 			\item public boolean updateName(int userID, String newName)
 			\begin{description}
-				\item updates Name of User
-				\item @param userID ID from user to update
-				\item @param newName name to set
+				\item updates the Name of the User
+				\item @param userID ID from the User to update
+				\item @param newName name to set in the DB
 				\item @return true, if update was successfull, otherwise false
 			\end{description}
 			\item public boolean updateLocation(int userId, Location newLocation)
 			\begin{description}
-				\item updates current location of user
-				\item @param userId userID from entry to update
-				\item @param newLocation new Location of user
+				\item updates current location of the User
+				\item @param userId userID from the entry to update
+				\item @param newLocation new Location of the User
 				\item @return true, if update was successfull, otherwise false
 			\end{description}
 			\item public User getUser(int userID)
 			\begin{description}
-				\item get User with given userID
-				\item  @param userID ID of User to search for
+				\item get User with the given userID
+				\item  @param userID ID of the User to search for
 				\item  @return found User
 			\end{description}
 		\end{itemize}
 		
 	\subsubsection{EventManagement}
-	Manages Event Table
+This class manages the access to the Event table.
 		\newline Methods:
 		\begin{itemize}
 			\item public Event add(String name, Location location, DateTime time, int userId, int groupID)
 			\begin{description}
-				\item creates new Group and adds new entry to table
-				\item adds all User from Group to Event and sets Status
-				\item @param name Name of Event
-				\item @param location Location, where Event takes place
-				\item @param time Date and Time, when Event takes place
-				\item @param userId ID of User who created the Event
-				\item @param groupID ID of Group to which Event is related to
+				\item creates new Group and adds new entry to the table
+				\item adds all Users from the Group to the Event and sets the status
+				\item @param name Name of the Event
+				\item @param location Location, where the Event takes place
+				\item @param time Date and Time, when the Event takes place
+				\item @param userId ID of the User who created the Event
+				\item @param groupID ID of the Group to which the Event is related to
 				\item @return created Event
 			\end{description}
 			\item public boolean update(Event chEvent)
 			\begin{description}
-				\item updates entry in table
-				\item  @param chEvent Event with changes
+				\item updates the entry in the table
+				\item  @param chEvent Event with the changes
 				\item  @return true, if update was successful, otherwise false
 			\end{description}
 			\item public boolean updateName(int eventID, String name)
 			\begin{description}
-				\item updates entry with given id - sets new name
-				\item  @param eventID ID of entry to be updated
-				\item  @param name new Name of Entry
+				\item updates entry with the given id - sets the new name
+				\item  @param eventID ID of the entry to be updated
+				\item  @param name new Name of the entry
 				\item  @return true, if update was successfull, otherwise false
 			\end{description}
 			\item public boolean updateStatus(int userID, int eventID, boolean newStatus)
 			\begin{description}
-				\item sets new status to entry with given ID
-				\item  @param userID ID from user
-				\item  @param eventID ID from Event
-				\item  @param newStatus status to set
+				\item sets the new status to the entry with the given ID
+				\item  @param userID ID from the User
+				\item  @param eventID ID from the Event
+				\item  @param newStatus status to set in the DB
 				\item  @return true, if update was successfull, otherwise false
 			\end{description}
 			\item public Event getEvent(int eventID)
 			\begin{description}
-				\item gets Event with given eventID
-				\item  @param eventID ID of event
+				\item gets the Event with the given eventID
+				\item  @param eventID ID of the Event
 				\item  @return matching  Event
 			\end{description}
 			\item public int getUser(int eventID)
 			\begin{description}
-				\item get User who created Event
-				\item @param eventID ID of entry
-				\item @return ID of User
+				\item get User who created the Event
+				\item @param eventID ID of the entry
+				\item @return ID of the User
 			\end{description}
 		\end{itemize}
 		
 	\subsubsection{EventUserManagement}
-	Manages Event-User Table
+This class manages the access to the Event-User table.
 		\newline Methods:
 		\begin{itemize}
 			\item public boolean add(int eventId, int userId)
 			\begin{description}
-				\item adds new entry to table
-				\item  @param eventId eventID to combine with user
-				\item  @param userId userID to combine with Event
+				\item adds new entry to the table
+				\item  @param eventId eventID to combine with the User
+				\item  @param userId userID to combine with the Event
 				\item  @return true, if adding was successfull, otherwise false
 			\end{description}
 			\item public boolean updateStatus(int eventID, int userID, int newStatus)
 			\begin{description}
-				\item updates Status of given user and eventID
-				\item  @param eventID eventID to upate
-				\item @param userID userID to update
-				\item  @param newStatus new Status to set
+				\item updates status of the given User and the eventID
+				\item  @param eventID eventID to upate in the DB
+				\item @param userID userID to update in the DB
+				\item  @param newStatus new status to set in the DB
 				\item  @return true, if update was successfull, otherwise false
 			\end{description}
 			\item public boolean delete(int eventID, int userID)
 			\begin{description}
-				\item removes entry (with userID and eventID)
-				\item  @param eventID eventID to remove
-				\item  @param userID userID to remove
+				\item removes the entry with the userID and the eventID
+				\item  @param eventID eventID from the entry that should be removed.
+				\item  @param userID userID from the entry that should be removed.
 				\item  @return true, if update was successfull, otherwise false
 			\end{description}
 			\item public List<Event> getEvents(int userID)
 			\begin{description}
-				\item get all events in which given user participates
-				\item @param userID ID of user
+				\item get all Events in which the given User participates
+				\item @param userID ID of the User
 				\item @return List of matching Events
 			\end{description}
 			\item public List<User> getUsers(int eventID)
 			\begin{description}
-				\item get all users which participate in given Event
-				\item  @param eventID ID of event
+				\item get all Users who participate in the given Event
+				\item  @param eventID ID of the Event
 				\item  @return List of matching User
 			\end{description}
 			\item public List<User> getUserByStatus(String status, int eventID)
 			\begin{description}
-				\item get all User with given Status from an Event
+				\item get all Users with given Status from an Event
 				\item @param status status to search for
 				\item @param eventID ID of event to search for
 				\item @return List of matching Users
@@ -379,7 +379,7 @@ Attributes:
 		\end{itemize}
 		
 	\subsubsection{GroupUserManagement}
-	Manages Group-User Table
+	This class manages the access to the Group-User table.
 		\newline Methods:
 		\begin{itemize}
 			\item public boolean add(int gruopID, int userID)
@@ -391,8 +391,8 @@ Attributes:
 			\end{description}
 			\item public List<User> getUsers(int gruopID)
 			\begin{description}
-				\item get all User to given Gruop
-				\item  @param gruopID ID of group
+				\item get all Users to given Group
+				\item  @param groupID ID of group
 				\item @return List of matching User
 			\end{description}
 			\item public List<Group> getGroups(int userID)
@@ -403,7 +403,7 @@ Attributes:
 			\end{description}
 			\item public boolean delete(int groupID, int userID)
 			\begin{description}
-				\item deletes entry in table with given GroupID and userID
+				\item deletes an entry in the table with the given groupID and userID
 				\item @param groupID groupID to delete (in combination)
 				\item @param userID userID to delete (in combination)
 				\item @return true, if successful, otherwise false
@@ -411,7 +411,7 @@ Attributes:
 		\end{itemize}
 		
 	\subsubsection{RequestManagement}
-	Manages Request Table
+This class manages the access to the Request table.
 		\newline Methods:
 		\begin{itemize}
 			\item public boolean add(int gruopID, int userID)
@@ -451,7 +451,7 @@ Attributes:
 	
 	Facade Class which communicates with the servlet and the database.
 	
-	\newline Methods:
+	 Methods:
 	\begin{itemize}
 		\item public List<Point> getClusteredCentralPoints(Event event) :
 		\begin{description}
