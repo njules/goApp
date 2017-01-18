@@ -39,8 +39,7 @@ public enum JSONParameter {
 	/**
 	 * The name of the method which should be executed on the server. For example the create method of the GroupServlet.
 	 */
-	Method,
-	...;
+	Method;
 
 	/**
 	 * Gives the corresponding name to an enum literal. Normally the enum literal name.
