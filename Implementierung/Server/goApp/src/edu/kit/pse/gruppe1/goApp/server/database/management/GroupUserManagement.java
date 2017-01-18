@@ -1,5 +1,10 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
+
+import java.util.List;
+
+import edu.kit.pse.gruppe1.goApp.server.model.*;
+
 /**
  * Manages GroupUser Table
  */
@@ -17,11 +22,11 @@ public class GroupUserManagement implements Management {
 	}
 
 	/**
-	 * get all User to given Gruop
-	 * @param gruopID ID of group
+	 * get all User to given Group
+	 * @param groupID ID of group
 	 * @return List of matching User
 	 */
-	public List<pse.goApp.client.model.User> getUsers(int gruopID) {
+	public List<User> getUsers(int groupID) {
 		// TODO - implement GroupUserManagement.getUsers
 		throw new UnsupportedOperationException();
 	}
@@ -31,7 +36,7 @@ public class GroupUserManagement implements Management {
 	 * @param userID ID of User
 	 * @return List of matching Groups
 	 */
-	public List<pse.goApp.client.model.Group> getGroups(int userID) {
+	public List<Group> getGroups(int userID) {
 		// TODO - implement GroupUserManagement.getGroups
 		throw new UnsupportedOperationException();
 	}
@@ -45,6 +50,12 @@ public class GroupUserManagement implements Management {
 	public boolean delete(int groupID, int userID) {
 		// TODO - implement GroupUserManagement.delete
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean delete(int ID) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

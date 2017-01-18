@@ -1,5 +1,9 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
+import java.util.List;
+
+import edu.kit.pse.gruppe1.goApp.server.model.*;
+
 /**
  * Manages Request Table
  */
@@ -21,7 +25,7 @@ public class RequestManagement implements Management {
 	 * @param gruopID ID of group
 	 * @return List of matching Users
 	 */
-	public List<pse.goApp.client.model.User> getRequestByGroup(int gruopID) {
+	public List<User> getRequestByGroup(int gruopID) {
 		// TODO - implement RequestManagement.getRequestByGroup
 		throw new UnsupportedOperationException();
 	}
@@ -31,7 +35,7 @@ public class RequestManagement implements Management {
 	 * @param userID ID of User
 	 * @return List of matching Groups
 	 */
-	public List<pse.goApp.client.model.Group> getRequestByUser(int userID) {
+	public List<Group> getRequestByUser(int userID) {
 		// TODO - implement RequestManagement.getRequestByUser
 		throw new UnsupportedOperationException();
 	}
@@ -45,6 +49,12 @@ public class RequestManagement implements Management {
 	public boolean delete(int groupID, int userID) {
 		// TODO - implement RequestManagement.delete
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean delete(int ID) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

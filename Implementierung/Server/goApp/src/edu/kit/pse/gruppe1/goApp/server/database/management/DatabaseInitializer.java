@@ -1,5 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
+import org.hibernate.SessionFactory;
+
 /**
  * Factory for creating Session Factory for DB communication
  */

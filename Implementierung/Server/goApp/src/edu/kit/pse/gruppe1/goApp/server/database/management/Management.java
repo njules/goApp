@@ -12,10 +12,4 @@ public interface Management {
 	 */
 	boolean delete(int ID);
 
-	/**
-	 * Constructor which initializes a DB Session
-	 * @param dbInitializer DataBaseInitializier Object - Created from Factory
-	 */
-	void Management(DatabaseInitializer dbInitializer);
-
 }

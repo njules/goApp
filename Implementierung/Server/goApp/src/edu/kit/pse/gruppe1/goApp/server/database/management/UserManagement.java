@@ -1,6 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
-import edu.kit.pse.gruppe1.goApp.client.model.*;
+import edu.kit.pse.gruppe1.goApp.server.model.*;
 
 /**
  * Manages User Table
@@ -58,6 +58,12 @@ public class UserManagement implements Management {
 	public User getUser(int userID) {
 		// TODO - implement UserManagement.getUser
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean delete(int ID) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

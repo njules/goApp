@@ -1,7 +1,9 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
-import edu.kit.pse.gruppe1.goApp.client.model.*;
 
+import java.util.List;
+
+import edu.kit.pse.gruppe1.goApp.server.model.*;
 /**
  * Manages Group Table
  */
@@ -64,7 +66,7 @@ public class GroupManagement implements Management {
 	 * @param member Name of Member
 	 * @return List of Groups
 	 */
-	public List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.Group> getGroupsByMember(String member) {
+	public List<Group> getGroupsByMember(String member) {
 		// TODO - implement GroupManagement.getGroupsByMember
 		throw new UnsupportedOperationException();
 	}
@@ -74,7 +76,7 @@ public class GroupManagement implements Management {
 	 * @param searchName name to search for
 	 * @return List of matching Groups
 	 */
-	public List<pse.goApp.client.model.Group> getGroupsByName(String searchName) {
+	public List<Group> getGroupsByName(String searchName) {
 		// TODO - implement GroupManagement.getGroupsByName
 		throw new UnsupportedOperationException();
 	}
@@ -106,9 +108,15 @@ public class GroupManagement implements Management {
 	 * @param groupID GroupID to search Events for
 	 * @return List of Events
 	 */
-	public List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.Event> getEvents(int groupID) {
+	public List<Event> getEvents(int groupID) {
 		// TODO - implement GroupManagement.getEvents
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean delete(int ID) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

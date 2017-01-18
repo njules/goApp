@@ -1,5 +1,9 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
+import java.util.List;
+
+import edu.kit.pse.gruppe1.goApp.server.model.*;
+
 /**
  * Manages Event-User Table
  */
@@ -43,7 +47,7 @@ public class EventUserManagement implements Management {
 	 * @param userID ID of user
 	 * @return List of matching Events
 	 */
-	public List<pse.goApp.client.model.Event> getEvents(int userID) {
+	public List<Event> getEvents(int userID) {
 		// TODO - implement EventUserManagement.getEvents
 		throw new UnsupportedOperationException();
 	}
@@ -53,7 +57,7 @@ public class EventUserManagement implements Management {
 	 * @param eventID ID of event
 	 * @return List of matching User
 	 */
-	public List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.User> getUsers(int eventID) {
+	public List<User> getUsers(int eventID) {
 		// TODO - implement EventUserManagement.getUsers
 		throw new UnsupportedOperationException();
 	}
@@ -64,9 +68,15 @@ public class EventUserManagement implements Management {
 	 * @param eventID ID of event to search for
 	 * @return List of matching Users
 	 */
-	public List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.User> getUserByStatus(String status, int eventID) {
+	public List<User> getUserByStatus(String status, int eventID) {
 		// TODO - implement EventUserManagement.getUserByStatus
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean delete(int ID) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

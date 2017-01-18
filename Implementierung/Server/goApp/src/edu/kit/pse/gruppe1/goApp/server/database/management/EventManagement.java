@@ -1,6 +1,5 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
-
-import edu.kit.pse.gruppe1.goApp.client.model.*;
+import edu.kit.pse.gruppe1.goApp.server.model.*;
 
 /**
  * Management for Event Table
@@ -72,6 +71,12 @@ public class EventManagement implements Management {
 	public int getUser(int eventID) {
 		// TODO - implement EventManagement.getUser
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean delete(int ID) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
