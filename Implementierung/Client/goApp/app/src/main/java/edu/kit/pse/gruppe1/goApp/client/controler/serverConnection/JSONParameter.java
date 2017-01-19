@@ -7,50 +7,56 @@ public enum JSONParameter {
 	/**
 	 * ID of the request
 	 */
-	ID,
+	ID("ID"),
 	/**
 	 * Error code which is 0 if no error occurred.
 	 */
-	ErrorCode,
+	ErrorCode("Error code"),
 	/**
 	 * ID of an user.
 	 */
-	UserID,
+	UserID("User ID"),
 	/**
 	 * ID of a group.
 	 */
-	GroupID,
+	GroupID("Group ID"),
 	/**
 	 * ID of an event.
 	 */
-	EventID,
+	EventID("Event ID"),
 	/**
 	 * Name of an user.
 	 */
-	UserName,
+	UserName("User name"),
 	/**
 	 * Name of a group.
 	 */
-	GroupName,
+	GroupName("Group name"),
 	/**
 	 * Name of an event.
 	 */
-	EventName,
+	EventName("Event name"),
 	/**
 	 * The name of the method which should be executed on the server. For example the create method of the GroupServlet.
 	 */
-	Method;
+	Method("Method");
+
+	private final String fieldDescription;
+
+	private JSONParameter(String description) {
+		fieldDescription = description;
+	}
 
 	/**
-	 * Gives the corresponding name to an enum literal. Normally the enum literal name.
+	 * Gives the corresponding name to an enum literal. Normally something like the enum literal name.
 	 */
 	public String toString() {
-		// TODO - implement JSONParameter.toString
-		throw new UnsupportedOperationException();
+		return fieldDescription;
 	}
 
 	/**
 	 * Gives the corresponding enum literal to a string.
+	 *
 	 * @param s
 	 */
 	public static JSONParameter fromString(String s) {
