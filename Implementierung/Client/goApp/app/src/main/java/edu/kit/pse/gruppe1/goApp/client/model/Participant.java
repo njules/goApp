@@ -8,6 +8,6 @@ public class Participant {
 	/**
 	 * the users status is either started or not started which shows if the user already departed to meet other members at the events
 	 */
-	private boolean started;
+	private int started;
 
 }

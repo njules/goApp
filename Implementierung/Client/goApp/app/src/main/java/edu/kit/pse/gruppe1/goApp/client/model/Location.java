@@ -25,8 +25,9 @@ public class Location {
 	 * @param name
 	 */
 	public Location(double longitude, double latitude, String name) {
-		// TODO - implement Location.Location
-		throw new UnsupportedOperationException();
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.name = name;
 	}
 
 }
