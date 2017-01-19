@@ -8,9 +8,9 @@ public class NotificationService {
 	/**
 	 * send a notification to the user that the event is going to start
 	 */
-	private void notify() {
+	/** private void notify() {
 		// TODO - implement NotificationService.notify
 		throw new UnsupportedOperationException();
-	}
+	}*/
 
 }

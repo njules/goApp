@@ -12,7 +12,7 @@ public class LoginService {
 	 * @param userID the id of the user which has to be found in the server database
 	 * @return the user who is now logged in
 	 */
-	private User login(Int userID) {
+	private User login(int userID) {
 		// TODO - implement LoginService.login
 		throw new UnsupportedOperationException();
 	}

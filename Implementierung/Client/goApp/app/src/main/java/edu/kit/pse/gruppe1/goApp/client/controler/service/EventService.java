@@ -1,5 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
+import java.sql.Date;
+
 import edu.kit.pse.gruppe1.goApp.client.model.*;
 
 /**
@@ -16,7 +18,7 @@ public class EventService {
 	 * @param group the group in which the event is created and which members are all invited
 	 * @return true, if method was successful, otherwise false
 	 */
-	private boolean create(String name, Location destination, User eventAdmin, Time time, Group group) {
+	private boolean create(String name, Location destination, User eventAdmin, Date time, Group group) {
 		// TODO - implement EventService.create
 		throw new UnsupportedOperationException();
 	}

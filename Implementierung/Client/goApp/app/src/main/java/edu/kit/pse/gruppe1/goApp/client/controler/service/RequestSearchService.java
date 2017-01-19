@@ -1,5 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
+import java.util.List;
+
 import edu.kit.pse.gruppe1.goApp.client.model.*;
 
 /**
@@ -12,7 +14,7 @@ public class RequestSearchService {
 	 * @param user the user who started the requests
 	 * @return all requests the user send or null
 	 */
-	private List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.Group> getRequestsByUser(User user) {
+	private List<Group> getRequestsByUser(User user) {
 		// TODO - implement RequestSearchService.getRequestsByUser
 		throw new UnsupportedOperationException();
 	}
@@ -22,7 +24,7 @@ public class RequestSearchService {
 	 * @param group the existing group which founder wants to access the requests
 	 * @return all request which are currently in the group or null if non exist
 	 */
-	private List<edu.kit.sdqweb.pse.gruppe1.goApp.client.model.User> getRequestsByGroup(Group group) {
+	private List<User> getRequestsByGroup(Group group) {
 		// TODO - implement RequestSearchService.getRequestsByGroup
 		throw new UnsupportedOperationException();
 	}

@@ -1,5 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
+import java.util.List;
+
 import edu.kit.pse.gruppe1.goApp.client.model.*;
 
 /**
@@ -21,7 +23,7 @@ public class GroupService {
 	/**
 	 * deletes a group
 	 * @param group The group to be deleted
-	 *  
+	 * ï¿½
 	 * @return true, if methode was successful, otherwise false
 	 */
 	private boolean delete(Group group) {
@@ -77,7 +79,7 @@ public class GroupService {
 	 * @param group The existing group to get events from
 	 * @return all event in the group or null
 	 */
-	private List<pse.goApp.client.model.Event> getEvents(Group group) {
+	private List<Event> getEvents(Group group) {
 		// TODO - implement GroupService.getEvents
 		throw new UnsupportedOperationException();
 	}
