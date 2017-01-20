@@ -31,7 +31,7 @@ public class GroupSearchService extends IntentService{
 	 * @param user the user which groups are returned
 
 	 */
-	public void getGroupsByMember(User user) {
+	public void getGroupsByMember(Context context,User user) {
 		if(user == null){
             Log.i(TAG, ERROR_INPUT);
         }
@@ -61,6 +61,7 @@ public class GroupSearchService extends IntentService{
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+        Log.i(TAG,"Startet GroupSearchService");
 
 	}
 }
