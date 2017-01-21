@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.model;
 
 import java.sql.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -36,14 +38,15 @@ public class Event {
 	private Date time;
 	
 	private Group group;
-	
-
+	private User creator;
+	private Set<Participant> participants;
+	private Set<Location> clusterPoints;
 
 	public Event() {}
 
 
-	public Event(Integer id, String name, Date time) {
-		this.eventId = id;
+	public Event(Integer eventId, String name, Date time) {
+		this.eventId = eventId;
 		this.name = name;
 		this.time = time;
 	}
@@ -52,7 +55,7 @@ public class Event {
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EVENT_ID")
-	public Integer getId() {
+	public Integer getEventId() {
 		return eventId;
 	}
 
@@ -79,11 +82,33 @@ public class Event {
 	public Group getGroup() {
 		return group;
 	}
-
-
 	public void setGroup(Group group) {
 		this.group = group;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "USER_ID")
+	public User getCreator() {
+		return creator;
+	}
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "participant")
+	public Set<Participant> getParticipants() {
+		return participants;
+	}
+	public void setParticipants(Set<Participant> participants) {
+		this.participants = participants;
+	}
+
+	@OneToMany
+	@JoinColumn(name="cluster_points")
+	public Set<Location> getClusterPoints() {
+		return clusterPoints;
+	}
+	public void setClusterPoints(Set<Location> clusterPoints) {
+		this.clusterPoints = clusterPoints;
+	}
 }

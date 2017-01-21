@@ -37,7 +37,7 @@ public class Request {
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "REQUEST_ID")
-	public Integer getId() {
+	public Integer getRequestId() {
 		return requestId;
 	}
 

@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -30,10 +31,12 @@ public class User {
 	 * The name of an user is selectable by the user and can also be changed.
 	 */
 	private String name;
-	
+	private Location location;
 	private Set<Request> requests;
 	private Set<Group> groups;
 	private Set<Group> foundedGroups;
+	private Set<Group> createdEvents;
+	private Set<Participant> participations;
 
 	/**
 	 * 
@@ -91,5 +94,30 @@ public class User {
 	public void setFoundedGroups(Set<Group> foundedGroups) {
 		this.foundedGroups = foundedGroups;
 	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+	public Set<Group> getCreatedEvents() {
+		return createdEvents;
+	}
+	public void setCreatedEvents(Set<Group> createdEvents) {
+		this.createdEvents = createdEvents;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "participant")
+	public Set<Participant> getParticipations() {
+		return participations;
+	}
+	public void setParticipations(Set<Participant> participations) {
+		this.participations = participations;
+	}
+
+	@OneToOne
+	@JoinColumn(name="LOCATION_ID")
+	public Location getLocation() {
+		return location;
+	}
+	public void setLocation(Location location) {
+		this.location = location;
+	}	
 	
 }

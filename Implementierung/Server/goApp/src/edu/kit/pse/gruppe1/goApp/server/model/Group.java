@@ -50,7 +50,7 @@ public class Group {
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "GROUP_ID")
-	public int getId() {
+	public int getGroupId() {
 		return groupId;
 	}
 
