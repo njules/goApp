@@ -28,7 +28,7 @@ public class HTTPConnection {
 	 * @param nameOfServlet The name of the servlet, the service wants to communicate with.
 	 */
 	public HTTPConnection(String nameOfServlet) {
-		try {
+	try {
 			url = new URL(SERVER_URL + nameOfServlet);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -51,7 +51,7 @@ public class HTTPConnection {
 	 * @param JSON The String which should be send to the server.
 	 */
 	public JSONObject sendPostRequest(String JSON) {
-		String res = send("GET",JSON);
+		String res = send("POST",JSON);
 		return toJSONObject(res);
 	}
 
@@ -77,6 +77,8 @@ public class HTTPConnection {
 			conn.setRequestMethod(requestMethod);
 
 			conn.setDoOutput(true);
+			out = new OutputStreamWriter(
+					conn.getOutputStream());
 			out.write(request);
 			out.close();
 			reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
