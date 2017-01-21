@@ -26,7 +26,7 @@ public class Group {
 	public Group(int id, String name) {
         this.id = id;
         this.name = name;
-		throw new UnsupportedOperationException();
+		//throw new UnsupportedOperationException();
 	}
 
 

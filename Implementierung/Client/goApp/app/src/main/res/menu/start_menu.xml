@@ -4,6 +4,11 @@
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
-        android:title="SearchGroup"
+        android:title="Search new groups"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_change_name"
+        android:icon="@drawable/ic_edit"
+        android:title="Change name"
         app:showAsAction="always" />
 </menu>
