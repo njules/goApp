@@ -20,8 +20,19 @@ public class User {
 	 * @param name The name of the user.
 	 */
 	public User(int id, String name) {
-		// TODO - implement User.User
-		throw new UnsupportedOperationException();
+		this.id = id;
+		this.name = name;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

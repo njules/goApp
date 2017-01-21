@@ -24,8 +24,21 @@ public class Group {
 	 * @param name The name of the Group.
 	 */
 	public Group(int id, String name) {
-		// TODO - implement Group.Group
+        this.id = id;
+        this.name = name;
 		throw new UnsupportedOperationException();
 	}
 
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
 }
