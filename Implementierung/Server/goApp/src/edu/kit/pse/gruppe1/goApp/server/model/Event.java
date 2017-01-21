@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * An event is created by a user within a specific group.
  */
 @Entity
-@Table(name = "event")
+@Table(name = "eventT")
 public class Event {
 	
 	/**
@@ -58,6 +58,9 @@ public class Event {
 	public Integer getEventId() {
 		return eventId;
 	}
+	public void setEventId(Integer eventId) {
+		this.eventId = eventId;
+	}
 
 
 	@Column(name = "name")
@@ -95,7 +98,7 @@ public class Event {
 		this.creator = creator;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "participant")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
 	public Set<Participant> getParticipants() {
 		return participants;
 	}

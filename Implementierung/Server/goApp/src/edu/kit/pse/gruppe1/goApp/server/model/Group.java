@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * A group is a composition of several users of the goApp, in which the users can create events.
  */
 @Entity
-@Table(name = "group")
+@Table(name = "groupT")
 public class Group {
 
 	
@@ -54,6 +54,9 @@ public class Group {
 		return groupId;
 	}
 
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -71,7 +74,7 @@ public class Group {
 		this.events = events;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "request")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
 	public Set<Request> getRequests() {
 		return requests;
 	}

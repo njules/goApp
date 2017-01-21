@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * A request is created whenever a user wants to join a new group and deleted as soon as the founder adds or rejects the user.
  */
 @Entity
-@Table(name = "request")
+@Table(name = "requestT")
 public class Request {
 
 	private Integer requestId;
@@ -40,8 +40,7 @@ public class Request {
 	public Integer getRequestId() {
 		return requestId;
 	}
-
-	public void setId(Integer requestId) {
+	public void setRequestId(Integer requestId) {
 		this.requestId = requestId;
 	}
 

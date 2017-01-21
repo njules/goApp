@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * The location is used to display something on the Map, whatever it is an user or the center of the group.
  */
 @Entity
-@Table(name = "location")
+@Table(name = "locationT")
 public class Location {
 	
 	
@@ -49,12 +49,14 @@ public class Location {
 	public Integer getLocationId() {
 		return locationId;
 	}
-	
+	public void setLocationId(Integer locationId) {
+		this.locationId = locationId;
+	}
 	@Column(name = "longitude")
 	public Double getLongitude() {
 		return longitude;
 	}
-	public void setLongitude(double longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 	
@@ -62,7 +64,7 @@ public class Location {
 	public double getLatitude() {
 		return latitude;
 	}
-	public void setLatitude(double latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 	
@@ -73,6 +75,8 @@ public class Location {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
 	
 	
 	

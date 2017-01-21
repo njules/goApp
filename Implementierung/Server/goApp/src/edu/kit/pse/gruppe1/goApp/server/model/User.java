@@ -20,7 +20,7 @@ import javax.persistence.Table;
  * An user describes an user of the goApp.
  */
 @Entity
-@Table(name = "user")
+@Table(name = "userT")
 public class User {
 
 	/**
@@ -35,7 +35,7 @@ public class User {
 	private Set<Request> requests;
 	private Set<Group> groups;
 	private Set<Group> foundedGroups;
-	private Set<Group> createdEvents;
+	private Set<Event> createdEvents;
 	private Set<Participant> participations;
 
 	/**
@@ -55,8 +55,12 @@ public class User {
 	public Integer getUserId() {
 		return userId;
 	}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "request")
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	public Set<Request> getRequests() {
 		return requests;
 	}
@@ -87,7 +91,7 @@ public class User {
 		this.groups = groups;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "founder")
 	public Set<Group> getFoundedGroups() {
 		return foundedGroups;
 	}
@@ -95,15 +99,15 @@ public class User {
 		this.foundedGroups = foundedGroups;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
-	public Set<Group> getCreatedEvents() {
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+	public Set<Event> getCreatedEvents() {
 		return createdEvents;
 	}
-	public void setCreatedEvents(Set<Group> createdEvents) {
+	public void setCreatedEvents(Set<Event> createdEvents) {
 		this.createdEvents = createdEvents;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "participant")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	public Set<Participant> getParticipations() {
 		return participations;
 	}

@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * the userEvent describes the status of a participant during the event.
  */
 @Entity
-@Table(name = "participant")
+@Table(name = "participantT")
 public class Participant {
 
 	/**
@@ -33,7 +33,10 @@ public class Participant {
 	public Integer getParticipantID() {
 		return participantID;
 	}
-	
+	public void setParticipantID(Integer participantID) {
+		this.participantID = participantID;
+	}
+
 	@Column(name = "status")
 	public Integer getStatus() {
 		return status;
