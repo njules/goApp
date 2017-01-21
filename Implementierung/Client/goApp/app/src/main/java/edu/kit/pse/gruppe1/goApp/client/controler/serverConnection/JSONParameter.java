@@ -1,5 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.serverConnection;
 
+import android.support.annotation.Nullable;
+
 /**
  * Enumerations with all possible parameter-types for the JSON-strings.
  */
@@ -57,11 +59,17 @@ public enum JSONParameter {
 	/**
 	 * Gives the corresponding enum literal to a string.
 	 *
-	 * @param s
+	 * @param s the string to which the returned JSONParameter should match
+	 * @return the JSONParameter to the string s
 	 */
+	@Nullable
 	public static JSONParameter fromString(String s) {
-		// TODO - implement JSONParameter.fromString
-		throw new UnsupportedOperationException();
+		for (JSONParameter json : JSONParameter.values()) {
+			if (json.toString().equals(s)) {
+				return json;
+			}
+		}
+		return null;
 	}
 
 }
