@@ -1,4 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
+
+import java.sql.Date;
+
 import edu.kit.pse.gruppe1.goApp.server.model.*;
 
 /**
@@ -7,22 +10,30 @@ import edu.kit.pse.gruppe1.goApp.server.model.*;
 public class EventManagement implements Management {
 
 	/**
-	 * creates new Group and adds new entry to table
-	 * adds all User from Group to Event and sets Status
-	 * @param name Name of Event
-	 * @param location Location, where Event takes place
-	 * @param time Date and Time, when Event takes place
-	 * @param userId ID of User who created the Event
-	 * @param groupID ID of Group to which Event is related to
+	 * creates new Group and adds new entry to table adds all User from Group to
+	 * Event and sets Status
+	 * 
+	 * @param name
+	 *            Name of Event
+	 * @param location
+	 *            Location, where Event takes place
+	 * @param time
+	 *            Date and Time, when Event takes place
+	 * @param userId
+	 *            ID of User who created the Event
+	 * @param groupID
+	 *            ID of Group to which Event is related to
 	 */
-	public Event add(String name, Location location, DateTime time, int userId, int groupID) {
+	public Event add(String name, Location location, Date time, int userId, int groupID) {
 		// TODO - implement EventManagement.add
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * updates entry in table
-	 * @param chEvent Event with changes
+	 * 
+	 * @param chEvent
+	 *            Event with changes
 	 * @return true, if update was successful, otherwise false
 	 */
 	public boolean update(Event chEvent) {
@@ -32,8 +43,11 @@ public class EventManagement implements Management {
 
 	/**
 	 * updates entry with given id - sets new name
-	 * @param eventID ID of entry to be updated
-	 * @param name new Name of Entry
+	 * 
+	 * @param eventID
+	 *            ID of entry to be updated
+	 * @param name
+	 *            new Name of Entry
 	 * @return true, if update was successfull, otherwise false
 	 */
 	public boolean updateName(int eventID, String name) {
@@ -43,9 +57,13 @@ public class EventManagement implements Management {
 
 	/**
 	 * sets new status to entry with given ID
-	 * @param userID ID from user
-	 * @param eventID ID from Event
-	 * @param newStatus status to set
+	 * 
+	 * @param userID
+	 *            ID from user
+	 * @param eventID
+	 *            ID from Event
+	 * @param newStatus
+	 *            status to set
 	 * @return true, if update was successfull, otherwise false
 	 */
 	public boolean updateStatus(int userID, int eventID, boolean newStatus) {
@@ -55,7 +73,9 @@ public class EventManagement implements Management {
 
 	/**
 	 * gets Event with given eventID
-	 * @param eventID ID of event
+	 * 
+	 * @param eventID
+	 *            ID of event
 	 * @return matching  Event
 	 */
 	public Event getEvent(int eventID) {
@@ -65,7 +85,9 @@ public class EventManagement implements Management {
 
 	/**
 	 * get User who created Event
-	 * @param eventID ID of entry
+	 * 
+	 * @param eventID
+	 *            ID of entry
 	 * @return ID of User
 	 */
 	public int getUser(int eventID) {
