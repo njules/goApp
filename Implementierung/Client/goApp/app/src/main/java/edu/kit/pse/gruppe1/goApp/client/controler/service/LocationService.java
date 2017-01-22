@@ -46,9 +46,8 @@ public class LocationService implements LocationListener {
 
         locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true), MIN_TIME, MIN_DISTANCE, this);
     }
-
     public void stopSyncLocation(){
-
+//TODO implement Methode
     }
 
     private void getGroupLocation(int eventId) {
