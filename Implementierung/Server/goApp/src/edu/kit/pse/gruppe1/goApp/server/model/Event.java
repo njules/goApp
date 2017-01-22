@@ -143,19 +143,4 @@ public class Event {
 		return null;
 	}
 
-	public boolean addParticipant(Participant participant) {
-		int size = participants.size();
-		participants.add(participant);
-		return size != participants.size();
-	}
-
-	public boolean removeParticipant(Integer userId) {
-		for (Participant participant : participants) {
-			if (participant.getUser().getUserId().equals(userId)) {
-				participants.remove(participant);
-				return true;
-			}
-		}
-		return false;
-	}
 }
