@@ -138,4 +138,19 @@ public class User {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
+
+	public boolean addGroup(Group group) {
+		int size = groups.size();
+		groups.add(group);
+		return size != groups.size();
+	}
+
+	public boolean removeGroup(Integer groupId) {
+		for (Group group : getGroups()) {
+			if (group.getGroupId().equals(groupId)) {
+				return groups.remove(group);
+			}
+		}
+		return false;
+	}
 }

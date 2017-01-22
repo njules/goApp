@@ -16,17 +16,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * A group is a composition of several users of the goApp, in which the users can create events.
+ * A group is a composition of several users of the goApp, in which the users
+ * can create events.
  */
 @Entity
 @Table(name = "groupT")
 public class Group {
-
-	
 	/**
 	 * The Id is used to identify each group and is therefore unique.
 	 */
-	private int groupId;
+	private Integer groupId;
 	private User founder;
 	private Set<Event> events;
 	private Set<Request> requests;
@@ -35,29 +34,33 @@ public class Group {
 	 * The name of a group is given by the founder and can be changed.
 	 */
 	private String name;
-	
-	public Group(){}
-	/**
-	 * 
-	 * @param id The Id of the group.
-	 * @param name The name of the Group.
-	 */
-	public Group(int id, String name) {
-        this.groupId = id;
-        this.name = name;
-		throw new UnsupportedOperationException();
+
+	public Group() {
 	}
 
-	@Id	
+	/**
+	 * 
+	 * @param name
+	 *            The name of the group.
+	 * @param founder
+	 *            The founder of the Group.
+	 */
+	public Group(String name, User founder) {
+		this.name = name;
+		this.founder = founder;
+	}
+
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "GROUP_ID")
-	public int getGroupId() {
+	public Integer getGroupId() {
 		return groupId;
 	}
 
-	public void setGroupId(int groupId) {
+	public void setGroupId(Integer groupId) {
 		this.groupId = groupId;
 	}
+
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -66,37 +69,41 @@ public class Group {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "group")
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "group")
 	public Set<Event> getEvents() {
 		return events;
 	}
+
 	public void setEvents(Set<Event> events) {
 		this.events = events;
 	}
-	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "group")
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "group")
 	public Set<Request> getRequests() {
 		return requests;
 	}
+
 	public void setRequests(Set<Request> requests) {
 		this.requests = requests;
 	}
-	
+
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
 	public Set<User> getUsers() {
 		return users;
 	}
+
 	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID")
 	public User getFounder() {
 		return founder;
 	}
+
 	public void setFounder(User founder) {
 		this.founder = founder;
-	}	
+	}
 }
