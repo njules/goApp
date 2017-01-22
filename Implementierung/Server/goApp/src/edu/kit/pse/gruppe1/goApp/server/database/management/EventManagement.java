@@ -1,8 +1,17 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import edu.kit.pse.gruppe1.goApp.server.model.*;
+import org.hibernate.Session;
+
+import edu.kit.pse.gruppe1.goApp.server.model.Event;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.model.Participant;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 /**
  * Management for Event Table
@@ -24,9 +33,24 @@ public class EventManagement implements Management {
 	 * @param groupID
 	 *            ID of Group to which Event is related to
 	 */
-	public Event add(String name, Location location, Date time, int userId, int groupID) {
-		// TODO - implement EventManagement.add
-		throw new UnsupportedOperationException();
+	public Event add(String name, Location location, Date time, int creatorId, int groupID) {
+		Session session = DatabaseInitializer.getFactory().getCurrentSession();
+		session.beginTransaction();
+		User creator = (User) session.get(User.class, creatorId);
+		session.getTransaction().commit();
+		session.beginTransaction();
+		Group group = (Group) session.get(Group.class, groupID);
+		session.getTransaction().commit();
+		Event event = new Event(name, location, time, group, creator);
+		Set<Participant> participants = new HashSet<>(group.getUsers().size());
+		for (User user : group.getUsers()) {
+			participants.add(new Participant(Status.INVITED.getValue(), event, user));
+		}
+		event.setParticipants(participants);
+		session.beginTransaction();
+		session.save(event);
+		session.getTransaction().commit();
+		return event;
 	}
 
 	/**
@@ -37,8 +61,14 @@ public class EventManagement implements Management {
 	 * @return true, if update was successful, otherwise false
 	 */
 	public boolean update(Event chEvent) {
-		// TODO - implement EventManagement.update
-		throw new UnsupportedOperationException();
+		if (chEvent.getEventId() == null) {
+			return false;
+		}
+		Session session = DatabaseInitializer.getFactory().getCurrentSession();
+		session.beginTransaction();
+		session.update(chEvent);
+		session.getTransaction().commit();
+		return true;
 	}
 
 	/**
@@ -51,8 +81,12 @@ public class EventManagement implements Management {
 	 * @return true, if update was successfull, otherwise false
 	 */
 	public boolean updateName(int eventID, String name) {
-		// TODO - implement EventManagement.updateName
-		throw new UnsupportedOperationException();
+		Event event = getEvent(eventID);
+		if (event == null) {
+			return false;
+		}
+		event.setName(name);
+		return update(event);
 	}
 
 	/**
@@ -66,9 +100,17 @@ public class EventManagement implements Management {
 	 *            status to set
 	 * @return true, if update was successfull, otherwise false
 	 */
-	public boolean updateStatus(int userID, int eventID, boolean newStatus) {
-		// TODO - implement EventManagement.updateStatus
-		throw new UnsupportedOperationException();
+	public boolean updateStatus(int userID, int eventID, Status newStatus) {
+		Event event = getEvent(eventID);
+		if (event == null) {
+			return false;
+		}
+		Participant participant = event.getParticipant(new Integer(userID));
+		if (participant == null) {
+			return false;
+		}
+		participant.setStatus(newStatus.getValue());
+		return update(event);
 	}
 
 	/**
@@ -79,8 +121,11 @@ public class EventManagement implements Management {
 	 * @return matching  Event
 	 */
 	public Event getEvent(int eventID) {
-		// TODO - implement EventManagement.getEvent
-		throw new UnsupportedOperationException();
+		Session session = DatabaseInitializer.getFactory().getCurrentSession();
+		session.beginTransaction();
+		Event event = (Event) session.get(Event.class, eventID);
+		session.getTransaction().commit();
+		return event;
 	}
 
 	/**
@@ -90,15 +135,24 @@ public class EventManagement implements Management {
 	 *            ID of entry
 	 * @return ID of User
 	 */
-	public int getUser(int eventID) {
-		// TODO - implement EventManagement.getUser
-		throw new UnsupportedOperationException();
+	public User getCreator(int eventID) {
+		Event event = getEvent(eventID);
+		if (event == null) {
+			return null;
+		}
+		return event.getCreator();
 	}
 
 	@Override
-	public boolean delete(int ID) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean delete(int eventID) {
+		Event event = getEvent(eventID);
+		if (event == null) {
+			return false;
+		}
+		Session session = DatabaseInitializer.getFactory().getCurrentSession();
+		session.beginTransaction();
+		session.delete(event);
+		session.getTransaction().commit();
+		return true;
 	}
-
 }

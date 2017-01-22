@@ -62,6 +62,7 @@ public class Event {
 	public Integer getEventId() {
 		return eventId;
 	}
+
 	public void setEventId(Integer eventId) {
 		this.eventId = eventId;
 	}
@@ -70,6 +71,7 @@ public class Event {
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -78,6 +80,7 @@ public class Event {
 	public Date getTime() {
 		return time;
 	}
+
 	public void setTime(Date time) {
 		this.time = time;
 	}
@@ -87,6 +90,7 @@ public class Event {
 	public Group getGroup() {
 		return group;
 	}
+
 	public void setGroup(Group group) {
 		this.group = group;
 	}
@@ -96,14 +100,16 @@ public class Event {
 	public User getCreator() {
 		return creator;
 	}
+
 	public void setCreator(User creator) {
 		this.creator = creator;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "event")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "event")
 	public Set<Participant> getParticipants() {
 		return participants;
 	}
+
 	public void setParticipants(Set<Participant> participants) {
 		this.participants = participants;
 	}
@@ -119,11 +125,21 @@ public class Event {
 	}
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="LOCATION_ID")
+	@JoinColumn(name = "LOCATION_ID")
 	public Location getLocation() {
 		return location;
 	}
+
 	public void setLocation(Location location) {
 		this.location = location;
-	}	
+	}
+
+	public Participant getParticipant(Integer userId) {
+		for (Participant participant : participants) {
+			if (participant.getUser().getUserId().equals(userId)) {
+				return participant;
+			}
+		}
+		return null;
+	}
 }
