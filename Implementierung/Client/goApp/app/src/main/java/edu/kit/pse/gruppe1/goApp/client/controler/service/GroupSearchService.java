@@ -95,9 +95,7 @@ public class GroupSearchService extends IntentService{
 	protected void onHandleIntent(Intent intent) {
         Group[]groups = getGroups(intent.getStringExtra("JSON"));
         Intent resultIntent = new Intent();
-        //TODO how to get the groups in an intent
-        Bundle groupBundle = new Bundle();
-        resultIntent.putExtra("groups",groupBundle);
+        resultIntent.putExtra("groups",groups);
         resultIntent.setAction(intent.getAction());
 
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());

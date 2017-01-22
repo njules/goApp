@@ -25,7 +25,6 @@ public class EventService extends IntentService {
     public static final String SERVLET = "EventServlet";
 
 
-
     public EventService() {
         super(NAME);
     }
@@ -44,10 +43,11 @@ public class EventService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            //TODO Add Destination and Time to Json
             requestJson.put(JSONParameter.EventName.toString(), name);
             requestJson.put(JSONParameter.GroupID.toString(), group.getId());
-            requestJson.put(JSONParameter.UserID.toString(), eventAdmin.getId());
+            requestJson.put(JSONParameter.Latitude.toString(),destination.getLatitude());
+            requestJson.put(JSONParameter.Longitude.toString(),destination.getLongitude());
+            requestJson.put(JSONParameter.EventTime.toString(), time.getTime());
             requestJson.put(JSONParameter.Method.toString(), ACTION_CREATE);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -114,24 +114,36 @@ public class EventService extends IntentService {
         Intent resultIntent = new Intent();
         JSONObject result;
         switch (intent.getAction()) {
-            case ACTION_CREATE: result = connection.sendPostRequest(intent.getStringExtra("JSON"));
+            case ACTION_CREATE:
+                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
                 resultIntent.setAction(intent.getAction());
                 try {
                     //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR",result.getInt(JSONParameter.ErrorCode.toString()));
+                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 break;
-            case ACTION_GET : result = connection.sendGetRequest(intent.getStringExtra("JSON"));
-                    //TODO add Event Attributes
-                    //Event event = new Event(result.getInt(JSONParameter.EventID.toString()),result.getString(JSONParameter.EventName.toString()));
-                    //TODO add Event to resultIntent
+            case ACTION_GET:
+                result = connection.sendGetRequest(intent.getStringExtra("JSON"));
+                //TODO Exaptions and errors
+                Event event = null;
+                try {
+                event = new Event(
+                        result.getInt(JSONParameter.EventID.toString()),
+                        result.getString(JSONParameter.EventName.toString()),
+                        new Date(result.getLong(JSONParameter.EventTime.toString())));                ;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+                resultIntent.putExtra("Event",event);
+
                 break;
-            case ACTION_CHANGE :  result = connection.sendPostRequest(intent.getStringExtra("JSON"));
+            case ACTION_CHANGE:
+                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
                 try {
                     //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR",result.getInt(JSONParameter.ErrorCode.toString()));
+                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

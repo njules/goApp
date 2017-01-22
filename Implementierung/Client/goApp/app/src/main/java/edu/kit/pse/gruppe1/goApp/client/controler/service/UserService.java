@@ -1,11 +1,27 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
+import android.app.IntentService;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
+import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * This Service provides methods to handle a single User.
  */
-public class UserService {
+public class UserService extends IntentService{
+
+	public static final String NAME = "UserService";
+	public static final String ACTION_CHANGE = "CHANGE";
+	public static final String SERVLET = "UserServlet";
+
+	public UserService() {
+		super(NAME);
+	}
 
 	/**
 	 * changes the old name into the new name of a user
@@ -13,9 +29,38 @@ public class UserService {
 	 * @param name The new name
 	 * @return true, if method was successful, otherwise false
 	 */
-	private boolean changeName(User user, String name) {
-		// TODO - implement UserService.changeName
-		throw new UnsupportedOperationException();
+	public void changeName(Context context, User user, String name) {
+        JSONObject requestJson = new JSONObject();
+
+        try {
+            requestJson.put(JSONParameter.UserID.toString(), user.getId());
+            requestJson.put(JSONParameter.UserName.toString(), name);
+
+            requestJson.put(JSONParameter.Method.toString(), ACTION_CHANGE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.setAction(ACTION_CHANGE);
+
+        startService(requestIntent);
 	}
 
+	@Override
+	protected void onHandleIntent(Intent intent) {
+        HTTPConnection connection = new HTTPConnection(SERVLET);
+        Intent resultIntent = new Intent();
+        JSONObject result = connection.sendPostRequest(intent.getStringExtra("JSON"));
+        resultIntent.setAction(intent.getAction());
+        try {
+            //TODO what happens if error != 0
+            resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
+        manager.sendBroadcast(resultIntent);
+	}
 }

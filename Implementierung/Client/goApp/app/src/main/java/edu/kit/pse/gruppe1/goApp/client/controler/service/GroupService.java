@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
+import java.sql.Date;
 import java.util.List;
 
 import android.app.IntentService;
@@ -223,10 +224,11 @@ public class GroupService extends IntentService {
                 result = connection.sendGetRequest(intent.getStringExtra("JSON"));
                 try {
                     Group group = new Group(result.getInt(JSONParameter.GroupID.toString()), result.getString(JSONParameter.GroupName.toString()));
+                    resultIntent.putExtra("group", group);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //TODO add group to resultIntent
+
                 break;
             case ACTION_DELETE:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
@@ -246,24 +248,26 @@ public class GroupService extends IntentService {
                     e.printStackTrace();
                 }
                 break;
-            case ACTION_GET_EVENTS : result = connection.sendGetRequest(intent.getStringExtra("JSON"));
-                //TODO how to get the events in an intent
-                getEvents(result);
-            case ACTION_SET_FOUNDER : result = connection.sendPostRequest(intent.getStringExtra("JSON"));
+            case ACTION_GET_EVENTS:
+                result = connection.sendGetRequest(intent.getStringExtra("JSON"));
+                resultIntent.putExtra("events", getEvents(result));
+            case ACTION_SET_FOUNDER:
+                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
                 try {
                     //TODO what happens if error != 0
                     resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            case ACTION_SET_NAME : result = connection.sendPostRequest(intent.getStringExtra("JSON"));
+            case ACTION_SET_NAME:
+                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
                 try {
                     //TODO what happens if error != 0
                     resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            //TODO default case
+                //TODO default case
 
         }
         resultIntent.setAction(intent.getAction());
@@ -272,15 +276,15 @@ public class GroupService extends IntentService {
         manager.sendBroadcast(resultIntent);
     }
 
-    private Event[] getEvents(JSONObject result){
+    private Event[] getEvents(JSONObject result) {
         try {
             JSONArray jsons = result.getJSONArray(JSONParameter.GroupName.toString());
             Event[] events = new Event[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
-                //TODO add Event Attributes
-                //events[i] = new Event(
-                //        (int)jsons.getJSONObject(i).get(JSONParameter.EventID.toString()),
-                //        (String)jsons.getJSONObject(i).get(JSONParameter.EventName.toString()));
+                events[i] = new Event(
+                        jsons.getJSONObject(i).getInt(JSONParameter.EventID.toString()),
+                        jsons.getJSONObject(i).getString(JSONParameter.EventName.toString()),
+                        new Date(jsons.getJSONObject(i).getLong(JSONParameter.EventTime.toString())));
             }
             return events;
         } catch (JSONException e) {
