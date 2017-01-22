@@ -106,4 +106,13 @@ public class Group {
 	public void setFounder(User founder) {
 		this.founder = founder;
 	}
+
+	public Request getRequest(Integer userId) {
+		for (Request request : requests) {
+			if (request.getUser().getUserId().equals(userId)) {
+				return request;
+			}
+		}
+		return null;
+	}
 }
