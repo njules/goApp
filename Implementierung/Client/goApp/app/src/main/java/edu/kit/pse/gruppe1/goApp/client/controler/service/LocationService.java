@@ -47,11 +47,14 @@ public class LocationService implements LocationListener {
         locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true), MIN_TIME, MIN_DISTANCE, this);
     }
 
+    public void stopSyncLocation(){
+
+    }
+
     private void getGroupLocation(int eventId) {
         JSONObject requestJson = new JSONObject();
 
         try {
-
             requestJson.put(JSONParameter.EventID.toString(), eventId);
             requestJson.put(JSONParameter.Method.toString(), ACTION_GET);
         } catch (JSONException e) {
