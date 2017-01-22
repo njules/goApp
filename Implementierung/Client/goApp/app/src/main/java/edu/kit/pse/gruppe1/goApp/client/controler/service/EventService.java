@@ -48,6 +48,7 @@ public class EventService extends IntentService {
             requestJson.put(JSONParameter.EventName.toString(), name);
             requestJson.put(JSONParameter.GroupID.toString(), group.getId());
             requestJson.put(JSONParameter.UserID.toString(), eventAdmin.getId());
+            requestJson.put(JSONParameter.Method.toString(), ACTION_CREATE);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -70,6 +71,7 @@ public class EventService extends IntentService {
 
         try {
             requestJson.put(JSONParameter.EventID.toString(), eventID);
+            requestJson.put(JSONParameter.Method.toString(), ACTION_GET);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -94,6 +96,7 @@ public class EventService extends IntentService {
             //TODO add Eventattributes which should be able to be changed
             requestJson.put(JSONParameter.EventID.toString(), event.getId());
             requestJson.put(JSONParameter.EventName.toString(), event.getName());
+            requestJson.put(JSONParameter.Method.toString(), ACTION_CHANGE);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -27,8 +27,8 @@ public class GroupSearchService extends IntentService{
     public static final String TAG = GroupSearchService.class.getSimpleName();
     public static final String ERROR_INPUT = "wrong Input";
     public static final String ERROR = "Ups, Error occured";
-    public static final String ACTION_GETBYNAME = "GETBYNAME";
-    public static final String ACTION_GETBYUSER = "GETBYUSER";
+    public static final String ACTION_GET_BY_NAME = "GET_BY_NAME";
+    public static final String ACTION_GET_BY_MEMBER = "GET_BY_MEMBER";
     public static final String SERVLET = "GroupSearchServlet";
 
     //for testing
@@ -53,13 +53,14 @@ public class GroupSearchService extends IntentService{
 
         try {
             requestJson.put(JSONParameter.UserID.toString(), user.getId());
+            requestJson.put(JSONParameter.Method.toString(), ACTION_GET_BY_MEMBER);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context,GroupSearchService.class);
         requestIntent.putExtra("Json",requestJson.toString());
-        requestIntent.setAction(ACTION_GETBYUSER);
+        requestIntent.setAction(ACTION_GET_BY_MEMBER);
 
         startService(requestIntent);
         running = true;
@@ -78,13 +79,14 @@ public class GroupSearchService extends IntentService{
 
         try {
             requestJson.put(JSONParameter.GroupName.toString(), name);
+            requestJson.put(JSONParameter.Method.toString(), ACTION_GET_BY_NAME);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context,GroupSearchService.class);
         requestIntent.putExtra("Json",requestJson.toString());
-        requestIntent.setAction(ACTION_GETBYNAME);
+        requestIntent.setAction(ACTION_GET_BY_NAME);
 
         startService(requestIntent);
 	}
