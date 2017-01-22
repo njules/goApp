@@ -27,6 +27,15 @@ public class Participant {
 	
 	public Participant(){}
 	
+	
+	public Participant(Integer status, Event event, User user) {
+		super();
+		this.status = status;
+		this.event = event;
+		this.user = user;
+	}
+
+
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "LOCATION_ID")

@@ -3,6 +3,7 @@ package edu.kit.pse.gruppe1.goApp.server.model;
 import java.sql.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -20,12 +22,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "eventT")
 public class Event {
-	
+
 	/**
 	 * The Id is used to identify each event and is therefore unique.
 	 */
 	private Integer eventId;
-	
+
 	/**
 	 * The name of an event is given by the creator.
 	 */
@@ -36,23 +38,25 @@ public class Event {
 	 * creator of the event.
 	 */
 	private Date time;
-	
+
 	private Group group;
 	private User creator;
 	private Set<Participant> participants;
 	private Set<Location> clusterPoints;
+	private Location location;
 
-	public Event() {}
-
-
-	public Event(Integer eventId, String name, Date time) {
-		this.eventId = eventId;
-		this.name = name;
-		this.time = time;
+	public Event() {
 	}
 
+	public Event(String name, Location location, Date time, Group group, User creator) {
+		this.name = name;
+		this.location = location;
+		this.time = time;
+		this.group = group;
+		this.creator = creator;
+	}
 
-	@Id	
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EVENT_ID")
 	public Integer getEventId() {
@@ -62,12 +66,10 @@ public class Event {
 		this.eventId = eventId;
 	}
 
-
 	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -79,9 +81,9 @@ public class Event {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "GROUP_ID")	
+	@JoinColumn(name = "GROUP_ID")
 	public Group getGroup() {
 		return group;
 	}
@@ -98,7 +100,7 @@ public class Event {
 		this.creator = creator;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "event")
 	public Set<Participant> getParticipants() {
 		return participants;
 	}
@@ -106,12 +108,22 @@ public class Event {
 		this.participants = participants;
 	}
 
-	@OneToMany
-	@JoinColumn(name="cluster_points")
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "cluster_points")
 	public Set<Location> getClusterPoints() {
 		return clusterPoints;
 	}
+
 	public void setClusterPoints(Set<Location> clusterPoints) {
 		this.clusterPoints = clusterPoints;
 	}
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="LOCATION_ID")
+	public Location getLocation() {
+		return location;
+	}
+	public void setLocation(Location location) {
+		this.location = location;
+	}	
 }

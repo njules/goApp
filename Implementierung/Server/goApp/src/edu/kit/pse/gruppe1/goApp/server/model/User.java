@@ -60,7 +60,7 @@ public class User {
 	}
 
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "user")
 	public Set<Request> getRequests() {
 		return requests;
 	}
@@ -107,7 +107,7 @@ public class User {
 		this.createdEvents = createdEvents;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "user")
 	public Set<Participant> getParticipations() {
 		return participations;
 	}
@@ -115,7 +115,7 @@ public class User {
 		this.participations = participations;
 	}
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="LOCATION_ID")
 	public Location getLocation() {
 		return location;

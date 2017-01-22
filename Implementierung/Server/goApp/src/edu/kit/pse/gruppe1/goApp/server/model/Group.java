@@ -2,6 +2,7 @@ package edu.kit.pse.gruppe1.goApp.server.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -66,7 +67,7 @@ public class Group {
 		this.name = name;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "group")
 	public Set<Event> getEvents() {
 		return events;
 	}
@@ -74,7 +75,7 @@ public class Group {
 		this.events = events;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "group")
 	public Set<Request> getRequests() {
 		return requests;
 	}

@@ -28,11 +28,8 @@ public class DatabaseInitializer {
 			Configuration configuration = new Configuration();
 			configuration.configure();
 			configuration.addAnnotatedClass(Group.class);
-			configuration.addAnnotatedClass(Event.class);
-			
-			
+			configuration.addAnnotatedClass(Event.class);		
 			configuration.addAnnotatedClass(Location.class);
-			
 			configuration.addAnnotatedClass(Request.class);
 			configuration.addAnnotatedClass(User.class);
 			configuration.addAnnotatedClass(Participant.class);
