@@ -33,20 +33,19 @@ public class EventManagement implements Management {
 	 * @param groupID
 	 *            ID of Group to which Event is related to
 	 */
-	public Event add(String name, Location location, Date time, int creatorId, int groupID) {
-		Session session = DatabaseInitializer.getFactory().getCurrentSession();
-		session.beginTransaction();
-		User creator = (User) session.get(User.class, creatorId);
-		session.getTransaction().commit();
-		session.beginTransaction();
-		Group group = (Group) session.get(Group.class, groupID);
-		session.getTransaction().commit();
+	public Event add(String name, Location location, Date time, int creatorId, int groupId) {
+		User creator = new UserManagement().getUser(creatorId);
+		Group group = new GroupManagement().getGroup(groupId);
+		if (creator == null || group == null) {
+			return null;
+		}
 		Event event = new Event(name, location, time, group, creator);
 		Set<Participant> participants = new HashSet<>(group.getUsers().size());
 		for (User user : group.getUsers()) {
 			participants.add(new Participant(Status.INVITED.getValue(), event, user));
 		}
 		event.setParticipants(participants);
+		Session session = DatabaseInitializer.getFactory().getCurrentSession();
 		session.beginTransaction();
 		session.save(event);
 		session.getTransaction().commit();
@@ -80,8 +79,8 @@ public class EventManagement implements Management {
 	 *            new Name of Entry
 	 * @return true, if update was successfull, otherwise false
 	 */
-	public boolean updateName(int eventID, String name) {
-		Event event = getEvent(eventID);
+	public boolean updateName(int eventId, String name) {
+		Event event = getEvent(eventId);
 		if (event == null) {
 			return false;
 		}
@@ -89,29 +88,7 @@ public class EventManagement implements Management {
 		return update(event);
 	}
 
-	/**
-	 * sets new status to entry with given ID
-	 * 
-	 * @param userID
-	 *            ID from user
-	 * @param eventID
-	 *            ID from Event
-	 * @param newStatus
-	 *            status to set
-	 * @return true, if update was successfull, otherwise false
-	 */
-	public boolean updateStatus(int userID, int eventID, Status newStatus) {
-		Event event = getEvent(eventID);
-		if (event == null) {
-			return false;
-		}
-		Participant participant = event.getParticipant(new Integer(userID));
-		if (participant == null) {
-			return false;
-		}
-		participant.setStatus(newStatus.getValue());
-		return update(event);
-	}
+
 
 	/**
 	 * gets Event with given eventID
@@ -120,10 +97,10 @@ public class EventManagement implements Management {
 	 *            ID of event
 	 * @return matching  Event
 	 */
-	public Event getEvent(int eventID) {
+	public Event getEvent(int eventId) {
 		Session session = DatabaseInitializer.getFactory().getCurrentSession();
 		session.beginTransaction();
-		Event event = (Event) session.get(Event.class, eventID);
+		Event event = (Event) session.get(Event.class, eventId);
 		session.getTransaction().commit();
 		return event;
 	}
@@ -135,8 +112,8 @@ public class EventManagement implements Management {
 	 *            ID of entry
 	 * @return ID of User
 	 */
-	public User getCreator(int eventID) {
-		Event event = getEvent(eventID);
+	public User getCreator(int eventId) {
+		Event event = getEvent(eventId);
 		if (event == null) {
 			return null;
 		}
@@ -144,8 +121,8 @@ public class EventManagement implements Management {
 	}
 
 	@Override
-	public boolean delete(int eventID) {
-		Event event = getEvent(eventID);
+	public boolean delete(int eventId) {
+		Event event = getEvent(eventId);
 		if (event == null) {
 			return false;
 		}

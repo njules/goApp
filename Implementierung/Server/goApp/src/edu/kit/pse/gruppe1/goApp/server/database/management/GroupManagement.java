@@ -3,6 +3,8 @@ package edu.kit.pse.gruppe1.goApp.server.database.management;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import edu.kit.pse.gruppe1.goApp.server.model.*;
 /**
  * Manages Group Table
@@ -56,9 +58,12 @@ public class GroupManagement implements Management {
 	 * @param groupID ID of Group to get
 	 * @return a Group
 	 */
-	public Group getGroup(int groupID) {
-		// TODO - implement GroupManagement.getGroup
-		throw new UnsupportedOperationException();
+	public Group getGroup(int groupId) {
+		Session session = DatabaseInitializer.getFactory().getCurrentSession();
+		session.beginTransaction();
+		Group group = (Group) session.get(Group.class, groupId);
+		session.getTransaction().commit();
+		return group;
 	}
 
 	/**
