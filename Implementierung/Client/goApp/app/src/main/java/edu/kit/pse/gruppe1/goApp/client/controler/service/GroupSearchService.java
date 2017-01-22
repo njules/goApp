@@ -58,7 +58,7 @@ public class GroupSearchService extends IntentService{
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context,GroupSearchService.class);
+        Intent requestIntent = new Intent(context,this.getClass());
         requestIntent.putExtra("Json",requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_MEMBER);
 
@@ -84,7 +84,7 @@ public class GroupSearchService extends IntentService{
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context,GroupSearchService.class);
+        Intent requestIntent = new Intent(context,this.getClass());
         requestIntent.putExtra("Json",requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_NAME);
 

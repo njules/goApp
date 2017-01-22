@@ -41,7 +41,7 @@ public class UserService extends IntentService{
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_CHANGE);
 

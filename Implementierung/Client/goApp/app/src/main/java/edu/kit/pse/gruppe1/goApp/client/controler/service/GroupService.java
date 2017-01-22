@@ -52,7 +52,7 @@ public class GroupService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_CREATE);
 
@@ -76,7 +76,7 @@ public class GroupService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_DELETE);
 
@@ -101,7 +101,7 @@ public class GroupService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_DELETE_MEMBER);
 
@@ -126,7 +126,7 @@ public class GroupService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_SET_NAME);
 
@@ -149,7 +149,7 @@ public class GroupService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GET);
 
@@ -173,7 +173,7 @@ public class GroupService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_SET_FOUNDER);
 
@@ -196,7 +196,7 @@ public class GroupService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GET_EVENTS);
 

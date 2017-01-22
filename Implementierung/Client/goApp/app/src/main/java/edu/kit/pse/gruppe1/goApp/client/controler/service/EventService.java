@@ -53,7 +53,7 @@ public class EventService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_CREATE);
 
@@ -76,7 +76,7 @@ public class EventService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GET);
 
@@ -101,7 +101,7 @@ public class EventService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_CHANGE);
 
