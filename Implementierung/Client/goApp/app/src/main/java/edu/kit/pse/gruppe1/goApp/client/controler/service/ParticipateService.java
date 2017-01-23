@@ -19,6 +19,7 @@ public class ParticipateService extends IntentService {
     private static final String NAME = "ParticipateService";
     private static final String ACTION_ACCEPT = "ACCEPT";
     private static final String ACTION_REJECT = "REJECT";
+    private static final String ACTION_GO = "GO";
     private static final String SERVLET = "ParticipateServlet";
 
     public ParticipateService() {
@@ -75,6 +76,24 @@ public class ParticipateService extends IntentService {
         startService(requestIntent);
 
     }
+    public void setGo(Context context, Event event, User user) {
+        JSONObject requestJson = new JSONObject();
+
+        try {
+            requestJson.put(JSONParameter.EventID.toString(), event.getId());
+            requestJson.put(JSONParameter.UserID.toString(), user.getId());
+            requestJson.put(JSONParameter.Method.toString(), ACTION_GO);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Intent requestIntent = new Intent(context, this.getClass());
+        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.setAction(ACTION_GO);
+
+        startService(requestIntent);
+
+    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -93,6 +112,15 @@ public class ParticipateService extends IntentService {
 
                 break;
             case ACTION_ACCEPT:
+                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
+                try {
+                    //TODO what happens if error != 0
+                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case ACTION_GO:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
                 try {
                     //TODO what happens if error != 0

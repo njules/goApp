@@ -115,6 +115,7 @@ public class EventService extends IntentService {
         JSONObject result;
         switch (intent.getAction()) {
             case ACTION_CREATE:
+                //TODO start alarm for notification and locationSync
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
                 resultIntent.setAction(intent.getAction());
                 try {
