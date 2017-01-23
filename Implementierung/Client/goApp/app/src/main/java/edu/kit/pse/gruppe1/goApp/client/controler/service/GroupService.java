@@ -251,6 +251,7 @@ public class GroupService extends IntentService {
             case ACTION_GET_EVENTS:
                 result = connection.sendGetRequest(intent.getStringExtra("JSON"));
                 resultIntent.putExtra("events", getEvents(result));
+                break;
             case ACTION_SET_FOUNDER:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
                 try {
@@ -259,6 +260,7 @@ public class GroupService extends IntentService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                break;
             case ACTION_SET_NAME:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
                 try {
@@ -267,6 +269,7 @@ public class GroupService extends IntentService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                break;
                 //TODO default case
 
         }
