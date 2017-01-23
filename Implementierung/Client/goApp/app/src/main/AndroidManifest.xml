@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.kit.pse.gruppe1.goApp.client">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,7 +17,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name=".controler.service.GroupSearchService" />
+        <service android:name=".controler.service.EventService"/>
+        <service android:name=".controler.service.GroupService"/>
+        <service android:name=".controler.service.UserService"/>
+        <service android:name=".controler.service.RequestService"/>
+        <service android:name=".controler.service.RequestSearchService"/>
+        <service android:name=".controler.service.ParticipateService"/>
+        <service android:name=".controler.service.NotificationService"/>
+
     </application>
 
 </manifest>

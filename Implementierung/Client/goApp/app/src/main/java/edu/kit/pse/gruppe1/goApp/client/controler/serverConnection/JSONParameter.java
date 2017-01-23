@@ -38,6 +38,21 @@ public enum JSONParameter {
      * Name of an event.
      */
     EventName("Event name"),
+
+    /**
+     * Time when the event starts
+     */
+    EventTime("Event time"),
+
+    /**
+     * Longitude of an location
+     */
+    Longitude("Longitude"),
+
+    /**
+     * Latitude of an location
+     */
+    Latitude("Latitude"),
     /**
      * The name of the method which should be executed on the server. For example the create method of the GroupServlet.
      */

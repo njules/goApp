@@ -1,11 +1,14 @@
 package edu.kit.pse.gruppe1.goApp.client.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.*;
 
 /**
  * A group is a composition of several users of the goApp, in which the users can create events.
  */
-public class Group {
+public class Group implements Parcelable{
 
 	Collection<Event> events;
 	Collection<Request> requests;
@@ -17,6 +20,9 @@ public class Group {
 	 * The name of a group is given by the founder and can be changed.
 	 */
 	private String name;
+    //TODO more attributes needed?
+    //private Set<Event> events;
+    //private Set<Request> requests;
 
 	/**
 	 * 
@@ -26,9 +32,25 @@ public class Group {
 	public Group(int id, String name) {
         this.id = id;
         this.name = name;
-		//throw new UnsupportedOperationException();
 	}
 
+
+	protected Group(Parcel in) {
+		id = in.readInt();
+		name = in.readString();
+	}
+
+	public static final Creator<Group> CREATOR = new Creator<Group>() {
+		@Override
+		public Group createFromParcel(Parcel in) {
+			return new Group(in);
+		}
+
+		@Override
+		public Group[] newArray(int size) {
+			return new Group[size];
+		}
+	};
 
 	public String getName() {
 		return name;
@@ -40,5 +62,16 @@ public class Group {
 
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel out, int i) {
+		out.writeInt(id);
+		out.writeString(name);
 	}
 }
