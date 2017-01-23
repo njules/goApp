@@ -22,4 +22,6 @@ Pflichtenheft/Pflichtenheft_goApp.pdf
 *.lck
 *.dvi
 Entwurf/Entwurf_goApp.pdf
+Implementierung/Server/goApp/.checkstyle
+Implementierung/Server/goApp/.project
 Implementierung/Client/goApp/.idea/checkstyle-idea.xml

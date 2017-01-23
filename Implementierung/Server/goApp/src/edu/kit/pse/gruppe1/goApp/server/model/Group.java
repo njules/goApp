@@ -2,6 +2,7 @@ package edu.kit.pse.gruppe1.goApp.server.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,82 +21,147 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "groupT")
 public class Group {
+  /**
+   * The Id is used to identify each group and is therefore unique.
+   */
+  private Integer groupId;
+  private User founder;
+  private Set<Event> events;
+  private Set<Request> requests;
+  private Set<User> users;
+  /**
+   * The name of a group is given by the founder and can be changed.
+   */
+  private String name;
 
-	
-	/**
-	 * The Id is used to identify each group and is therefore unique.
-	 */
-	private int groupId;
-	private User founder;
-	private Set<Event> events;
-	private Set<Request> requests;
-	private Set<User> users;
-	/**
-	 * The name of a group is given by the founder and can be changed.
-	 */
-	private String name;
-	
-	public Group(){}
-	/**
-	 * 
-	 * @param id The Id of the group.
-	 * @param name The name of the Group.
-	 */
-	public Group(int id, String name) {
-        this.groupId = id;
-        this.name = name;
-		throw new UnsupportedOperationException();
-	}
+  /**
+   * Standard constructor
+   */
+  public Group() {
+  }
 
-	@Id	
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "GROUP_ID")
-	public int getGroupId() {
-		return groupId;
-	}
+  /**
+   * 
+   * @param name
+   *          The name of the group.
+   * @param founder
+   *          The founder of the group.
+   */
+  public Group(String name, User founder) {
+    this.name = name;
+    this.founder = founder;
+  }
 
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
-	}
-	@Column(name = "name")
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the id of the group
+   */
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "GROUP_ID")
+  public Integer getGroupId() {
+    return groupId;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
-	public Set<Event> getEvents() {
-		return events;
-	}
-	public void setEvents(Set<Event> events) {
-		this.events = events;
-	}
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
-	public Set<Request> getRequests() {
-		return requests;
-	}
-	public void setRequests(Set<Request> requests) {
-		this.requests = requests;
-	}
-	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
-	public Set<User> getUsers() {
-		return users;
-	}
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID")
-	public User getFounder() {
-		return founder;
-	}
-	public void setFounder(User founder) {
-		this.founder = founder;
-	}	
+  /**
+   * @param groupId
+   *          the id of the group
+   */
+  public void setGroupId(Integer groupId) {
+    this.groupId = groupId;
+  }
+
+  /**
+   * @return the name of the group
+   */
+  @Column(name = "name")
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * @param name
+   *          the name of the group
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * @return the events which belongs to the group
+   */
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "group")
+  public Set<Event> getEvents() {
+    return events;
+  }
+
+  /**
+   * @param events
+   *          the events which belongs to the group
+   */
+  public void setEvents(Set<Event> events) {
+    this.events = events;
+  }
+
+  /**
+   * @return the requests which belongs to the group
+   */
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "group")
+  public Set<Request> getRequests() {
+    return requests;
+  }
+
+  /**
+   * @param requests
+   *          the requests which belongs to the group
+   */
+  public void setRequests(Set<Request> requests) {
+    this.requests = requests;
+  }
+
+  /**
+   * @return all member of the group
+   */
+  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
+  public Set<User> getUsers() {
+    return users;
+  }
+
+  /**
+   * @param users
+   *          all member of the group
+   */
+  public void setUsers(Set<User> users) {
+    this.users = users;
+  }
+
+  /**
+   * @return the founder of the group
+   */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "USER_ID")
+  public User getFounder() {
+    return founder;
+  }
+
+  /**
+   * @param founder
+   *          the founder of the group
+   */
+  public void setFounder(User founder) {
+    this.founder = founder;
+  }
+
+  /**
+   * @param userId
+   *          the userId of the request
+   * @return the request with the given userId
+   */
+  public Request getRequest(Integer userId) {
+    for (Request request : requests) {
+      if (request.getUser().getUserId().equals(userId)) {
+        return request;
+      }
+    }
+    return null;
+  }
 }
