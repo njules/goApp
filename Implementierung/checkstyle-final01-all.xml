@@ -439,8 +439,6 @@
             <!--
             <property name="excludeScope"          value=""/>
             !-->
-            <property name="authorFormat"          value=""/>
-            <property name="versionFormat"         value=""/>
             <property name="allowMissingParamTags" value="false"/>
             <property name="allowUnknownTags"      value="false"/>
             <property name="tokens"                value="INTERFACE_DEF, CLASS_DEF"/>
