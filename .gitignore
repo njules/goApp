@@ -25,3 +25,6 @@ Entwurf/Entwurf_goApp.pdf
 Implementierung/Server/goApp/.checkstyle
 Implementierung/Server/goApp/.project
 Implementierung/Client/goApp/.idea/checkstyle-idea.xml
+Implementierung/Server/.classpath
+*.project
+Implementierung/Server/goApp/.project
