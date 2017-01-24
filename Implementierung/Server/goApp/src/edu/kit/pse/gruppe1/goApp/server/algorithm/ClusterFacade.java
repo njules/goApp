@@ -27,6 +27,23 @@ public class ClusterFacade {
   public List<DoublePoint> getClusteredCentralPoints(Event event) {
     int eventId = event.getEventId();
 
+    List<DoublePoint> locations = getEventsLocations(eventId);
+    List<Cluster<DoublePoint>> clusters = getClusters(locations);
+
+    CentralPointAlgo algorithm = new SimpleCentral();
+
+    
+    
+    List<DoublePoint> result = new ArrayList<DoublePoint>(0);
+    for (Cluster<DoublePoint> c : clusters) {
+      
+      if(!c.equals(null)) {
+        result.add(algorithm.calculateCentralPoint(c));
+      }
+    }
+    
+    return result;
+
   }
 
   private List<DoublePoint> getEventsLocations(int eventId) {
@@ -56,17 +73,12 @@ public class ClusterFacade {
 
   }
 
-  private List<CentroidCluster> getClusters(List<DoublePoint> points) {
-    
+  private List<Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
+
     DBSCANClusterer<DoublePoint> clusterer = new DBSCANClusterer<DoublePoint>(0.1, 2);
-    
-    
-    clusterer.cluster(points);
-    
-    
-    
-    
-    
+
+    return clusterer.cluster(points);
+
   }
 
 }

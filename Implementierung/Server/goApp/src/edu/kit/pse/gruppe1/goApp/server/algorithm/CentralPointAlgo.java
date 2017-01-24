@@ -3,6 +3,7 @@ package edu.kit.pse.gruppe1.goApp.server.algorithm;
 import java.awt.geom.Point2D;
 
 import org.apache.commons.math4.ml.clustering.CentroidCluster;
+import org.apache.commons.math4.ml.clustering.Cluster;
 import org.apache.commons.math4.ml.clustering.DoublePoint;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
@@ -18,6 +19,6 @@ public abstract class CentralPointAlgo {
    * @param cluster
    *          This is the cluster which central point should be calculated.
    */
-  public abstract DoublePoint calculateCentralPoint(CentroidCluster<DoublePoint> cluster);
+  public abstract DoublePoint calculateCentralPoint(Cluster<DoublePoint> cluster);
 
 }
