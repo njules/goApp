@@ -22,11 +22,15 @@ public class GroupManagement implements Management {
 	 * 
 	 * @param name
 	 *            Name of Group
-	 * @param founder
-	 *            Founder of Group (User)
+	 * @param founderId
+	 *            id of the founder (User) of Group 
 	 * @return created Group
 	 */
-	public Group add(String name, User founder) {
+	public Group add(String name, int founderId) {
+	    User founder = new UserManagement().getUser(founderId);
+	    if (founder == null) {
+	      return null;
+	    }
 		Group group = new Group(name, founder);
 		Session session = DatabaseInitializer.getFactory().getCurrentSession();
 		session.beginTransaction();

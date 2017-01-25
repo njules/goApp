@@ -1,7 +1,10 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
-import java.sql.Date;
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -33,7 +36,7 @@ public class EventManagement implements Management {
    *          ID of Group to which Event is related to
    */
 
-  public Event add(String name, Location location, Date time, int creatorId, int groupId) {
+  public Event add(String name, Location location, Time time, int creatorId, int groupId) {
   User creator = new UserManagement().getUser(creatorId);
   Group group = new GroupManagement().getGroup(groupId);
   if (creator == null || group == null) {
@@ -117,6 +120,28 @@ public class EventManagement implements Management {
   }
   return event.getCreator();
   }
+  
+  
+  public List<Location> getUserLocations(int eventId){
+      Event event = getEvent(eventId);
+      if (event == null) {
+        return null;
+      }    
+      List<Location>locations=new ArrayList<>(event.getParticipants().size());
+      for (Participant participant : event.getParticipants()) {
+        locations.add(participant.getUser().getLocation());
+      }
+      return new ArrayList<Location>();
+    }
+
+    public boolean setClusterPoints(int eventId, Collection<Location> points) {
+      Event event = getEvent(eventId);
+      if (event == null) {
+        return false;
+      }
+      event.setClusterPoints(new HashSet<Location>(points));
+      return update(event);
+    }
 
   @Override
   public boolean delete(int eventId) {
