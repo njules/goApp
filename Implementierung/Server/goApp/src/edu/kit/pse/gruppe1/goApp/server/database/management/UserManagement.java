@@ -1,7 +1,5 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
-import java.util.HashSet;
-import java.util.Set;
 
 import org.hibernate.Session;
 
