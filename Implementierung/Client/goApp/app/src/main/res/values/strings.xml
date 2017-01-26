@@ -5,7 +5,11 @@
     <string name="change">JA!</string>
     <string name="cancel">Abbruch</string>
     <string name="go">GO</string>
-    <string name="your_events">Deine Termine</string>
-    <string name="new_events">Neue Termine</string>
+    <string name="your_events">Deine Termine:</string>
+    <string name="new_events">Neue Termine:</string>
     <string name="info">info</string>
+    <string name="group_member">Mitglieder:</string>
+    <string name="group_request">Anfragen:</string>
+    <string name="exit">VERLASSEN</string>
+    <string name="delete">LÖSCHEN</string>
 </resources>

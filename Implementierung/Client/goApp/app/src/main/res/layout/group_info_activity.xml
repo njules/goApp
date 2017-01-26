@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <data >
+        <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"></variable>
+    </data>
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/group_info_toolbar"
+            app:title="@{group.name}"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp"
+            android:background="@color/colorPrimary"
+            android:theme="@style/AppTheme">
+    </android.support.v7.widget.Toolbar>
+</layout>
