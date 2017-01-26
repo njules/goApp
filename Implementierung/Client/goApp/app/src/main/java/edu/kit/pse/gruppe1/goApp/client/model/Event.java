@@ -20,6 +20,10 @@ public class Event implements Parcelable {
      */
     private String name;
 
+    public Date getTime() {
+        return time;
+    }
+
     /**
      * The time of an event tells when the event is starting and set by the creator of the event.
      */

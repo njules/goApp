@@ -4,4 +4,8 @@
     <string name="changeName">Dein Neuer Benutzername:</string>
     <string name="change">JA!</string>
     <string name="cancel">Abbruch</string>
+    <string name="go">GO</string>
+    <string name="your_events">Deine Termine</string>
+    <string name="new_events">Neue Termine</string>
+    <string name="info">info</string>
 </resources>
