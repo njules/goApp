@@ -5,12 +5,16 @@
         <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"/>
     </data>
 
-<TextView
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textSize="30sp"
-    android:paddingLeft="50dp"
-    android:text="@{group.name}">
+    <TextView
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="30sp"
+            android:text="@{group.name}"
+            android:background="?android:attr/selectableItemBackground">
 
-</TextView>
+    </TextView>
 </layout>
