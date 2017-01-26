@@ -4,6 +4,9 @@
     <string name="changeName">Dein Neuer Benutzername:</string>
     <string name="change">JA!</string>
     <string name="cancel">Abbruch</string>
+    <string name="search">Suche: </string>
+    <string name="groupName">Gruppenname..</string>
+    <string name="newGroup">Möchtest du eine neue Gruppe erstellen?</string>
     <string name="go">GO</string>
     <string name="your_events">Deine Termine:</string>
     <string name="new_events">Neue Termine:</string>

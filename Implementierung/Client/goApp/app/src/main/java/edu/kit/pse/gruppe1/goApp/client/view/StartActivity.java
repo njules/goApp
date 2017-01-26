@@ -1,7 +1,9 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.StartActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
+import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 
@@ -36,7 +39,7 @@ public class StartActivity extends AppCompatActivity implements Communicator{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.start_activity);
-        user = new User(17, "Maxi");
+        user = Preferences.getUser(); //Stattdessen wird der User in der LoginActivity geholt
         binding.setUser(user);
         Toolbar startToolbar = (Toolbar) findViewById(R.id.start_toolbar);
         setSupportActionBar(startToolbar);
@@ -76,6 +79,7 @@ public class StartActivity extends AppCompatActivity implements Communicator{
         groupLayoutManager = new LinearLayoutManager(this);
         groupRecyclerView.setLayoutManager(groupLayoutManager);
         // specify an adapter
+        // Todo: Hier Gruppen des Users suchen(GroupSearchService)
         groupAdapter = new GroupAdapter(fillGroupDataset());
         groupRecyclerView.setAdapter(groupAdapter);
 
@@ -85,6 +89,7 @@ public class StartActivity extends AppCompatActivity implements Communicator{
         groupLayoutManager = new LinearLayoutManager(this);
         requestRecyclerView.setLayoutManager(groupLayoutManager);
         // specify an adapter
+        //Todo: Hier Requests des Users suchen(RequestSearchService)
         groupAdapter = new GroupAdapter(fillDataset());
         requestRecyclerView.setAdapter(groupAdapter);
     }
@@ -137,7 +142,14 @@ public class StartActivity extends AppCompatActivity implements Communicator{
     @Override
     public void respond(String response) {
         user.setName(response);
+        Preferences.setUser(user);
         String output = R.string.changeName + " " + user.getName();
+        //Todo hier Benutzernamen ändern
         Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
+    }
+
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, StartActivity.class);
+        activity.startActivity(intent);
     }
 }

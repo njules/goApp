@@ -5,7 +5,7 @@
     <data>
     </data>
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:theme="@style/AppTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,7 +20,12 @@
             android:elevation="4dp"
             android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            android:title="">
+            android:title="@string/search">
+            <EditText
+                android:id="@+id/search_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/groupName"/>
         </android.support.v7.widget.Toolbar>
 
         <android.support.v7.widget.RecyclerView
@@ -32,15 +37,14 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/new_group_button"
-            android:layout_width="54dp"
-            android:layout_height="52dp"
-            android:layout_gravity="bottom|right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:layout_gravity="bottom|end"
             android:clickable="true"
-            app:fabSize="mini"
+            app:fabSize="normal"
             android:theme="@style/AppTheme"
-            android:src="@drawable/ic_fab_add"
-             />
+            android:src="@drawable/ic_fab_add" />
 
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>
