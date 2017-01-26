@@ -15,12 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 
-public class NewGroupActivity extends AppCompatActivity implements View.OnClickListener {
+public class NewGroupActivity extends AppCompatActivity implements View.OnClickListener, ItemClickListener {
     private RecyclerView groupRecyclerView;
-    private RecyclerView.Adapter groupAdapter;
+    private GroupAdapter groupAdapter;
     private RecyclerView.LayoutManager groupLayoutManager;
     private EditText et;
 
@@ -73,7 +74,7 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
             case R.id.action_search:
                 et.getText();
                 //Todo Hier nach den angefragten Gruppen suchen (GroupSearchService)
-                groupAdapter = new GroupAdapter(fillGroupDataset());
+                groupAdapter = new GroupAdapter(fillGroupDataset(), this);
                 groupRecyclerView.setAdapter(groupAdapter);
                 return true;
             default:
@@ -88,5 +89,11 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
         NewGroupFragment fragment = new NewGroupFragment();
         fragmentTransaction.add(fragment, "NewGroupFragment");
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        Group group = groupAdapter.getItem(position);
+        Toast.makeText(getApplicationContext(), group.getName(), Toast.LENGTH_LONG).show();
     }
 }

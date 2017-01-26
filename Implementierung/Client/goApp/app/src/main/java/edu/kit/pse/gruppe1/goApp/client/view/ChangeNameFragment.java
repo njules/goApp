@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import edu.kit.pse.gruppe1.goApp.client.R;
-import edu.kit.pse.gruppe1.goApp.client.databinding.ChangeNameDialogBinding;
-import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 /**
  * Created by Tobias on 20.01.2017.

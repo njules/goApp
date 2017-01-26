@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable name="user" type="edu.kit.pse.gruppe1.goApp.client.model.User"></variable>
     </data>
@@ -19,12 +17,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_reject"
-                android:layout_toRightOf="@id/accept_member"/>
+                android:layout_toEndOf="@id/member"/>
         <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/accept_member"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/member"
+                android:layout_toEndOf="@id/reject_member"
                 android:src="@drawable/ic_accept"/>
 
     </RelativeLayout>
