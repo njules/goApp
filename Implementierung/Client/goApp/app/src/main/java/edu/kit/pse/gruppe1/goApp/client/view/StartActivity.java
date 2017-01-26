@@ -127,6 +127,7 @@ public class StartActivity extends AppCompatActivity implements Communicator{
                 fragmentTransaction.commit();
                 return true;
             case R.id.action_search:
+                NewGroupActivity.start(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -136,6 +137,7 @@ public class StartActivity extends AppCompatActivity implements Communicator{
     @Override
     public void respond(String response) {
         user.setName(response);
-        Toast.makeText(getApplicationContext(), R.string.changeName + " " + user.getName(), Toast.LENGTH_SHORT).show();
+        String output = R.string.changeName + " " + user.getName();
+        Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
     }
 }
