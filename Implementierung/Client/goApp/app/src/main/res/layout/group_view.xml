@@ -15,6 +15,5 @@
             android:textSize="30sp"
             android:text="@{group.name}"
             android:background="?android:attr/selectableItemBackground">
-
     </TextView>
 </layout>
