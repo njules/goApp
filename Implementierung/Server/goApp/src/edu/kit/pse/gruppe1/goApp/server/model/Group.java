@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -50,6 +51,8 @@ public class Group {
   public Group(String name, User founder) {
     this.name = name;
     this.founder = founder;
+    this.users=new HashSet<>();
+    this.users.add(founder);
   }
 
   /**

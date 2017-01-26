@@ -39,7 +39,9 @@ public class User {
 	private Set<Group> foundedGroups;
 	private Set<Event> createdEvents;
 	private Set<Participant> participations;
-
+	
+	public User(){	  
+	}
 	/**
 	 * 
 	 * @param id

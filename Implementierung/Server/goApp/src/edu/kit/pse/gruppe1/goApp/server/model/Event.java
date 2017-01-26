@@ -19,14 +19,6 @@ import javax.persistence.Table;
 /**
  * An event is created by a user within a specific group.
  */
-/**
- * @author Jonas
- *
- */
-/**
- * @author Jonas
- *
- */
 @Entity
 @Table(name = "eventT")
 public class Event {

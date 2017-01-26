@@ -33,7 +33,7 @@ public class DatabaseInitializer {
 			configuration.addAnnotatedClass(Request.class);
 			configuration.addAnnotatedClass(User.class);
 			configuration.addAnnotatedClass(Participant.class);
-			
+			configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
 			ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
 					.applySettings(configuration.getProperties()).build();
 			factory = configuration.buildSessionFactory(serviceRegistry);
