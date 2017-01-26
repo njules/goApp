@@ -21,7 +21,7 @@ import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 
-public class StartActivity extends AppCompatActivity{
+public class StartActivity extends AppCompatActivity implements Communicator{
     private RecyclerView groupRecyclerView;
     private RecyclerView.Adapter groupAdapter;
     private RecyclerView.LayoutManager groupLayoutManager;
@@ -31,15 +31,16 @@ public class StartActivity extends AppCompatActivity{
     private RecyclerView.LayoutManager requestLayoutManager;
 
     private User user;
+    private StartActivityBinding binding;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StartActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.start_activity);
+        binding = DataBindingUtil.setContentView(this, R.layout.start_activity);
         user = new User(17, "Maxi");
         binding.setUser(user);
         Toolbar startToolbar = (Toolbar) findViewById(R.id.start_toolbar);
         setSupportActionBar(startToolbar);
-    }
+     }
 
     //TODO: Wieder löschen nur zum Testzweck
     private Group[] fillGroupDataset() {
@@ -122,7 +123,7 @@ public class StartActivity extends AppCompatActivity{
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 ChangeNameFragment fragment = new ChangeNameFragment();
-                fragmentTransaction.add(fragment, "Test");
+                fragmentTransaction.add(fragment, "ChangeNameFragment");
                 fragmentTransaction.commit();
                 return true;
             case R.id.action_search:
@@ -132,4 +133,9 @@ public class StartActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void respond(String response) {
+        user.setName(response);
+        Toast.makeText(getApplicationContext(), R.string.changeName + " " + user.getName(), Toast.LENGTH_SHORT).show();
+    }
 }
