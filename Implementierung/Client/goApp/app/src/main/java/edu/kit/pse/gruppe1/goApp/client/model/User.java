@@ -1,12 +1,14 @@
 package edu.kit.pse.gruppe1.goApp.client.model;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
  * An user describes an user of the goApp.
  */
-public class User implements Parcelable {
+public class User extends BaseObservable implements Parcelable {
 
     //TODO more attributes?
     /**
@@ -48,12 +50,14 @@ public class User implements Parcelable {
         return id;
     }
 
+    @Bindable
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+        notifyChange();
     }
 
     @Override
