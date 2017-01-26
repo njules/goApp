@@ -17,6 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.NewGroupActivity"
+            android:parentActivityName=".view.StartActivity" >
+        </activity>
 
         <service android:name=".controler.service.GroupSearchService" />
         <service android:name=".controler.service.EventService"/>
