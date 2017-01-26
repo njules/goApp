@@ -15,4 +15,5 @@
     <string name="group_request">Anfragen:</string>
     <string name="exit">VERLASSEN</string>
     <string name="delete">LÖSCHEN</string>
+    <string name="participants">Teilnehmer:</string>
 </resources>
