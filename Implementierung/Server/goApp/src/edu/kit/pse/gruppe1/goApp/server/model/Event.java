@@ -78,7 +78,7 @@ public class Event {
    */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "EVENT_ID")
+  @Column(name = "EVENT_ID", unique = true, nullable = false)
   public Integer getEventId() {
   return eventId;
   }
@@ -96,7 +96,7 @@ public class Event {
    * 
    * @return the name of the Event
    */
-  @Column(name = "name")
+  @Column(name = "name",nullable = false)
   public String getName() {
   return name;
   }
@@ -112,7 +112,7 @@ public class Event {
   /**
    * @return the time when the Event starts
    */
-  @Column(name = "time")
+  @Column(name = "time",nullable = false)
   public Time getTime() {
   return time;
   }
@@ -131,7 +131,7 @@ public class Event {
    * @return the group in which the Event was created
    */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "GROUP_ID")
+  @JoinColumn(name = "GROUP_ID", nullable = false)
   public Group getGroup() {
   return group;
   }
@@ -150,7 +150,7 @@ public class Event {
    * @return the user who created the Event
    */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_ID")
+  @JoinColumn(name = "USER_ID", nullable = false)
   public User getCreator() {
   return creator;
   }
@@ -206,7 +206,7 @@ public class Event {
    * @return the location of the Event
    */
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "LOCATION_ID")
+  @JoinColumn(name = "LOCATION_ID", nullable = false)
   public Location getLocation() {
   return location;
   }

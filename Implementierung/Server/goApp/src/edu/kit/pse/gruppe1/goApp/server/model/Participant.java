@@ -57,7 +57,7 @@ public class Participant {
    */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "LOCATION_ID")
+  @Column(name = "PARTICIPANT_ID", unique = true, nullable = false)
   public Integer getParticipantID() {
   return participantID;
   }
@@ -75,7 +75,7 @@ public class Participant {
    * 
    * @return the status of the participant
    */
-  @Column(name = "status")
+  @Column(name = "status", nullable = false)
   public Integer getStatus() {
   return status;
   }
@@ -94,7 +94,7 @@ public class Participant {
    * @return the event on which the participant participate
    */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "EVENT_ID")
+  @JoinColumn(name = "EVENT_ID", nullable = false)
   public Event getEvent() {
   return event;
   }
@@ -113,7 +113,7 @@ public class Participant {
    * @return the user which participate on the event
    */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_ID")
+  @JoinColumn(name = "USER_ID", nullable = false)
   public User getUser() {
   return user;
   }

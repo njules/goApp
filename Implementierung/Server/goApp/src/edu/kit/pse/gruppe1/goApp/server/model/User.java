@@ -56,7 +56,7 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_ID")
+	@Column(name = "USER_ID", unique = true, nullable = false)
 	public Integer getUserId() {
 		return userId;
 	}
@@ -65,7 +65,7 @@ public class User {
 		this.userId = userId;
 	}
 
-	@Column(name = "GOOGLE_ID")
+	@Column(name = "GOOGLE_ID", nullable = false)
 	public Integer getGoogleId() {
 		return googleId;
 	}
@@ -83,7 +83,7 @@ public class User {
 		this.requests = requests;
 	}
 
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	public String getName() {
 		return name;
 	}

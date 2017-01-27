@@ -60,7 +60,7 @@ public class Group {
    */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "GROUP_ID")
+  @Column(name = "GROUP_ID", unique = true, nullable = false)
   public Integer getGroupId() {
     return groupId;
   }
@@ -76,7 +76,7 @@ public class Group {
   /**
    * @return the name of the group
    */
-  @Column(name = "name")
+  @Column(name = "name", nullable = false)
   public String getName() {
     return name;
   }
@@ -141,7 +141,7 @@ public class Group {
    * @return the founder of the group
    */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_ID")
+  @JoinColumn(name = "USER_ID", nullable = false)
   public User getFounder() {
     return founder;
   }
