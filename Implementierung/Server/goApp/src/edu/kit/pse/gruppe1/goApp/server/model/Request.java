@@ -41,7 +41,7 @@ public class Request {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "REQUEST_ID")
+	@Column(name = "REQUEST_ID", unique = true, nullable = false)
 	public Integer getRequestId() {
 		return requestId;
 	}
@@ -51,7 +51,7 @@ public class Request {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "GROUP_ID")
+	@JoinColumn(name = "GROUP_ID", nullable = false)
 	public Group getGroup() {
 		return group;
 	}
@@ -61,7 +61,7 @@ public class Request {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID")
+	@JoinColumn(name = "USER_ID", nullable = false)
 	public User getUser() {
 		return user;
 	}

@@ -45,7 +45,7 @@ public class Location {
 	
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "LOCATION_ID")
+	@Column(name = "LOCATION_ID", unique = true, nullable = false)
 	public Integer getLocationId() {
 		return locationId;
 	}
