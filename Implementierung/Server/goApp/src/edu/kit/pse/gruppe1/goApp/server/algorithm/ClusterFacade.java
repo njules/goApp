@@ -75,7 +75,7 @@ public class ClusterFacade {
 
   private List<Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
 
-    DBSCANClusterer<DoublePoint> clusterer = new DBSCANClusterer<DoublePoint>(0.1, 2);
+    DBSCANClusterer<DoublePoint> clusterer = new DBSCANClusterer<DoublePoint>(0.001, 2);
 
     return clusterer.cluster(points);
 
