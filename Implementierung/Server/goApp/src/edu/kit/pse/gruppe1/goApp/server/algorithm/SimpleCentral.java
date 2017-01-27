@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.algorithm;
 
+import java.util.EmptyStackException;
 import java.util.List;
 
 import org.apache.commons.math4.ml.clustering.*;
@@ -11,7 +12,12 @@ public class SimpleCentral extends CentralPointAlgo {
 
 	@Override
 	public DoublePoint calculateCentralPoint(Cluster<DoublePoint> cluster) {
-		List<DoublePoint> list = cluster.getPoints();
+		
+	  if(cluster.getPoints().isEmpty()) {
+	    throw new IllegalArgumentException("Cluster is empty");
+	  }
+	  
+	  List<DoublePoint> list = cluster.getPoints();
 		double longitude = 0;
 		double latitude = 0;
 		for(DoublePoint p: list) {
