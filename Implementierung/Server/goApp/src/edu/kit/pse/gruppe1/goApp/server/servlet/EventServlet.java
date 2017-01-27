@@ -34,6 +34,7 @@ public class EventServlet extends HttpServlet {
    * Default constructor.
    */
   public EventServlet() {
+    super();
     this.eventMang = new EventManagement();
   }
 
