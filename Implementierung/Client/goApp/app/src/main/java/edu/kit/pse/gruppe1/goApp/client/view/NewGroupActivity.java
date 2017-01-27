@@ -94,6 +94,8 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onItemClicked(int position) {
         Group group = groupAdapter.getItem(position);
-        Toast.makeText(getApplicationContext(), group.getName(), Toast.LENGTH_LONG).show();
+        //Todo Hier Anfrage erstellen
+        String output = ""+group.getName() + R.string.request_send;
+        Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
     }
 }

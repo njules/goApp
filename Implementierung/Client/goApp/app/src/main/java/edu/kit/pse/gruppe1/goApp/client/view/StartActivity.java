@@ -26,11 +26,11 @@ import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 public class StartActivity extends AppCompatActivity implements Communicator, ItemClickListener{
     private RecyclerView groupRecyclerView;
-    private RecyclerView.Adapter groupAdapter;
+    private GroupAdapter groupAdapter;
     private RecyclerView.LayoutManager groupLayoutManager;
 
     private RecyclerView requestRecyclerView;
-    private RecyclerView.Adapter requestAdapter;
+    private GroupAdapter requestAdapter;
     private RecyclerView.LayoutManager requestLayoutManager;
 
     private User user;
@@ -63,7 +63,6 @@ public class StartActivity extends AppCompatActivity implements Communicator, It
         return groups;
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.start_menu, menu);
@@ -80,6 +79,8 @@ public class StartActivity extends AppCompatActivity implements Communicator, It
         groupRecyclerView.setLayoutManager(groupLayoutManager);
         // specify an adapter
         // Todo: Hier Gruppen des Users suchen(GroupSearchService)
+        //RequestSearchService service = new RequestService();
+        //service.getRequestsByUser(user);
         groupAdapter = new GroupAdapter(fillGroupDataset(), this);
         groupRecyclerView.setAdapter(groupAdapter);
 
@@ -90,8 +91,16 @@ public class StartActivity extends AppCompatActivity implements Communicator, It
         requestRecyclerView.setLayoutManager(groupLayoutManager);
         // specify an adapter
         //Todo: Hier Requests des Users suchen(RequestSearchService)
-        groupAdapter = new GroupAdapter(fillDataset(), this);
-        requestRecyclerView.setAdapter(groupAdapter);
+        requestAdapter = new GroupAdapter(fillDataset(), new ItemClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                Group group = requestAdapter.getItem(position);
+                //RequestService service = new RequestService;
+                //service.reject(group,user);
+                //TODO reject request in RequestService
+            }
+        });
+        requestRecyclerView.setAdapter(requestAdapter);
     }
 
     @Override
@@ -118,8 +127,6 @@ public class StartActivity extends AppCompatActivity implements Communicator, It
     protected void onDestroy() {
         super.onDestroy();
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -155,6 +162,7 @@ public class StartActivity extends AppCompatActivity implements Communicator, It
 
     @Override
     public void onItemClicked(int position) {
-
+        Group group = groupAdapter.getItem(position);
+        GroupActivity.start(this, group);
     }
 }
