@@ -16,4 +16,7 @@
     <string name="exit">VERLASSEN</string>
     <string name="delete">LÖSCHEN</string>
     <string name="participants">Teilnehmer:</string>
+    <string name="hint_event_name">Name des Events</string>
+    <string name="new_event_title">Neuer Termin</string>
+    <string name="hint_event_destination">Ort des Termins</string>
 </resources>
