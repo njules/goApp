@@ -5,6 +5,7 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
  */
 public enum JSONParameter {
     // TODO: String weg machen ->überflüssig
+    // TODO: Großbuchstaben
     /**
      * 
      * ID of the request
@@ -88,7 +89,19 @@ public enum JSONParameter {
      * name of an location
      */
 
-    LocationName("LocationName");
+    LocationName("LocationName"),
+
+    /**
+     * method (from enum Methods)
+     */
+
+    Method("Method"),
+
+    /**
+     * ErrorCode (from enum ErrorCodes)
+     */
+
+    ErrorCode("ErrorCode");
 
     private final String fieldDescription;
 
@@ -122,19 +135,23 @@ public enum JSONParameter {
     }
 
     // TODO: JavaDocs
-    public enum ErrorCode {
+    public enum ErrorCodes {
         OK(0, "No error"),
 
         READ_JSON(1, "JSON could not be read."),
 
         WRITE_JSON(2, "JSON could not be wrote."),
 
-        DB_ERROR(3, "Error in Database.");
+        DB_ERROR(3, "Error in Database."),
+
+        USR_LIMIT(4, "User limit was reached."),
+
+        GRP_LIMIT(5, "Group limit was reached.");
 
         private final String fieldDescription;
         private final int errCode;
 
-        private ErrorCode(int code, String description) {
+        private ErrorCodes(int code, String description) {
             fieldDescription = description;
             errCode = code;
         }

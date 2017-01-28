@@ -68,7 +68,7 @@ public class RequestSearchServlet extends HttpServlet {
         try {
             userID = json.getInt(JSONParameter.UserID.toString());
         } catch (JSONException e) {
-            return "UserID not found";
+            //TODO: ErrorCode return "UserID not found";
         }
 
         grpFromUsr = reqMang.getRequestByUser(userID);
@@ -94,7 +94,9 @@ public class RequestSearchServlet extends HttpServlet {
         try {
             groupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
-            return "GroupID not found";
+           // return "GroupID not found";
+            //TODO: ErrorCode
+            return null;
         }
 
         usrInGrp = reqMang.getRequestByGroup(groupID);
