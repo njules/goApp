@@ -7,30 +7,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import edu.kit.pse.gruppe1.goApp.client.R;
-import edu.kit.pse.gruppe1.goApp.client.databinding.NewEventViewBinding;
+import edu.kit.pse.gruppe1.goApp.client.databinding.AcceptedEventViewBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 
 /**
  * Created by Tobias on 27.01.2017.
  */
 
-public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.NewEventViewHolder> {
+public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdapter.AcceptedEventViewHolder> {
     private Event[] dataset;
     private final ItemClickListener itemClickListener;
 
-    public NewEventAdapter(Event[] eventDataset, ItemClickListener icl) {
+    public AcceptedEventAdapter(Event[] eventDataset, ItemClickListener icl) {
         dataset = eventDataset;
         itemClickListener = icl;
     }
 
     @Override
-    public NewEventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        NewEventViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.new_event_view, parent, false);
-        return new NewEventViewHolder(binding, itemClickListener);
+    public AcceptedEventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        AcceptedEventViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.accepted_event_view, parent, false);
+        return new AcceptedEventViewHolder(binding, itemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(NewEventViewHolder holder, int position) {
+    public void onBindViewHolder(AcceptedEventViewHolder holder, int position) {
         final Event event = dataset[position];
         holder.getBinding().setEvent(event);
         holder.getBinding().executePendingBindings();
@@ -45,22 +45,21 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.NewEve
         return dataset[position];
     }
 
-    public static class NewEventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class AcceptedEventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public NewEventViewBinding getBinding() {
+        public AcceptedEventViewBinding getBinding() {
             return binding;
         }
 
-        private NewEventViewBinding binding;
+        private AcceptedEventViewBinding binding;
         private final ItemClickListener itemClickListener;
 
-        public NewEventViewHolder(NewEventViewBinding b, ItemClickListener icl) {
+        public AcceptedEventViewHolder(AcceptedEventViewBinding b, ItemClickListener icl) {
             super(b.getRoot());
             binding = b;
             binding.executePendingBindings();
             itemClickListener = icl;
-            itemView.findViewById(R.id.reject_event).setOnClickListener(this);
-            itemView.findViewById(R.id.accept_event).setOnClickListener(this);
+            itemView.findViewById(R.id.start_event).setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 
@@ -68,16 +67,12 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.NewEve
         public void onClick(View view) {
             //EventService service = new EventService();
             switch(view.getId()){
-                case R.id.accept_event :
+                case R.id.start_event :
                     //service.
-                    Log.i("NewEventAdapter", "accept");
-                    break;
-                case R.id.reject_event:
-                    //servide.
-                    Log.i("NewEventAdapter","reject");
+                    Log.i("AcceptedEventAdapter", "start");
                     break;
                 default: itemClickListener.onItemClicked(getAdapterPosition());
-                    Log.i("NewEventAdapter", "info");
+                    Log.i("AcceptedEventAdapter", "info");
             }
         }
         //private final Listener;

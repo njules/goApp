@@ -24,7 +24,7 @@ import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 
-public class StartActivity extends AppCompatActivity implements Communicator, ItemClickListener{
+public class StartActivity extends AppCompatActivity implements Communicator{
     private RecyclerView groupRecyclerView;
     private GroupAdapter groupAdapter;
     private RecyclerView.LayoutManager groupLayoutManager;
@@ -81,7 +81,13 @@ public class StartActivity extends AppCompatActivity implements Communicator, It
         // Todo: Hier Gruppen des Users suchen(GroupSearchService)
         //RequestSearchService service = new RequestService();
         //service.getRequestsByUser(user);
-        groupAdapter = new GroupAdapter(fillGroupDataset(), this);
+        groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                Group group = groupAdapter.getItem(position);
+                GroupActivity.start(StartActivity.this, group);
+            }
+        });
         groupRecyclerView.setAdapter(groupAdapter);
 
         requestRecyclerView = (RecyclerView) findViewById(R.id.my_requests_recycler_view);
@@ -160,9 +166,4 @@ public class StartActivity extends AppCompatActivity implements Communicator, It
         activity.startActivity(intent);
     }
 
-    @Override
-    public void onItemClicked(int position) {
-        Group group = groupAdapter.getItem(position);
-        GroupActivity.start(this, group);
-    }
 }

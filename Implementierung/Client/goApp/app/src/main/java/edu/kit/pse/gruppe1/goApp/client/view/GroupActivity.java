@@ -15,12 +15,17 @@ import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 
+import java.sql.Date;
+
 public class GroupActivity extends AppCompatActivity implements ItemClickListener{
     private GroupActivityBinding binding;
     private Group group;
     private RecyclerView newEventRecylcerView;
-    private LinearLayoutManager eventLayoutManager;
+    private RecyclerView acceptedEventRecyclerView;
+    private LinearLayoutManager newEventLayoutManager;
+    private LinearLayoutManager acceptedEventLayoutManager;
     private NewEventAdapter newEventAdapter;
+    private AcceptedEventAdapter acceptedEventAdapter;
 
     public static void start(Activity activity, Group group) {
         Intent intent = new Intent(activity, GroupActivity.class);
@@ -49,18 +54,32 @@ public class GroupActivity extends AppCompatActivity implements ItemClickListene
         super.onStart();
         newEventRecylcerView = (RecyclerView) findViewById(R.id.new_event_recycler_view);
         newEventRecylcerView.setHasFixedSize(true);
-        eventLayoutManager = new LinearLayoutManager(this);
-        newEventRecylcerView.setLayoutManager(eventLayoutManager);
+        acceptedEventRecyclerView = (RecyclerView) findViewById(R.id.accepted_event_recycler_view);
+        acceptedEventRecyclerView.setHasFixedSize(true);
+
+        newEventLayoutManager = new LinearLayoutManager(this);
+        newEventLayoutManager.setOrientation(newEventLayoutManager.HORIZONTAL);
+        acceptedEventLayoutManager = new LinearLayoutManager(this);
+        acceptedEventLayoutManager.setOrientation(acceptedEventLayoutManager.HORIZONTAL);
+
+        newEventRecylcerView.setLayoutManager(newEventLayoutManager);
+        acceptedEventRecyclerView.setLayoutManager(acceptedEventLayoutManager);
+
         newEventAdapter = new NewEventAdapter(fillDataset(),this);
         newEventRecylcerView.setAdapter(newEventAdapter);
+        acceptedEventAdapter = new AcceptedEventAdapter(fillDataset(),this);
+        acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
     }
 
     private Event[] fillDataset() {
-        return null;
+        Event[] events = new Event[20];
+        for (int i = 0; i < 20; i++) {
+            events[i] = new Event(i, "name"+i,new Date(100000*i));
+        }
+        return events;
     }
 
     @Override
     public void onItemClicked(int position) {
-
     }
 }

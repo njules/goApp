@@ -35,7 +35,7 @@
                 android:layout_gravity="top"
                 android:layout_width="match_parent"
                 android:layout_marginTop="100dp"
-                android:layout_height="225dp"/>
+                android:layout_height="240dp"/>
         <TextView android:layout_width="match_parent"
                   android:paddingTop="5dp"
                   android:paddingBottom="5dp"
@@ -52,12 +52,13 @@
                 android:scrollbars="horizontal"
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
-                android:layout_height="225dp"/>
+                android:layout_height="255dp"/>
         <android.support.design.widget.FloatingActionButton
                 android:id="@+id/create_event"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
                 app:fabSize="normal"
                 android:src="@drawable/ic_fab_add"/>
     </android.support.design.widget.CoordinatorLayout>
