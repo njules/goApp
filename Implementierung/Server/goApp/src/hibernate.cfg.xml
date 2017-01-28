@@ -4,29 +4,30 @@
 
 <hibernate-configuration>
 
-    <session-factory>
+	<session-factory>
 
-        <!-- JDBC Database connection settings -->
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost/test2?createDatabaseIfNotExist=true</property>
-        <property name="connection.username">root</property>
-        <property name="connection.password">j9w5alter</property>
-        
-        <property name="hbm2ddl.auto">create-drop</property>
-        
+		<!-- JDBC Database connection settings -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://localhost/test2?createDatabaseIfNotExist=true</property>
+		<property name="connection.username">root</property>
+		<property name="connection.password">j9w5alter</property>
+		
+		<!-- update -->
+		<property name="hbm2ddl.auto">create-drop</property>
 
-        <!-- JDBC connection pool settings ... using built-in test pool -->
-        <property name="connection.pool_size">1</property>
 
-        <!-- Select our SQL dialect -->
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<!-- JDBC connection pool settings ... using built-in test pool -->
+		<property name="connection.pool_size">1</property>
 
-        <!-- Echo the SQL to stdout -->
-        <property name="show_sql">true</property>
+		<!-- Select our SQL dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+		<!-- Echo the SQL to stdout -->
+		<property name="show_sql">true</property>
 
 		<!-- Set the current session context -->
 		<property name="current_session_context_class">thread</property>
- 
-    </session-factory>
+
+	</session-factory>
 
 </hibernate-configuration>
