@@ -4,146 +4,257 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
  * Enumerations with all possible parameter-types for the JSON-strings.
  */
 public enum JSONParameter {
+    // TODO: String weg machen ->überflüssig
+    /**
+     * 
+     * ID of the request
+     * 
+     */
 
-  /**
-   * 
-   * ID of the request
-   * 
-   */
+    ID("ID"),
 
-  ID("ID"),
+    /**
+     * 
+     * ID of an user.
+     * 
+     */
 
-  /**
-   * 
-   * Error code which is 0 if no error occurred.
-   * 
-   */
+    UserID("UserID"),
 
-  ErrorCode("Error code"),
+    /**
+     * 
+     * ID of a group.
+     * 
+     */
 
-  /**
-   * 
-   * ID of an user.
-   * 
-   */
+    GroupID("GroupID"),
 
-  UserID("User ID"),
+    /**
+     * 
+     * ID of an event.
+     * 
+     */
 
-  /**
-   * 
-   * ID of a group.
-   * 
-   */
+    EventID("EventID"),
 
-  GroupID("Group ID"),
+    /**
+     * 
+     * Name of an user.
+     * 
+     */
 
-  /**
-   * 
-   * ID of an event.
-   * 
-   */
+    UserName("UserName"),
 
-  EventID("Event ID"),
+    /**
+     * 
+     * Name of a group.
+     * 
+     */
 
-  /**
-   * 
-   * Name of an user.
-   * 
-   */
+    GroupName("GroupName"),
 
-  UserName("User name"),
+    /**
+     * 
+     * Name of an event.
+     * 
+     */
 
-  /**
-   * 
-   * Name of a group.
-   * 
-   */
+    EventName("EventName"),
 
-  GroupName("Group name"),
+    /**
+     * 
+     * Time when the event starts
+     * 
+     */
 
-  /**
-   * 
-   * Name of an event.
-   * 
-   */
+    EventTime("EventTime"),
 
-  EventName("Event name"),
+    /**
+     * 
+     * Longitude of an location
+     * 
+     */
 
-  /**
-   * 
-   * Time when the event starts
-   * 
-   */
+    Longitude("Longitude"),
 
-  EventTime("Event time"),
+    /**
+     * Latitude of an location
+     * 
+     */
 
-  /**
-   * 
-   * Longitude of an location
-   * 
-   */
+    Latitude("Latitude"),
 
-  Longitude("Longitude"),
+    /**
+     * name of an location
+     */
 
-  /**
-   * Latitude of an location
-   * 
-   */
+    LocationName("LocationName");
 
-  Latitude("Latitude"),
+    private final String fieldDescription;
 
-  /*
-   * name of an location
-   */
-
-  LocationName("LocationName"),
-
-  /**
-   * Event Class
-   */
-  Event("Event"),
-
-  /**
-   * User Class
-   */
-  User("User"),
-  
-  /**
-   * 
-   * The name of the method which should be executed on the server. For example the create method of
-   * the GroupServlet.
-   * 
-   */
-
-  Method("Method");
-
-  private final String fieldDescription;
-
-  private JSONParameter(String description) {
-    fieldDescription = description;
-  }
-
-  /**
-   * Gives the corresponding name to an enum literal. Normally something like the enum literal name.
-   */
-  public String toString() {
-    return fieldDescription;
-  }
-
-  /**
-   * Gives the corresponding enum literal to a string.
-   *
-   * @param s
-   *          the string to which the returned JSONParameter should match
-   * @return the JSONParameter to the string s
-   */
-  public static JSONParameter fromString(String s) {
-    for (JSONParameter json : JSONParameter.values()) {
-      if (json.toString().equals(s)) {
-        return json;
-      }
+    private JSONParameter(String description) {
+        fieldDescription = description;
     }
-    return null;
-  }
+
+    /**
+     * Gives the corresponding name to an enum literal. Normally something like the enum literal
+     * name.
+     */
+    @Override
+    public String toString() {
+        return fieldDescription;
+    }
+
+    /**
+     * Gives the corresponding enum literal to a string.
+     *
+     * @param s
+     *            the string to which the returned JSONParameter should match
+     * @return the JSONParameter to the string s
+     */
+    public static JSONParameter fromString(String s) {
+        for (JSONParameter json : JSONParameter.values()) {
+            if (json.toString().equals(s)) {
+                return json;
+            }
+        }
+        return null;
+    }
+
+    // TODO: JavaDocs
+    public enum ErrorCode {
+        OK(0, "No error"),
+
+        READ_JSON(1, "JSON could not be read."),
+
+        WRITE_JSON(2, "JSON could not be wrote."),
+
+        DB_ERROR(3, "Error in Database.");
+
+        private final String fieldDescription;
+        private final int errCode;
+
+        private ErrorCode(int code, String description) {
+            fieldDescription = description;
+            errCode = code;
+        }
+
+        @Override
+        public String toString() {
+            return fieldDescription;
+        }
+
+        public int getErrorCode() {
+            return errCode;
+        }
+    }
+
+    // TODO: JavaDocs
+    public enum Methods {
+        /**
+         * Event.create Group.create Request.create
+         */
+        CREATE,
+
+        /**
+         * Event.change User.changeName
+         */
+        CHANGE,
+
+        /**
+         * User.getUser
+         */
+        GET_USER,
+
+        /**
+         * Event.getEvent Group.getEvents
+         */
+        GET_EVENT,
+
+        /**
+         * Go.getStartedParticpants
+         */
+        GET_START,
+
+        /**
+         * Group.getGroup
+         */
+        GET_GROUP,
+
+        /**
+         * GroupSearch.getGroupsByName
+         */
+        GET_GRP_NAME,
+
+        /**
+         * GroupSearch.getGroupsByMember
+         */
+        GET_GRP_MEM,
+
+        /**
+         * Location.getCluster
+         */
+        GET_CLUSTER,
+
+        /**
+         * RequestSearchServlet.getRequestsByUser
+         */
+        GET_REQ_USR,
+
+        /**
+         * RequestSearchServlet.getRequestsByGroup
+         */
+        GET_REQ_GRP,
+
+        /**
+         * Group.delete
+         */
+        DELETE,
+
+        /**
+         * Group.deleteMember
+         */
+        DEL_MEM,
+
+        /**
+         * Group.setName
+         */
+        SET_NAME,
+
+        /**
+         * Go.setStarted
+         */
+        SET_START,
+
+        /**
+         * Group.setFounder
+         */
+        SET_FOUNDER,
+
+        /**
+         * Location.setGPS
+         */
+        SET_GPS,
+
+        /**
+         * Login.register
+         */
+        REGISTER,
+
+        /**
+         * Login.login
+         */
+        LOGIN,
+
+        /**
+         * Participate.accept Request.accept
+         */
+        ACCEPT,
+
+        /**
+         * Participate.reject Request.reject
+         */
+        REJECT;
+    }
 
 }
