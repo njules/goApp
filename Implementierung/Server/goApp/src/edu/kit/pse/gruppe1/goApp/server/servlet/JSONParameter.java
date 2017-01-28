@@ -104,6 +104,11 @@ public enum JSONParameter {
   Event("Event"),
 
   /**
+   * User Class
+   */
+  User("User"),
+  
+  /**
    * 
    * The name of the method which should be executed on the server. For example the create method of
    * the GroupServlet.
