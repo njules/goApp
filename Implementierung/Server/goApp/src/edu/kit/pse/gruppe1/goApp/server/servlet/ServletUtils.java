@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,38 +30,38 @@ public final class ServletUtils {
     private ServletUtils() {
     }
 
-    public static String createJSONEvent(Event event) {
+    public static JSONObject createJSONEvent(Event event) {
         return null;
     }
 
-    public static String createJSONLocation(Location location) {
+    public static JSONObject createJSONLocation(Location location) {
         return null;
     }
 
-    public static String createJSONGroup(Group group) {
+    public static JSONObject createJSONGroup(Group group) {
         return null;
     }
 
-    public static String createJSONUser(User user) {
+    public static JSONObject createJSONUser(User user) {
         return null;
     }
 
-    public static String createJSONListUsr(List<User> user) {
+    public static JSONObject createJSONListUsr(List<User> user) {
         return null;
     }
 
-    public static String createJSONListGrp(List<Group> group) {
+    public static JSONObject createJSONListGrp(List<Group> group) {
         return null;
     }
 
-    public static String createJSONError(JSONParameter.ErrorCodes error) {
+    public static JSONObject createJSONError(JSONParameter.ErrorCodes error) {
         JSONObject res = new JSONObject();
         try {
             res.append(JSONParameter.ErrorCode.toString(), error.getErrorCode());
         } catch (JSONException e) {
             // TODO Keine Ahnung
         }
-        return res.toString();
+        return res;
     }
 
     /**
@@ -92,5 +93,21 @@ public final class ServletUtils {
         method = JSONParameter.Methods
                 .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
         return method;
+    }
+
+    protected static JSONObject extractJSON(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            if (request.getReader().readLine() == null) {
+            }
+            return new JSONObject(request.getReader().readLine());
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            try {
+                response.getWriter().println(createJSONError(JSONParameter.ErrorCodes.IO_ERROR));
+            } catch (IOException n) {
+                n.printStackTrace();
+            }
+            return null;
+        }
     }
 }

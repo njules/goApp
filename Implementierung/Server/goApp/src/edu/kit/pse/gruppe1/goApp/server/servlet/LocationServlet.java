@@ -39,7 +39,17 @@ public class LocationServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
-	    Methods method = ServletUtils.extractMethod(jsonRequest);
+	    if (jsonRequest == null) {
+	        return;
+	    }
+        String method = "";
+        try {
+            method = jsonRequest.getString(JSONParameter.Method.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
+            return;
+        }
 	    if (method.equals(JSONParameter.Methods.GET_CLUSTER)) {
             response.getWriter().println(getCluster(jsonRequest));
         }
@@ -81,7 +91,7 @@ public class LocationServlet extends HttpServlet {
 	        response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
 	    } catch (JSONException e) {
             e.printStackTrace();
-            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
 	    }
         return response.toString();
 	}
