@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -23,22 +24,45 @@ public class GroupServlet extends HttpServlet {
      */
     public GroupServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+        JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            return;
+        }
+        String method = "";
+        try {
+            method = jsonRequest.getString(JSONParameter.Method.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
+            return;
+        }
+        if (method.equals(JSONParameter.Methods.CREATE)) {
+            response.getWriter().println(create(jsonRequest));
+        } else if (method.equals(JSONParameter.Methods.DELETE)) {
+            response.getWriter().println(delete(jsonRequest));
+        } else if (method.equals(JSONParameter.Methods.SET_NAME)) {
+            response.getWriter().println(setName(jsonRequest));
+        } else if (method.equals(JSONParameter.Methods.DEL_MEM)) {
+            response.getWriter().println(deleteMember(jsonRequest));
+        } else if (method.equals(JSONParameter.Methods.GET_EVENT)) {
+            response.getWriter().println(getEvents(jsonRequest));
+        } else if (method.equals(JSONParameter.Methods.GET_GROUP)) {
+            response.getWriter().println(getGroup(jsonRequest));
+        } else if (method.equals(JSONParameter.Methods.SET_FOUNDER)) {
+            response.getWriter().println(setFounder(jsonRequest));
+        }
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
