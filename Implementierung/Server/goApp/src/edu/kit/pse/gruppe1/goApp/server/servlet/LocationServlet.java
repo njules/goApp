@@ -1,13 +1,20 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.util.Set;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class LocationServlet
@@ -17,21 +24,25 @@ import org.json.JSONObject;
 @WebServlet("/LocationServlet")
 public class LocationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final EventManagement database;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public LocationServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        database = new EventManagement();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+	    JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+	    Methods method = ServletUtils.extractMethod(jsonRequest);
+	    if (method.equals(JSONParameter.Methods.GET_CLUSTER)) {
+            response.getWriter().println(getCluster(jsonRequest));
+        }
 	}
 
 	/**
@@ -58,8 +69,20 @@ public class LocationServlet extends HttpServlet {
 	 * @return Returns a JSON string containing the results of the clustering algorithm.
 	 */
 	private String getCluster(JSONObject json) {
-		// TODO - implement LocationServlet.getCluster
-		throw new UnsupportedOperationException();
+	    JSONObject response = new JSONObject();
+	    try {
+	        int eventID = Integer.parseInt(json.getString(JSONParameter.EventID.toString()));
+	        Set<Location> locations = database.getEvent(eventID).getClusterPoints();
+	        for (Location location:locations) {
+	            response.append(JSONParameter.Latitude.toString(), location.getLatitude());
+	            response.append(JSONParameter.Longitude.toString(), location.getLongitude());
+	            response.append(JSONParameter.LocationName.toString(), location.getName());
+	        }
+	        response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+	    } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);
+	    }
+        return response.toString();
 	}
-
 }
