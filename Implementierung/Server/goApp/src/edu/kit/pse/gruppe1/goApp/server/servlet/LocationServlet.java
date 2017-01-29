@@ -18,17 +18,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
-
-
-import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
-import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
-import edu.kit.pse.gruppe1.goApp.server.model.Event;
-import edu.kit.pse.gruppe1.goApp.server.model.Group;
-import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
-
-import java.io.PrintWriter;
-import java.sql.Timestamp;
 
 /**
  * Servlet implementation class LocationServlet
