@@ -31,27 +31,123 @@ public final class ServletUtils {
     }
 
     public static JSONObject createJSONEvent(Event event) {
-        return null;
+        JSONObject json = new JSONObject();
+        try {
+            json.append(JSONParameter.EventName.toString(), event.getName());
+            json.append(JSONParameter.EventTime.toString(), event.getTime().getTime());
+
+            // TODO: json.append(JSONParameter.LOCATION.toString(),
+            // locationObject(event.getLocation()));
+            json.append(JSONParameter.LocationName.toString(), event.getLocation().getName());
+            json.append(JSONParameter.Longitude.toString(), event.getLocation().getLongitude());
+            json.append(JSONParameter.Latitude.toString(), event.getLocation().getLatitude());
+
+            // TODO: json.append(JSONParameter.GROUP.toString(), groupObject(event.getGroup()));
+            json.append(JSONParameter.GroupID.toString(), event.getGroup().getGroupId());
+
+            // TODO: json.append(JSONParameter.USER.toString(), userObject(event.getCreator()));
+            json.append(JSONParameter.UserID.toString(), event.getCreator().getUserId());
+
+            json.append(JSONParameter.EventID.toString(), event.getEventId());
+            json.append(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
+    // private static JSONObject locationObject(Location location) throws JSONException {
+    // JSONObject json = new JSONObject();
+    // json.append(JSONParameter.LocationName.toString(), location.getName());
+    // json.append(JSONParameter.Longitude.toString(), location.getLongitude());
+    // json.append(JSONParameter.Latitude.toString(), location.getLatitude());
+    // return json;
+    // }
+
     public static JSONObject createJSONLocation(Location location) {
-        return null;
+        JSONObject json = new JSONObject();
+
+        try {
+            json.append(JSONParameter.LocationName.toString(), location.getName());
+            json.append(JSONParameter.Longitude.toString(), location.getLongitude());
+            json.append(JSONParameter.Latitude.toString(), location.getLatitude());
+            json.append(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     public static JSONObject createJSONGroup(Group group) {
-        return null;
+        JSONObject json = new JSONObject();
+
+        try {
+            json.append(JSONParameter.LocationName.toString(), group.getName());
+            json.append(JSONParameter.Longitude.toString(), group.getGroupId());
+
+            // TODO: json.append(JSONParameter.USER.toString(), userObject(group.getFounder()));
+            json.append(JSONParameter.UserID.toString(), group.getFounder().getUserId());
+            json.append(JSONParameter.UserName.toString(), group.getFounder().getName());
+
+            json.append(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     public static JSONObject createJSONUser(User user) {
-        return null;
+        JSONObject json = new JSONObject();
+        try {
+            // TODO: User user object ??
+            json.append(JSONParameter.UserID.toString(), user.getUserId());
+            json.append(JSONParameter.UserName.toString(), user.getName());
+            json.append(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
+    // private static JSONObject userObject(User user){
+    // JSONObject json = new JSONObject();
+    // try {
+    // json.append(JSONParameter.UserID.toString(), user.getUserId());
+    // json.append(JSONParameter.UserName.toString(), user.getName());
+    // } catch (JSONException e) {
+    // e.printStackTrace();
+    // return null;
+    // }
+    // return json;
+    // }
+
     public static JSONObject createJSONListUsr(List<User> user) {
-        return null;
+        JSONObject json = new JSONObject();
+        try {
+            // TODO: Liste User
+            json.append(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     public static JSONObject createJSONListGrp(List<Group> group) {
-        return null;
+        JSONObject json = new JSONObject();
+        try {
+            // TODO: Liste Gruppen
+
+            json.append(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     public static JSONObject createJSONError(JSONParameter.ErrorCodes error) {
@@ -60,6 +156,7 @@ public final class ServletUtils {
             res.append(JSONParameter.ErrorCode.toString(), error.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
         return res;
     }
@@ -95,7 +192,9 @@ public final class ServletUtils {
         return method;
     }
 
-    protected static JSONObject extractJSON(HttpServletRequest request, HttpServletResponse response) {
+    // TODO Julian: JavaDocs schreiben
+    protected static JSONObject extractJSON(HttpServletRequest request,
+            HttpServletResponse response) {
         try {
             if (request.getReader().readLine() == null) {
             }
