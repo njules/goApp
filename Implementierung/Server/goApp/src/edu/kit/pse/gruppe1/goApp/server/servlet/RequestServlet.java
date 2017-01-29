@@ -148,17 +148,18 @@ public class RequestServlet extends HttpServlet {
      * @return Returns a JSON string containing information about the success of this operation.
      */
     private String create(JSONObject json) {
-        // TODO: contrains in Datei festlegen und diese hier auslesen
-        // TODO: richtige Limits
-        // TODO: bisherige Requests auch zählen - ja
+        // TODO: constrains in Datei festlegen und diese hier auslesen
         // TODO: weniger returns
-        JSONParameter.ErrorCodes error = ErrorCodes.OK;
         int userlimit = 20;
         int grouplimit = 50;
         int userID = -1;
         int newGroupID = -1;
         List<Group> groups = null;
         List<User> users = null;
+        List<Group> reqGroups = null;
+        List<User> reqUsers = null;
+        int groupSum = 0;
+        int userSum = 0;
 
         try {
             userID = json.getInt(JSONParameter.UserID.toString());
@@ -167,26 +168,34 @@ public class RequestServlet extends HttpServlet {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
-        // Check Users Memberships
-
-        if (userID != -1) {
+        // Check Users Memberships and Group size
+        if (userID != -1 && newGroupID != -1) {
             groups = grUsrMang.getGroups(userID);
-            if (groups.size() >= userlimit) {
-                return ServletUtils.createJSONError(ErrorCodes.USR_LIMIT);
-            }
-        } else {
-            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
-        }
-
-        // Check Group size
-        if (newGroupID != -1) {
             users = grUsrMang.getUsers(newGroupID);
-            if (users.size() >= grouplimit) {
+            reqGroups = reqMang.getRequestByUser(userID);
+            reqUsers = reqMang.getRequestByGroup(newGroupID);
+            
+            if (groups != null && users != null) {
+                return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
+            }
+            groupSum += groups.size();
+            userSum += users.size();
+            
+            //it is possible, that there are no open requests
+            if(reqGroups != null){
+                groupSum += reqGroups.size();
+            }
+            if(reqUsers != null){
+                userSum += reqUsers.size();
+            }
+            
+            //check all sizes
+            if (groupSum >= userlimit) {
+                return ServletUtils.createJSONError(ErrorCodes.USR_LIMIT);
+            }else if (userSum >= grouplimit) {
                 return ServletUtils.createJSONError(ErrorCodes.GRP_LIMIT);
             }
-        } else {
-            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
-        }
+        } 
 
         // Add new Request
         if (reqMang.add(newGroupID, userID)) {

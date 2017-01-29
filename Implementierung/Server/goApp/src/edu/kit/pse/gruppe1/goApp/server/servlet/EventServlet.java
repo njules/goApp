@@ -88,7 +88,7 @@ public class EventServlet extends HttpServlet {
         // out.println(strResponse);
         // }
 
-        //TODO: delete old one, if new does work
+        // TODO: delete old one, if new does work
         String strResponse = null;
         JSONObject jsonRequest = null;
         JSONParameter.Methods method = null;
@@ -159,16 +159,13 @@ public class EventServlet extends HttpServlet {
         int groupID = -1;
         JSONParameter.ErrorCodes err = ErrorCodes.OK;
 
+        //get all parameter from json
         try {
             name = json.getString(JSONParameter.EventName.toString());
-
-            // GetLocation
             longitude = json.getDouble(JSONParameter.Longitude.toString());
             latitude = json.getDouble(JSONParameter.Latitude.toString());
-            locName = json.getString(JSONParameter.LocationName.toString());
-
-            // TODO: funktioniert das hier?
-            time = (Timestamp) json.get(JSONParameter.EventTime.toString());
+            locName = json.getString(JSONParameter.LocationName.toString());           
+            time = new Timestamp(json.getLong(JSONParameter.EventTime.toString()));
             creatorID = json.getInt(JSONParameter.UserID.toString());
             groupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
@@ -184,7 +181,12 @@ public class EventServlet extends HttpServlet {
         return createJSONObject(event, err);
     }
 
-    // TODO: JavaDocs
+    /**
+     * calls methods for creating Error or Event JSONObject
+     * @param event Event to serialize
+     * @param error Error to serialize
+     * @return String with serialized JSONObject
+     */
     private String createJSONObject(Event event, JSONParameter.ErrorCodes error) {
         String result = null;
         if (error.equals(ErrorCodes.OK)) {
