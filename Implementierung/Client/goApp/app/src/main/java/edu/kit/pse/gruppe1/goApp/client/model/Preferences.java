@@ -5,7 +5,8 @@ package edu.kit.pse.gruppe1.goApp.client.model;
  */
 
 public class Preferences {
-    private static User user = new User(17, "Maxi");
+    private static User user = new User(1, "Maxi");
+    private static Group group;
 
     public static User getUser(){
         return user;
@@ -13,5 +14,13 @@ public class Preferences {
 
     public static void setUser(User nUser){
         user = nUser;
+    }
+
+    public static Group getGroup() {
+        return group;
+    }
+
+    public static void setGroup(Group group) {
+        Preferences.group = group;
     }
 }

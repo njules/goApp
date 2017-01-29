@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,7 +50,7 @@ public class StartActivity extends AppCompatActivity implements Communicator{
         for (int i = 0; i < 20; i++) {
             groups[i] = new Group(i, "name" + i, user);
         }
-        return groups;
+       return groups;
     }
 
     //TODO: Wieder löschen nur zum Testzweck
@@ -83,7 +84,8 @@ public class StartActivity extends AppCompatActivity implements Communicator{
             @Override
             public void onItemClicked(int position, View view) {
                 Group group = groupAdapter.getItem(position);
-                GroupActivity.start(StartActivity.this, group);
+                Preferences.setGroup(group);
+                GroupActivity.start(StartActivity.this);
             }
         });
         groupRecyclerView.setAdapter(groupAdapter);

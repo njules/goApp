@@ -9,34 +9,44 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
+import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
 public class GroupInfoActivity extends AppCompatActivity {
     private Group group;
     private GroupInfoActivityBinding binding;
 
-    public static void start(Activity activity, Group group) {
+    public static void start(Activity activity) {
         Intent intent = new Intent(activity, GroupInfoActivity.class);
-        intent.putExtra("Gruppe", group);
         activity.startActivity(intent);
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        group = getIntent().getParcelableExtra("Gruppe");
         binding = DataBindingUtil.setContentView(this, R.layout.group_info_activity);
+        group = Preferences.getGroup();
         binding.setGroup(group);
+
         Toolbar groupInfoToolbar = (Toolbar) findViewById(R.id.group_info_toolbar);
         setSupportActionBar(groupInfoToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        UserFragment fragment = new UserFragment();
-        fragmentTransaction.add(R.id.Fragment_Container ,fragment);
-        fragmentTransaction.commit();
+        if(group.getFounder().getId() == Preferences.getUser().getId()){
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            AdminFragment fragment = new AdminFragment();
+            fragmentTransaction.add(R.id.Fragment_Container ,fragment);
+            fragmentTransaction.commit();
+        } else {
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            UserFragment fragment = new UserFragment();
+            fragmentTransaction.add(R.id.Fragment_Container ,fragment);
+            fragmentTransaction.commit();
+        }
     }
 
     @Override

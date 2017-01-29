@@ -17,6 +17,7 @@ import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
+import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
 import java.sql.Date;
 
@@ -30,15 +31,14 @@ public class GroupActivity extends AppCompatActivity {
     private NewEventAdapter newEventAdapter;
     private AcceptedEventAdapter acceptedEventAdapter;
 
-    public static void start(Activity activity, Group group) {
+    public static void start(Activity activity) {
         Intent intent = new Intent(activity, GroupActivity.class);
-        intent.putExtra("Gruppe", group);
         activity.startActivity(intent);
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        group = getIntent().getParcelableExtra("Gruppe");
+        group = Preferences.getGroup();
         binding = DataBindingUtil.setContentView(this, R.layout.group_activity);
         binding.setGroup(group);
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.group_toolbar);
@@ -55,6 +55,7 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        binding.setGroup(group);
         newEventRecylcerView = (RecyclerView) findViewById(R.id.new_event_recycler_view);
         newEventRecylcerView.setHasFixedSize(true);
         acceptedEventRecyclerView = (RecyclerView) findViewById(R.id.accepted_event_recycler_view);
@@ -111,7 +112,7 @@ public class GroupActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_group_info:
-                GroupInfoActivity.start(this, group);
+                GroupInfoActivity.start(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
