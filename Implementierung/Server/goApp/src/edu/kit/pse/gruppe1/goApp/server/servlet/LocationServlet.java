@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
-import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class LocationServlet
@@ -80,6 +79,7 @@ public class LocationServlet extends HttpServlet {
 		    int lat = json.getInt(JSONParameter.Latitude.toString());
 		    int lon = json.getInt(JSONParameter.Longitude.toString());
 		    //TODO update location of participant
+		    response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
 		} catch (JSONException e) {
 		    e.printStackTrace();
 		    return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
