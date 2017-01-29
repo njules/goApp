@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
+
 /**
  * Servlet implementation class ParticipateServlet
  * 
@@ -18,12 +21,14 @@ import org.json.JSONObject;
 @WebServlet("/ParticipateServlet")
 public class ParticipateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final EventUserManagement eventUser;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public ParticipateServlet() {
         super();
+        eventUser = new EventUserManagement();
     }
 
 	/**
@@ -62,8 +67,19 @@ public class ParticipateServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String accept(JSONObject json) {
-		// TODO - implement ParticipateServlet.accept
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            int event = Integer.parseInt(json.getString(JSONParameter.EventID.toString()));
+            int user = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            if (!eventUser.updateStatus(event, user, Status.PARTICIPATE)) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+            }
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
