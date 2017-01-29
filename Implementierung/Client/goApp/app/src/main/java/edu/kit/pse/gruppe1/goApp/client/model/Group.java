@@ -12,6 +12,11 @@ public class Group implements Parcelable{
 
 	Collection<Event> events;
 	Collection<Request> requests;
+
+	/**
+	 * The User who founded the group.
+	 */
+	private User founder;
 	/**
 	 * The Id is used to identify each group and is therefore unique.
 	 */
@@ -29,9 +34,10 @@ public class Group implements Parcelable{
 	 * @param id The Id of the group.
 	 * @param name The name of the Group.
 	 */
-	public Group(int id, String name) {
+	public Group(int id, String name, User user) {
         this.id = id;
         this.name = name;
+		founder = user;
 	}
 
 
@@ -73,5 +79,9 @@ public class Group implements Parcelable{
 	public void writeToParcel(Parcel out, int i) {
 		out.writeInt(id);
 		out.writeString(name);
+	}
+
+	public User getFounder() {
+		return founder;
 	}
 }

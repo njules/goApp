@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable name="user" type="edu.kit.pse.gruppe1.goApp.client.model.User"></variable>
+    </data>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@{user.name}"/>
+        <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/delete_member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_reject"
+                android:layout_toEndOf="@id/member"/>
+    </RelativeLayout>
+
+
+</layout>

@@ -103,9 +103,10 @@ public class RequestSearchService extends IntentService {
             JSONArray jsons = result.getJSONArray(JSONParameter.GroupName.toString());
             Group[] groups = new Group[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
+                User user = new User(result.getInt(JSONParameter.UserID.toString()), result.getString(JSONParameter.UserName.toString()));
                 groups[i] = new Group(
                         (int) jsons.getJSONObject(i).get(JSONParameter.GroupID.toString()),
-                        (String) jsons.getJSONObject(i).get(JSONParameter.GroupName.toString()));
+                        (String) jsons.getJSONObject(i).get(JSONParameter.GroupName.toString()), user);
             }
             return groups;
         } catch (JSONException e) {
