@@ -88,8 +88,19 @@ public class ParticipateServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String reject(JSONObject json) {
-		// TODO - implement ParticipateServlet.reject
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            int event = Integer.parseInt(json.getString(JSONParameter.EventID.toString()));
+            int user = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            if (!eventUser.delete(event, user)) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+            }
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 }
