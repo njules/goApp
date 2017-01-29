@@ -141,12 +141,16 @@ public enum JSONParameter {
         READ_JSON(1, "JSON could not be read."),
 
         WRITE_JSON(2, "JSON could not be wrote."),
+        
+        EMPTY_JSON(3, "Empty JSON String"),
 
-        DB_ERROR(3, "Error in Database."),
+        DB_ERROR(4, "Error in Database."),
 
-        USR_LIMIT(4, "User limit was reached."),
+        USR_LIMIT(5, "User limit was reached."),
 
-        GRP_LIMIT(5, "Group limit was reached.");
+        GRP_LIMIT(6, "Group limit was reached."),
+
+        IO_ERROR(7, "Error with IO Methods.");
 
         private final String fieldDescription;
         private final int errCode;
@@ -156,14 +160,27 @@ public enum JSONParameter {
             errCode = code;
         }
 
+        //TODO: JavaDocs
         @Override
         public String toString() {
             return fieldDescription;
         }
 
+        //TODO: JavaDocs
         public int getErrorCode() {
             return errCode;
         }
+        
+        // TODO: JavaDocs
+        public static ErrorCodes fromString(String s) {
+            for (ErrorCodes err : ErrorCodes.values()) {
+                if (err.toString().equals(s)) {
+                    return err;
+                }
+            }
+            return null;
+        }
+        
     }
 
     // TODO: JavaDocs
@@ -272,6 +289,16 @@ public enum JSONParameter {
          * Participate.reject Request.reject
          */
         REJECT;
+
+        // TODO: JavaDocs
+        public static Methods fromString(String s) {
+            for (Methods meth : Methods.values()) {
+                if (meth.toString().equals(s)) {
+                    return meth;
+                }
+            }
+            return null;
+        }
     }
 
 }
