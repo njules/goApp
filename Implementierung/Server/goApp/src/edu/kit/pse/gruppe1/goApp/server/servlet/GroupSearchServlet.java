@@ -1,6 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+
 /**
  * Servlet implementation class GroupSearchServlet
  * 
@@ -18,12 +23,14 @@ import org.json.JSONObject;
 @WebServlet("/GroupSearchServlet")
 public class GroupSearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final GroupManagement groupM;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public GroupSearchServlet() {
         super();
+        groupM = new GroupManagement();
     }
 
 	/**
@@ -62,8 +69,21 @@ public class GroupSearchServlet extends HttpServlet {
 	 * @return Returns a JSON string containing a list of all the groups associated with this name.
 	 */
 	private String getGroupsByName(JSONObject json) {
-		// TODO - implement GroupSearchServlet.getGroupsByName
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            String name = json.getString(JSONParameter.GroupName.toString());
+            List<Group> groups;
+            groups = groupM.getGroupsByName(name);
+            for (Group group : groups) {
+                response.append(JSONParameter.GroupID.toString(), group.getGroupId());
+                response.append(JSONParameter.GroupName.toString(), group.getName());
+            }
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
