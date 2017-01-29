@@ -44,20 +44,30 @@ public class GroupServlet extends HttpServlet {
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
             return;
         }
-        if (method.equals(JSONParameter.Methods.CREATE)) {
+        switch (method) {
+        case CREATE:
             response.getWriter().println(create(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.DELETE)) {
+            break;
+        case DELETE:
             response.getWriter().println(delete(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.SET_NAME)) {
+            break;
+        case SET_NAME:
             response.getWriter().println(setName(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.DEL_MEM)) {
+            break;
+        case DEL_MEM:
             response.getWriter().println(deleteMember(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.GET_EVENT)) {
+            break;
+        case GET_EVENT:
             response.getWriter().println(getEvents(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.GET_GROUP)) {
+            break;
+        case GET_GROUP:
             response.getWriter().println(getGroup(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.SET_FOUNDER)) {
+            break;
+        case SET_FOUNDER:
             response.getWriter().println(setFounder(jsonRequest));
+            break;
+        default: 
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
         }
 	}
 

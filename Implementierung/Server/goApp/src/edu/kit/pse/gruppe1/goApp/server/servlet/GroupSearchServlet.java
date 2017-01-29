@@ -53,11 +53,6 @@ public class GroupSearchServlet extends HttpServlet {
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
             return;
         }
-        if (method.equals(JSONParameter.Methods.GET_GRP_NAME)) {
-            response.getWriter().println(getGroupsByName(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.GET_GRP_MEM)) {
-            response.getWriter().println(getGroupsByMember(jsonRequest));
-        }
         switch (method) {
         case GET_GRP_NAME:
             response.getWriter().println(getGroupsByName(jsonRequest));
