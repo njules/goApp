@@ -95,8 +95,21 @@ public class GoServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String setStarted(JSONObject json) {
-		// TODO - implement GoServlet.setStarted
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            int user = json.getInt(JSONParameter.UserID.toString());
+            int event = json.getInt(JSONParameter.EventID.toString());
+            Status status = Status.STARTED;
+            if (eventUser.updateStatus(event, user, status)) {
+                response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+            } else {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 }
