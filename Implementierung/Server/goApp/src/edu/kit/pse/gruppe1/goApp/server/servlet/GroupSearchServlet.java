@@ -58,6 +58,16 @@ public class GroupSearchServlet extends HttpServlet {
         } else if (method.equals(JSONParameter.Methods.GET_GRP_MEM)) {
             response.getWriter().println(getGroupsByMember(jsonRequest));
         }
+        switch (method) {
+        case GET_GRP_NAME:
+            response.getWriter().println(getGroupsByName(jsonRequest));
+            break;
+        case GET_GRP_MEM:
+            response.getWriter().println(getGroupsByMember(jsonRequest));
+            break;
+        default: 
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+        }
 	}
 
 	/**

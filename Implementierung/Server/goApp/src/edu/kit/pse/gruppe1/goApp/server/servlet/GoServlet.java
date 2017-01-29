@@ -52,10 +52,15 @@ public class GoServlet extends HttpServlet {
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
             return;
         }
-        if (method.equals(JSONParameter.Methods.GET_START)) {
+        switch (method) {
+        case GET_START:
             response.getWriter().println(getStartedParticipants(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.SET_START)) {
+            break;
+        case SET_START:
             response.getWriter().println(setStarted(jsonRequest));
+            break;
+        default: 
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
         }
 	}
 

@@ -48,10 +48,15 @@ public class ParticipateServlet extends HttpServlet {
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
             return;
         }
-        if (method.equals(JSONParameter.Methods.ACCEPT)) {
+        switch (method) {
+        case ACCEPT:
             response.getWriter().println(accept(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.REJECT)) {
+            break;
+        case REJECT:
             response.getWriter().println(reject(jsonRequest));
+            break;
+        default: 
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
         }
 	}
 
