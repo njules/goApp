@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
+
 /**
  * Servlet implementation class GroupServlet
  * 
@@ -34,9 +36,9 @@ public class GroupServlet extends HttpServlet {
         if (jsonRequest == null) {
             return;
         }
-        String method = "";
+        Methods method;
         try {
-            method = jsonRequest.getString(JSONParameter.Method.toString());
+            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.Method.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
