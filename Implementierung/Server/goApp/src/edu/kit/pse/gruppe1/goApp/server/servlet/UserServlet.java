@@ -109,7 +109,7 @@ public class UserServlet extends HttpServlet {
             if (error.equals(ErrorCodes.OK)) {
                 error = ErrorCodes.READ_JSON;
             }
-            strResponse = ServletUtils.createJSONError(error);
+            strResponse = ServletUtils.createJSONError(error).toString();
             break;
         }
         out.println(strResponse);
@@ -162,13 +162,13 @@ public class UserServlet extends HttpServlet {
     // TODO: JavaDocs
     // TODO: überflüssig durch Util?
     private String createJSONObject(User user, JSONParameter.ErrorCodes error) {
-        String result = null;
+        JSONObject result = null;
         if (error.equals(ErrorCodes.OK)) {
             result = ServletUtils.createJSONUser(user);
         } else {
             result = ServletUtils.createJSONError(error);
         }
-        return result;
+        return result.toString();
     }
 
     /**

@@ -111,7 +111,7 @@ public class RequestSearchServlet extends HttpServlet {
             if (error.equals(ErrorCodes.OK)) {
                 error = ErrorCodes.READ_JSON;
             }
-            strResponse = ServletUtils.createJSONError(error);
+            strResponse = ServletUtils.createJSONError(error).toString();
             break;
         }
         out.println(strResponse);
@@ -142,12 +142,12 @@ public class RequestSearchServlet extends HttpServlet {
         try {
             userID = json.getInt(JSONParameter.UserID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
 
         grpFromUsr = reqMang.getRequestByUser(userID);
 
-        return ServletUtils.createJSONListGrp(grpFromUsr);
+        return ServletUtils.createJSONListGrp(grpFromUsr).toString();
     }
 
     /**
@@ -167,12 +167,12 @@ public class RequestSearchServlet extends HttpServlet {
         try {
             groupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
 
         usrInGrp = reqMang.getRequestByGroup(groupID);
 
-        return ServletUtils.createJSONListUsr(usrInGrp);
+        return ServletUtils.createJSONListUsr(usrInGrp).toString();
 
     }
 

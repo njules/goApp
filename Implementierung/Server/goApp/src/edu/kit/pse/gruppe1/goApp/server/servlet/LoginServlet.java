@@ -111,7 +111,7 @@ public class LoginServlet extends HttpServlet {
             if (error.equals(ErrorCodes.OK)) {
                 error = ErrorCodes.READ_JSON;
             }
-            strResponse = ServletUtils.createJSONError(error);
+            strResponse = ServletUtils.createJSONError(error).toString();
             break;
         }
         out.println(strResponse);
@@ -147,12 +147,12 @@ public class LoginServlet extends HttpServlet {
             user = usrMang.add(name, googleId);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
-            return ServletUtils.createJSONError(error);
+            return ServletUtils.createJSONError(error).toString();
         }
         if (user != null) {
-            result = ServletUtils.createJSONUser(user);
+            result = ServletUtils.createJSONUser(user).toString();
         } else if (!error.equals(ErrorCodes.OK)) {
-            result = ServletUtils.createJSONError(error);
+            result = ServletUtils.createJSONError(error).toString();
         }
         return result;
     }
@@ -175,11 +175,11 @@ public class LoginServlet extends HttpServlet {
             userID = json.getInt(JSONParameter.UserID.toString());
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
-            return ServletUtils.createJSONError(error);
+            return ServletUtils.createJSONError(error).toString();
         }
         user = usrMang.getUser(userID);
         if (user != null) {
-            return ServletUtils.createJSONUser(user);
+            return ServletUtils.createJSONUser(user).toString();
         }
         // if User does not exist yet (getUser == null) register new User
         return register(json);

@@ -122,7 +122,7 @@ public class RequestServlet extends HttpServlet {
             if (error.equals(ErrorCodes.OK)) {
                 error = ErrorCodes.READ_JSON;
             }
-            strResponse = ServletUtils.createJSONError(error);
+            strResponse = ServletUtils.createJSONError(error).toString();
             break;
         }
         out.println(strResponse);
@@ -165,7 +165,7 @@ public class RequestServlet extends HttpServlet {
             userID = json.getInt(JSONParameter.UserID.toString());
             newGroupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
 
         // Check Users Memberships and Group size
@@ -176,7 +176,7 @@ public class RequestServlet extends HttpServlet {
             reqUsers = reqMang.getRequestByGroup(newGroupID);
             
             if (groups != null && users != null) {
-                return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
+                return ServletUtils.createJSONError(ErrorCodes.DB_ERROR).toString();
             }
             groupSum += groups.size();
             userSum += users.size();
@@ -191,17 +191,17 @@ public class RequestServlet extends HttpServlet {
             
             //check all sizes
             if (groupSum >= userlimit) {
-                return ServletUtils.createJSONError(ErrorCodes.USR_LIMIT);
+                return ServletUtils.createJSONError(ErrorCodes.USR_LIMIT).toString();
             }else if (userSum >= grouplimit) {
-                return ServletUtils.createJSONError(ErrorCodes.GRP_LIMIT);
+                return ServletUtils.createJSONError(ErrorCodes.GRP_LIMIT).toString();
             }
         } 
 
         // Add new Request
         if (reqMang.add(newGroupID, userID)) {
-            return ServletUtils.createJSONError(ErrorCodes.OK);
+            return ServletUtils.createJSONError(ErrorCodes.OK).toString();
         } else {
-            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
+            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR).toString();
         }
     }
 
@@ -225,7 +225,7 @@ public class RequestServlet extends HttpServlet {
             userID = json.getInt(JSONParameter.UserID.toString());
             groupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
 
         req = reqMang.getRequest(userID, groupID);
@@ -235,7 +235,7 @@ public class RequestServlet extends HttpServlet {
         } else {
             error = ErrorCodes.DB_ERROR;
         }
-        return ServletUtils.createJSONError(error);
+        return ServletUtils.createJSONError(error).toString();
     }
 
     /**
@@ -257,7 +257,7 @@ public class RequestServlet extends HttpServlet {
             userID = json.getInt(JSONParameter.UserID.toString());
             groupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
 
         // delete request, if exists
@@ -267,7 +267,7 @@ public class RequestServlet extends HttpServlet {
         } else {
             error = ErrorCodes.DB_ERROR;
         }
-        return ServletUtils.createJSONError(error);
+        return ServletUtils.createJSONError(error).toString();
 
     }
 }
