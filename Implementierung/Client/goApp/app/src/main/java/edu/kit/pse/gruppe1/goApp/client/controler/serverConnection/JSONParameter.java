@@ -1,12 +1,11 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.serverConnection;
 
 import android.support.annotation.Nullable;
-
 /**
  * Enumerations with all possible parameter-types for the JSON-strings.
  */
 public enum JSONParameter {
-    // TODO: String weg machen ->überflüssig
+    // TODO: Großbuchstaben
     /**
      * 
      * ID of the request
@@ -90,7 +89,19 @@ public enum JSONParameter {
      * name of an location
      */
 
-    LocationName("LocationName");
+    LocationName("LocationName"),
+
+    /**
+     * method (from enum Methods)
+     */
+
+    Method("Method"),
+
+    /**
+     * ErrorCode (from enum ErrorCodes)
+     */
+
+    ErrorCode("ErrorCode");
 
     private final String fieldDescription;
 
@@ -124,31 +135,54 @@ public enum JSONParameter {
     }
 
     // TODO: JavaDocs
-    public enum ErrorCode {
+    public enum ErrorCodes {
         OK(0, "No error"),
 
         READ_JSON(1, "JSON could not be read."),
 
         WRITE_JSON(2, "JSON could not be wrote."),
+        
+        EMPTY_JSON(3, "Empty JSON String"),
 
-        DB_ERROR(3, "Error in Database.");
+        DB_ERROR(4, "Error in Database."),
+
+        USR_LIMIT(5, "User limit was reached."),
+
+        GRP_LIMIT(6, "Group limit was reached."),
+
+        IO_ERROR(7, "Error with IO Methods."),
+        
+        ALGO_Error(8, "Error while processing Clusering.");
 
         private final String fieldDescription;
         private final int errCode;
 
-        private ErrorCode(int code, String description) {
+        private ErrorCodes(int code, String description) {
             fieldDescription = description;
             errCode = code;
         }
 
+        //TODO: JavaDocs
         @Override
         public String toString() {
             return fieldDescription;
         }
 
+        //TODO: JavaDocs
         public int getErrorCode() {
             return errCode;
         }
+        
+        // TODO: JavaDocs
+        public static ErrorCodes fromString(String s) {
+            for (ErrorCodes err : ErrorCodes.values()) {
+                if (err.toString().equals(s)) {
+                    return err;
+                }
+            }
+            return null;
+        }
+        
     }
 
     // TODO: JavaDocs
@@ -257,6 +291,16 @@ public enum JSONParameter {
          * Participate.reject Request.reject
          */
         REJECT;
+
+        // TODO: JavaDocs
+        public static Methods fromString(String s) {
+            for (Methods meth : Methods.values()) {
+                if (meth.toString().equals(s)) {
+                    return meth;
+                }
+            }
+            return null;
+        }
     }
 
 }
