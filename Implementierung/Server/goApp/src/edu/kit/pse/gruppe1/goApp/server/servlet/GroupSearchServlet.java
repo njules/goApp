@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
+import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 
 /**
@@ -24,6 +25,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.Group;
 public class GroupSearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final GroupManagement groupM;
+    private final GroupUserManagement groupUM;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -31,6 +33,7 @@ public class GroupSearchServlet extends HttpServlet {
     public GroupSearchServlet() {
         super();
         groupM = new GroupManagement();
+        groupUM = new GroupUserManagement();
     }
 
 	/**
@@ -92,8 +95,21 @@ public class GroupSearchServlet extends HttpServlet {
 	 * @return Returns a JSON string containing a list of all the groups in which the given user is a member.
 	 */
 	private String getGroupsByMember(JSONObject json) {
-		// TODO - implement GroupSearchServlet.getGroupsByMember
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            int ID = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            List<Group> groups;
+            groups = groupUM.getGroups(ID);
+            for (Group group : groups) {
+                response.append(JSONParameter.GroupID.toString(), group.getGroupId());
+                response.append(JSONParameter.GroupName.toString(), group.getName());
+            }
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 	
 }
