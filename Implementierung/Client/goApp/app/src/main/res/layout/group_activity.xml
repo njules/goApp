@@ -31,7 +31,6 @@
                   android:text="@string/new_events"/>
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/new_event_recycler_view"
-                android:scrollbars="horizontal"
                 android:layout_gravity="top"
                 android:layout_width="match_parent"
                 android:layout_marginTop="100dp"
@@ -49,7 +48,6 @@
                   android:layout_gravity="center"/>
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/accepted_event_recycler_view"
-                android:scrollbars="horizontal"
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="255dp"/>

@@ -47,7 +47,7 @@ public class StartActivity extends AppCompatActivity implements Communicator{
     private Group[] fillGroupDataset() {
         Group[] groups = new Group[20];
         for (int i = 0; i < 20; i++) {
-            groups[i] = new Group(i, "name" + i);
+            groups[i] = new Group(i, "name" + i, user);
         }
         return groups;
     }
@@ -55,9 +55,9 @@ public class StartActivity extends AppCompatActivity implements Communicator{
     //TODO: Wieder löschen nur zum Testzweck
     private Group[] fillDataset() {
         Group[] groups = new Group[3];
-        groups[0] = new Group(23, "Test");
-        groups[1] = new Group(243, "Beispiel");
-        groups[2] = new Group(123, "Penis");
+        groups[0] = new Group(23, "Test", user);
+        groups[1] = new Group(243, "Beispiel", user);
+        groups[2] = new Group(123, "Penis", user);
         return groups;
     }
 

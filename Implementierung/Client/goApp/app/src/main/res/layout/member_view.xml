@@ -5,7 +5,7 @@
         <variable name="user" type="edu.kit.pse.gruppe1.goApp.client.model.User"></variable>
     </data>
     <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/member"

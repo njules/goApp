@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
+import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
 public class NewGroupActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView groupRecyclerView;
@@ -64,7 +65,7 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
     private Group[] fillGroupDataset() {
         Group[] groups = new Group[15];
         for (int i = 0; i < 15; i++) {
-            groups[i] = new Group(i, "name" + i);
+            groups[i] = new Group(i, "name" + i, Preferences.getUser());
         }
         return groups;
     }

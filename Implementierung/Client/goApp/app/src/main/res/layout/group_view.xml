@@ -5,15 +5,29 @@
         <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"/>
     </data>
 
-    <TextView
-            android:orientation="vertical" android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="30sp"
-            android:text="@{group.name}"
-            android:background="?android:attr/selectableItemBackground">
-    </TextView>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/gruppen_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="30dp"
+                android:text="@{group.name}"
+                android:background="?android:attr/selectableItemBackground"/>
+        <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@{group.founder.name}"
+                android:gravity="bottom"
+                android:layout_toEndOf="@id/gruppen_name"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_marginStart="20dp"
+                android:textSize="25dp"
+                />
+    </RelativeLayout>
 </layout>
