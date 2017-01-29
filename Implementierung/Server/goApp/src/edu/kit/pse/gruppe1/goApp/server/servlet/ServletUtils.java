@@ -1,9 +1,9 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONException;
@@ -16,8 +16,16 @@ import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
+/**
+ * Utils for all Servlets
+ *
+ * contains methods for creating JSON Strings out of classes and to reduce redundant code
+ */
 public final class ServletUtils {
 
+    /**
+     * private constructor to make class static
+     */
     private ServletUtils() {
     }
 
@@ -55,16 +63,24 @@ public final class ServletUtils {
         return res.toString();
     }
 
-    // TODO: testweise, noch nicht gut
     /**
-     * DO NOT USE YET
+     * extract Method from request
      * 
      * @param request
-     * @return
+     *            Incoming Request
+     * @param jsonRequest
+     *            jsonRequest (to set here)
+     * @return Method (Enum Value)
+     * @throws ServletException
+     *             if Servlet Exception happens
      * @throws JSONException
+     *             if JSONException happens - either with Message if JSON was empty or without (Read
+     *             Error)
      * @throws IOException
+     *             if problems with IO operation happened
      */
-    public static Methods getMethod(HttpServletRequest request) throws JSONException, IOException {
+    public static Methods getMethod(HttpServletRequest request, JSONObject jsonRequest)
+            throws ServletException, JSONException, IOException {
         String jsonString = null;
         JSONParameter.Methods method = null;
         jsonString = request.getReader().readLine();
@@ -72,7 +88,7 @@ public final class ServletUtils {
         if (jsonString == null) {
             throw new JSONException(ErrorCodes.EMPTY_JSON.toString());
         }
-        JSONObject jsonRequest = new JSONObject(jsonString);
+        jsonRequest = new JSONObject(jsonString);
         method = JSONParameter.Methods
                 .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
         return method;
