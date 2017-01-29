@@ -3,8 +3,12 @@ package edu.kit.pse.gruppe1.goApp.client.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,18 +30,19 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         event = getIntent().getParcelableExtra("Event");
         setContentView(R.layout.event_info_activity);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        SupportMapFragment map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        map.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-       // googleMap.addMarker(new MarkerOptions().position(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude())).title(getString(R.string.event_location)));
+        Log.i("Maps", "Map Ready");
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Test"));
+        //googleMap.addMarker(new MarkerOptions().position(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude())).title(getString(R.string.event_location)));
         //for (int i = 0; i < event.getClusterPoints().size(); i++) {
-            // googleMap.addMarker(new MarkerOptions()
-            //         .position(new LatLng(event.getClusterPoints(), event.getLocation().getLongitude()))
-            //        .title(getString(R.string.event_location)));
+        // googleMap.addMarker(new MarkerOptions()
+        //         .position(new LatLng(event.getClusterPoints(), event.getLocation().getLongitude()))
+        //        .title(getString(R.string.event_location)));
         //}
     }
 }

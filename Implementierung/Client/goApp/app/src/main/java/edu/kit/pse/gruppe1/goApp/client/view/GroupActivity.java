@@ -82,7 +82,7 @@ public class GroupActivity extends AppCompatActivity {
                         Log.i("GroupActivity", "reject");
                         break;
                     default:
-                        //EventActivity.start(GroupActivity.this, event);
+                        EventActivity.start(GroupActivity.this, event);
                         Log.i("GroupActivity", "info");
                 }
             }
