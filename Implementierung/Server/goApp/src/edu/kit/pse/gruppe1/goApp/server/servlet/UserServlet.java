@@ -1,6 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
-import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
@@ -38,8 +39,45 @@ public class UserServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        response.getWriter().append("Served at: ").append(request.getContextPath());
+        String strResponse = null;
+        String jsonString = null;
+        JSONParameter.Methods method = null;
+        response.setContentType("text/plain");
+        PrintWriter out = null;
+        // try {
+        out = response.getWriter();
+        jsonString = request.getReader().readLine();
+        // } catch (IOException e1) {
+        // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
+        // out.println(strResponse);
+        // return;
+        // }
+
+        if (jsonString == null) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
+            out.println(strResponse);
+            return;
+        }
+        try {
+            JSONObject jsonRequest = new JSONObject(jsonString);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+            switch (method) {
+            case CHANGE:
+                strResponse = changeName(jsonRequest);
+                break;
+            case GET_USER:
+                strResponse = getUser(jsonRequest);
+                break;
+            default:
+                strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
+                break;
+            }
+            out.println(strResponse);
+        } catch (JSONException e) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            out.println(strResponse);
+        }
     }
 
     /**
@@ -63,7 +101,7 @@ public class UserServlet extends HttpServlet {
     private String changeName(JSONObject json) {
         User user = null;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
-        
+
         try {
             int userID = json.getInt(JSONParameter.UserID.toString());
             user = usrMang.getUser(userID);
@@ -87,20 +125,14 @@ public class UserServlet extends HttpServlet {
     }
 
     // TODO: JavaDocs
-    // TODO: wie ganze Klassen Serialisieren
+    // TODO: überflüssig durch Util?
     private String createJSONObject(User user, JSONParameter.ErrorCodes error) {
         String result = null;
-        JSONObject res = new JSONObject();
-        try {
-            if (error == null) {
-                // TODO: User Serialisieren res.append(JSONParameter.User.toString(), user);
-            } else {
-                res.append(JSONParameter.ErrorCode.toString(), error);
-            }
-        } catch (JSONException e) {
-            //res.append(JSONParameter.ErrorCode.toString(), ErrorCodes.WRITE_JSON);
+        if (error.equals(ErrorCodes.OK)) {
+            result = ServletUtils.createJSONUser(user);
+        } else {
+            result = ServletUtils.createJSONError(error);
         }
-        result = res.toString();
         return result;
     }
 

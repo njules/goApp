@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.RequestManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
 /**
  * Servlet implementation class RequestSearchServlet
@@ -39,8 +41,45 @@ public class RequestSearchServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        response.getWriter().append("Served at: ").append(request.getContextPath());
+        String strResponse = null;
+        String jsonString = null;
+        JSONParameter.Methods method = null;
+        response.setContentType("text/plain");
+        PrintWriter out = null;
+        // try {
+        out = response.getWriter();
+        jsonString = request.getReader().readLine();
+        // } catch (IOException e1) {
+        // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
+        // out.println(strResponse);
+        // return;
+        // }
+
+        if (jsonString == null) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
+            out.println(strResponse);
+            return;
+        }
+        try {
+            JSONObject jsonRequest = new JSONObject(jsonString);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+            switch (method) {
+            case GET_REQ_USR:
+                strResponse = getRequestsByUser(jsonRequest);
+                break;
+            case GET_REQ_GRP:
+                strResponse = getRequestsByGroup(jsonRequest);
+                break;
+            default:
+                strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
+                break;
+            }
+            out.println(strResponse);
+        } catch (JSONException e) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            out.println(strResponse);
+        }
     }
 
     /**
@@ -68,13 +107,12 @@ public class RequestSearchServlet extends HttpServlet {
         try {
             userID = json.getInt(JSONParameter.UserID.toString());
         } catch (JSONException e) {
-            //TODO: ErrorCode return "UserID not found";
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         grpFromUsr = reqMang.getRequestByUser(userID);
 
-        // TODO: wie Serialisieren
-        return null;
+        return ServletUtils.createJSONListGrp(grpFromUsr);
     }
 
     /**
@@ -94,15 +132,12 @@ public class RequestSearchServlet extends HttpServlet {
         try {
             groupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
-           // return "GroupID not found";
-            //TODO: ErrorCode
-            return null;
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         usrInGrp = reqMang.getRequestByGroup(groupID);
 
-        // TODO: wie Serialisieren
-        return null;
+        return ServletUtils.createJSONListUsr(usrInGrp);
 
     }
 

@@ -5,7 +5,7 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
  */
 public enum JSONParameter {
     // TODO: String weg machen ->überflüssig?
-    // TODO: Großbuchstaben
+    // TODO: Großbuchstaben -> mit Katha vorher abklären -> wird zu Fehlern bei ihr führen.
     /**
      * 
      * ID of the request
@@ -141,7 +141,7 @@ public enum JSONParameter {
         READ_JSON(1, "JSON could not be read."),
 
         WRITE_JSON(2, "JSON could not be wrote."),
-        
+
         EMPTY_JSON(3, "Empty JSON String"),
 
         DB_ERROR(4, "Error in Database."),
@@ -151,8 +151,10 @@ public enum JSONParameter {
         GRP_LIMIT(6, "Group limit was reached."),
 
         IO_ERROR(7, "Error with IO Methods."),
-        
-        ALGO_Error(8, "Error while processing Clusering.");
+
+        ALGO_ERROR(8, "Error while processing Clusering."),
+
+        METH_ERROR(9, "Method not found.");
 
         private final String fieldDescription;
         private final int errCode;
@@ -162,17 +164,17 @@ public enum JSONParameter {
             errCode = code;
         }
 
-        //TODO: JavaDocs
+        // TODO: JavaDocs
         @Override
         public String toString() {
             return fieldDescription;
         }
 
-        //TODO: JavaDocs
+        // TODO: JavaDocs
         public int getErrorCode() {
             return errCode;
         }
-        
+
         // TODO: JavaDocs
         public static ErrorCodes fromString(String s) {
             for (ErrorCodes err : ErrorCodes.values()) {
@@ -182,7 +184,7 @@ public enum JSONParameter {
             }
             return null;
         }
-        
+
     }
 
     // TODO: JavaDocs

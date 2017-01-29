@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.RequestManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.Request;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
@@ -44,9 +46,48 @@ public class RequestServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        response.getWriter().append("Served at: ").append(request.getContextPath());
-        JSONParameter.Methods.ACCEPT.toString();
+        String strResponse = null;
+        String jsonString = null;
+        JSONParameter.Methods method = null;
+        response.setContentType("text/plain");
+        PrintWriter out = null;
+        // try {
+        out = response.getWriter();
+        jsonString = request.getReader().readLine();
+        // } catch (IOException e1) {
+        // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
+        // out.println(strResponse);
+        // return;
+        // }
+
+        if (jsonString == null) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
+            out.println(strResponse);
+            return;
+        }
+        try {
+            JSONObject jsonRequest = new JSONObject(jsonString);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+            switch (method) {
+            case CREATE:
+                strResponse = create(jsonRequest);
+                break;
+            case ACCEPT:
+                strResponse = accept(jsonRequest);
+                break;
+            case REJECT:
+                strResponse = reject(jsonRequest);
+                break;
+            default:
+                strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
+                break;
+            }
+            out.println(strResponse);
+        } catch (JSONException e) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            out.println(strResponse);
+        }
     }
 
     /**
@@ -72,6 +113,7 @@ public class RequestServlet extends HttpServlet {
         // TODO: contrains in Datei festlegen und diese hier auslesen
         // TODO: richtige Limits
         // TODO: bisherige Requests auch zählen - ja
+        // TODO: weniger returns
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
         int userlimit = 20;
         int grouplimit = 50;
@@ -80,54 +122,40 @@ public class RequestServlet extends HttpServlet {
         List<Group> groups = null;
         List<User> users = null;
 
-       
         try {
             userID = json.getInt(JSONParameter.UserID.toString());
             newGroupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
-            return createErrorJSON(ErrorCodes.READ_JSON);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
-        
+
         // Check Users Memberships
-        
+
         if (userID != -1) {
             groups = grUsrMang.getGroups(userID);
             if (groups.size() >= userlimit) {
-                return createErrorJSON(ErrorCodes.USR_LIMIT);
+                return ServletUtils.createJSONError(ErrorCodes.USR_LIMIT);
             }
         } else {
-            return createErrorJSON(ErrorCodes.DB_ERROR);
+            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
         }
 
         // Check Group size
         if (newGroupID != -1) {
             users = grUsrMang.getUsers(newGroupID);
             if (users.size() >= grouplimit) {
-                return createErrorJSON(ErrorCodes.GRP_LIMIT);
+                return ServletUtils.createJSONError(ErrorCodes.GRP_LIMIT);
             }
         } else {
-            return createErrorJSON(ErrorCodes.DB_ERROR);
+            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
         }
 
         // Add new Request
         if (reqMang.add(newGroupID, userID)) {
-            return createErrorJSON(ErrorCodes.OK);
+            return ServletUtils.createJSONError(ErrorCodes.OK);
         } else {
-            return createErrorJSON(ErrorCodes.DB_ERROR);
+            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
         }
-    }
-
-    // TODO: JavaDocs
-    // TODO: Fehlerfall
-    private String createErrorJSON(JSONParameter.ErrorCodes error) {
-        String result = null;
-        JSONObject res = new JSONObject();
-        try {
-            res.append(JSONParameter.ErrorCode.toString(), error).toString();
-        } catch (JSONException e) {
-            // TODO: was tun?
-        }
-        return res.toString();
     }
 
     /**
@@ -143,27 +171,24 @@ public class RequestServlet extends HttpServlet {
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
         int userID = -1;
         int groupID = -1;
+        Request req = null;
 
         // read User and Group ID from JSON
         try {
             userID = json.getInt(JSONParameter.UserID.toString());
-        } catch (JSONException e) {
-            return "UserID not found";
-        }
-
-        try {
             groupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
-            return "GroupID not found";
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
-        error = checkRequest(userID, groupID);
-        if (error.equals(ErrorCodes.OK)) {
+        req = reqMang.getRequest(userID, groupID);
+        if (req != null) {
             grUsrMang.add(groupID, userID);
             reqMang.delete(groupID, userID);
+        } else {
+            error = ErrorCodes.DB_ERROR;
         }
-        return createErrorJSON(error);
-
+        return ServletUtils.createJSONError(error);
     }
 
     /**
@@ -178,49 +203,24 @@ public class RequestServlet extends HttpServlet {
         int userID = -1;
         int groupID = -1;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
+        Request req = null;
 
         // read User and Group ID from JSON
         try {
             userID = json.getInt(JSONParameter.UserID.toString());
             groupID = json.getInt(JSONParameter.GroupID.toString());
         } catch (JSONException e) {
-            return createErrorJSON(ErrorCodes.READ_JSON);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         // delete request, if exists
-        error = checkRequest(userID, groupID);
-        if (error.equals(ErrorCodes.OK)) {
+        req = reqMang.getRequest(userID, groupID);
+        if (req != null) {
             reqMang.delete(groupID, userID);
-        }
-        return createErrorJSON(error);
-
-    }
-
-    /**
-     * TODO: restliches JavaDocs
-     * 
-     * @param json
-     * @return error as String or empty String, if request exists
-     */
-    private ErrorCodes checkRequest(int userID, int groupID) {
-        List<User> usrInGrp = null;
-        boolean userFound = false;
-
-        // if object is in RequestManagement then add user to group
-        // TODO: evtl neue Funktion in RequestManagement
-        usrInGrp = reqMang.getRequestByGroup(groupID);
-        for (User usr : usrInGrp) {
-            if (usr.getUserId() == userID) {
-                userFound = true;
-                break;
-            }
-        }
-
-        if (!userFound) {
-            return ErrorCodes.DB_ERROR;
         } else {
-            return ErrorCodes.OK;
+            error = ErrorCodes.DB_ERROR;
         }
-    }
+        return ServletUtils.createJSONError(error);
 
+    }
 }

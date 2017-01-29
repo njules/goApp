@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 
 import javax.servlet.ServletException;
@@ -44,8 +45,48 @@ public class EventServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        response.getWriter().append("Served at: ").append(request.getContextPath());
+        String strResponse = null;
+        String jsonString = null;
+        JSONParameter.Methods method = null;
+        response.setContentType("text/plain");
+        PrintWriter out = null;
+        // try {
+        out = response.getWriter();
+        jsonString = request.getReader().readLine();
+        // } catch (IOException e1) {
+        // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
+        // out.println(strResponse);
+        // return;
+        // }
+
+        if (jsonString == null) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
+            out.println(strResponse);
+            return;
+        }
+        try {
+            JSONObject jsonRequest = new JSONObject(jsonString);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+            switch (method) {
+            case CREATE:
+                strResponse = create(jsonRequest);
+                break;
+            case GET_EVENT:
+                strResponse = getEvent(jsonRequest);
+                break;
+            case CHANGE:
+                strResponse = change(jsonRequest);
+                break;
+            default:
+                strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
+                break;
+            }
+            out.println(strResponse);
+        } catch (JSONException e) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            out.println(strResponse);
+        }
     }
 
     /**
@@ -106,20 +147,13 @@ public class EventServlet extends HttpServlet {
     }
 
     // TODO: JavaDocs
-    // TODO: wie ganze Klassen Serialisieren
     private String createJSONObject(Event event, JSONParameter.ErrorCodes error) {
         String result = null;
-        JSONObject res = new JSONObject();
-        try {
-            if (error.equals(ErrorCodes.OK)) {
-                // TODO Attribute res.append(JSONParameter.Event.toString(), event);
-            } else {
-                res.append(JSONParameter.ErrorCode.toString(), error);
-            }
-        } catch (JSONException e) {
-            // TODO Was nur tun?
+        if (error.equals(ErrorCodes.OK)) {
+            result = ServletUtils.createJSONEvent(event);
+        } else {
+            result = ServletUtils.createJSONError(error);
         }
-        result = res.toString();
         return result;
     }
 

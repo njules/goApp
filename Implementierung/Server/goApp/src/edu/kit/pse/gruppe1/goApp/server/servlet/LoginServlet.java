@@ -1,6 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
-import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
@@ -39,8 +40,68 @@ public class LoginServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        response.getWriter().append("Served at: ").append(request.getContextPath());
+
+        String strResponse = null;
+        String jsonString = null;
+        JSONParameter.Methods method = null;
+        response.setContentType("text/plain");
+        PrintWriter out = null;
+        // try {
+        out = response.getWriter();
+        jsonString = request.getReader().readLine();
+        // } catch (IOException e1) {
+        // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
+        // out.println(strResponse);
+        // return;
+        // }
+
+        if (jsonString == null) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
+            out.println(strResponse);
+            return;
+        }
+        try {
+            JSONObject jsonRequest = new JSONObject(jsonString);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+            switch (method) {
+            case LOGIN:
+                strResponse = login(jsonRequest);
+                break;
+            case REGISTER:
+                strResponse = register(jsonRequest);
+                break;
+            default:
+                strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
+                break;
+            }
+            out.println(strResponse);
+        } catch (JSONException e) {
+            strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
+            out.println(strResponse);
+        }
+
+        /*
+         * TODO:Test auslagern und wiederverwenden ...
+         * 
+         * String strResponse = null; String jsonString = null; JSONObject jsonRequest = null; try {
+         * jsonRequest = new JSONObject(jsonString); } catch (JSONException e2) { // TODO
+         * Auto-generated catch block e2.printStackTrace(); } JSONParameter.Methods method = null;
+         * response.setContentType("text/plain"); PrintWriter out = null; try { out =
+         * response.getWriter(); } catch (IOException e1) { // TODO Auto-generated catch block
+         * e1.printStackTrace(); } try { method = ServletUtils.getMethod(request); } catch
+         * (JSONException e) { if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
+         * strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON); } else { strResponse =
+         * ServletUtils.createJSONError(ErrorCodes.READ_JSON); } out.println(strResponse); return; }
+         * catch (IOException e) { strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
+         * out.println(strResponse); return; }
+         * 
+         * switch (method)
+         * 
+         * { case LOGIN: strResponse = login(jsonRequest); break; case REGISTER: strResponse =
+         * register(jsonRequest); break; default: strResponse =
+         * ServletUtils.createJSONError(ErrorCodes.READ_JSON); break; } out.println(strResponse);
+         */
     }
 
     /**
@@ -48,7 +109,7 @@ public class LoginServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
+        // TODO: was hier tun?
         doGet(request, response);
     }
 
@@ -62,23 +123,25 @@ public class LoginServlet extends HttpServlet {
      * @return Returns a JSON string containing the user that just registered.
      */
     private String register(JSONObject json) {
-        // TODO: wie sicherstellen, ob schon registriert, DB oder hier?
         int googleId = -1;
-        String name = null;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
         User user = null;
+        String result = null;
 
         try {
             googleId = json.getInt(JSONParameter.ID.toString());
-            name = json.getString(JSONParameter.UserName.toString());
+            String name = json.getString(JSONParameter.UserName.toString());
             user = usrMang.add(name, googleId);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
+            return ServletUtils.createJSONError(error);
         }
-
-        return createJSONObject(user, error);
-
-        // TODO: GoogleID verifizieren
+        if (user != null) {
+            result = ServletUtils.createJSONUser(user);
+        } else if (!error.equals(ErrorCodes.OK)) {
+            result = ServletUtils.createJSONError(error);
+        }
+        return result;
     }
 
     /**
@@ -91,27 +154,24 @@ public class LoginServlet extends HttpServlet {
      * @return Returns a JSON string containing the user that just logged in.
      */
     private String login(JSONObject json) {
-        // TODO: neuer, falls noch nicht da
-        // sonst Rückgabe User ->Name/ID
-        throw new UnsupportedOperationException();
-    }
+        int userID = -1;
+        JSONParameter.ErrorCodes error = ErrorCodes.OK;
+        User user = null;
 
-    // TODO: JavaDocs
-    // TODO: wie ganze Klassen Serialisieren
-    private String createJSONObject(User user, JSONParameter.ErrorCodes error) {
-        String result = null;
-        JSONObject res = new JSONObject();
         try {
-            if (error == null) {
-                // TODO User serialisieren res.append(JSONParameter.User.toString(), user);
-            } else {
-                res.append(JSONParameter.ErrorCode.toString(), error);
-            }
+            userID = json.getInt(JSONParameter.UserID.toString());
+            // googleId = json.getInt(JSONParameter.ID.toString());
+            // String name = json.getString(JSONParameter.UserName.toString());
         } catch (JSONException e) {
-            // TODO Was nur tun?
+            error = ErrorCodes.READ_JSON;
+            return ServletUtils.createJSONError(error);
         }
-        result = res.toString();
-        return result;
+        user = usrMang.getUser(userID);
+        if (user != null) {
+            return ServletUtils.createJSONUser(user);
+        }
+        // if User does not exist yet (getUser == null) register new User
+        return register(json);
     }
 
 }
