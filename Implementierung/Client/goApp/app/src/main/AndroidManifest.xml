@@ -22,15 +22,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.NewGroupActivity"
-            android:parentActivityName=".view.StartActivity" >
+            android:parentActivityName=".view.StartActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity android:name=".view.GroupActivity"
-                  android:parentActivityName=".view.StartActivity" >
+                  android:parentActivityName=".view.StartActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity android:name=".view.GroupInfoActivity"
-                  android:parentActivityName=".view.GroupActivity" >
+                  android:parentActivityName=".view.GroupActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".view.EventActivity"/>
+        <activity android:name=".view.EventActivity"
+                  android:screenOrientation="portrait"/>
 
         <service android:name=".controler.service.GroupSearchService" />
         <service android:name=".controler.service.EventService"/>
