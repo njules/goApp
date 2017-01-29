@@ -4,7 +4,7 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
  * Enumerations with all possible parameter-types for the JSON-strings.
  */
 public enum JSONParameter {
-    // TODO: String weg machen ->überflüssig
+    // TODO: String weg machen ->überflüssig?
     // TODO: Großbuchstaben
     /**
      * 
@@ -150,7 +150,9 @@ public enum JSONParameter {
 
         GRP_LIMIT(6, "Group limit was reached."),
 
-        IO_ERROR(7, "Error with IO Methods.");
+        IO_ERROR(7, "Error with IO Methods."),
+        
+        ALGO_Error(8, "Error while processing Clusering.");
 
         private final String fieldDescription;
         private final int errCode;

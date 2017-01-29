@@ -28,3 +28,4 @@ Implementierung/Client/goApp/.idea/checkstyle-idea.xml
 Implementierung/Server/.classpath
 *.project
 Implementierung/Server/goApp/.project
+serverConnection.lnk
