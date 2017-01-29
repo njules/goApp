@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,8 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 /**
  * Servlet implementation class LocationServlet
@@ -78,7 +81,17 @@ public class LocationServlet extends HttpServlet {
 		    int user = json.getInt(JSONParameter.UserID.toString());
 		    int lat = json.getInt(JSONParameter.Latitude.toString());
 		    int lon = json.getInt(JSONParameter.Longitude.toString());
-		    //TODO update location of participant
+		    Location location = new Location(lon, lat, null);
+		    List<User> userList = eventUser.getUserByStatus(Status.STARTED, event);
+		    for (User participant : userList) {
+		        if (participant.getUserId() == user) {
+		            participant.setLocation(location);
+		            location = null;
+		        }
+		    }
+		    if (location != null) {
+		        return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+		    }
 		    response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
 		} catch (JSONException e) {
 		    e.printStackTrace();
