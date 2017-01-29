@@ -19,6 +19,17 @@ import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 
+
+import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
+import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Event;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
+
+import java.io.PrintWriter;
+import java.sql.Timestamp;
+
 /**
  * Servlet implementation class LocationServlet
  * 
@@ -47,18 +58,23 @@ public class LocationServlet extends HttpServlet {
 	    if (jsonRequest == null) {
 	        return;
 	    }
-        String method = "";
+        Methods method;
         try {
-            method = jsonRequest.getString(JSONParameter.Method.toString());
+            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.Method.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
             return;
         }
-	    if (method.equals(JSONParameter.Methods.GET_CLUSTER)) {
+        switch (method) {
+        case GET_CLUSTER:
             response.getWriter().println(getCluster(jsonRequest));
-        } else if (method.equals(JSONParameter.Methods.SET_GPS)) {
+            break;
+        case SET_GPS:
             response.getWriter().println(setGPS(jsonRequest));
+            break;
+        default: 
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
         }
 	}
 
