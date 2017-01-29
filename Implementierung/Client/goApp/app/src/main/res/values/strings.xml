@@ -4,7 +4,7 @@
     <string name="changeName">Dein Neuer Benutzername:</string>
     <string name="change">JA!</string>
     <string name="cancel">Abbruch</string>
-    <string name="search">Suche: </string>
+    <string name="search">Suche:</string>
     <string name="groupName">Gruppenname..</string>
     <string name="newGroup">Möchtest du eine neue Gruppe erstellen?</string>
     <string name="go">GO</string>
@@ -20,4 +20,6 @@
     <string name="hint_event_name">Name des Events</string>
     <string name="new_event_title">Neuer Termin</string>
     <string name="hint_event_destination">Ort des Termins</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="event_location">Ziel</string>
 </resources>
