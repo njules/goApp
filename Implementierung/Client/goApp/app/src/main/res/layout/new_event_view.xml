@@ -16,7 +16,7 @@
                       android:textAlignment="center"
                       android:textSize="40sp"
                       android:lines="3"
-                      android:clickable="true"
+                      android:clickable="false"
                       android:background="@color/colorButton"
                       android:text="@{event.name + '\n' + event.creator.name + '\n' + event.time.toString()}"/>
 

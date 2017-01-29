@@ -65,15 +65,7 @@ public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdap
 
         @Override
         public void onClick(View view) {
-            //EventService service = new EventService();
-            switch(view.getId()){
-                case R.id.start_event :
-                    //service.
-                    Log.i("AcceptedEventAdapter", "start");
-                    break;
-                default: itemClickListener.onItemClicked(getAdapterPosition());
-                    Log.i("AcceptedEventAdapter", "info");
-            }
+            itemClickListener.onItemClicked(getAdapterPosition(), view);
         }
         //private final Listener;
     }

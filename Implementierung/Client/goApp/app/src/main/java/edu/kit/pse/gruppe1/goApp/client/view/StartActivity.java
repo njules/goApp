@@ -13,8 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.Toast;
 
 import edu.kit.pse.gruppe1.goApp.client.R;
@@ -83,7 +81,7 @@ public class StartActivity extends AppCompatActivity implements Communicator{
         //service.getRequestsByUser(user);
         groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
             @Override
-            public void onItemClicked(int position) {
+            public void onItemClicked(int position, View view) {
                 Group group = groupAdapter.getItem(position);
                 GroupActivity.start(StartActivity.this, group);
             }
@@ -99,7 +97,7 @@ public class StartActivity extends AppCompatActivity implements Communicator{
         //Todo: Hier Requests des Users suchen(RequestSearchService)
         requestAdapter = new GroupAdapter(fillDataset(), new ItemClickListener() {
             @Override
-            public void onItemClicked(int position) {
+            public void onItemClicked(int position, View view) {
                 Group group = requestAdapter.getItem(position);
                 //RequestService service = new RequestService;
                 //service.reject(group,user);

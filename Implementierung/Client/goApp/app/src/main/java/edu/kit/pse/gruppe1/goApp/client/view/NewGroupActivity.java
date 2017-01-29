@@ -19,7 +19,7 @@ import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 
-public class NewGroupActivity extends AppCompatActivity implements View.OnClickListener, ItemClickListener {
+public class NewGroupActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView groupRecyclerView;
     private GroupAdapter groupAdapter;
     private RecyclerView.LayoutManager groupLayoutManager;
@@ -74,7 +74,15 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
             case R.id.action_search:
                 et.getText();
                 //Todo Hier nach den angefragten Gruppen suchen (GroupSearchService)
-                groupAdapter = new GroupAdapter(fillGroupDataset(), this);
+                groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
+                    @Override
+                    public void onItemClicked(int position, View view) {
+                        Group group = groupAdapter.getItem(position);
+                        //Todo Hier Anfrage erstellen
+                        String output = ""+group.getName() + R.string.request_send;
+                        Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
+                    }
+                });
                 groupRecyclerView.setAdapter(groupAdapter);
                 return true;
             default:
@@ -89,13 +97,5 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
         NewGroupFragment fragment = new NewGroupFragment();
         fragmentTransaction.add(fragment, "NewGroupFragment");
         fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onItemClicked(int position) {
-        Group group = groupAdapter.getItem(position);
-        //Todo Hier Anfrage erstellen
-        String output = ""+group.getName() + R.string.request_send;
-        Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
     }
 }

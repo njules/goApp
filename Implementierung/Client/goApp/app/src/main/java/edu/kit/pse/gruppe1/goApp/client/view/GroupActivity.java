@@ -8,7 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
@@ -17,7 +20,7 @@ import edu.kit.pse.gruppe1.goApp.client.model.Group;
 
 import java.sql.Date;
 
-public class GroupActivity extends AppCompatActivity implements ItemClickListener{
+public class GroupActivity extends AppCompatActivity {
     private GroupActivityBinding binding;
     private Group group;
     private RecyclerView newEventRecylcerView;
@@ -65,21 +68,53 @@ public class GroupActivity extends AppCompatActivity implements ItemClickListene
         newEventRecylcerView.setLayoutManager(newEventLayoutManager);
         acceptedEventRecyclerView.setLayoutManager(acceptedEventLayoutManager);
 
-        newEventAdapter = new NewEventAdapter(fillDataset(),this);
+        newEventAdapter = new NewEventAdapter(fillDataset(), new ItemClickListener() {
+            @Override
+            public void onItemClicked(int position, View view) {
+                Event event = newEventAdapter.getItem(position);
+                switch (view.getId()) {
+                    case R.id.accept_event:
+                        //service.
+                        Log.i("GroupActivity", "accept");
+                        break;
+                    case R.id.reject_event:
+                        //servide.
+                        Log.i("GroupActivity", "reject");
+                        break;
+                    default:
+                        //EventActivity.start(GroupActivity.this, event);
+                        Log.i("GroupActivity", "info");
+                }
+            }
+        });
         newEventRecylcerView.setAdapter(newEventAdapter);
-        acceptedEventAdapter = new AcceptedEventAdapter(fillDataset(),this);
+
+        acceptedEventAdapter = new AcceptedEventAdapter(fillDataset(), new ItemClickListener() {
+            @Override
+            public void onItemClicked(int position, View view) {
+
+            }
+        });
         acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
     }
 
+    //Todo löschen, nur zum Testzweck
     private Event[] fillDataset() {
         Event[] events = new Event[20];
         for (int i = 0; i < 20; i++) {
-            events[i] = new Event(i, "name"+i,new Date(100000*i));
+            events[i] = new Event(i, "name" + i, new Date(100000 * i));
         }
         return events;
     }
 
     @Override
-    public void onItemClicked(int position) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_group_info:
+                GroupInfoActivity.start(this, group);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

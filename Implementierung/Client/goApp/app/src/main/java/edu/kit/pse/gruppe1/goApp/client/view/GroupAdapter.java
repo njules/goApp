@@ -36,7 +36,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
         @Override
         public void onClick(View view) {
-            itemClickListener.onItemClicked(getAdapterPosition());
+            itemClickListener.onItemClicked(getAdapterPosition(), view);
         }
     }
 

@@ -6,7 +6,8 @@
     </data>
 <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <android.support.v7.widget.Toolbar
             android:id="@+id/group_info_toolbar"
             app:title="@{group.name}"
@@ -16,5 +17,13 @@
             android:background="@color/colorPrimary"
             android:theme="@style/AppTheme">
     </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+            android:id="@+id/Fragment_Container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+    </LinearLayout>
 </LinearLayout>
 </layout>

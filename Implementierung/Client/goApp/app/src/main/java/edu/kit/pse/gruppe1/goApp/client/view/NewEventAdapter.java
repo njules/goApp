@@ -66,19 +66,7 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.NewEve
 
         @Override
         public void onClick(View view) {
-            //EventService service = new EventService();
-            switch(view.getId()){
-                case R.id.accept_event :
-                    //service.
-                    Log.i("NewEventAdapter", "accept");
-                    break;
-                case R.id.reject_event:
-                    //servide.
-                    Log.i("NewEventAdapter","reject");
-                    break;
-                default: itemClickListener.onItemClicked(getAdapterPosition());
-                    Log.i("NewEventAdapter", "info");
-            }
+             itemClickListener.onItemClicked(getAdapterPosition(), view);
         }
         //private final Listener;
     }
