@@ -59,7 +59,7 @@ public final class ServletUtils {
         try {
             res.append(JSONParameter.ErrorCode.toString(), error.getErrorCode());
         } catch (JSONException e) {
-            // TODO Keine Ahnung
+            e.printStackTrace();
         }
         return res;
     }
