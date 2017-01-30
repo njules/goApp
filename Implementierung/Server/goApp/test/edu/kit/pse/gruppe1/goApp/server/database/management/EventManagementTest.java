@@ -48,51 +48,72 @@ public class EventManagementTest {
     }
 
     @Test
+    public void testUpdate() {
+        // Database doesn't store the milliseconds
+        Timestamp newTimestamp = new Timestamp((System.currentTimeMillis() / 1000L) * 1000L);
+        createdEvent.setTimestamp(newTimestamp);
+        assertThat(new EventManagement().update(createdEvent), is(true));
+        assertThat(
+                new EventManagement().getEvent(createdEvent.getEventId()).getTimestamp().getTime(),
+                is(newTimestamp.getTime()));
+    }
+
+    @Test
+    public void testUpdateName() {
+        String newName = "new Name";
+        assertThat(new EventManagement().updateName(createdEvent.getEventId(), newName), is(true));
+        assertThat(new EventManagement().getEvent(createdEvent.getEventId()).getName(),
+                is(newName));
+    }
+
+    @Test
     public void testAdd() {
-        assertNotNull(createdEvent);
-        assertEquals(eventName, createdEvent.getName());
-        assertEquals(location.getLocationId(), createdEvent.getLocation().getLocationId());
-        assertEquals(timestamp.getTime(), createdEvent.getTimestamp().getTime());
-        assertEquals(user.getUserId(), createdEvent.getCreator().getUserId());
-        assertEquals(group.getGroupId(), createdEvent.getGroup().getGroupId());
+        assertThat(createdEvent, is(notNullValue()));
+        assertThat(createdEvent.getName(), is(eventName));
+        assertThat(createdEvent.getLocation().getLocationId(), is(location.getLocationId()));
+        assertThat(createdEvent.getTimestamp().getTime(), is(timestamp.getTime()));
+        assertThat(createdEvent.getCreator().getUserId(), is(user.getUserId()));
+        assertThat(createdEvent.getGroup().getGroupId(), is(group.getGroupId()));
     }
 
     @Test
     public void testDelete() {
-        new EventManagement().delete(createdEvent.getEventId());
-        assertNull(new EventManagement().getEvent(createdEvent.getEventId()));
+        assertThat(new EventManagement().delete(createdEvent.getEventId()), is(true));
+        assertThat(new EventManagement().getEvent(createdEvent.getEventId()), is(nullValue()));
+        assertThat(new UserManagement().getUser(user.getUserId()), is(notNullValue()));
+        assertThat(new GroupManagement().getGroup(group.getGroupId()), is(notNullValue()));
     }
 
     @Test
     public void testGetCreator() {
-        assertEquals(user.getUserId(),
-                new EventManagement().getCreator(createdEvent.getEventId()).getUserId());
+        assertThat(new EventManagement().getCreator(createdEvent.getEventId()).getUserId(),
+                is(user.getUserId()));
     }
 
     @Test
     public void testGetEvent() {
         Event event = new EventManagement().getEvent(createdEvent.getEventId());
-        assertNotNull(event);
-        assertEquals(createdEvent.getName(), createdEvent.getName());
-        assertEquals(createdEvent.getLocation().getLocationId(),
-                event.getLocation().getLocationId());
-        assertEquals(createdEvent.getTimestamp().getTime(), event.getTimestamp().getTime());
-        assertEquals(createdEvent.getCreator().getUserId(), event.getCreator().getUserId());
-        assertEquals(createdEvent.getGroup().getGroupId(), event.getGroup().getGroupId());
+        assertThat(event, is(notNullValue()));
+        assertThat(event.getName(), is(createdEvent.getName()));
+        assertThat(event.getLocation().getLocationId(),
+                is(createdEvent.getLocation().getLocationId()));
+        assertThat(event.getTimestamp().getTime(), is(createdEvent.getTimestamp().getTime()));
+        assertThat(event.getCreator().getUserId(), is(createdEvent.getCreator().getUserId()));
+        assertThat(event.getGroup().getGroupId(), is(createdEvent.getGroup().getGroupId()));
     }
 
     @Test
     public void testGetUserLocations() {
         List<Location> locations = new EventManagement()
                 .getUserLocations(createdEvent.getEventId());
-        assertEquals(locations.size(), 0);
+        assertThat(locations.size(), is(0));
         Location userLocation = new Location(1, 1, "userLocation");
         user.setLocation(userLocation);
-        new UserManagement().update(user);
+        assertThat(new UserManagement().update(user), is(true));
         locations = new EventManagement().getUserLocations(createdEvent.getEventId());
         System.out.println(new UserManagement().getUser(user.getUserId()).getLocation().getName());
-        assertEquals(1, locations.size());
-        assertEquals(userLocation.getLocationId(), locations.get(0).getLocationId());
+        assertThat(locations.size(), is(1));
+        assertThat(locations.get(0).getLocationId(), is(userLocation.getLocationId()));
     }
 
     @Test
@@ -100,10 +121,11 @@ public class EventManagementTest {
         List<Location> points = new ArrayList<>();
         Location location = new Location(1, 1, "location");
         points.add(location);
-        new EventManagement().setClusterPoints(createdEvent.getEventId(), points);
+        assertThat(new EventManagement().setClusterPoints(createdEvent.getEventId(), points),
+                is(true));
         Event event = new EventManagement().getEvent(createdEvent.getEventId());
-        assertEquals(points.size(), event.getClusterPoints().size());
-        assertTrue(points.containsAll(event.getClusterPoints()));
+        assertThat(event.getClusterPoints().size(), is(points.size()));
+        assertThat(points.containsAll(event.getClusterPoints()), is(true));
     }
 
 }

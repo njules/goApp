@@ -12,7 +12,7 @@ public class DatabaseInitializerTest {
 
     @Test
     public void test() {
-        assertNotNull(DatabaseInitializer.getFactory());
+        assertThat(DatabaseInitializer.getFactory(), is(notNullValue()));
     }
 
     @Test

@@ -9,6 +9,9 @@ import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
@@ -163,10 +166,16 @@ public class EventManagement implements Management {
         long now = System.currentTimeMillis();
         long deletionTime = now - (minutesTillDeletion * 60L * 1000L);
         Timestamp time = new Timestamp(deletionTime);
-        Query query = DatabaseInitializer.getFactory().openSession()
-                .createQuery("delete from Event where timestamp < :limit");
-        query.setParameter("limit", time);
-        query.executeUpdate();
+        @SuppressWarnings("unchecked")
+        Session session = DatabaseInitializer.getFactory().openSession();
+        List<Event> events = session.createCriteria(Event.class)
+                .add(Restrictions.lt("timestamp", time)).list();
+
+        session.beginTransaction();
+        for (Event event : events) {
+            session.delete(event);
+        }
+        session.getTransaction().commit();
 
     }
 }

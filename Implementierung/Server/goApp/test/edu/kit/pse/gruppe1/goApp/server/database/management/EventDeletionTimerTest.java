@@ -31,9 +31,8 @@ public class EventDeletionTimerTest {
         Event event = management.add(name, location, time, user.getUserId(), group.getGroupId());
         assertThat(event, is(notNullValue()));
 
-//        new EventDeletionTimer(120, 0);
+        new EventDeletionTimer(120, 0);
         for (int i = 0; i < 30 + SECONDS_TOLERANCE; i++) {
-            new EventManagement().deleteOldEvents(0);
             if (i < 30 - SECONDS_TOLERANCE) {
                 assertThat(management.getEvent(event.getEventId()), is(notNullValue()));
             }
@@ -43,8 +42,7 @@ public class EventDeletionTimerTest {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-        }
-        new EventManagement().deleteOldEvents(0);
+        }        
         assertThat(management.getEvent(event.getEventId()), is(nullValue()));
     }
 

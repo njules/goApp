@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
@@ -21,36 +22,36 @@ public class GroupManagementTest {
     @Before
     public void setUp() throws Exception {
         user = new UserManagement().add("user", 3);
-        assertNotNull(user);
+        assertThat(user, is(notNullValue()));
         createdGroup = new GroupManagement().add(groupName, user.getUserId());
-        assertNotNull(createdGroup);
+        assertThat(createdGroup, is(notNullValue()));
     }
 
     @After
-    public void tearDown() throws Exception {        
+    public void tearDown() throws Exception {
         new GroupManagement().delete(createdGroup.getGroupId());
         new UserManagement().delete(user.getUserId());
     }
 
     @Test
     public void testAdd() {
-        assertNotNull(createdGroup);
-        assertEquals(groupName, createdGroup.getName());
-        assertEquals(user.getUserId(), createdGroup.getFounder().getUserId());
-        assertEquals(1, createdGroup.getUsers().size());
+        assertThat(createdGroup, is(notNullValue()));
+        assertThat(createdGroup.getName(), is(groupName));
+        assertThat(createdGroup.getFounder().getUserId(), is(user.getUserId()));
+        assertThat(createdGroup.getUsers().size(), is(1));
         for (User u : createdGroup.getUsers()) {
-            assertEquals(user.getUserId(), u.getUserId());
+            assertThat(u.getUserId(), is(user.getUserId()));
         }
     }
 
     @Test
     public void testGetGroup() {
         Group group = new GroupManagement().getGroup(createdGroup.getGroupId());
-        assertNotNull(group);
-        assertEquals(createdGroup.getName(), group.getName());        
-        assertEquals(createdGroup.getFounder().getUserId(), group.getFounder().getUserId());
-        assertEquals(createdGroup.getUsers().size(), group.getUsers().size());
-        assertTrue(group.getUsers().containsAll(createdGroup.getUsers()));
+        assertThat(group, is(notNullValue()));
+        assertThat(group.getName(), is(createdGroup.getName()));
+        assertThat(group.getFounder().getUserId(), is(createdGroup.getFounder().getUserId()));
+        assertThat(group.getUsers().size(), is(createdGroup.getUsers().size()));
+        assertThat(group.getUsers().containsAll(createdGroup.getUsers()), is(true));
     }
 
 }
