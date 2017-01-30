@@ -1,6 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -20,12 +24,14 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 @WebServlet("/GroupServlet")
 public class GroupServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final GroupManagement groupManager;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public GroupServlet() {
         super();
+        groupManager = new GroupManagement();
     }
 
 	/**
@@ -84,8 +90,19 @@ public class GroupServlet extends HttpServlet {
 	 * @return Returns a JSON string containing the ID of the created group.
 	 */
 	private String create(JSONObject json) {
-		// TODO - implement GroupServlet.create
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            Group group;
+            String name = json.getString(JSONParameter.GroupName.toString());
+            int founder = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            group = groupManager.add(name, founder);
+            response.append(JSONParameter.GroupID.toString(), group.getGroupId());
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
