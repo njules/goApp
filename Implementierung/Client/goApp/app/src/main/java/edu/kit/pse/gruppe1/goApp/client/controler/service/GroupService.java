@@ -288,7 +288,8 @@ public class GroupService extends IntentService {
                 events[i] = new Event(
                         jsons.getJSONObject(i).getInt(JSONParameter.EventID.toString()),
                         jsons.getJSONObject(i).getString(JSONParameter.EventName.toString()),
-                        new Date(jsons.getJSONObject(i).getLong(JSONParameter.EventTime.toString())));
+                        new Date(jsons.getJSONObject(i).getLong(JSONParameter.EventTime.toString())),
+                        new Location(result.getDouble(JSONParameter.Latitude.toString()), result.getDouble(JSONParameter.Longitude.toString()), result.getString(JSONParameter.LocationName.toString())));;
             }
             return events;
         } catch (JSONException e) {

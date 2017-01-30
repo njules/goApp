@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+>
+
+    <data>
+        <variable name="user" type="edu.kit.pse.gruppe1.goApp.client.model.User"/>
+    </data>
+
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/gruppen_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="30dp"
+                android:text="@{user.name}"/>
+
+    </LinearLayout>
+
+</layout>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
+import edu.kit.pse.gruppe1.goApp.client.model.Location;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +48,8 @@ public class NotificationService extends IntentService{
             event = new Event(
                     result.getInt(JSONParameter.EventID.toString()),
                     result.getString(JSONParameter.EventName.toString()),
-                    new Date(result.getLong(JSONParameter.EventTime.toString())));
+                    new Date(result.getLong(JSONParameter.EventTime.toString())),
+					new Location(result.getDouble(JSONParameter.Latitude.toString()), result.getDouble(JSONParameter.Longitude.toString()), result.getString(JSONParameter.LocationName.toString())));
         } catch (JSONException e) {
             e.printStackTrace();
         }

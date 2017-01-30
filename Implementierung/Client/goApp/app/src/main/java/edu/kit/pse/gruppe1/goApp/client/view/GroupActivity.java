@@ -17,6 +17,7 @@ import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
+import edu.kit.pse.gruppe1.goApp.client.model.Location;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
 import java.sql.Date;
@@ -103,7 +104,7 @@ public class GroupActivity extends AppCompatActivity {
     private Event[] fillDataset() {
         Event[] events = new Event[20];
         for (int i = 0; i < 20; i++) {
-            events[i] = new Event(i, "name" + i, new Date(100000 * i));
+            events[i] = new Event(i, "name" + i, new Date(100000 * i), new Location(i,i,"Random Location"+i));
         }
         return events;
     }
