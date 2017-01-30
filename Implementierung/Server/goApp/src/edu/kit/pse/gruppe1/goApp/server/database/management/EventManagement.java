@@ -130,9 +130,11 @@ public class EventManagement implements Management {
         }
         List<Location> locations = new ArrayList<>(event.getParticipants().size());
         for (Participant participant : event.getParticipants()) {
-            locations.add(participant.getUser().getLocation());
+            if (participant.getUser().getLocation() != null) {
+                locations.add(participant.getUser().getLocation());
+            }
         }
-        return new ArrayList<Location>();
+        return locations;
     }
 
     public boolean setClusterPoints(int eventId, Collection<Location> points) {
@@ -162,7 +164,7 @@ public class EventManagement implements Management {
         long deletionTime = now - (minutesTillDeletion * 60L * 1000L);
         Timestamp time = new Timestamp(deletionTime);
         Query query = DatabaseInitializer.getFactory().openSession()
-                .createQuery("delete from Event where time < :limit");
+                .createQuery("delete from Event where timestamp < :limit");
         query.setParameter("limit", time);
         query.executeUpdate();
 
