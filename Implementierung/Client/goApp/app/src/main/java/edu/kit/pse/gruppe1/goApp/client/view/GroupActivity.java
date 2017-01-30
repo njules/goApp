@@ -94,7 +94,16 @@ public class GroupActivity extends AppCompatActivity {
         acceptedEventAdapter = new AcceptedEventAdapter(fillDataset(), new ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
-
+                Event event = newEventAdapter.getItem(position);
+                switch (view.getId()) {
+                    case R.id.start_event:
+                        //TODO service.
+                        Log.i("GroupActivity", "go");
+                        break;
+                    default:
+                        EventActivity.start(GroupActivity.this, event);
+                        Log.i("GroupActivity", "info");
+                }
             }
         });
         acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
@@ -104,7 +113,7 @@ public class GroupActivity extends AppCompatActivity {
     private Event[] fillDataset() {
         Event[] events = new Event[20];
         for (int i = 0; i < 20; i++) {
-            events[i] = new Event(i, "name" + i, new Date(100000 * i), new Location(i,i,"Random Location"+i));
+            events[i] = new Event(i, "name" + i, new Date(100000 * i), new Location(i, i, "Random Location" + i));
         }
         return events;
     }
