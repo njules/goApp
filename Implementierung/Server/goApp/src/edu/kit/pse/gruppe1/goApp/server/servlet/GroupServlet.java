@@ -134,8 +134,25 @@ public class GroupServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String setName(JSONObject json) {
-		// TODO - implement GroupServlet.setName
-		throw new UnsupportedOperationException();
+	    //TODO almost the same as delete
+        JSONObject response = new JSONObject();
+        try {
+            int caller = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GroupID.toString()));
+            String newName = json.getString(JSONParameter.GroupName.toString());
+            int groupFounder = groupManager.getGroup(group).getFounder().getUserId();
+            if (groupFounder != caller) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+            }
+            if (!groupManager.updateName(group, newName)) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR).toString();
+            }
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
