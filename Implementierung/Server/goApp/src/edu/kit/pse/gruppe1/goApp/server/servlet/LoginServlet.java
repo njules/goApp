@@ -26,13 +26,15 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserManagement usrMang;
-
+    //TODO: String test wieder rausnehmen
+    private String test;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public LoginServlet() {
         super();
         usrMang = new UserManagement();
+        test = "inKlasse";
     }
 
     /**
@@ -115,6 +117,10 @@ public class LoginServlet extends HttpServlet {
             break;
         }
         out.println(strResponse);
+    }
+    /* TODO: Löschen, wenn JUnit funktioniert*/
+    private String getTest(){
+        return this.test;
     }
 
     /**
