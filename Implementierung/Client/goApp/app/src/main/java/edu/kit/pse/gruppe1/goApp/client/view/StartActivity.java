@@ -47,7 +47,8 @@ public class StartActivity extends AppCompatActivity implements Communicator{
     //TODO: Wieder löschen nur zum Testzweck
     private Group[] fillGroupDataset() {
         Group[] groups = new Group[20];
-        for (int i = 0; i < 20; i++) {
+        groups[0] = new Group(0,"Test",new User(12948,"Sven"));
+        for (int i = 1; i < 20; i++) {
             groups[i] = new Group(i, "name" + i, user);
         }
        return groups;

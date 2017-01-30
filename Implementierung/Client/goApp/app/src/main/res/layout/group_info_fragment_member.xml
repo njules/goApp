@@ -25,6 +25,7 @@
                 android:layout_below="@id/member_text"
                 android:layout_height="425dp"/>
         <android.support.v7.widget.AppCompatButton
+                android:id="@+id/leave_group_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/member_recycler_view"

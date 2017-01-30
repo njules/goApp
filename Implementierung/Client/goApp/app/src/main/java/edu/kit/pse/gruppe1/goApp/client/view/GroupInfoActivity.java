@@ -1,11 +1,12 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -34,15 +35,15 @@ public class GroupInfoActivity extends AppCompatActivity {
         setSupportActionBar(groupInfoToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         if(group.getFounder().getId() == Preferences.getUser().getId()){
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
             AdminFragment fragment = new AdminFragment();
             fragmentTransaction.add(R.id.Fragment_Container ,fragment);
             fragmentTransaction.commit();
         } else {
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             UserFragment fragment = new UserFragment();
             fragmentTransaction.add(R.id.Fragment_Container ,fragment);
             fragmentTransaction.commit();

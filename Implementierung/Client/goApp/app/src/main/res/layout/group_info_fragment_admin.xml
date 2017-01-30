@@ -40,6 +40,7 @@
                 android:layout_below="@id/request_text"
                 android:layout_height="190dp"/>
         <android.support.v7.widget.AppCompatButton
+                android:id="@+id/delete_group_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/request_recycler_view"
