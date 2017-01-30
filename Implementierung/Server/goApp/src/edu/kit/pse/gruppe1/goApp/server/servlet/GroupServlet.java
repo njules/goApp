@@ -1,8 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -111,8 +109,23 @@ public class GroupServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String delete(JSONObject json) {
-		// TODO - implement GroupServlet.delete
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            int caller = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GroupID.toString()));
+            int groupFounder = groupManager.getGroup(group).getFounder().getUserId();
+            if (groupFounder != caller) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+            }
+            if (!groupManager.delete(group)) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR).toString();
+            }
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
