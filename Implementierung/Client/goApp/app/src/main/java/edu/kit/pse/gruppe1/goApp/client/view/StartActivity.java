@@ -1,7 +1,9 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,41 +13,41 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.Toast;
 
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.StartActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
+import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 
-public class StartActivity extends AppCompatActivity{
+public class StartActivity extends AppCompatActivity implements Communicator{
     private RecyclerView groupRecyclerView;
-    private RecyclerView.Adapter groupAdapter;
+    private GroupAdapter groupAdapter;
     private RecyclerView.LayoutManager groupLayoutManager;
 
     private RecyclerView requestRecyclerView;
-    private RecyclerView.Adapter requestAdapter;
+    private GroupAdapter requestAdapter;
     private RecyclerView.LayoutManager requestLayoutManager;
 
     private User user;
+    private StartActivityBinding binding;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StartActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.start_activity);
-        user = new User(17, "Maxi");
+        binding = DataBindingUtil.setContentView(this, R.layout.start_activity);
+        user = Preferences.getUser(); //Stattdessen wird der User in der LoginActivity geholt
         binding.setUser(user);
         Toolbar startToolbar = (Toolbar) findViewById(R.id.start_toolbar);
         setSupportActionBar(startToolbar);
-    }
+     }
 
     //TODO: Wieder löschen nur zum Testzweck
     private Group[] fillGroupDataset() {
         Group[] groups = new Group[20];
         for (int i = 0; i < 20; i++) {
-            groups[i] = new Group(i, "name" + i);
+            groups[i] = new Group(i, "name" + i, user);
         }
         return groups;
     }
@@ -53,12 +55,11 @@ public class StartActivity extends AppCompatActivity{
     //TODO: Wieder löschen nur zum Testzweck
     private Group[] fillDataset() {
         Group[] groups = new Group[3];
-        groups[0] = new Group(23, "Test");
-        groups[1] = new Group(243, "Beispiel");
-        groups[2] = new Group(123, "Penis");
+        groups[0] = new Group(23, "Test", user);
+        groups[1] = new Group(243, "Beispiel", user);
+        groups[2] = new Group(123, "Penis", user);
         return groups;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,7 +76,16 @@ public class StartActivity extends AppCompatActivity{
         groupLayoutManager = new LinearLayoutManager(this);
         groupRecyclerView.setLayoutManager(groupLayoutManager);
         // specify an adapter
-        groupAdapter = new GroupAdapter(fillGroupDataset());
+        // Todo: Hier Gruppen des Users suchen(GroupSearchService)
+        //RequestSearchService service = new RequestService();
+        //service.getRequestsByUser(user);
+        groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
+            @Override
+            public void onItemClicked(int position, View view) {
+                Group group = groupAdapter.getItem(position);
+                GroupActivity.start(StartActivity.this, group);
+            }
+        });
         groupRecyclerView.setAdapter(groupAdapter);
 
         requestRecyclerView = (RecyclerView) findViewById(R.id.my_requests_recycler_view);
@@ -84,8 +94,17 @@ public class StartActivity extends AppCompatActivity{
         groupLayoutManager = new LinearLayoutManager(this);
         requestRecyclerView.setLayoutManager(groupLayoutManager);
         // specify an adapter
-        groupAdapter = new GroupAdapter(fillDataset());
-        requestRecyclerView.setAdapter(groupAdapter);
+        //Todo: Hier Requests des Users suchen(RequestSearchService)
+        requestAdapter = new GroupAdapter(fillDataset(), new ItemClickListener() {
+            @Override
+            public void onItemClicked(int position, View view) {
+                Group group = requestAdapter.getItem(position);
+                //RequestService service = new RequestService;
+                //service.reject(group,user);
+                //TODO reject request in RequestService
+            }
+        });
+        requestRecyclerView.setAdapter(requestAdapter);
     }
 
     @Override
@@ -113,8 +132,6 @@ public class StartActivity extends AppCompatActivity{
         super.onDestroy();
     }
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -122,14 +139,29 @@ public class StartActivity extends AppCompatActivity{
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 ChangeNameFragment fragment = new ChangeNameFragment();
-                fragmentTransaction.add(fragment, "Test");
+                fragmentTransaction.add(fragment, "ChangeNameFragment");
                 fragmentTransaction.commit();
                 return true;
             case R.id.action_search:
+                NewGroupActivity.start(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void respond(String response) {
+        user.setName(response);
+        Preferences.setUser(user);
+        String output = R.string.changeName + " " + user.getName();
+        //Todo hier Benutzernamen ändern
+        Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
+    }
+
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, StartActivity.class);
+        activity.startActivity(intent);
     }
 
 }

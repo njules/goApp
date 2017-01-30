@@ -111,9 +111,10 @@ public class GroupSearchService extends IntentService{
            JSONArray jsons = result.getJSONArray(JSONParameter.GroupName.toString());
             Group[] groups = new Group[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
+                User user = new User(result.getInt(JSONParameter.UserID.toString()), result.getString(JSONParameter.UserName.toString()));
                 groups[i] = new Group(
                         (int)jsons.getJSONObject(i).get(JSONParameter.GroupID.toString()),
-                        (String)jsons.getJSONObject(i).get(JSONParameter.GroupName.toString()));
+                        (String)jsons.getJSONObject(i).get(JSONParameter.GroupName.toString()), user);
             }
             return groups;
         } catch (JSONException e) {
@@ -125,7 +126,7 @@ public class GroupSearchService extends IntentService{
     private Group[] getGroups(){
         Group[] group = new Group[20];
         for (int i = 0; i < 20 ; i++) {
-            group[i] = new Group(i,"name"+i);
+            group[i] = new Group(i,"name"+i, new User(1, "Penis"));
         }
         return  group;
     }

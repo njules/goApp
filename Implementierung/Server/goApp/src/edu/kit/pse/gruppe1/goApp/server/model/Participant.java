@@ -15,8 +15,7 @@ import javax.persistence.UniqueConstraint;
  * the userEvent describes the status of a participant during the event.
  */
 @Entity
-@Table(name = "participantT", uniqueConstraints = @UniqueConstraint(columnNames = { "USER_ID",
-    "EVENT_ID" }))
+@Table(name = "participantT")
 public class Participant {
 
   /**
@@ -57,7 +56,7 @@ public class Participant {
    */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "LOCATION_ID")
+  @Column(name = "PARTICIPANT_ID", unique = true, nullable = false)
   public Integer getParticipantID() {
   return participantID;
   }
@@ -75,7 +74,7 @@ public class Participant {
    * 
    * @return the status of the participant
    */
-  @Column(name = "status")
+  @Column(name = "status", nullable = false)
   public Integer getStatus() {
   return status;
   }
@@ -94,7 +93,7 @@ public class Participant {
    * @return the event on which the participant participate
    */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "EVENT_ID")
+  @JoinColumn(name = "EVENT_ID", nullable = false)
   public Event getEvent() {
   return event;
   }
@@ -113,7 +112,7 @@ public class Participant {
    * @return the user which participate on the event
    */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_ID")
+  @JoinColumn(name = "USER_ID", nullable = false)
   public User getUser() {
   return user;
   }
