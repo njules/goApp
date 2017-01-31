@@ -276,7 +276,7 @@ public class EventServlet extends HttpServlet {
 
         try {
             Timestamp time = (Timestamp) json.get(JSONParameter.EventTime.toString());
-            event.setTime(time);
+            event.setTimestamp(time);
             valuesChanged = true;
         } catch (JSONException e) {
             // do nothing, because it can happen
