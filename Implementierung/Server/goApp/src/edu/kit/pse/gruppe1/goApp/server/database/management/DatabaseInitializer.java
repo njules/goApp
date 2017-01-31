@@ -26,7 +26,7 @@ public class DatabaseInitializer {
      * 
      * @return SessionFactory Object from Hibernate Library
      */
-    public static SessionFactory getFactory() {
+    public static synchronized SessionFactory getFactory() {
         if (eventDeletionTimer == null) {
             eventDeletionTimer = new EventDeletionTimer(2, 1);
         }

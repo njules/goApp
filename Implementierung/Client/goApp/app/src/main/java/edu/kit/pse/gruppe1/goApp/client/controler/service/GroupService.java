@@ -223,7 +223,8 @@ public class GroupService extends IntentService {
             case ACTION_GET:
                 result = connection.sendGetRequest(intent.getStringExtra("JSON"));
                 try {
-                    Group group = new Group(result.getInt(JSONParameter.GroupID.toString()), result.getString(JSONParameter.GroupName.toString()));
+                    User user = new User(result.getInt(JSONParameter.UserID.toString()), result.getString(JSONParameter.UserName.toString()));
+                    Group group = new Group(result.getInt(JSONParameter.GroupID.toString()), result.getString(JSONParameter.GroupName.toString()), user);
                     resultIntent.putExtra("group", group);
                 } catch (JSONException e) {
                     e.printStackTrace();

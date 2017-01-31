@@ -15,8 +15,7 @@ import javax.persistence.UniqueConstraint;
  * the userEvent describes the status of a participant during the event.
  */
 @Entity
-@Table(name = "participantT", uniqueConstraints = @UniqueConstraint(columnNames = { "USER_ID",
-    "EVENT_ID" }))
+@Table(name = "participantT")
 public class Participant {
 
   /**

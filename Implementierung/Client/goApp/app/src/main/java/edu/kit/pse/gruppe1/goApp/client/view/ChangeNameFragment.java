@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import edu.kit.pse.gruppe1.goApp.client.R;
-import edu.kit.pse.gruppe1.goApp.client.databinding.ChangeNameDialogBinding;
-import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 /**
  * Created by Tobias on 20.01.2017.
@@ -33,7 +31,7 @@ public class ChangeNameFragment extends DialogFragment {
             .setView(text)
                 .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                       EditText et = (EditText) text.findViewById(R.id.changeName);
+                        EditText et = (EditText) text.findViewById(R.id.changeName);
                         String response = et.getText().toString();
                         communicator.respond(response);
                     }
