@@ -1,6 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +14,9 @@ import org.json.JSONObject;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -186,23 +190,60 @@ public class GroupServlet extends HttpServlet {
 	}
 
 	/**
-	 * Any user may request a list of events from any group he is a member of.
+	 * Any user may request a list of events from any one group he is a member of.
 	 * @param json JSON object containing the ID of the group from which the events are requested.
 	 * @return Returns a JSON string containing a List with all Events within that group.
 	 */
 	private String getEvents(JSONObject json) {
-		// TODO - implement GroupServlet.getEvents
-		throw new UnsupportedOperationException();
+	    //TODO nothing returned?
+        JSONObject response = new JSONObject();
+        try {
+            List<Event> groupEvents;
+            int group = Integer.parseInt(json.getString(JSONParameter.GroupID.toString()));
+            int member = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            groupUserManager.getUsers(group);
+            groupEvents = groupManager.getEvents(group);
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
 	 * This method returns all relevant information about a given group and may be invoked by any member of that group.
 	 * @param json JSON object containing the ID of the group about which the information is requested.
-	 * @return Returns a JSON string containing information about the group such as members, events, the founder and users that have sent unanswered requests to this group.
+	 * @return Returns a JSON string containing information about the group such as members, events and the founder.
 	 */
 	private String getGroup(JSONObject json) {
-		// TODO - implement GroupServlet.getGroup
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            List<User> members;
+            List<Event> events;
+            User founder;
+            int groupID = Integer.parseInt(json.getString(JSONParameter.GroupID.toString()));
+            Group group = groupManager.getGroup(groupID);
+            members = groupUserManager.getUsers(groupID);
+            events = groupManager.getEvents(groupID);
+            founder = group.getFounder();
+            for (User member : members) {
+                response.append(JSONParameter.UserID.toString(), member.getUserId());
+                response.append(JSONParameter.UserName.toString(), member.getName());
+            }
+            for (Event event : events) {
+                response.append(JSONParameter.EventID.toString(), event.getEventId());
+                response.append(JSONParameter.EventName.toString(), event.getName());
+                response.append(JSONParameter.EventTime.toString(), event.getTimestamp());
+            }
+            response.append(JSONParameter.UserID.toString(), founder.getUserId());
+            response.append(JSONParameter.UserName.toString(), founder.getName());
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
