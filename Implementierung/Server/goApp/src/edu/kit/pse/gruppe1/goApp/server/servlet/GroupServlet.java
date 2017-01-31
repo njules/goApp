@@ -214,7 +214,7 @@ public class GroupServlet extends HttpServlet {
 	/**
 	 * This method returns all relevant information about a given group and may be invoked by any member of that group.
 	 * @param json JSON object containing the ID of the group about which the information is requested.
-	 * @return Returns a JSON string containing information about the group such as members, events, the founder and users that have sent unanswered requests to this group.
+	 * @return Returns a JSON string containing information about the group such as members, events and the founder.
 	 */
 	private String getGroup(JSONObject json) {
         JSONObject response = new JSONObject();
@@ -222,7 +222,6 @@ public class GroupServlet extends HttpServlet {
             List<User> members;
             List<Event> events;
             User founder;
-            List<User> prospects;
             int groupID = Integer.parseInt(json.getString(JSONParameter.GroupID.toString()));
             Group group = groupManager.getGroup(groupID);
             members = groupUserManager.getUsers(groupID);
