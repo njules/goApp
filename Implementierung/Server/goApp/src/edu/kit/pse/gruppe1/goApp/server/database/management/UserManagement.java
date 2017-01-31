@@ -98,7 +98,7 @@ public class UserManagement implements Management {
 	}
 
 	@Override
-	public boolean delete(int userId) {
+    public boolean delete(int userId) {
 		User user = getUser(userId);
 		if (user == null) {
 			return false;
