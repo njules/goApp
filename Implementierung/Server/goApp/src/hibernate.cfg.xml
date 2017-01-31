@@ -8,7 +8,7 @@
 
 		<!-- JDBC Database connection settings -->
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="connection.url">jdbc:mysql://localhost/test2?createDatabaseIfNotExist=true</property>
+		<property name="connection.url">jdbc:mysql://localhost/db?createDatabaseIfNotExist=true</property>
 		<property name="connection.username">root</property>
 		<property name="connection.password">j9w5alter</property>
 		
