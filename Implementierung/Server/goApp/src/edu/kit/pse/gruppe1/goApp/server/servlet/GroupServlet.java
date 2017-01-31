@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
+import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
@@ -29,6 +30,7 @@ public class GroupServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final GroupManagement groupManager;
     private final GroupUserManagement groupUserManager;
+    private final UserManagement userManager;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -37,6 +39,7 @@ public class GroupServlet extends HttpServlet {
         super();
         groupManager = new GroupManagement();
         groupUserManager = new GroupUserManagement();
+        userManager = new UserManagement();
     }
 
 	/**
@@ -252,8 +255,18 @@ public class GroupServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String setFounder(JSONObject json) {
-		// TODO - implement GroupServlet.setFounder
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            int group = Integer.parseInt(json.getString(JSONParameter.GroupID.toString()));
+            int newFounder = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            User next = userManager.getUser(newFounder);
+            groupManager.updateFounder(group, next);
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 	
 }
