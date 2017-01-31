@@ -4,15 +4,20 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
-import edu.kit.pse.gruppe1.goApp.server.database.management.Management;
-import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 import java.lang.reflect.Field;
@@ -26,36 +31,11 @@ import java.lang.reflect.Method;
 public class LoginServletTest {
     private LoginServlet servlet;
 
-    private class UserManagement implements Management {
-        private User user;
+    @Mock
+    UserManagement mockUsrMang;
 
-        public UserManagement() {
-            super();
-        }
-
-        public User add(String name, int googleId) {
-            this.user = new User(googleId, name);
-            return user;
-        }
-
-        public User getUser(int userId) {
-            return this.user;
-        }
-        public boolean update(User chUser) {
-            return false;
-        }
-        public boolean updateName(int userId, String newName) {
-            return false;
-        }
-        
-        public boolean updateLocation(int userId, Location newLocation) {
-            return false;
-        }
-        
-        public boolean delete(int userId) {
-            return false;
-        }
-    }
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     /**
      * @throws java.lang.Exception
@@ -63,19 +43,19 @@ public class LoginServletTest {
     @Before
     public void setUp() throws Exception {
         servlet = new LoginServlet();
-        String name = "usrMang";
         String name1 = "test";
-        UserManagement nUsrMang = new UserManagement();
-
         Field field1 = servlet.getClass().getDeclaredField(name1);
         field1.setAccessible(true);
         field1.set(servlet, "Test");
         System.out.println(field1.get(servlet));
         System.out.println(field1.get(servlet));
 
-//        Field field = servlet.getClass().getDeclaredField(name);
-//        field.setAccessible(true);
-//        field.set(servlet, nUsrMang);
+        // UserManagement nUsrMang = new UserManagement();
+        String name = "usrMang";
+        Field field = servlet.getClass().getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(servlet, mockUsrMang);
+
     }
 
     /**
@@ -85,42 +65,77 @@ public class LoginServletTest {
     public void tearDown() throws Exception {
     }
 
-    /**
-     * Test method for {@link edu.kit.pse.gruppe1.goApp.server.servlet.LoginServlet#LoginServlet()}.
-     */
+
     @Test
+    public void testLogin() {
+        String name = "login";
+        User realUsr = new User(1234, "Test User");
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        Method method;
+
+        // prepare Test
+        when(mockUsrMang.getUser(realUsr.getGoogleId())).thenReturn(realUsr);
+        try {
+            json.accumulate(JSONParameter.UserName.toString(), realUsr.getName());
+            json.accumulate(JSONParameter.UserID.toString(), realUsr.getGoogleId());
+        } catch (JSONException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        // Call Method
+        try {
+            method = servlet.getClass().getDeclaredMethod(name, JSONObject.class);
+            method.setAccessible(true);
+            Object returnValue = method.invoke(servlet, json);
+            // assert Object returnValue ist JSONObject
+            newJson = (JSONObject) returnValue;
+
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (newJson != null) {
+            try {
+                assertEquals(realUsr.getName(),
+                        newJson.getString(JSONParameter.UserName.toString()));
+
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else {
+            fail();
+        }
+
+    }
+
     @Ignore
-    public void testLoginServlet() {
-        fail("Not yet implemented");
+    @Test
+    public void testLoginWithNonUsr() {
+        User nullUsr = new User(1, "Null User");
+        when(mockUsrMang.getUser(nullUsr.getGoogleId())).thenReturn(null);
     }
 
     @Test
-    public void Test() {
+    public void test() {
         String name = "getTest";
         Method method = null;
         JSONObject json = new JSONObject();
+
         try {
             method = servlet.getClass().getDeclaredMethod(name);
             method.setAccessible(true);
             Object returnValue = method.invoke(servlet);
             System.out.println(returnValue);
-        } catch (NoSuchMethodException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+            assertEquals(returnValue.toString(), "Test");
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
     /**
