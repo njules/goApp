@@ -101,13 +101,13 @@ public class LoginServlet extends HttpServlet {
                 error = ErrorCodes.READ_JSON;
             }
         }
-
+        //TODO überall: method null abfangen
         switch (method) {
         case LOGIN:
-            strResponse = login(jsonRequest);
+            strResponse = login(jsonRequest).toString();
             break;
         case REGISTER:
-            strResponse = register(jsonRequest);
+            strResponse = register(jsonRequest).toString();
             break;
         default:
             if (error.equals(ErrorCodes.OK)) {
@@ -141,11 +141,11 @@ public class LoginServlet extends HttpServlet {
      *            The JSON object contains a user ID to which the user shall be registered.
      * @return Returns a JSON string containing the user that just registered.
      */
-    private String register(JSONObject json) {
+    private JSONObject register(JSONObject json) {
         int googleId = -1;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
         User user = null;
-        String result = null;
+        JSONObject result = null;
 
         try {
             googleId = json.getInt(JSONParameter.ID.toString());
@@ -153,12 +153,12 @@ public class LoginServlet extends HttpServlet {
             user = usrMang.add(name, googleId);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
-            return ServletUtils.createJSONError(error).toString();
+            return ServletUtils.createJSONError(error);
         }
         if (user != null) {
-            result = ServletUtils.createJSONUser(user).toString();
+            result = ServletUtils.createJSONUser(user);
         } else if (!error.equals(ErrorCodes.OK)) {
-            result = ServletUtils.createJSONError(error).toString();
+            result = ServletUtils.createJSONError(error);
         }
         return result;
     }
@@ -172,20 +172,21 @@ public class LoginServlet extends HttpServlet {
      *            This JSON object contains the user that wants to login.
      * @return Returns a JSON string containing the user that just logged in.
      */
-    private String login(JSONObject json) {
+    private JSONObject login(JSONObject json) {
         int userID = -1;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
         User user = null;
 
         try {
+           // userID = json.getJSONArray(JSONParameter.UserID.toString()).getInt(0);
             userID = json.getInt(JSONParameter.UserID.toString());
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
-            return ServletUtils.createJSONError(error).toString();
+            return ServletUtils.createJSONError(error);
         }
         user = usrMang.getUser(userID);
         if (user != null) {
-            return ServletUtils.createJSONUser(user).toString();
+            return ServletUtils.createJSONUser(user);
         }
         // if User does not exist yet (getUser == null) register new User
         return register(json);
