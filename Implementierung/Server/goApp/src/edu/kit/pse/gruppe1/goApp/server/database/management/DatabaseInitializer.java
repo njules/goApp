@@ -27,9 +27,6 @@ public class DatabaseInitializer {
      * @return SessionFactory Object from Hibernate Library
      */
     public static synchronized SessionFactory getFactory() {
-        if (eventDeletionTimer == null) {
-            eventDeletionTimer = new EventDeletionTimer(2, 1);
-        }
         if (factory == null) {
             Configuration configuration = new Configuration();
             configuration.configure();
@@ -43,6 +40,9 @@ public class DatabaseInitializer {
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties()).build();
             factory = configuration.buildSessionFactory(serviceRegistry);
+
+            // start thread that delete old events
+            eventDeletionTimer = new EventDeletionTimer(2, 1);
         }
         return factory;
     }
