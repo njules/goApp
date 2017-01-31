@@ -53,11 +53,12 @@ public class EventUserManagementTest {
     @Test
     public void testAddUser() {
         User userTmp = new UserManagement().add(userName + "usertmp", googleId + 1);
-        assertThat(new EventUserManagement().addUser(createdEvent.getEventId(),
-                createdUser.getUserId(), Status.INVITED), is(true));
-        assertThat(new UserManagement().getUser(userTmp.getUserId()), is(notNullValue()));
-        assertThat(new UserManagement().getUser(userTmp.getUserId()).getGoogleId(),
-                is(userTmp.getGoogleId()));
+        assertThat(new EventUserManagement().addUser(createdEvent.getEventId(), userTmp.getUserId(),
+                Status.INVITED), is(true));
+        assertThat(new EventManagement().getEvent(createdEvent.getEventId())
+                .getParticipant(userTmp.getUserId()), is(notNullValue()));
+        assertThat(new UserManagement().getUser(userTmp.getUserId()).getParticipations().size(),
+                is(1));
         new UserManagement().delete(userTmp.getUserId());
     }
 
