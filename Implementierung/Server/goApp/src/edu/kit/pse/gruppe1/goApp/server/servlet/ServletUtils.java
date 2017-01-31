@@ -35,20 +35,15 @@ public final class ServletUtils {
         try {
             json.accumulate(JSONParameter.EventName.toString(), event.getName());
             json.accumulate(JSONParameter.EventTime.toString(), event.getTimestamp().getTime());
+            json.accumulate(JSONParameter.EventID.toString(), event.getEventId());
 
-            // TODO: json.accumulate(JSONParameter.LOCATION.toString(),
-            // locationObject(event.getLocation()));
             json.accumulate(JSONParameter.LocationName.toString(), event.getLocation().getName());
             json.accumulate(JSONParameter.Longitude.toString(), event.getLocation().getLongitude());
             json.accumulate(JSONParameter.Latitude.toString(), event.getLocation().getLatitude());
 
-            // TODO: json.accumulate(JSONParameter.GROUP.toString(), groupObject(event.getGroup()));
             json.accumulate(JSONParameter.GroupID.toString(), event.getGroup().getGroupId());
-
-            // TODO: json.accumulate(JSONParameter.USER.toString(), userObject(event.getCreator()));
             json.accumulate(JSONParameter.UserID.toString(), event.getCreator().getUserId());
 
-            json.accumulate(JSONParameter.EventID.toString(), event.getEventId());
             json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -56,14 +51,6 @@ public final class ServletUtils {
         }
         return json;
     }
-
-    // private static JSONObject locationObject(Location location) throws JSONException {
-    // JSONObject json = new JSONObject();
-    // json.accumulate(JSONParameter.LocationName.toString(), location.getName());
-    // json.accumulate(JSONParameter.Longitude.toString(), location.getLongitude());
-    // json.accumulate(JSONParameter.Latitude.toString(), location.getLatitude());
-    // return json;
-    // }
 
     public static JSONObject createJSONLocation(Location location) {
         JSONObject json = new JSONObject();
@@ -84,12 +71,11 @@ public final class ServletUtils {
         JSONObject json = new JSONObject();
 
         try {
-            // TODO: json.accumulate(JSONParameter.USER.toString(), userObject(group.getFounder()));
             json.accumulate(JSONParameter.UserID.toString(), group.getFounder().getUserId());
             json.accumulate(JSONParameter.UserName.toString(), group.getFounder().getName());
             json.accumulate(JSONParameter.GroupName.toString(), group.getName());
             json.accumulate(JSONParameter.GroupID.toString(), group.getGroupId());
-            
+
             json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -101,7 +87,6 @@ public final class ServletUtils {
     public static JSONObject createJSONUser(User user) {
         JSONObject json = new JSONObject();
         try {
-            // TODO: User user object ??
             json.accumulate(JSONParameter.UserID.toString(), user.getUserId());
             json.accumulate(JSONParameter.UserName.toString(), user.getName());
             json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
@@ -111,23 +96,28 @@ public final class ServletUtils {
         }
         return json;
     }
-
-    // private static JSONObject userObject(User user){
-    // JSONObject json = new JSONObject();
-    // try {
-    // json.accumulate(JSONParameter.UserID.toString(), user.getUserId());
-    // json.accumulate(JSONParameter.UserName.toString(), user.getName());
-    // } catch (JSONException e) {
-    // e.printStackTrace();
-    // return null;
-    // }
-    // return json;
-    // }
+    
+  
+    public static JSONObject createJSONListEvent(List<Event> event) {
+        JSONObject json = new JSONObject();
+        try {
+            for (Event evt : event) {
+                json.append(JSONParameter.LIST_EVENT.toString(), createJSONEvent(evt));
+            }
+            json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
 
     public static JSONObject createJSONListUsr(List<User> user) {
         JSONObject json = new JSONObject();
         try {
-            // TODO: Liste User
+            for (User usr : user) {
+                json.append(JSONParameter.LIST_USER.toString(), createJSONUser(usr));
+            }
             json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -139,8 +129,9 @@ public final class ServletUtils {
     public static JSONObject createJSONListGrp(List<Group> group) {
         JSONObject json = new JSONObject();
         try {
-            // TODO: Liste Gruppen - JSONObjekt mit Daten und dann Array daraus
-            json.getJSONArray("Liste").getJSONObject(0);
+            for (Group grp : group) {
+                json.append(JSONParameter.LIST_GROUP.toString(), createJSONGroup(grp));
+            }
             json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();

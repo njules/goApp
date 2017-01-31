@@ -101,7 +101,20 @@ public enum JSONParameter {
      * ErrorCode (from enum ErrorCodes)
      */
 
-    ErrorCode("ErrorCode");
+    ErrorCode("ErrorCode"),
+
+    /**
+     * List of User
+     */
+    LIST_USER("ListUser"),
+
+    /**
+     * List of Group
+     */
+    LIST_GROUP("ListGroup"), /**
+                              * List of Group
+                              */
+    LIST_EVENT("ListEvent");
 
     private final String fieldDescription;
 
