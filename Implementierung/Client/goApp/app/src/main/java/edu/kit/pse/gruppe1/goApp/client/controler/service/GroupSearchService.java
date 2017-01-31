@@ -22,13 +22,17 @@ import edu.kit.pse.gruppe1.goApp.client.model.*;
 /**
  * This Service is needed to list various Groups at once.
  */
-public class GroupSearchService extends IntentService{
+public class GroupSearchService extends IntentService {
 
     public static final String TAG = GroupSearchService.class.getSimpleName();
     public static final String ERROR_INPUT = "wrong Input";
     public static final String ERROR = "Ups, Error occured";
     public static final String ACTION_GET_BY_NAME = "GET_BY_NAME";
     public static final String ACTION_GET_BY_MEMBER = "GET_BY_MEMBER";
+    public static final String RESULT_GET_BY_MEMBER = "RESULT_BY_MEMBER";
+    public static final String RESULT_GET_BY_NAME = "RESULT_BY_MEMBER";
+
+
     public static final String SERVLET = "GroupSearchServlet";
 
     //for testing
@@ -41,12 +45,12 @@ public class GroupSearchService extends IntentService{
 
 
     /**
-	 * finds all groups which the user is a member of. This is used to present the groups in the StartActivity
-	 * @param user the user which groups are returned
-
-	 */
-	public void getGroupsByMember(Context context,User user) {
-		if(user == null) {
+     * finds all groups which the user is a member of. This is used to present the groups in the StartActivity
+     *
+     * @param user the user which groups are returned
+     */
+    public void getGroupsByMember(Context context, User user) {
+        if (user == null) {
             throw new IllegalArgumentException();
         }
         JSONObject requestJson = new JSONObject();
@@ -57,23 +61,25 @@ public class GroupSearchService extends IntentService{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        Intent requestIntent = new Intent(context,this.getClass());
-        requestIntent.putExtra("Json",requestJson.toString());
+//TODO WHHHYYYY???????
+        Intent requestIntent = new Intent(context, GroupSearchService.class);
+        Log.i("GroupSearchService","new Intent");
+        requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_MEMBER);
-
-        startService(requestIntent);
-        running = true;
+        Log.i(this.getClass().getSimpleName(),"starting");
+        context.startService(requestIntent);
+        Log.i(this.getClass().getSimpleName(),"started");
 
 
     }
 
-	/**
-	 * finds all groups which name include the given string to show the results of a search request by the user using the search function of the NewGroupActivity
-	 * @param name the string which the user typed in the NewGroupActivity to find a new group he wants to be member of with that name
-	 * @return all groups the name is included in the group name or null
-	 */
-	public void getGroupsByName(Context context, String name) {
+    /**
+     * finds all groups which name include the given string to show the results of a search request by the user using the search function of the NewGroupActivity
+     *
+     * @param name the string which the user typed in the NewGroupActivity to find a new group he wants to be member of with that name
+     * @return all groups the name is included in the group name or null
+     */
+    public void getGroupsByName(Context context, String name) {
 
         JSONObject requestJson = new JSONObject();
 
@@ -84,19 +90,29 @@ public class GroupSearchService extends IntentService{
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context,this.getClass());
-        requestIntent.putExtra("Json",requestJson.toString());
+        Intent requestIntent = new Intent(context, this.getClass());
+        requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_NAME);
 
-        startService(requestIntent);
-	}
+        context.startService(requestIntent);
+    }
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-        Group[]groups = getGroups(intent.getStringExtra("JSON"));
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        //TODO Test
+        //Group[] groups = getGroups(intent.getStringExtra("JSON"));
+        Group[] groups = getGroups();
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("groups",groups);
-        resultIntent.setAction(intent.getAction());
+        resultIntent.putExtra("groups", groups);
+        switch (intent.getAction()) {
+            case ACTION_GET_BY_MEMBER:
+                resultIntent.setAction(RESULT_GET_BY_MEMBER);
+                break;
+            case ACTION_GET_BY_NAME:
+                resultIntent.setAction(RESULT_GET_BY_NAME);
+                break;
+            //TODO default:
+        }
 
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);
@@ -104,17 +120,17 @@ public class GroupSearchService extends IntentService{
 
 
     @Nullable
-    private Group[] getGroups(String json){
+    private Group[] getGroups(String json) {
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendGetRequest(json);
         try {
-           JSONArray jsons = result.getJSONArray(JSONParameter.GroupName.toString());
+            JSONArray jsons = result.getJSONArray(JSONParameter.GroupName.toString());
             Group[] groups = new Group[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
                 User user = new User(result.getInt(JSONParameter.UserID.toString()), result.getString(JSONParameter.UserName.toString()));
                 groups[i] = new Group(
-                        (int)jsons.getJSONObject(i).get(JSONParameter.GroupID.toString()),
-                        (String)jsons.getJSONObject(i).get(JSONParameter.GroupName.toString()), user);
+                        (int) jsons.getJSONObject(i).get(JSONParameter.GroupID.toString()),
+                        (String) jsons.getJSONObject(i).get(JSONParameter.GroupName.toString()), user);
             }
             return groups;
         } catch (JSONException e) {
@@ -122,15 +138,17 @@ public class GroupSearchService extends IntentService{
         }
         return null;
     }
-//For testing
-    private Group[] getGroups(){
-        Group[] group = new Group[20];
-        for (int i = 0; i < 20 ; i++) {
-            group[i] = new Group(i,"name"+i, new User(1, "Penis"));
+
+    //TODO Test
+    private Group[] getGroups() {
+        Group[] groups = new Group[20];
+        for (int i = 0; i < 20; i++) {
+            groups[i] = new Group(i, "Gruppe" + i, new User(i, "Founder" + i));
         }
-        return  group;
+        return groups;
     }
-//For testing
+
+    //For testing
     public boolean isRunning() {
         return running;
     }

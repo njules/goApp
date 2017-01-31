@@ -23,6 +23,8 @@ public class RequestSearchService extends IntentService {
     public static final String NAME = "RequestSearchService";
     public static final String ACTION_GET_BY_USER = "GET_BY_USER";
     public static final String ACTION_GET_BY_GROUP = "GET_BY_GROUP";
+    public static final String RESULT_GET_BY_GROUP = "RESULT_BY_GROUP";
+    public static final String RESULT_GET_BY_USER = "RESULT_BY_USER";
     public static final String SERVLET = "RequestSearchServlet";
 
     public RequestSearchService() {
@@ -45,11 +47,11 @@ public class RequestSearchService extends IntentService {
             e.printStackTrace();
         }
 
-        Intent requestIntent = new Intent(context, this.getClass());
+        Intent requestIntent = new Intent(context, RequestSearchService.class);
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_USER);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
@@ -73,23 +75,26 @@ public class RequestSearchService extends IntentService {
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_GROUP);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         HTTPConnection connection = new HTTPConnection(SERVLET);
         Intent resultIntent = new Intent();
-        resultIntent.setAction(intent.getAction());
         JSONObject result;
         switch (intent.getAction()) {
             case ACTION_GET_BY_USER:
-                result = connection.sendGetRequest(intent.getStringExtra("JSON"));
-                resultIntent.putExtra("groups", getGroups(result));
+                //result = connection.sendGetRequest(intent.getStringExtra("JSON"));
+                resultIntent.putExtra("groups", getGroups());
+                //TODO Test
+                //resultIntent.putExtra("groups", getGroups(result));
+                resultIntent.setAction(RESULT_GET_BY_USER);
                 break;
             case ACTION_GET_BY_GROUP:
-                result = connection.sendGetRequest(intent.getStringExtra("JSON"));
-                resultIntent.putExtra("users", getUsers(result));
+                //result = connection.sendGetRequest(intent.getStringExtra("JSON"));
+                //resultIntent.putExtra("users", getUsers(result));
+                resultIntent.setAction(RESULT_GET_BY_GROUP);
                 break;
             //TODO default case
         }
@@ -115,6 +120,14 @@ public class RequestSearchService extends IntentService {
         return null;
     }
 
+    //TODO Test
+    private Group[] getGroups() {
+        Group[] groups = new Group[20];
+        for (int i = 0; i < 20; i++) {
+            groups[i] = new Group(i, "Gruppe" + i, new User(i, "Founder" + i));
+        }
+        return groups;
+    }
     private User[] getUsers(JSONObject result) {
         try {
             //TODO structure of the json? jsonPArameter of the array

@@ -21,6 +21,9 @@ public class RequestService extends IntentService{
 	public static final String ACTION_CREATE = "CREATE";
 	public static final String ACTION_ACCEPT = "ACCEPT";
 	public static final String ACTION_REJECT = "REJECT";
+	public static final String RESULT_REJECT = "RESULT_REJECT";
+	public static final String RESULT_ACCEPT = "RESULT_ACCEPT";
+	public static final String RESULT_CREATE = "RESULT_CREATE";
 	public static final String SERVLET = "RequestServlet";
 
     public RequestService() {
@@ -49,7 +52,7 @@ public class RequestService extends IntentService{
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_CREATE);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 //TODO differenz between accept and reject
 	/**
@@ -72,7 +75,7 @@ public class RequestService extends IntentService{
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_ACCEPT);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 
 	/**

@@ -1,18 +1,13 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
-import android.app.DialogFragment;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.*;
 import android.widget.Toast;
-import com.google.android.gms.dynamic.LifecycleDelegate;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoFragmentAdminBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
@@ -73,6 +68,11 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
             user[i] = new User(i,"Maxi"+i);
         }
         return user;
+    }
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.group_info_admin_menu, menu);
     }
 
 
