@@ -1,6 +1,9 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,6 +12,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
@@ -28,6 +43,85 @@ public final class ServletUtils {
      * private constructor to make class static
      */
     private ServletUtils() {
+    }
+
+    public static boolean isValidGoogleToken() {
+        // TODO: https://developers.google.com/identity/sign-in/web/backend-auth
+        // verfify ID signed by Google
+        // check if one User has this GoogleID == aud TODO: fehlt noch im kopierten Code
+        // iss == accounts.google.com oder https://accounts.google.com
+        // expired time has not passed exp
+
+        // Copied from Google (URL siehe oben)
+        JsonFactory jsonFactory = null;
+        HttpTransport transport = null;
+        String CLIENT_ID = null;
+        String idTokenString = null;
+
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+                .setAudience(Collections.singletonList(CLIENT_ID))
+                // Or, if multiple clients access the backend:
+                // .setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+                .build();
+
+        // (Receive idTokenString by HTTPS POST)
+
+        GoogleIdToken idToken = null;
+        try {
+            idToken = verifier.verify(idTokenString);
+        } catch (GeneralSecurityException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (idToken != null) {
+            Payload payload = idToken.getPayload();
+
+            // Print user identifier
+            String userId = payload.getSubject();
+            System.out.println("User ID: " + userId);
+
+            // Get profile information from payload
+            String email = payload.getEmail();
+            boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+            String name = (String) payload.get("name");
+            String pictureUrl = (String) payload.get("picture");
+            String locale = (String) payload.get("locale");
+            String familyName = (String) payload.get("family_name");
+            String givenName = (String) payload.get("given_name");
+
+            // Use or store profile information
+            // ...
+
+        } else {
+            System.out.println("Invalid ID token.");
+        }
+
+        // kopiert bis hier.
+
+        // try:
+        // https://developers.google.com/api-client-library/java/google-api-java-client/reference/1.20.0/com/google/api/client/googleapis/auth/oauth2/GoogleAuthorizationCodeFlow#newAuthorizationUrl()
+        // com.google.api.client.http.HttpTransport transport = null;
+        // com.google.api.client.json.JsonFactory jsonFactory = null;
+        // String clientId = null;
+        // String clientSecret = null;
+        // Collection<String> scopes = null;
+        // Credential token = null;
+        //
+        // GoogleAuthorizationCodeFlow google = new GoogleAuthorizationCodeFlow(transport,
+        // jsonFactory,
+        // clientId, clientSecret, scopes);
+        // String userID = "123";
+        // try {
+        // token = google.loadCredential(userID);
+        // } catch (IOException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // if (token == null) {
+        // AuthorizationCodeRequestUrl url = google.newAuthorizationUrl();
+        // }
+
+        return false;
     }
 
     public static JSONObject createJSONEvent(Event event) {
@@ -96,8 +190,7 @@ public final class ServletUtils {
         }
         return json;
     }
-    
-  
+
     public static JSONObject createJSONListEvent(List<Event> event) {
         JSONObject json = new JSONObject();
         try {
