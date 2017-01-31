@@ -26,8 +26,9 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserManagement usrMang;
-    //TODO: String test wieder rausnehmen
+    // TODO: String test wieder rausnehmen
     private String test;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -101,7 +102,7 @@ public class LoginServlet extends HttpServlet {
                 error = ErrorCodes.READ_JSON;
             }
         }
-        //TODO überall: method null abfangen
+        // TODO überall: method null abfangen
         switch (method) {
         case LOGIN:
             strResponse = login(jsonRequest).toString();
@@ -118,10 +119,10 @@ public class LoginServlet extends HttpServlet {
         }
         out.println(strResponse);
     }
-    /* TODO: Löschen, wenn JUnit funktioniert*/
-    private String getTest(){
-        return this.test;
-    }
+    // /* TODO: Löschen, wenn JUnit funktioniert*/
+    // private String getTest(){
+    // return this.test;
+    // }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -178,7 +179,7 @@ public class LoginServlet extends HttpServlet {
         User user = null;
 
         try {
-           // userID = json.getJSONArray(JSONParameter.UserID.toString()).getInt(0);
+            // userID = json.getJSONArray(JSONParameter.UserID.toString()).getInt(0);
             userID = json.getInt(JSONParameter.UserID.toString());
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
