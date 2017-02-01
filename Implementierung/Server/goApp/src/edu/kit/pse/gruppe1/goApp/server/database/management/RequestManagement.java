@@ -19,13 +19,14 @@ public class RequestManagement implements Management {
         return request;
     }
 
-    private Request getRequest(int groupId, int userId) {
-        Group group = new GroupManagement().getGroup(groupId);
-        if (group == null) {
-            return null;
-        }
-        return group.getRequest(userId);
-    }
+	//TODO: JavaDocs
+	public Request getRequest(int groupId, int userId) {
+		Group group = new GroupManagement().getGroup(groupId);
+		if (group == null) {
+			return null;
+		}
+		return group.getRequest(userId);
+	}
 
     /**
      * creates new entry

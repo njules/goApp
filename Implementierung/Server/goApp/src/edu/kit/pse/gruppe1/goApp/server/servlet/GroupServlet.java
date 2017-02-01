@@ -7,7 +7,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
+import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class GroupServlet
@@ -17,28 +23,65 @@ import org.json.JSONObject;
 @WebServlet("/GroupServlet")
 public class GroupServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final GroupManagement groupManager;
+    private final GroupUserManagement groupUserManager;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public GroupServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        groupManager = new GroupManagement();
+        groupUserManager = new GroupUserManagement();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+        JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            return;
+        }
+        Methods method;
+        try {
+            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
+            return;
+        }
+        switch (method) {
+        case CREATE:
+            response.getWriter().println(create(jsonRequest));
+            break;
+        case DELETE:
+            response.getWriter().println(delete(jsonRequest));
+            break;
+        case SET_NAME:
+            response.getWriter().println(setName(jsonRequest));
+            break;
+        case DEL_MEM:
+            response.getWriter().println(deleteMember(jsonRequest));
+            break;
+        case GET_EVENT:
+            response.getWriter().println(getEvents(jsonRequest));
+            break;
+        case GET_GROUP:
+            response.getWriter().println(getGroup(jsonRequest));
+            break;
+        case SET_FOUNDER:
+            response.getWriter().println(setFounder(jsonRequest));
+            break;
+        default: 
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+        }
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
@@ -48,8 +91,19 @@ public class GroupServlet extends HttpServlet {
 	 * @return Returns a JSON string containing the ID of the created group.
 	 */
 	private String create(JSONObject json) {
-		// TODO - implement GroupServlet.create
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            Group group;
+            String name = json.getString(JSONParameter.GroupName.toString());
+            int founder = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            group = groupManager.add(name, founder);
+            response.append(JSONParameter.GroupID.toString(), group.getGroupId());
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
@@ -58,8 +112,23 @@ public class GroupServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String delete(JSONObject json) {
-		// TODO - implement GroupServlet.delete
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            int caller = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GroupID.toString()));
+            int groupFounder = groupManager.getGroup(group).getFounder().getUserId();
+            if (groupFounder != caller) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+            }
+            if (!groupManager.delete(group)) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR).toString();
+            }
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
@@ -68,8 +137,25 @@ public class GroupServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String setName(JSONObject json) {
-		// TODO - implement GroupServlet.setName
-		throw new UnsupportedOperationException();
+	    //TODO almost the same as delete
+        JSONObject response = new JSONObject();
+        try {
+            int caller = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GroupID.toString()));
+            String newName = json.getString(JSONParameter.GroupName.toString());
+            int groupFounder = groupManager.getGroup(group).getFounder().getUserId();
+            if (groupFounder != caller) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+            }
+            if (!groupManager.updateName(group, newName)) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR).toString();
+            }
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
@@ -78,8 +164,25 @@ public class GroupServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String deleteMember(JSONObject json) {
-		// TODO - implement GroupServlet.deleteMember
-		throw new UnsupportedOperationException();
+        //TODO almost the same as delete
+        JSONObject response = new JSONObject();
+        try {
+            int caller = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GroupID.toString()));
+            int member = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            int groupFounder = groupManager.getGroup(group).getFounder().getUserId();
+            if (groupFounder != caller) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+            }
+            if (!groupUserManager.delete(group, member)) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR).toString();
+            }
+            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
