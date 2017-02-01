@@ -213,4 +213,8 @@ public class Group {
         return true;
     }
 
+    public boolean addRequest(Request request) {
+        return requests.add(request);
+    }
+
 }
