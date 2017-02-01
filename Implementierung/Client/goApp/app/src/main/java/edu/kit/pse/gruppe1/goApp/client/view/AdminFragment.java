@@ -1,5 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.Toast;
+import com.google.android.gms.maps.SupportMapFragment;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoFragmentAdminBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
@@ -30,6 +33,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         group = Preferences.getGroup();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -41,6 +45,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
         // Inflate the layout for this fragment
         return binding.getRoot();
     }
+
 
     public void onStart() {
         super.onStart();

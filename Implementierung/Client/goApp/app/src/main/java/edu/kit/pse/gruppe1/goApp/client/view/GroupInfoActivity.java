@@ -9,12 +9,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
-public class GroupInfoActivity extends AppCompatActivity {
+public class GroupInfoActivity extends AppCompatActivity implements Communicator {
     private Group group;
     private GroupInfoActivityBinding binding;
 
@@ -36,21 +37,35 @@ public class GroupInfoActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if(group.getFounder().getId() == Preferences.getUser().getId()){
+        if (group.getFounder().getId() == Preferences.getUser().getId()) {
 
             AdminFragment fragment = new AdminFragment();
-            fragmentTransaction.add(R.id.Fragment_Container ,fragment);
+            fragmentTransaction.add(R.id.Fragment_Container, fragment);
             fragmentTransaction.commit();
         } else {
             UserFragment fragment = new UserFragment();
-            fragmentTransaction.add(R.id.Fragment_Container ,fragment);
+            fragmentTransaction.add(R.id.Fragment_Container, fragment);
             fragmentTransaction.commit();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.group_info_menu, menu);
-        return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_change_name:
+                android.app.FragmentManager fragmentManager = getFragmentManager();
+                android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                ChangeNameFragment fragment = new ChangeNameFragment();
+                fragmentTransaction.add(fragment, "ChangeNameFragment");
+                fragmentTransaction.commit();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void respond(String response) {
+        //TODO change name
     }
 }

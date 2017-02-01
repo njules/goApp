@@ -16,13 +16,13 @@
                 android:id="@+id/gruppen_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
+                android:textSize="@dimen/viewholder_textsize"
                 android:text="@{group.name}"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{group.founder.name}"
                 android:layout_alignParentEnd="true"
-                android:textSize="25dp"/>
+                android:textSize="@dimen/viewholder_textsize"/>
     </RelativeLayout>
 </layout>
