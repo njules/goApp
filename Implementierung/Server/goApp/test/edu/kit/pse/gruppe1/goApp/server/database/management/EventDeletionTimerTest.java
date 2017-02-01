@@ -16,7 +16,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 public class EventDeletionTimerTest {
-    private static final int SECONDS_TOLERANCE = 10;
+    private static final int SECONDS_TOLERANCE = 2;
 
     @Test
     public void test() {
@@ -31,9 +31,9 @@ public class EventDeletionTimerTest {
         Event event = management.add(name, location, time, user.getUserId(), group.getGroupId());
         assertThat(event, is(notNullValue()));
 
-        new EventDeletionTimer(120, 0);
-        for (int i = 0; i < 30 + SECONDS_TOLERANCE; i++) {
-            if (i < 30 - SECONDS_TOLERANCE) {
+        new EventDeletionTimer(600, 0);
+        for (int i = 0; i < 6 + SECONDS_TOLERANCE; i++) {
+            if (i < 6 - SECONDS_TOLERANCE) {
                 assertThat(management.getEvent(event.getEventId()), is(notNullValue()));
             }
             try {
@@ -42,7 +42,7 @@ public class EventDeletionTimerTest {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-        }        
+        }
         assertThat(management.getEvent(event.getEventId()), is(nullValue()));
     }
 

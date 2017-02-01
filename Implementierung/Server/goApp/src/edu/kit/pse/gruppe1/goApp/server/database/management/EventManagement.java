@@ -167,11 +167,11 @@ public class EventManagement implements Management {
         long deletionTime = now - (minutesTillDeletion * 60L * 1000L);
         Timestamp time = new Timestamp(deletionTime);
         @SuppressWarnings("unchecked")
-        Session session = DatabaseInitializer.getFactory().openSession();
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
         List<Event> events = session.createCriteria(Event.class)
                 .add(Restrictions.lt("timestamp", time)).list();
 
-        session.beginTransaction();
         for (Event event : events) {
             session.delete(event);
         }

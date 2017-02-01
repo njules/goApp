@@ -171,4 +171,50 @@ public class Group {
         }
         return null;
     }
+
+    public boolean addUser(User user) {
+        return users.add(user);
+    }
+
+    public boolean removeUser(int userId) {
+        if (founder.getUserId().equals(new Integer(userId))) {
+            return false;
+        }
+        for (User user : getUsers()) {
+            if (user.getUserId().equals(userId)) {
+                return users.remove(user);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Group other = (Group) obj;
+        if (groupId == null) {
+            if (other.groupId != null)
+                return false;
+        } else if (!groupId.equals(other.groupId))
+            return false;
+        return true;
+    }
+
+    public boolean addRequest(Request request) {
+        return requests.add(request);
+    }
+
 }

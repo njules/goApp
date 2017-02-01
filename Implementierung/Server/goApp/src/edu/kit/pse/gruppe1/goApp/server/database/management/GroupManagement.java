@@ -115,11 +115,13 @@ public class GroupManagement implements Management {
      * @return List of matching Groups
      */
     public List<Group> getGroupsByName(String searchName) {
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
         @SuppressWarnings("unchecked")
-        List<Group> groups = DatabaseInitializer.getFactory().getCurrentSession()
-                .createCriteria(Group.class)
+        List<Group> groups = session.createCriteria(Group.class)
                 .add(Restrictions.ilike("name", searchName, MatchMode.ANYWHERE))
                 .addOrder(Property.forName("name").asc()).list();
+        session.getTransaction().commit();
         return groups;
     }
 
