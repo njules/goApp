@@ -15,6 +15,53 @@ import org.apache.commons.math4.ml.clustering.*;
  */
 public class ClusterFacade {
 
+    
+    private CentralPointAlgo algorithm;
+    private Clusterer<DoublePoint> clusterer;
+    
+    
+    
+    
+    /*
+     * default constructor with simpleCentral-Algorithm and DBSCAN
+     */
+    public ClusterFacade() {
+        this.algorithm = new SimpleCentral(); 
+        clusterer = new DBSCANClusterer<DoublePoint>(0.001, 2);
+    }
+    
+    /*
+     * Constructor with DBSCAN, CentralPointAlgo selectable.
+     */
+    public ClusterFacade(CentralPointAlgo algorithm) {
+        this.algorithm = algorithm;
+        this.clusterer = new DBSCANClusterer<DoublePoint>(0.001, 2);
+    }
+    
+    /*
+     * Constructor with SimpleCentralAlgo, Clusterer selectable.
+     */
+    public ClusterFacade(Clusterer<DoublePoint> clusterer) {
+        this.algorithm = new SimpleCentral(); 
+        this.clusterer = clusterer;
+    }
+    
+    /*
+     * Clusterer and midpoint-algorithm selectable.
+     */
+    public ClusterFacade(Clusterer<DoublePoint> clusterer, CentralPointAlgo algorithm) {
+        this.algorithm = algorithm; 
+        this.clusterer = clusterer;
+    }
+    
+    
+   
+    
+    
+    
+    
+    
+    
   /**
    * This method fetches all locations from the database which belong to the event and calls the
    * cluster algorithm to get it clustered. After that it calls the MidpointAlgo to get the
@@ -28,9 +75,9 @@ public class ClusterFacade {
     int eventId = event.getEventId();
 
     List<DoublePoint> locations = getEventsLocations(eventId);
-    List<Cluster<DoublePoint>> clusters = getClusters(locations);
+    List<? extends Cluster<DoublePoint>> clusters = getClusters(locations);
 
-    CentralPointAlgo algorithm = new SimpleCentral();
+    
 
     
     
@@ -73,9 +120,9 @@ public class ClusterFacade {
 
   }
 
-  private List<Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
+  private List<? extends Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
 
-    DBSCANClusterer<DoublePoint> clusterer = new DBSCANClusterer<DoublePoint>(0.001, 2);
+   
 
     return clusterer.cluster(points);
 
