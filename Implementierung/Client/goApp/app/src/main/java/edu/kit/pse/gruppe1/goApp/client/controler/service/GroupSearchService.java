@@ -31,12 +31,7 @@ public class GroupSearchService extends IntentService {
     public static final String ACTION_GET_BY_MEMBER = "GET_BY_MEMBER";
     public static final String RESULT_GET_BY_MEMBER = "RESULT_BY_MEMBER";
     public static final String RESULT_GET_BY_NAME = "RESULT_BY_MEMBER";
-
-
     public static final String SERVLET = "GroupSearchServlet";
-
-    //for testing
-    private boolean running = false;
     private static final String name = "GroupSearchService";
 
     public GroupSearchService() {
@@ -61,16 +56,10 @@ public class GroupSearchService extends IntentService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//TODO WHHHYYYY???????
         Intent requestIntent = new Intent(context, GroupSearchService.class);
-        Log.i("GroupSearchService","new Intent");
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_MEMBER);
-        Log.i(this.getClass().getSimpleName(),"starting");
         context.startService(requestIntent);
-        Log.i(this.getClass().getSimpleName(),"started");
-
-
     }
 
     /**
@@ -99,9 +88,7 @@ public class GroupSearchService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        //TODO Test
-        //Group[] groups = getGroups(intent.getStringExtra("JSON"));
-        Group[] groups = getGroups();
+        Group[] groups = getGroups(intent.getStringExtra("JSON"));
         Intent resultIntent = new Intent();
         resultIntent.putExtra("groups", groups);
         switch (intent.getAction()) {
@@ -137,19 +124,5 @@ public class GroupSearchService extends IntentService {
             e.printStackTrace();
         }
         return null;
-    }
-
-    //TODO Test
-    private Group[] getGroups() {
-        Group[] groups = new Group[20];
-        for (int i = 0; i < 20; i++) {
-            groups[i] = new Group(i, "Gruppe" + i, new User(i, "Founder" + i));
-        }
-        return groups;
-    }
-
-    //For testing
-    public boolean isRunning() {
-        return running;
     }
 }

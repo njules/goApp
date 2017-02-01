@@ -98,7 +98,7 @@ public class RequestService extends IntentService{
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_REJECT);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 
 	@Override
@@ -109,13 +109,13 @@ public class RequestService extends IntentService{
         switch (intent.getAction()) {
             case ACTION_CREATE:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                resultIntent.setAction(intent.getAction());
                 try {
                     //TODO what happens if error != 0
                     resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                resultIntent.setAction(RESULT_CREATE);
                 break;
             case ACTION_REJECT:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
@@ -125,7 +125,7 @@ public class RequestService extends IntentService{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
+                resultIntent.setAction(RESULT_REJECT);
                 break;
             case ACTION_ACCEPT:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
@@ -135,12 +135,10 @@ public class RequestService extends IntentService{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                resultIntent.setAction(RESULT_ACCEPT);
                 break;
             //TODO default case
-
         }
-        resultIntent.setAction(intent.getAction());
-
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);
 	}

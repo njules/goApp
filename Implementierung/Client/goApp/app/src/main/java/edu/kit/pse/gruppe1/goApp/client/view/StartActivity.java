@@ -21,10 +21,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import edu.kit.pse.gruppe1.goApp.client.R;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupSearchService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.RequestSearchService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.RequestService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.UserService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.*;
 import edu.kit.pse.gruppe1.goApp.client.databinding.StartActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
@@ -97,13 +94,15 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestSearchService.RESULT_GET_BY_USER));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestService.RESULT_REJECT));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(UserService.RESULT_CHANGE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(GroupService.RESULT_CREATE));
         //Group Recycler View
         groupSearchService = new GroupSearchService();
         groupRecyclerView = (RecyclerView) findViewById(R.id.my_groups_recycler_view);
         groupRecyclerView.setHasFixedSize(true);
         groupLayoutManager = new LinearLayoutManager(this);
         groupRecyclerView.setLayoutManager(groupLayoutManager);
-        groupSearchService.getGroupsByMember(this, user); //TODO doesnt work
+        receiver.onReceive(this,new Intent(GroupSearchService.RESULT_GET_BY_MEMBER));
+        //groupSearchService.getGroupsByMember(this, user); //TODO doesnt work
         // Todo: Test if Groups come back
         //Request Recycler View
         requestSearchService = new RequestSearchService();
@@ -111,7 +110,8 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         requestRecyclerView.setHasFixedSize(true);
         requestLayoutManager = new LinearLayoutManager(this);
         requestRecyclerView.setLayoutManager(requestLayoutManager);
-        requestSearchService.getRequestsByUser(this, user); //TODO doesnt work
+        receiver.onReceive(this,new Intent(RequestSearchService.RESULT_GET_BY_USER));
+        //requestSearchService.getRequestsByUser(this, user); //TODO doesnt work
         //Todo: Test if Requests come back
     }
 
@@ -162,8 +162,8 @@ public class StartActivity extends AppCompatActivity implements Communicator {
     public void respond(String response) {
         user.setName(response);
         Preferences.setUser(user);
-        String output = R.string.changeName + " " + user.getName();
-        userService.changeName(this, user, response);
+        String output = getString(R.string.changeName) + " " + user.getName();
+        //userService.changeName(this, user, response);
         //Todo hier Benutzernamen ändern
 
         Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
@@ -181,7 +181,8 @@ public class StartActivity extends AppCompatActivity implements Communicator {
             switch (intent.getAction()) {
                 case GroupSearchService.RESULT_GET_BY_MEMBER:
                     //TODO cahnge Datatset
-                    groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
+                    //groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
+                    groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
                             Group group = groupAdapter.getItem(position);
@@ -192,11 +193,12 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     groupRecyclerView.setAdapter(groupAdapter);
                     break;
                 case RequestSearchService.RESULT_GET_BY_USER:
-                    requestAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
+                    //requestAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
+                    requestAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
                             Group group = requestAdapter.getItem(position);
-                            requestService.reject(StartActivity.this, new Request(user, group));
+                            //requestService.reject(StartActivity.this, new Request(user, group));
                             //TODO reject request in RequestService
                         }
                     });
@@ -217,6 +219,11 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                         //TODO when to change the name
                     }
                     break;
+                case GroupService.RESULT_CREATE:
+                    if (intent.getBooleanExtra("ERROR", false)) {
+                        Toast.makeText(StartActivity.this,"Gruppe hinzugefügt",Toast.LENGTH_SHORT).show();
+                        //TODO reload groups or add group to adapter
+                    }
 
                 //TODO default
             }
