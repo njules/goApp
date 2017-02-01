@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,7 @@ import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
 import java.sql.Date;
 
-public class GroupActivity extends AppCompatActivity {
+public class GroupActivity extends AppCompatActivity implements View.OnClickListener{
     private GroupActivityBinding binding;
     private Group group;
     private RecyclerView newEventRecylcerView;
@@ -45,6 +46,9 @@ public class GroupActivity extends AppCompatActivity {
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.group_toolbar);
         setSupportActionBar(groupToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        FloatingActionButton newEventFab = (FloatingActionButton) findViewById(R.id.create_event);
+        newEventFab.setOnClickListener(this);
     }
 
     @Override
@@ -127,5 +131,10 @@ public class GroupActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        NewEventActivity.start(this);
     }
 }

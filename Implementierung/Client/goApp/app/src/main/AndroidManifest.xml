@@ -34,7 +34,12 @@
         </activity>
         <activity android:name=".view.EventActivity"
                   android:parentActivityName=".view.GroupActivity"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".view.NewEventActivity"
+                  android:parentActivityName=".view.GroupActivity"
+                  android:screenOrientation="portrait">
+        </activity>
 
         <service android:name=".controler.service.GroupSearchService" />
         <service android:name=".controler.service.EventService"/>
