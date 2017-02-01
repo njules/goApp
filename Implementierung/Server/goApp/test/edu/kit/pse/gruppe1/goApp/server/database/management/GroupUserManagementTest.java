@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -27,6 +28,7 @@ public class GroupUserManagementTest {
         assertThat(createdUser, is(notNullValue()));
         createdGroup = new GroupManagement().add(groupName, createdUser.getUserId());
         assertThat(createdGroup, is(notNullValue()));
+        assertThat(new GroupUserManagement().getGroups(createdUser.getUserId()).size(), is(1));
     }
 
     @After
@@ -50,4 +52,39 @@ public class GroupUserManagementTest {
         new UserManagement().delete(userTmp.getUserId());
     }
 
+    @Test
+    public void testDelete1() {
+        // should return false because createdUser is founder of createdGroup
+        assertThat(new GroupUserManagement().delete(createdGroup.getGroupId(),
+                createdUser.getUserId()), is(false));
+        assertThat(new GroupUserManagement().getGroups(createdUser.getUserId()).size(), is(1));
+    }
+
+    @Test
+    public void testDelete2() {
+        User userTmp = new UserManagement().add(userName + "usertmp", googleId + 1);
+        assertThat(new GroupUserManagement().add(createdGroup.getGroupId(), userTmp.getUserId()),
+                is(true));
+        assertThat(new GroupUserManagement().getGroups(userTmp.getUserId()).size(), is(1));
+        assertThat(new GroupUserManagement().delete(createdGroup.getGroupId(), userTmp.getUserId()),
+                is(true));
+        assertThat(new GroupUserManagement().getGroups(userTmp.getUserId()).size(), is(0));
+        new UserManagement().delete(userTmp.getUserId());
+    }
+
+    @Test
+    public void testGetGroups() {
+        List<Group> groups = new GroupUserManagement().getGroups(createdUser.getUserId());
+        assertThat(groups, is(notNullValue()));
+        assertThat(groups.size(), is(1));
+        assertThat(groups.get(0).getGroupId(), is(createdGroup.getGroupId()));
+    }
+
+    @Test
+    public void testGetUsers() {
+        List<User> users = new GroupUserManagement().getUsers(createdGroup.getGroupId());
+        assertThat(users, is(notNullValue()));
+        assertThat(users.size(), is(1));
+        assertThat(users.get(0).getUserId(), is(createdUser.getUserId()));
+    }
 }

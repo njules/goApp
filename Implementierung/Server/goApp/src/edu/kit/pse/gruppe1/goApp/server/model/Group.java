@@ -173,12 +173,13 @@ public class Group {
     }
 
     public boolean addUser(User user) {
-        int size = users.size();
-        users.add(user);
-        return size != users.size();
+        return users.add(user);
     }
 
     public boolean removeUser(int userId) {
+        if (founder.getUserId().equals(new Integer(userId))) {
+            return false;
+        }
         for (User user : getUsers()) {
             if (user.getUserId().equals(userId)) {
                 return users.remove(user);
