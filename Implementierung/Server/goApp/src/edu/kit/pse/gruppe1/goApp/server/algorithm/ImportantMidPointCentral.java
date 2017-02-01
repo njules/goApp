@@ -39,11 +39,11 @@ public class ImportantMidPointCentral extends CentralPointAlgo {
             latitude += p.getPoint()[1];
         }
 
-        longitude += (1 / 2) * list.size() * eventLocation.getPoint()[0];
-        latitude += (1 / 2) * list.size() * eventLocation.getPoint()[1];
+        longitude += ((double) 1 / 2) * list.size() * eventLocation.getPoint()[0];
+        latitude += ((double) 1 / 2) * list.size() * eventLocation.getPoint()[1];
 
-        longitude /= (3 / 2) * list.size();
-        latitude /= (3 / 2) * list.size();
+        longitude /= ((double) 3 / 2) * list.size();
+        latitude /= ((double) 3 / 2) * list.size();
 
         DoublePoint result = new DoublePoint(new double[] { longitude, latitude });
 
