@@ -43,12 +43,12 @@ public class LoginServletTest {
     @Before
     public void setUp() throws Exception {
         servlet = new LoginServlet();
-        String name1 = "test";
-        Field field1 = servlet.getClass().getDeclaredField(name1);
-        field1.setAccessible(true);
-        field1.set(servlet, "Test");
-        System.out.println(field1.get(servlet));
-        System.out.println(field1.get(servlet));
+        // String name1 = "test";
+        // Field field1 = servlet.getClass().getDeclaredField(name1);
+        // field1.setAccessible(true);
+        // System.out.println(field1.get(servlet));
+        // field1.set(servlet, "Test");
+        // System.out.println(field1.get(servlet));
 
         // UserManagement nUsrMang = new UserManagement();
         String name = "usrMang";
@@ -65,7 +65,6 @@ public class LoginServletTest {
     public void tearDown() throws Exception {
     }
 
-
     @Test
     public void testLogin() {
         String name = "login";
@@ -80,8 +79,8 @@ public class LoginServletTest {
             json.accumulate(JSONParameter.UserName.toString(), realUsr.getName());
             json.accumulate(JSONParameter.UserID.toString(), realUsr.getGoogleId());
         } catch (JSONException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
+            fail();
         }
 
         // Call Method
@@ -94,8 +93,8 @@ public class LoginServletTest {
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            fail();
         }
         if (newJson != null) {
             try {
@@ -103,8 +102,8 @@ public class LoginServletTest {
                         newJson.getString(JSONParameter.UserName.toString()));
 
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
+                fail();
             }
         } else {
             fail();
@@ -119,24 +118,24 @@ public class LoginServletTest {
         when(mockUsrMang.getUser(nullUsr.getGoogleId())).thenReturn(null);
     }
 
-    @Test
-    public void test() {
-        String name = "getTest";
-        Method method = null;
-        JSONObject json = new JSONObject();
-
-        try {
-            method = servlet.getClass().getDeclaredMethod(name);
-            method.setAccessible(true);
-            Object returnValue = method.invoke(servlet);
-            System.out.println(returnValue);
-            assertEquals(returnValue.toString(), "Test");
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+    // @Test
+    // public void test() {
+    // String name = "getTest";
+    // Method method = null;
+    // JSONObject json = new JSONObject();
+    //
+    // try {
+    // method = servlet.getClass().getDeclaredMethod(name);
+    // method.setAccessible(true);
+    // Object returnValue = method.invoke(servlet);
+    // System.out.println(returnValue);
+    // assertEquals(returnValue.toString(), "Test");
+    // } catch (NoSuchMethodException | SecurityException | IllegalAccessException
+    // | IllegalArgumentException | InvocationTargetException e) {
+    // e.printStackTrace();
+    // fail();
+    // }
+    // }
 
     /**
      * Test method for
