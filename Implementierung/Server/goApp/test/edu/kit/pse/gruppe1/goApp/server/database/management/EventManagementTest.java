@@ -74,6 +74,8 @@ public class EventManagementTest {
         assertThat(createdEvent.getTimestamp().getTime(), is(timestamp.getTime()));
         assertThat(createdEvent.getCreator().getUserId(), is(user.getUserId()));
         assertThat(createdEvent.getGroup().getGroupId(), is(group.getGroupId()));
+        assertThat(createdEvent.getParticipants().size(), is(1));
+        assertThat(createdEvent.getParticipant(user.getUserId()), is(notNullValue()));
     }
 
     @Test
