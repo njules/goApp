@@ -27,7 +27,7 @@
                       android:layout_height="match_parent"
                       android:textAlignment="center"
                       android:layout_gravity="center"
-                      android:textSize="25sp"
+                      android:textSize="@dimen/viewholder_textsize"
                       android:lines="3"
                       android:clickable="false"
                       android:background="@color/colorButton"

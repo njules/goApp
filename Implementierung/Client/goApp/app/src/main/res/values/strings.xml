@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">goApp</string>
     <string name="requests">Deine Beitrittsanfragen:</string>
-    <string name="changeName">Dein Neuer Benutzername:</string>
+    <string name="changeName">Neuer Name:</string>
     <string name="change">JA!</string>
     <string name="cancel">Abbruch</string>
     <string name="search">Suche:</string>

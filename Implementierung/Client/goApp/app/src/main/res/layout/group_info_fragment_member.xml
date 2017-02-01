@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/member_recycler_view"
                 android:textAlignment="center"
-                android:background="@color/colorAccent"
+                android:background="@color/colorReject"
                 android:textSize="26sp"
                 android:text="@string/exit"/>
     </LinearLayout>
