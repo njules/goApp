@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class UserServlet
@@ -98,6 +99,10 @@ public class UserServlet extends HttpServlet {
             }
         }
 
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
+        
         switch (method) {
         case CHANGE:
             strResponse = changeName(jsonRequest);

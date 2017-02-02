@@ -305,7 +305,12 @@ public enum JSONParameter {
         /**
          * Participate.reject Request.reject
          */
-        REJECT;
+        REJECT,
+        
+        /**
+         * No Method was found - equals null, but does not produce NullPointerException
+         */
+        NONE;
 
         // TODO: JavaDocs
         public static Methods fromString(String s) {

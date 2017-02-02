@@ -17,6 +17,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.RequestManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class RequestSearchServlet
@@ -100,6 +101,10 @@ public class RequestSearchServlet extends HttpServlet {
             }
         }
 
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
+        
         switch (method) {
         case GET_REQ_USR:
             strResponse = getRequestsByUser(jsonRequest);

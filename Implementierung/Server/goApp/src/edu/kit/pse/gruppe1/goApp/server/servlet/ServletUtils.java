@@ -45,6 +45,11 @@ public final class ServletUtils {
     private ServletUtils() {
     }
 
+    /**
+     * TODO: checks if GoogleTokenisValid
+     * atm always true, and parameters will change in the future
+     * @return
+     */
     public static boolean isValidGoogleToken() {
         // TODO: https://developers.google.com/identity/sign-in/web/backend-auth
         // verfify ID signed by Google
@@ -121,7 +126,7 @@ public final class ServletUtils {
         // AuthorizationCodeRequestUrl url = google.newAuthorizationUrl();
         // }
 
-        return false;
+        return true;
     }
 
     public static JSONObject createJSONEvent(Event event) {
@@ -137,7 +142,6 @@ public final class ServletUtils {
 
             json.accumulate(JSONParameter.GroupID.toString(), event.getGroup().getGroupId());
             json.accumulate(JSONParameter.UserID.toString(), event.getCreator().getUserId());
-
             json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -148,7 +152,7 @@ public final class ServletUtils {
 
     public static JSONObject createJSONLocation(Location location) {
         JSONObject json = new JSONObject();
-
+        
         try {
             json.accumulate(JSONParameter.LocationName.toString(), location.getName());
             json.accumulate(JSONParameter.Longitude.toString(), location.getLongitude());
@@ -263,7 +267,7 @@ public final class ServletUtils {
     public static Methods getMethod(HttpServletRequest request, JSONObject jsonRequest)
             throws ServletException, JSONException, IOException {
         String jsonString = null;
-        JSONParameter.Methods method = null;
+        JSONParameter.Methods method = Methods.NONE;
         jsonString = request.getReader().readLine();
 
         if (jsonString == null) {
@@ -272,6 +276,11 @@ public final class ServletUtils {
         jsonRequest = new JSONObject(jsonString);
         method = JSONParameter.Methods
                 .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+        
+        //do this to prevent null-pointer exception in switch-case in every Servlet
+        if(method == null){
+            method = Methods.NONE;
+        }
         return method;
     }
 

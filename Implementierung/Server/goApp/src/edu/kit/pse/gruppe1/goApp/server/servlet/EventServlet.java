@@ -8,6 +8,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,6 +108,10 @@ public class EventServlet extends HttpServlet {
             }
         }
 
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
+        
         switch (method) {
         case CREATE:
             strResponse = create(jsonRequest);
@@ -123,6 +128,7 @@ public class EventServlet extends HttpServlet {
             }
             strResponse = ServletUtils.createJSONError(error).toString();
             break;
+
         }
         out.println(strResponse);
     }
@@ -159,12 +165,12 @@ public class EventServlet extends HttpServlet {
         int groupID = -1;
         JSONParameter.ErrorCodes err = ErrorCodes.OK;
 
-        //get all parameter from json
+        // get all parameter from json
         try {
             name = json.getString(JSONParameter.EventName.toString());
             longitude = json.getDouble(JSONParameter.Longitude.toString());
             latitude = json.getDouble(JSONParameter.Latitude.toString());
-            locName = json.getString(JSONParameter.LocationName.toString());           
+            locName = json.getString(JSONParameter.LocationName.toString());
             time = new Timestamp(json.getLong(JSONParameter.EventTime.toString()));
             creatorID = json.getInt(JSONParameter.UserID.toString());
             groupID = json.getInt(JSONParameter.GroupID.toString());
@@ -183,8 +189,11 @@ public class EventServlet extends HttpServlet {
 
     /**
      * calls methods for creating Error or Event JSONObject
-     * @param event Event to serialize
-     * @param error Error to serialize
+     * 
+     * @param event
+     *            Event to serialize
+     * @param error
+     *            Error to serialize
      * @return String with serialized JSONObject
      */
     private String createJSONObject(Event event, JSONParameter.ErrorCodes error) {

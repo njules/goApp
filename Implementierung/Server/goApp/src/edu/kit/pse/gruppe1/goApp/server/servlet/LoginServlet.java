@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class LoginServlet
@@ -85,6 +86,8 @@ public class LoginServlet extends HttpServlet {
         // }
         // TODO: IO-Error/Servlet Error werfen?
 
+        // TODO: wenn Methode register ->neues Token, bei LogIn prüfen
+
         String strResponse = null;
         JSONObject jsonRequest = null;
         JSONParameter.Methods method = null;
@@ -102,7 +105,11 @@ public class LoginServlet extends HttpServlet {
                 error = ErrorCodes.READ_JSON;
             }
         }
-        // TODO überall: method null abfangen
+
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
+
         switch (method) {
         case LOGIN:
             strResponse = login(jsonRequest).toString();

@@ -19,6 +19,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Request;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class RequestServlet
@@ -108,6 +109,10 @@ public class RequestServlet extends HttpServlet {
             }
         }
 
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
+        
         switch (method) {
         case CREATE:
             strResponse = create(jsonRequest);
