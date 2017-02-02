@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -82,7 +83,6 @@ public class GroupSearchService extends IntentService {
         Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_NAME);
-
         context.startService(requestIntent);
     }
 
@@ -111,18 +111,23 @@ public class GroupSearchService extends IntentService {
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendGetRequest(json);
         try {
-            JSONArray jsons = result.getJSONArray(JSONParameter.GroupName.toString());
-            Group[] groups = new Group[jsons.length()];
-            for (int i = 0; i < jsons.length(); i++) {
-                User user = new User(result.getInt(JSONParameter.UserID.toString()), result.getString(JSONParameter.UserName.toString()));
-                groups[i] = new Group(
-                        (int) jsons.getJSONObject(i).get(JSONParameter.GroupID.toString()),
-                        (String) jsons.getJSONObject(i).get(JSONParameter.GroupName.toString()), user);
+            if (result.getInt(JSONParameter.ErrorCode.toString()) == JSONParameter.ErrorCodes.OK.getErrorCode()) {
+                JSONArray name = result.getJSONArray(JSONParameter.GroupName.toString());
+                JSONArray id = result.getJSONArray(JSONParameter.GroupID.toString());
+                Group[] groups = new Group[name.length()];
+                for (int i = 0; i < name.length(); i++) {
+                    User user = new User(0,"Test"+i);
+                    // TODO : User user = new User(result.getInt(JSONParameter.UserID.toString()), result.getString(JSONParameter.UserName.toString()));
+                    groups[i] = new Group(
+                            (int) name.get(i),
+                            (String) id.get(i), user);
+                }
+                return groups;
             }
-            return groups;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            }catch(JSONException e){
+                e.printStackTrace();
+            }
+
         return null;
     }
 }
