@@ -6,11 +6,13 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -22,11 +24,18 @@ import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Location;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
+
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 public class NewEventActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
     private NewEventActivityBinding binding;
     private Location location;
     private TimePicker timepicker;
     private DatePicker datepicker;
+    private EditText en;
+    private EditText el;
     GoogleMap googleMap;
     MarkerOptions marker;
 
@@ -43,9 +52,13 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         setSupportActionBar(groupToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        en = (EditText)findViewById(R.id.new_event_name);
+        el = (EditText)findViewById(R.id.new_event_location);
+
         timepicker = (TimePicker)findViewById(R.id.time_picker);
         timepicker.setIs24HourView(true);
         datepicker = (DatePicker)findViewById(R.id.date_picker);
+
     }
 
     @Override
@@ -64,12 +77,31 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.make_event:
-                EditText en = (EditText)findViewById(R.id.new_event_name);
-                String eventName = en.getText().toString();
-                EditText el = (EditText)findViewById(R.id.new_event_location);
-                location.setName(el.getText().toString());
+                if(location == null){
+                    Toast.makeText(this, getString(R.string.noLocation), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                else{
+                    location.setName(el.getText().toString());
+                }
 
-                //TODO hier mit Event Service neues event erstellen.
+
+                String timeString = datepicker.getDayOfMonth() +"-"+ (datepicker.getMonth()+1) +"-"+ datepicker.getYear() +" "+ timepicker.getCurrentHour() +":"+ timepicker.getCurrentMinute();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm");
+                try {
+                    Timestamp timestamp = new Timestamp(sdf.parse(timeString).getTime());
+                    Log.i("ourTime", timestamp.toString());
+                    Log.i("sysTime", new Timestamp(System.currentTimeMillis()).toString());
+                    if(timestamp.after(new Timestamp(System.currentTimeMillis()))){
+                        Toast.makeText(this, "Penis", Toast.LENGTH_SHORT).show();
+                        //TODO hier mit Event Service neues event erstellen.
+                    } else {
+                        Toast.makeText(this, getString(R.string.wrongTime), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ParseException e) {
+                    Toast.makeText(this, "Brüste", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
                 GroupActivity.start(this);
             default:
                 return super.onOptionsItemSelected(item);
@@ -85,9 +117,10 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onMapLongClick(LatLng latLng) {
+        location = new Location(latLng.longitude, latLng.latitude, el.getText().toString());
         googleMap.clear();
         marker.position(latLng);
+        marker.title(location.getName());
         googleMap.addMarker(marker);
-        location = new Location(latLng.longitude, latLng.latitude, "Treffpunkt");
     }
 }

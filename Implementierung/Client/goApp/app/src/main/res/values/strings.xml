@@ -22,4 +22,6 @@
     <string name="hint_event_destination">Ort des Termins</string>
     <string name="title_activity_maps">Map</string>
     <string name="event_location">Ziel</string>
+    <string name="wrongTime">Dein Termin liegt in der Vergangenheit</string>
+    <string name="noLocation">Du musst einen Treffpunkt auswählen</string>
 </resources>
