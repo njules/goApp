@@ -20,6 +20,8 @@ public class User extends BaseObservable implements Parcelable {
      */
     private String name;
 
+    private Location location;
+
     /**
      * @param id   The Id of the user.
      * @param name The name of the user.
@@ -69,5 +71,13 @@ public class User extends BaseObservable implements Parcelable {
     public void writeToParcel(Parcel out, int i) {
         out.writeInt(id);
         out.writeString(name);
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

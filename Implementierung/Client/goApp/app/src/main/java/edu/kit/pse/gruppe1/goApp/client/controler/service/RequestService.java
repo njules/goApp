@@ -21,6 +21,9 @@ public class RequestService extends IntentService{
 	public static final String ACTION_CREATE = "CREATE";
 	public static final String ACTION_ACCEPT = "ACCEPT";
 	public static final String ACTION_REJECT = "REJECT";
+	public static final String RESULT_REJECT = "RESULT_REJECT";
+	public static final String RESULT_ACCEPT = "RESULT_ACCEPT";
+	public static final String RESULT_CREATE = "RESULT_CREATE";
 	public static final String SERVLET = "RequestServlet";
 
     public RequestService() {
@@ -49,7 +52,7 @@ public class RequestService extends IntentService{
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_CREATE);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 //TODO differenz between accept and reject
 	/**
@@ -72,7 +75,7 @@ public class RequestService extends IntentService{
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_ACCEPT);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 
 	/**
@@ -95,7 +98,7 @@ public class RequestService extends IntentService{
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_REJECT);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 
 	@Override
@@ -106,13 +109,13 @@ public class RequestService extends IntentService{
         switch (intent.getAction()) {
             case ACTION_CREATE:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                resultIntent.setAction(intent.getAction());
                 try {
                     //TODO what happens if error != 0
                     resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                resultIntent.setAction(RESULT_CREATE);
                 break;
             case ACTION_REJECT:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
@@ -122,7 +125,7 @@ public class RequestService extends IntentService{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
+                resultIntent.setAction(RESULT_REJECT);
                 break;
             case ACTION_ACCEPT:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
@@ -132,12 +135,10 @@ public class RequestService extends IntentService{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                resultIntent.setAction(RESULT_ACCEPT);
                 break;
             //TODO default case
-
         }
-        resultIntent.setAction(intent.getAction());
-
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);
 	}

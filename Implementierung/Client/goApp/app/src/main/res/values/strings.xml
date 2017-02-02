@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">goApp</string>
     <string name="requests">Deine Beitrittsanfragen:</string>
-    <string name="changeName">Dein Neuer Benutzername:</string>
+    <string name="changeName">Neuer Name:</string>
     <string name="change">JA!</string>
     <string name="cancel">Abbruch</string>
     <string name="search">Suche:</string>
@@ -22,4 +22,6 @@
     <string name="hint_event_destination">Ort des Termins</string>
     <string name="title_activity_maps">Map</string>
     <string name="event_location">Ziel</string>
+    <string name="wrongTime">Dein Termin liegt in der Vergangenheit</string>
+    <string name="noLocation">Du musst einen Treffpunkt auswählen</string>
 </resources>

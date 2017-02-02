@@ -3,44 +3,56 @@
     <data>
         <variable name="event" type="edu.kit.pse.gruppe1.goApp.client.model.Event"/>
     </data>
-    <RelativeLayout
-            android:orientation="horizontal"
+
+
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="250dp"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:padding="10dp">
+
+        <android.support.design.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_time"
+                    android:elevation="1dp"/>
 
             <TextView android:id="@+id/event_info_user"
                       android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:gravity="center|top"
+                      android:layout_height="match_parent"
                       android:textAlignment="center"
-                      android:textSize="40sp"
+                      android:layout_gravity="center"
+                      android:textSize="@dimen/viewholder_textsize"
                       android:lines="3"
                       android:clickable="false"
                       android:background="@color/colorButton"
                       android:text="@{event.name + '\n' + event.creator.name + '\n' + event.time.toString()}"/>
 
-        <ImageButton android:id="@+id/accept_event"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/event_info_user"
-                     android:layout_margin="10dp"
-                     android:maxHeight="60dp"
-                     android:minHeight="60dp"
-                     android:maxWidth="100dp"
-                     android:minWidth="100dp"
-                     android:src="@drawable/ic_accept"/>
+        </android.support.design.widget.CoordinatorLayout>
 
-        <ImageButton android:id="@+id/reject_event"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/event_info_user"
-                     android:layout_alignParentEnd="true"
-                     android:layout_margin="10dp"
-                     android:maxHeight="60dp"
-                     android:minHeight="60dp"
-                     android:maxWidth="100dp"
-                     android:minWidth="100dp"
-                     android:src="@drawable/ic_reject"/>
-    </RelativeLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="horizontal"
+                      android:layout_weight="3">
+
+            <ImageButton android:id="@+id/accept_event"
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:background="@color/colorAccept"
+                         android:src="@drawable/ic_accept"/>
+
+            <ImageButton android:id="@+id/reject_event"
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:background="@color/colorReject"
+                         android:src="@drawable/ic_reject"/>
+        </LinearLayout>
+    </LinearLayout>
 </layout>

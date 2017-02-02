@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +18,12 @@ import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
+import edu.kit.pse.gruppe1.goApp.client.model.Location;
+import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
 import java.sql.Date;
 
-public class GroupActivity extends AppCompatActivity {
+public class GroupActivity extends AppCompatActivity implements View.OnClickListener{
     private GroupActivityBinding binding;
     private Group group;
     private RecyclerView newEventRecylcerView;
@@ -30,20 +33,22 @@ public class GroupActivity extends AppCompatActivity {
     private NewEventAdapter newEventAdapter;
     private AcceptedEventAdapter acceptedEventAdapter;
 
-    public static void start(Activity activity, Group group) {
+    public static void start(Activity activity) {
         Intent intent = new Intent(activity, GroupActivity.class);
-        intent.putExtra("Gruppe", group);
         activity.startActivity(intent);
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        group = getIntent().getParcelableExtra("Gruppe");
+        group = Preferences.getGroup();
         binding = DataBindingUtil.setContentView(this, R.layout.group_activity);
         binding.setGroup(group);
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.group_toolbar);
         setSupportActionBar(groupToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        FloatingActionButton newEventFab = (FloatingActionButton) findViewById(R.id.create_event);
+        newEventFab.setOnClickListener(this);
     }
 
     @Override
@@ -55,6 +60,7 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        binding.setGroup(group);
         newEventRecylcerView = (RecyclerView) findViewById(R.id.new_event_recycler_view);
         newEventRecylcerView.setHasFixedSize(true);
         acceptedEventRecyclerView = (RecyclerView) findViewById(R.id.accepted_event_recycler_view);
@@ -82,7 +88,7 @@ public class GroupActivity extends AppCompatActivity {
                         Log.i("GroupActivity", "reject");
                         break;
                     default:
-                        //EventActivity.start(GroupActivity.this, event);
+                        EventActivity.start(GroupActivity.this, event);
                         Log.i("GroupActivity", "info");
                 }
             }
@@ -92,7 +98,16 @@ public class GroupActivity extends AppCompatActivity {
         acceptedEventAdapter = new AcceptedEventAdapter(fillDataset(), new ItemClickListener() {
             @Override
             public void onItemClicked(int position, View view) {
-
+                Event event = newEventAdapter.getItem(position);
+                switch (view.getId()) {
+                    case R.id.start_event:
+                        //TODO service.
+                        Log.i("GroupActivity", "go");
+                        break;
+                    default:
+                        EventActivity.start(GroupActivity.this, event);
+                        Log.i("GroupActivity", "info");
+                }
             }
         });
         acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
@@ -102,7 +117,7 @@ public class GroupActivity extends AppCompatActivity {
     private Event[] fillDataset() {
         Event[] events = new Event[20];
         for (int i = 0; i < 20; i++) {
-            events[i] = new Event(i, "name" + i, new Date(100000 * i));
+            events[i] = new Event(i, "name" + i, new Date(100000 * i), new Location(i, i, "Random Location" + i));
         }
         return events;
     }
@@ -111,10 +126,15 @@ public class GroupActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_group_info:
-                GroupInfoActivity.start(this, group);
+                GroupInfoActivity.start(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        NewEventActivity.start(this);
     }
 }

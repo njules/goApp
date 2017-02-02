@@ -19,7 +19,7 @@ import javax.net.ssl.HttpsURLConnection;
  * For later requests the service can use the same HTTPConnection object.
  */
 public class HTTPConnection {
-    private static final String SERVER_URL = "https://i43pc164.ipd.kit.edu/PSEWS1617GoGruppe1/TestTomcat3/";
+    private static final String SERVER_URL = "https://i43pc164.ipd.kit.edu/PSEWS1617GoGruppe1/goApp/";
     private URL url;
 
     /**
