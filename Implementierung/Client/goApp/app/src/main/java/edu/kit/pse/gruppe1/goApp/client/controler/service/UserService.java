@@ -17,6 +17,7 @@ public class UserService extends IntentService{
 
 	public static final String NAME = "UserService";
 	public static final String ACTION_CHANGE = "CHANGE";
+	public static final String RESULT_CHANGE = "RESULT_CHANGE";
 	public static final String SERVLET = "UserServlet";
 
 	public UserService() {
@@ -45,7 +46,7 @@ public class UserService extends IntentService{
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_CHANGE);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class UserService extends IntentService{
         HTTPConnection connection = new HTTPConnection(SERVLET);
         Intent resultIntent = new Intent();
         JSONObject result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-        resultIntent.setAction(intent.getAction());
+        resultIntent.setAction(RESULT_CHANGE);
         try {
             //TODO what happens if error != 0
             resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));

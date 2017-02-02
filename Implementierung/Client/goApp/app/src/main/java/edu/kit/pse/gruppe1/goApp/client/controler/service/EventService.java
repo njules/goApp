@@ -45,8 +45,8 @@ public class EventService extends IntentService {
         try {
             requestJson.put(JSONParameter.EventName.toString(), name);
             requestJson.put(JSONParameter.GroupID.toString(), group.getId());
-            requestJson.put(JSONParameter.Latitude.toString(),destination.getLatitude());
-            requestJson.put(JSONParameter.Longitude.toString(),destination.getLongitude());
+            requestJson.put(JSONParameter.Latitude.toString(), destination.getLatitude());
+            requestJson.put(JSONParameter.Longitude.toString(), destination.getLongitude());
             requestJson.put(JSONParameter.EventTime.toString(), time.getTime());
             requestJson.put(JSONParameter.Method.toString(), ACTION_CREATE);
         } catch (JSONException e) {
@@ -130,14 +130,15 @@ public class EventService extends IntentService {
                 //TODO Exaptions and errors
                 Event event = null;
                 try {
-                event = new Event(
-                        result.getInt(JSONParameter.EventID.toString()),
-                        result.getString(JSONParameter.EventName.toString()),
-                        new Date(result.getLong(JSONParameter.EventTime.toString())));                ;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-                resultIntent.putExtra("Event",event);
+                    event = new Event(
+                            result.getInt(JSONParameter.EventID.toString()),
+                            result.getString(JSONParameter.EventName.toString()),
+                            new Date(result.getLong(JSONParameter.EventTime.toString())),
+                            new Location(result.getDouble(JSONParameter.Latitude.toString()), result.getDouble(JSONParameter.Longitude.toString()), result.getString(JSONParameter.LocationName.toString())));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                resultIntent.putExtra("Event", event);
 
                 break;
             case ACTION_CHANGE:

@@ -20,6 +20,7 @@ public class ParticipateService extends IntentService {
     private static final String ACTION_ACCEPT = "ACCEPT";
     private static final String ACTION_REJECT = "REJECT";
     private static final String ACTION_GO = "GO";
+    private static final String ACTION_GET = "GET";
     private static final String SERVLET = "ParticipateServlet";
 
     public ParticipateService() {
@@ -48,7 +49,7 @@ public class ParticipateService extends IntentService {
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_ACCEPT);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
@@ -73,7 +74,7 @@ public class ParticipateService extends IntentService {
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_REJECT);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 
     }
     public void setGo(Context context, Event event, User user) {
@@ -91,9 +92,28 @@ public class ParticipateService extends IntentService {
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_GO);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 
     }
+    public void getStatus(Context context, Event event, User user) {
+        JSONObject requestJson = new JSONObject();
+
+        try {
+            requestJson.put(JSONParameter.EventID.toString(), event.getId());
+            requestJson.put(JSONParameter.UserID.toString(), user.getId());
+            requestJson.put(JSONParameter.Method.toString(), ACTION_GET);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Intent requestIntent = new Intent(context, this.getClass());
+        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.setAction(ACTION_GET);
+
+        context.startService(requestIntent);
+
+    }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -129,7 +149,15 @@ public class ParticipateService extends IntentService {
                     e.printStackTrace();
                 }
                 break;
-            //TODO default case
+            case ACTION_GET:
+                result = connection.sendGetRequest(intent.getStringExtra("JSON"));
+                //TODO JsonParamter
+                try {
+                    resultIntent.putExtra("STATUS",result.getInt(""));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //TODO default case
 
         }
         resultIntent.setAction(intent.getAction());
