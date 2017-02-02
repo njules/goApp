@@ -72,19 +72,18 @@ public class ClusterFacade {
    *          List of points which should clustered and which central point should be calculated.
    */
   public List<DoublePoint> getClusteredCentralPoints(Event event) {
+    
     int eventId = event.getEventId();
 
     List<DoublePoint> locations = getEventsLocations(eventId);
     List<? extends Cluster<DoublePoint>> clusters = getClusters(locations);
 
     
-
-    
-    
     List<DoublePoint> result = new ArrayList<DoublePoint>(0);
     for (Cluster<DoublePoint> c : clusters) {
       
-      if(!c.equals(null)) {
+      if(c.getPoints().size() >= 2) {
+          
         result.add(algorithm.calculateCentralPoint(c));
       }
     }
@@ -93,6 +92,9 @@ public class ClusterFacade {
 
   }
 
+  /*
+   * This class fetches the locations from the event, and builds a list of DoublePoint.class objects
+   */
   private List<DoublePoint> getEventsLocations(int eventId) {
 
     EventUserManagement management = new EventUserManagement();
@@ -120,10 +122,10 @@ public class ClusterFacade {
 
   }
 
+  
+  
+  
   private List<? extends Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
-
-   
-
     return clusterer.cluster(points);
 
   }
