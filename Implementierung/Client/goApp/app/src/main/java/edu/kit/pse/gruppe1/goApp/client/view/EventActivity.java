@@ -1,12 +1,16 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.location.Criteria;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +25,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.EventInfoActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
@@ -37,7 +42,8 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     private RecyclerView participantRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private UserAdapter userAdapter;
-    Event event;
+    private Event event;
+    private ResultReceiver receiver;
 
     public static void start(Activity activity, Event event) {
         Intent intent = new Intent(activity, EventActivity.class);
@@ -67,6 +73,9 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         participantRecyclerView.setLayoutManager(linearLayoutManager);
         userAdapter = new UserAdapter(fillDataset());
         participantRecyclerView.setAdapter(userAdapter);
+        receiver = new ResultReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_GET));
+        //TODO hier getEvent von eventService starten
     }
 
     //TODO For Tests
@@ -98,6 +107,22 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         while(iter.hasNext()){
             Location location = iter.next();
             googleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),location.getLongitude())).title(location.getName()));
+        }
+    }
+
+    private class ResultReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case EventService.RESULT_GET:
+                    if (intent.getBooleanExtra("ERROR", false)) {
+                        userAdapter = new UserAdapter(fillDataset());
+                        participantRecyclerView.setAdapter(userAdapter);
+                    }
+                    break;
+                    //TODO default
+            }
         }
     }
 }

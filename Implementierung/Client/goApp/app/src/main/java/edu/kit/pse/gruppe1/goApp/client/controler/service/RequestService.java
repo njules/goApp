@@ -21,9 +21,9 @@ public class RequestService extends IntentService{
 	public static final String ACTION_CREATE = "CREATE";
 	public static final String ACTION_ACCEPT = "ACCEPT";
 	public static final String ACTION_REJECT = "REJECT";
-	public static final String RESULT_REJECT = "RESULT_REJECT";
-	public static final String RESULT_ACCEPT = "RESULT_ACCEPT";
-	public static final String RESULT_CREATE = "RESULT_CREATE";
+	public static final String RESULT_REJECT = "RESULT_REJECT_REQUEST";
+	public static final String RESULT_ACCEPT = "RESULT_ACCEPT_REQUEST";
+	public static final String RESULT_CREATE = "RESULT_CREATE_REQUEST";
 	public static final String SERVLET = "RequestServlet";
 
     public RequestService() {

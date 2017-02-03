@@ -1,6 +1,10 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -15,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.NotificationService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
@@ -32,6 +38,8 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     private LinearLayoutManager acceptedEventLayoutManager;
     private NewEventAdapter newEventAdapter;
     private AcceptedEventAdapter acceptedEventAdapter;
+
+    private ResultReceiver receiver;
 
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, GroupActivity.class);
@@ -136,5 +144,28 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         NewEventActivity.start(this);
+    }
+
+    private class ResultReceiver extends BroadcastReceiver {
+        private AlarmManager notifyAlarmMgr;
+        private PendingIntent notifyAlarmIntent;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case EventService.ACTION_CREATE:
+                    if (intent.getBooleanExtra("ERROR", false)) {
+                        Toast.makeText(GroupActivity.this,"Neues Event erstllet",Toast.LENGTH_SHORT).show();
+
+                        notifyAlarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                        Intent notifyIntent = new Intent(context, NotificationService.class);
+                        notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
+                        notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, 1, notifyAlarmIntent);
+                        //TODO Events neu Laden
+                    }
+
+                    //TODO default
+            }
+        }
     }
 }

@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupSearchService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.RequestService;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
@@ -130,6 +131,13 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
                         Toast.makeText(NewGroupActivity.this,"Anfrage gesendet",Toast.LENGTH_SHORT).show();
                         //TODO reload groups or add group to adapter
                     }
+                    break;
+                case GroupService.RESULT_CREATE:
+                    if (intent.getBooleanExtra("ERROR", false)) {
+                        Toast.makeText(NewGroupActivity.this,"Gruppe hinzugefügt",Toast.LENGTH_SHORT).show();
+                        StartActivity.start(NewGroupActivity.this);
+                    }
+                    break;
                     //TODO reaction to errors and how to updat view
             }
         }
