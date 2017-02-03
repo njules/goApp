@@ -46,50 +46,7 @@ public class EventServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // String strResponse = null;
-        // String jsonString = null;
-        // JSONParameter.Methods method = null;
-        // response.setContentType("text/plain");
-        // PrintWriter out = null;
-        // // try {
-        // out = response.getWriter();
-        // jsonString = request.getReader().readLine();
-        // // } catch (IOException e1) {
-        // // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
-        // // out.println(strResponse);
-        // // return;
-        // // }
-        //
-        // if (jsonString == null) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
-        // out.println(strResponse);
-        // return;
-        // }
-        // try {
-        // JSONObject jsonRequest = new JSONObject(jsonString);
-        // method = JSONParameter.Methods
-        // .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
-        // switch (method) {
-        // case CREATE:
-        // strResponse = create(jsonRequest);
-        // break;
-        // case GET_EVENT:
-        // strResponse = getEvent(jsonRequest);
-        // break;
-        // case CHANGE:
-        // strResponse = change(jsonRequest);
-        // break;
-        // default:
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
-        // break;
-        // }
-        // out.println(strResponse);
-        // } catch (JSONException e) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
-        // out.println(strResponse);
-        // }
 
-        // TODO: delete old one, if new does work
         String strResponse = null;
         JSONObject jsonRequest = null;
         JSONParameter.Methods method = null;
@@ -98,8 +55,15 @@ public class EventServlet extends HttpServlet {
 
         out = response.getWriter();
 
+        jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            // response was set in extractJSON
+            return;
+        }
+        
         try {
-            method = ServletUtils.getMethod(request, jsonRequest);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -111,7 +75,7 @@ public class EventServlet extends HttpServlet {
         if (method == null || !error.equals(ErrorCodes.OK)) {
             method = Methods.NONE;
         }
-        
+
         switch (method) {
         case CREATE:
             strResponse = create(jsonRequest);

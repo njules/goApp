@@ -4,7 +4,6 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
  * Enumerations with all possible parameter-types for the JSON-strings.
  */
 public enum JSONParameter {
-    // TODO: String weg machen ->überflüssig?
     // TODO: Großbuchstaben -> mit Katha vorher abklären -> wird zu Fehlern bei ihr führen.
     /**
      * 
@@ -111,10 +110,17 @@ public enum JSONParameter {
     /**
      * List of Group
      */
-    LIST_GROUP("ListGroup"), /**
-                              * List of Group
-                              */
-    LIST_EVENT("ListEvent");
+    LIST_GROUP("ListGroup"),
+
+    /**
+     * List of Group
+     */
+    LIST_EVENT("ListEvent"),
+
+    /**
+     * Google ID
+     */
+    GOOGLE_ID("GoogleId");
 
     private final String fieldDescription;
 
@@ -306,7 +312,7 @@ public enum JSONParameter {
          * Participate.reject Request.reject
          */
         REJECT,
-        
+
         /**
          * No Method was found - equals null, but does not produce NullPointerException
          */
@@ -319,7 +325,7 @@ public enum JSONParameter {
                     return meth;
                 }
             }
-            return null;
+            return NONE;
         }
     }
 
