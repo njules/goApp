@@ -32,12 +32,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Toast.makeText(this,"logi in",Toast.LENGTH_SHORT).show();
         if(requestCode == RC_SIGN_IN){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
-
             if(result.isSuccess()){
                 String idToken = result.getSignInAccount().getIdToken();
                 Toast.makeText(this,idToken.toString(),Toast.LENGTH_SHORT).show();
                 Preferences.setIdToken(idToken);
-                loginService.login(this, idToken);
+                loginService.login(this, result);
             } else {
                 Toast.makeText(this,result.getStatus()+"",Toast.LENGTH_SHORT).show();
             }

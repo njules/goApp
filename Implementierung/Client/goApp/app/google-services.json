@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "425489712686",
+    "project_id": "goapp-157109"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425489712686:android:314e8f3ce23d4358",
+        "android_client_info": {
+          "package_name": "edu.kit.pse.gruppe1.goApp.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425489712686-jabmfnud53o35a90icutfi6g2qmmitfv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.kit.pse.gruppe1.goApp.client",
+            "certificate_hash": "B3BAF68407A579125620A9DDB4C3CC79C73936A6"
+          }
+        },
+        {
+          "client_id": "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1Z6j8taUUcv1h7zAYJXcILVuTm8E51iI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -57,7 +57,7 @@ public class EventService extends IntentService {
         requestIntent.putExtra("Json", requestJson.toString());
         requestIntent.setAction(ACTION_CREATE);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
