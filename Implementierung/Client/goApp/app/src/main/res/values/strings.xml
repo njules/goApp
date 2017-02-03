@@ -24,4 +24,6 @@
     <string name="event_location">Ziel</string>
     <string name="wrongTime">Dein Termin liegt in der Vergangenheit</string>
     <string name="noLocation">Du musst einen Treffpunkt auswählen</string>
+
+    <string name="clientId">425489712686-jabmfnud53o35a90icutfi6g2qmmitfv.apps.googleusercontent.com</string>
 </resources>
