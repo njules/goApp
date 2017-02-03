@@ -17,6 +17,17 @@ public class ClusterFacade {
 
     
     private CentralPointAlgo algorithm;
+    public void setAlgorithm(CentralPointAlgo algorithm) {
+        this.algorithm = algorithm;
+    }
+
+    public void setClusterer(Clusterer<DoublePoint> clusterer) {
+        this.clusterer = clusterer;
+    }
+
+
+
+
     private Clusterer<DoublePoint> clusterer;
     
     
@@ -80,11 +91,12 @@ public class ClusterFacade {
 
     
     List<DoublePoint> result = new ArrayList<DoublePoint>(0);
+    
     for (Cluster<DoublePoint> c : clusters) {
       
       if(c.getPoints().size() >= 2) {
-          
-        result.add(algorithm.calculateCentralPoint(c));
+        
+        result.add(getCenter(c));
       }
     }
     
@@ -95,7 +107,7 @@ public class ClusterFacade {
   /*
    * This class fetches the locations from the event, and builds a list of DoublePoint.class objects
    */
-  private List<DoublePoint> getEventsLocations(int eventId) {
+  public List<DoublePoint> getEventsLocations(int eventId) {
 
     EventUserManagement management = new EventUserManagement();
     List<User> list = management.getUsers(eventId);
@@ -125,9 +137,15 @@ public class ClusterFacade {
   
   
   
-  private List<? extends Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
+  public List<? extends Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
+      
     return clusterer.cluster(points);
+    
 
   }
 
+  
+  public DoublePoint getCenter(Cluster<DoublePoint> cluster) {
+      return algorithm.calculateCentralPoint(cluster);
+  }
 }
