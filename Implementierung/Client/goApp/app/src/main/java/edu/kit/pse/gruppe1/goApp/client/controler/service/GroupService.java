@@ -228,6 +228,7 @@ public class GroupService extends IntentService {
                     e.printStackTrace();
                 }
                 break;
+            // TODO Methode soll die Gruppenmitglieder und Anfragen laden, nicht die Gruppe an sich.
             case ACTION_GET:
                 result = connection.sendGetRequest(intent.getStringExtra("JSON"));
                 resultIntent.setAction(RESULT_GET);

@@ -20,8 +20,11 @@ public class EventService extends IntentService {
 
     public static final String NAME = "EventService";
     public static final String ACTION_CREATE = "CREATE";
+    public static final String RESULT_CREATE = "RESULT_CREATE";
     public static final String ACTION_GET = "GET";
+    public static final String RESULT_GET = "RESULT_GET";
     public static final String ACTION_CHANGE = "CHANGE";
+    public static final String RESULT_CHANGE = "RESULT_CHANGE";
     public static final String SERVLET = "EventServlet";
 
 
@@ -124,7 +127,9 @@ public class EventService extends IntentService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                resultIntent.setAction(RESULT_CREATE);
                 break;
+            //TODO Methode soll Teilnehmer und "Mittelpunkte" laden.
             case ACTION_GET:
                 result = connection.sendGetRequest(intent.getStringExtra("JSON"));
                 //TODO Exaptions and errors
@@ -139,6 +144,7 @@ public class EventService extends IntentService {
                     e.printStackTrace();
                 }
                 resultIntent.putExtra("Event", event);
+                resultIntent.setAction(RESULT_GET);
 
                 break;
             case ACTION_CHANGE:
@@ -149,11 +155,10 @@ public class EventService extends IntentService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                resultIntent.setAction(RESULT_CHANGE);
                 break;
             //TODO default case
-
         }
-        resultIntent.setAction(intent.getAction());
 
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);

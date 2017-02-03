@@ -219,11 +219,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                         //TODO when to change the name
                     }
                     break;
-                case GroupService.RESULT_CREATE:
-                    if (intent.getBooleanExtra("ERROR", false)) {
-                        Toast.makeText(StartActivity.this,"Gruppe hinzugefügt",Toast.LENGTH_SHORT).show();
-                        //TODO reload groups or add group to adapter
-                    }
+
 
                 //TODO default
             }
