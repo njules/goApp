@@ -72,7 +72,7 @@ public class ClusterFacadeTest {
         double yFirstDifference = result.get(0).getPoint()[1] - 33.5007525;
         double ySecondDifference = result.get(1).getPoint()[1] - 1.3676667;   
         
-        System.out.println(ySecondDifference);
+        
         assertTrue( xFirstDifference <= 0.0001 && xFirstDifference >= -0.0001);
         assertTrue( yFirstDifference <= 0.0001 && yFirstDifference >= -0.0001);
         assertTrue( xSecondDifference <= 0.0001 && xSecondDifference >= -0.0001);
