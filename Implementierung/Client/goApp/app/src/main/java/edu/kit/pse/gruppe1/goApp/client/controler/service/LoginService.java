@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
@@ -36,40 +37,28 @@ public class LoginService extends IntentService {
      */
     public void login(Context context, GoogleSignInResult result) {
 
-        Intent requestIntent = new Intent(context,LoginService.class);
-        requestIntent.putExtra("JSON",createJson(result).toString());
+        Intent requestIntent = new Intent(context, LoginService.class);
+        requestIntent.putExtra("JSON", createJson(result).toString());
         requestIntent.setAction(ACTION_LOGIN);
-
+Log.i("Login",createJson(result).toString());
         context.startService(requestIntent);
-
-
-
-            Intent resultIntent = new Intent();
-
-            //TODO communicate with the server
-            resultIntent.putExtra("ERROR", true);
-            resultIntent.setAction(RESULT_LOGIN);
-            //TODO get Real user
-            Preferences.setUser(new User(0, "Test"));
-            LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context.getApplicationContext());
-            manager.sendBroadcast(resultIntent);
-        }
-        // TODO - implement LoginService.login
+    }
+    // TODO - implement LoginService.login
 
     private JSONObject createJson(GoogleSignInResult result) {
         JSONObject requestJSON = new JSONObject();
         if (result.getSignInAccount().getIdToken() != null) {
             try {
-                requestJSON.put(JSONParameter.UserID.toString(), result.getSignInAccount().getId());
+                requestJSON.put(JSONParameter.ID.toString(), result.getSignInAccount().getId());
                 requestJSON.put(JSONParameter.UserName.toString(), result.getSignInAccount().getDisplayName());
-            requestJSON.put(JSONParameter.Method.toString(),JSONParameter.Methods.LOGIN);
+                requestJSON.put(JSONParameter.Method.toString(), JSONParameter.Methods.LOGIN);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+        } else{Log.i("Login","idToken is null");}
         return requestJSON;
     }
-
+@Deprecated
     private User register() {
         // TODO - implement LoginService.register
         throw new UnsupportedOperationException();
@@ -77,10 +66,28 @@ public class LoginService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.i("Login","LoginService started");
         HTTPConnection connection = new HTTPConnection(SERVLET);
-
+        Log.i("Login","starting connection with the server");
+        JSONObject result = connection.sendGetRequest(intent.getStringExtra("JSON"));
+        Log.i("Login","server answer received");
         Intent resultIntent = new Intent();
         resultIntent.setAction(RESULT_LOGIN);
+        try {
+            int error = result.getInt(JSONParameter.ErrorCode.toString());
+            if (error == 0) {
+                String name = result.getString(JSONParameter.UserName.toString());
+                int id = result.getInt(JSONParameter.UserID.toString());
+                Preferences.setUser(new User(id, name));
+                resultIntent.putExtra("ERROR", true);
+            } else resultIntent.putExtra("ERROR", false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            resultIntent.putExtra("ERROR", false);
+        }
+        resultIntent.setAction(RESULT_LOGIN);
+        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
+        manager.sendBroadcast(resultIntent);
 
     }
 }

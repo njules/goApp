@@ -55,6 +55,7 @@
         <service android:name=".controler.service.RequestSearchService"/>
         <service android:name=".controler.service.ParticipateService"/>
         <service android:name=".controler.service.NotificationService"/>
+        <service android:name=".controler.service.LoginService"/>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
