@@ -24,135 +24,145 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "userT", uniqueConstraints = @UniqueConstraint(columnNames = { "GOOGLE_ID" }))
 public class User {
 
-	/**
-	 * The Id is used to identify each user and is therefore unique.
-	 */
-	private Integer userId;
-	private Integer googleId;
-	/**
-	 * The name of an user is selectable by the user and can also be changed.
-	 */
-	private String name;
-	private Location location;
-	private Set<Request> requests;
-	private Set<Group> groups;
-	private Set<Group> foundedGroups;
-	private Set<Event> createdEvents;
-	private Set<Participant> participations;
-	
-	public User(){	  
-	}
-	/**
-	 * 
-	 * @param id
-	 *            The Id of the user.
-	 * @param name
-	 *            The name of the user.
-	 */
-	public User(int googleId, String name) {
-		this.googleId = googleId;
-		this.name = name;
-	}
+    /**
+     * The Id is used to identify each user and is therefore unique.
+     */
+    private Integer userId;
+    private Integer googleId;
+    /**
+     * The name of an user is selectable by the user and can also be changed.
+     */
+    private String name;
+    private Location location;
+    private Set<Request> requests;
+    private Set<Group> groups;
+    private Set<Group> foundedGroups;
+    private Set<Event> createdEvents;
+    private Set<Participant> participations;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_ID", unique = true, nullable = false)
-	public Integer getUserId() {
-		return userId;
-	}
+    public User() {
+    }
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
+    /**
+     * 
+     * @param id
+     *            The Id of the user.
+     * @param name
+     *            The name of the user.
+     */
+    public User(int googleId, String name) {
+        this.googleId = googleId;
+        this.name = name;
+    }
 
-	@Column(name = "GOOGLE_ID", nullable = false)
-	public Integer getGoogleId() {
-		return googleId;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_ID", unique = true, nullable = false)
+    public Integer getUserId() {
+        return userId;
+    }
 
-	public void setGoogleId(Integer googleId) {
-		this.googleId = googleId;
-	}
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
-	public Set<Request> getRequests() {
-		return requests;
-	}
+    @Column(name = "GOOGLE_ID", nullable = false)
+    public Integer getGoogleId() {
+        return googleId;
+    }
 
-	public void setRequests(Set<Request> requests) {
-		this.requests = requests;
-	}
+    public void setGoogleId(Integer googleId) {
+        this.googleId = googleId;
+    }
 
-	@Column(name = "name", nullable = false)
-	public String getName() {
-		return name;
-	}
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    public Set<Request> getRequests() {
+        return requests;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setRequests(Set<Request> requests) {
+        this.requests = requests;
+    }
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "user_group", joinColumns = {
-			@JoinColumn(name = "USER_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "GROUP_ID", nullable = false, updatable = false) })
-	public Set<Group> getGroups() {
-		return groups;
-	}
+    @Column(name = "name", nullable = false)
+    public String getName() {
+        return name;
+    }
 
-	public void setGroups(Set<Group> groups) {
-		this.groups = groups;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "founder")
-	public Set<Group> getFoundedGroups() {
-		return foundedGroups;
-	}
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
+    public Set<Group> getGroups() {
+        return groups;
+    }
 
-	public void setFoundedGroups(Set<Group> foundedGroups) {
-		this.foundedGroups = foundedGroups;
-	}
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
-	public Set<Event> getCreatedEvents() {
-		return createdEvents;
-	}
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "founder")
+    public Set<Group> getFoundedGroups() {
+        return foundedGroups;
+    }
 
-	public void setCreatedEvents(Set<Event> createdEvents) {
-		this.createdEvents = createdEvents;
-	}
+    public void setFoundedGroups(Set<Group> foundedGroups) {
+        this.foundedGroups = foundedGroups;
+    }
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
-	public Set<Participant> getParticipations() {
-		return participations;
-	}
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+    public Set<Event> getCreatedEvents() {
+        return createdEvents;
+    }
 
-	public void setParticipations(Set<Participant> participations) {
-		this.participations = participations;
-	}
+    public void setCreatedEvents(Set<Event> createdEvents) {
+        this.createdEvents = createdEvents;
+    }
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "LOCATION_ID")
-	public Location getLocation() {
-		return location;
-	}
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    public Set<Participant> getParticipations() {
+        return participations;
+    }
 
-	public void setLocation(Location location) {
-		this.location = location;
-	}
+    public void setParticipations(Set<Participant> participations) {
+        this.participations = participations;
+    }
 
-	public boolean addGroup(Group group) {
-		int size = groups.size();
-		groups.add(group);
-		return size != groups.size();
-	}
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "LOCATION_ID")
+    public Location getLocation() {
+        return location;
+    }
 
-	public boolean removeGroup(Integer groupId) {
-		for (Group group : getGroups()) {
-			if (group.getGroupId().equals(groupId)) {
-				return groups.remove(group);
-			}
-		}
-		return false;
-	}
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+  
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (userId == null) {
+            if (other.userId != null)
+                return false;
+        } else if (!userId.equals(other.userId))
+            return false;
+        return true;
+    }
 }

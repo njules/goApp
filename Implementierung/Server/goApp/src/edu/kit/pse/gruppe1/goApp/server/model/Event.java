@@ -36,7 +36,7 @@ public class Event {
     /**
      * The time of an event tells when the event is starting and set by the creator of the event.
      */
-    private Timestamp time;
+    private Timestamp timestamp;
 
     private Group group;
     private User creator;
@@ -64,10 +64,10 @@ public class Event {
      * @param creator
      *            the user who created the Event
      */
-    public Event(String name, Location location, Timestamp time, Group group, User creator) {
+    public Event(String name, Location location, Timestamp timestamp, Group group, User creator) {
         this.name = name;
         this.location = location;
-        this.time = time;
+        this.timestamp = timestamp;
         this.group = group;
         this.creator = creator;
     }
@@ -112,9 +112,9 @@ public class Event {
     /**
      * @return the time when the Event starts
      */
-    @Column(name = "time", nullable = false)
-    public Timestamp getTime() {
-        return time;
+    @Column(name = "timestamp", nullable = false)
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
     /**
@@ -122,8 +122,8 @@ public class Event {
      * @param time
      *            the time when the Event starts
      */
-    public void setTime(Timestamp time) {
-        this.time = time;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
     /**

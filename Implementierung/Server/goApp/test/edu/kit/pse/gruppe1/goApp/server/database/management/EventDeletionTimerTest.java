@@ -1,10 +1,11 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Timer;
 
 import org.junit.Test;
 
@@ -15,25 +16,25 @@ import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 public class EventDeletionTimerTest {
-    private static final int SECONDS_TOLERANCE = 10;
+    private static final int SECONDS_TOLERANCE = 2;
 
     @Test
     public void test() {
         String name = "testn";
         Location location = new Location(0, 0, name);
         User user = new UserManagement().add(name, 264212);
-        assertNotNull(user);
+        assertThat(user, is(notNullValue()));
         Group group = new GroupManagement().add(name, user.getUserId());
-        assertNotNull(group);
+        assertThat(group, is(notNullValue()));
         Timestamp time = new Timestamp(System.currentTimeMillis() + 1000);
         EventManagement management = new EventManagement();
         Event event = management.add(name, location, time, user.getUserId(), group.getGroupId());
-        assertNotNull(event);
+        assertThat(event, is(notNullValue()));
 
-        new EventDeletionTimer(60, 0);
-        for (int i = 0; i < 60 + SECONDS_TOLERANCE; i++) {
-            if (i < 60 - SECONDS_TOLERANCE) {
-                assertNotNull(management.getEvent(event.getEventId()));
+        new EventDeletionTimer(600, 0);
+        for (int i = 0; i < 6 + SECONDS_TOLERANCE; i++) {
+            if (i < 6 - SECONDS_TOLERANCE) {
+                assertThat(management.getEvent(event.getEventId()), is(notNullValue()));
             }
             try {
                 Thread.sleep(1000);
@@ -42,7 +43,7 @@ public class EventDeletionTimerTest {
                 e.printStackTrace();
             }
         }
-        assertNull(management.getEvent(event.getEventId()));
+        assertThat(management.getEvent(event.getEventId()), is(nullValue()));
     }
 
 }
