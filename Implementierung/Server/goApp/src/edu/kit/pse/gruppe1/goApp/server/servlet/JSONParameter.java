@@ -203,6 +203,16 @@ public enum JSONParameter {
             }
             return null;
         }
+        
+        //TODO: JavDocs
+        public static ErrorCodes fromErCode(int i){
+            for (ErrorCodes err : ErrorCodes.values()) {
+                if (err.getErrorCode() == i) {
+                    return err;
+                }
+            }
+            return null;
+        }
 
     }
 
