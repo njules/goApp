@@ -45,7 +45,12 @@ public final class ServletUtils {
     private ServletUtils() {
     }
 
-    public static boolean isValidGoogleToken() {
+    /**
+     * TODO: checks if GoogleTokenisValid atm always true, and parameters will change in the future
+     * 
+     * @return
+     */
+    protected static boolean isValidGoogleToken() {
         // TODO: https://developers.google.com/identity/sign-in/web/backend-auth
         // verfify ID signed by Google
         // check if one User has this GoogleID == aud TODO: fehlt noch im kopierten Code
@@ -121,10 +126,10 @@ public final class ServletUtils {
         // AuthorizationCodeRequestUrl url = google.newAuthorizationUrl();
         // }
 
-        return false;
+        return true;
     }
 
-    public static JSONObject createJSONEvent(Event event) {
+    protected static JSONObject createJSONEvent(Event event) {
         JSONObject json = new JSONObject();
         try {
             json.accumulate(JSONParameter.EventName.toString(), event.getName());
@@ -137,7 +142,6 @@ public final class ServletUtils {
 
             json.accumulate(JSONParameter.GroupID.toString(), event.getGroup().getGroupId());
             json.accumulate(JSONParameter.UserID.toString(), event.getCreator().getUserId());
-
             json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -146,7 +150,7 @@ public final class ServletUtils {
         return json;
     }
 
-    public static JSONObject createJSONLocation(Location location) {
+    protected static JSONObject createJSONLocation(Location location) {
         JSONObject json = new JSONObject();
 
         try {
@@ -161,7 +165,7 @@ public final class ServletUtils {
         return json;
     }
 
-    public static JSONObject createJSONGroup(Group group) {
+    protected static JSONObject createJSONGroup(Group group) {
         JSONObject json = new JSONObject();
 
         try {
@@ -178,7 +182,7 @@ public final class ServletUtils {
         return json;
     }
 
-    public static JSONObject createJSONUser(User user) {
+    protected static JSONObject createJSONUser(User user) {
         JSONObject json = new JSONObject();
         try {
             json.accumulate(JSONParameter.UserID.toString(), user.getUserId());
@@ -191,7 +195,7 @@ public final class ServletUtils {
         return json;
     }
 
-    public static JSONObject createJSONListEvent(List<Event> event) {
+    protected static JSONObject createJSONListEvent(List<Event> event) {
         JSONObject json = new JSONObject();
         try {
             for (Event evt : event) {
@@ -205,7 +209,7 @@ public final class ServletUtils {
         return json;
     }
 
-    public static JSONObject createJSONListUsr(List<User> user) {
+    protected static JSONObject createJSONListUsr(List<User> user) {
         JSONObject json = new JSONObject();
         try {
             for (User usr : user) {
@@ -219,7 +223,7 @@ public final class ServletUtils {
         return json;
     }
 
-    public static JSONObject createJSONListGrp(List<Group> group) {
+    protected static JSONObject createJSONListGrp(List<Group> group) {
         JSONObject json = new JSONObject();
         try {
             for (Group grp : group) {
@@ -233,7 +237,7 @@ public final class ServletUtils {
         return json;
     }
 
-    public static JSONObject createJSONError(JSONParameter.ErrorCodes error) {
+    protected static JSONObject createJSONError(JSONParameter.ErrorCodes error) {
         JSONObject res = new JSONObject();
         try {
             res.put(JSONParameter.ErrorCode.toString(), error.getErrorCode());
@@ -244,52 +248,81 @@ public final class ServletUtils {
         return res;
     }
 
+    // maybe not needed anymore
+    // /**
+    // * extract Method from request
+    // *
+    // * @param request
+    // * Incoming Request
+    // * @param jsonRequest
+    // * jsonRequest (to set here)
+    // * @return Method (Enum Value)
+    // * @throws ServletException
+    // * if Servlet Exception happens
+    // * @throws JSONException
+    // * if JSONException happens - either with Message if JSON was empty or without (Read
+    // * Error)
+    // * @throws IOException
+    // * if problems with IO operation happened
+    // */
+    // public static Methods getMethod(HttpServletRequest request, JSONObject jsonRequest)
+    // throws ServletException, JSONException, IOException {
+    //
+    //
+    // String jsonString = null;
+    // JSONParameter.Methods method = Methods.NONE;
+    // jsonString = request.getReader().readLine();
+    //
+    // if (jsonString == null) {
+    // throw new JSONException(ErrorCodes.EMPTY_JSON.toString());
+    // }
+    // jsonRequest = new JSONObject(jsonString);
+    // method = JSONParameter.Methods
+    // .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+    //
+    // // do this to prevent null-pointer exception in switch-case in every Servlet
+    // if (method == null) {
+    // method = Methods.NONE;
+    // }
+    // return method;
+    // }
+
     /**
-     * extract Method from request
+     * extracts JSONObject from HTTP Request
      * 
      * @param request
-     *            Incoming Request
-     * @param jsonRequest
-     *            jsonRequest (to set here)
-     * @return Method (Enum Value)
-     * @throws ServletException
-     *             if Servlet Exception happens
-     * @throws JSONException
-     *             if JSONException happens - either with Message if JSON was empty or without (Read
-     *             Error)
-     * @throws IOException
-     *             if problems with IO operation happened
+     *            Request to Servlet
+     * @param response
+     *            Response to sent
+     * @return JSONObject if reading was successful, otherwise null and then sets also response
      */
-    public static Methods getMethod(HttpServletRequest request, JSONObject jsonRequest)
-            throws ServletException, JSONException, IOException {
-        String jsonString = null;
-        JSONParameter.Methods method = null;
-        jsonString = request.getReader().readLine();
-
-        if (jsonString == null) {
-            throw new JSONException(ErrorCodes.EMPTY_JSON.toString());
-        }
-        jsonRequest = new JSONObject(jsonString);
-        method = JSONParameter.Methods
-                .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
-        return method;
-    }
-
-    // TODO Julian: JavaDocs schreiben
     protected static JSONObject extractJSON(HttpServletRequest request,
             HttpServletResponse response) {
+        String jsonString = null;
+        ErrorCodes error = ErrorCodes.OK;
         try {
-            if (request.getReader().readLine() == null) {
-            }
-            return new JSONObject(request.getReader().readLine());
-        } catch (IOException | JSONException e) {
+            jsonString = request.getReader().readLine();
+        } catch (IOException e) {
             e.printStackTrace();
-            try {
-                response.getWriter().println(createJSONError(JSONParameter.ErrorCodes.IO_ERROR));
-            } catch (IOException n) {
-                n.printStackTrace();
-            }
-            return null;
+            error = JSONParameter.ErrorCodes.IO_ERROR;
         }
+
+        if (jsonString != null) {
+            try {
+                return new JSONObject(jsonString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                error = JSONParameter.ErrorCodes.READ_JSON;
+            }
+        } else if (error.equals(ErrorCodes.OK)) {
+            error = JSONParameter.ErrorCodes.READ_JSON;
+        }
+
+        try {
+            response.getWriter().println(createJSONError(error));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
