@@ -40,7 +40,7 @@ public class LoginService extends IntentService {
         Intent requestIntent = new Intent(context, LoginService.class);
         requestIntent.putExtra("JSON", createJson(result).toString());
         requestIntent.setAction(ACTION_LOGIN);
-Log.i("Login",createJson(result).toString());
+        Log.i("Login",createJson(result).toString());
         context.startService(requestIntent);
     }
     // TODO - implement LoginService.login
