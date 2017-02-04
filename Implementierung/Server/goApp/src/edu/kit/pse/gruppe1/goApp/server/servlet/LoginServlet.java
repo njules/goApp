@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class LoginServlet
@@ -43,47 +44,9 @@ public class LoginServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO: hier herkömmlich
-        // String strResponse = null;
-        // String jsonString = null;
-        // JSONParameter.Methods method = null;
-        // response.setContentType("text/plain");
-        // PrintWriter out = null;
-        // // try {
-        // out = response.getWriter();
-        // jsonString = request.getReader().readLine();
-        // // } catch (IOException e1) {
-        // // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
-        // // out.println(strResponse);
-        // // return;
-        // // }
-        //
-        // if (jsonString == null) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
-        // out.println(strResponse);
-        // return;
-        // }
-        // try {
-        // JSONObject jsonRequest = new JSONObject(jsonString);
-        // method = JSONParameter.Methods
-        // .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
-        // switch (method) {
-        // case LOGIN:
-        // strResponse = login(jsonRequest);
-        // break;
-        // case REGISTER:
-        // strResponse = register(jsonRequest);
-        // break;
-        // default:
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
-        // break;
-        // }
-        // out.println(strResponse);
-        // } catch (JSONException e) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
-        // out.println(strResponse);
-        // }
         // TODO: IO-Error/Servlet Error werfen?
+
+        // TODO: wenn Methode register ->neues Token, bei LogIn prüfen
 
         String strResponse = null;
         JSONObject jsonRequest = null;
@@ -93,8 +56,15 @@ public class LoginServlet extends HttpServlet {
 
         out = response.getWriter();
 
+        jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            //response was set in extractJSON
+            return;
+        }
+
         try {
-            method = ServletUtils.getMethod(request, jsonRequest);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -102,7 +72,10 @@ public class LoginServlet extends HttpServlet {
                 error = ErrorCodes.READ_JSON;
             }
         }
-        // TODO überall: method null abfangen
+
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
         switch (method) {
         case LOGIN:
             strResponse = login(jsonRequest).toString();
@@ -119,10 +92,6 @@ public class LoginServlet extends HttpServlet {
         }
         out.println(strResponse);
     }
-    // /* TODO: Löschen, wenn JUnit funktioniert*/
-    // private String getTest(){
-    // return this.test;
-    // }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -149,7 +118,7 @@ public class LoginServlet extends HttpServlet {
         JSONObject result = null;
 
         try {
-            googleId = json.getInt(JSONParameter.ID.toString());
+            googleId = json.getInt(JSONParameter.GOOGLE_ID.toString());
             String name = json.getString(JSONParameter.UserName.toString());
             user = usrMang.add(name, googleId);
         } catch (JSONException e) {
@@ -179,11 +148,10 @@ public class LoginServlet extends HttpServlet {
         User user = null;
 
         try {
-            // userID = json.getJSONArray(JSONParameter.UserID.toString()).getInt(0);
             userID = json.getInt(JSONParameter.UserID.toString());
         } catch (JSONException e) {
-            error = ErrorCodes.READ_JSON;
-            return ServletUtils.createJSONError(error);
+            // could happen, if no user exists and then no UserID was set;
+            userID = -1;
         }
         user = usrMang.getUser(userID);
         if (user != null) {
