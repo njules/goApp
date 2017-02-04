@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_centerInParent="true">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/login_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:title="@string/app_name"/>
+
 
 
     <com.google.android.gms.common.SignInButton
@@ -12,5 +23,13 @@
             android:layout_centerInParent="true"
             android:layout_height="wrap_content">
     </com.google.android.gms.common.SignInButton>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/sign_in"
+            android:layout_margin="16dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/login_text"/>
 
 </RelativeLayout>

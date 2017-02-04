@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
@@ -45,6 +46,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activty);
         findViewById(R.id.sign_in).setOnClickListener(this);
+        Toolbar loginToolbar = (Toolbar) findViewById(R.id.login_toolbar);
+        setSupportActionBar(loginToolbar);
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.clientId)).build();
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this).addApi(Auth.GOOGLE_SIGN_IN_API,googleSignInOptions).build();

@@ -7,6 +7,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
@@ -20,16 +21,16 @@ import org.json.JSONObject;
 public class GroupService extends IntentService {
 
     public static final String NAME = "GroupService";
-    public static final String ACTION_CREATE = "CREATE";
-    public static final String ACTION_DELETE = "DELETE";
-    public static final String ACTION_GET = "GET";
+    public static final String ACTION_CREATE = "CREATE_GROUP";
+    public static final String ACTION_DELETE = "DELETE_GROUP";
+    public static final String ACTION_GET = "GET_GROUP";
     public static final String ACTION_DELETE_MEMBER = "DELETE_MEMBER";
     public static final String ACTION_SET_NAME = "SET_NAME";
     public static final String ACTION_SET_FOUNDER = "SET_FOUNDER";
     public static final String ACTION_GET_EVENTS = "GET_EVENTS";
-    public static final String RESULT_CREATE = "RESULT_CREATE";
-    public static final String RESZULT_DELETE = "RESULT_DELETE";
-    public static final String RESULT_GET = "RESULT_GET";
+    public static final String RESULT_CREATE = "RESULT_CREATE_GROUP";
+    public static final String RESULT_DELETE = "RESULT_DELETE_GROUP";
+    public static final String RESULT_GET = "RESULT_GET_GROUP";
     public static final String RESULT_DELETE_MEMBER = "RESULT_DELETE_MEMBER";
     public static final String RESULT_SET_NAME = "RESULT_SET_NAME";
     public static final String RESULT_SET_FOUNDER = "RESULT_SET_FOUNDER";
@@ -60,7 +61,7 @@ public class GroupService extends IntentService {
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(getString(R.string.JSON), requestJson.toString());
         requestIntent.setAction(ACTION_CREATE);
 
         context.startService(requestIntent);
@@ -243,7 +244,7 @@ public class GroupService extends IntentService {
                 break;
             case ACTION_DELETE:
                 result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                resultIntent.setAction(RESZULT_DELETE);
+                resultIntent.setAction(RESULT_DELETE);
                 try {
                     //TODO what happens if error != 0
                     resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
