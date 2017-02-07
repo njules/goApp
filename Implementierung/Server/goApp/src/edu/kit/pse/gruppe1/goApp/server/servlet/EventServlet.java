@@ -8,6 +8,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,50 +46,7 @@ public class EventServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // String strResponse = null;
-        // String jsonString = null;
-        // JSONParameter.Methods method = null;
-        // response.setContentType("text/plain");
-        // PrintWriter out = null;
-        // // try {
-        // out = response.getWriter();
-        // jsonString = request.getReader().readLine();
-        // // } catch (IOException e1) {
-        // // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
-        // // out.println(strResponse);
-        // // return;
-        // // }
-        //
-        // if (jsonString == null) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
-        // out.println(strResponse);
-        // return;
-        // }
-        // try {
-        // JSONObject jsonRequest = new JSONObject(jsonString);
-        // method = JSONParameter.Methods
-        // .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
-        // switch (method) {
-        // case CREATE:
-        // strResponse = create(jsonRequest);
-        // break;
-        // case GET_EVENT:
-        // strResponse = getEvent(jsonRequest);
-        // break;
-        // case CHANGE:
-        // strResponse = change(jsonRequest);
-        // break;
-        // default:
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
-        // break;
-        // }
-        // out.println(strResponse);
-        // } catch (JSONException e) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
-        // out.println(strResponse);
-        // }
 
-        // TODO: delete old one, if new does work
         String strResponse = null;
         JSONObject jsonRequest = null;
         JSONParameter.Methods method = null;
@@ -97,14 +55,25 @@ public class EventServlet extends HttpServlet {
 
         out = response.getWriter();
 
+        jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            // response was set in extractJSON
+            return;
+        }
+        
         try {
-            method = ServletUtils.getMethod(request, jsonRequest);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
             } else {
                 error = ErrorCodes.READ_JSON;
             }
+        }
+
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
         }
 
         switch (method) {
@@ -123,6 +92,7 @@ public class EventServlet extends HttpServlet {
             }
             strResponse = ServletUtils.createJSONError(error).toString();
             break;
+
         }
         out.println(strResponse);
     }
@@ -159,12 +129,12 @@ public class EventServlet extends HttpServlet {
         int groupID = -1;
         JSONParameter.ErrorCodes err = ErrorCodes.OK;
 
-        //get all parameter from json
+        // get all parameter from json
         try {
             name = json.getString(JSONParameter.EventName.toString());
             longitude = json.getDouble(JSONParameter.Longitude.toString());
             latitude = json.getDouble(JSONParameter.Latitude.toString());
-            locName = json.getString(JSONParameter.LocationName.toString());           
+            locName = json.getString(JSONParameter.LocationName.toString());
             time = new Timestamp(json.getLong(JSONParameter.EventTime.toString()));
             creatorID = json.getInt(JSONParameter.UserID.toString());
             groupID = json.getInt(JSONParameter.GroupID.toString());
@@ -183,8 +153,11 @@ public class EventServlet extends HttpServlet {
 
     /**
      * calls methods for creating Error or Event JSONObject
-     * @param event Event to serialize
-     * @param error Error to serialize
+     * 
+     * @param event
+     *            Event to serialize
+     * @param error
+     *            Error to serialize
      * @return String with serialized JSONObject
      */
     private String createJSONObject(Event event, JSONParameter.ErrorCodes error) {
