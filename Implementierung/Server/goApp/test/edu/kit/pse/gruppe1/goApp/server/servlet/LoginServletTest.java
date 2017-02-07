@@ -47,9 +47,13 @@ public class LoginServletTest {
 
     @Mock
     private UserManagement mockUsrMang;
+    @Mock
     private HttpServletRequest mockHttpRequest;
+    @Mock
     private HttpServletResponse mockHttpResponse;
+    @Mock
     private PrintWriter mockPrintWriter;
+    @Mock
     private BufferedReader mockBuffRead;
 
     @Captor
@@ -215,6 +219,21 @@ public class LoginServletTest {
             fail();
         }
     }
+    
+    private JSONObject appendUserToJson(User user, JSONObject json){
+        try {
+            json.accumulate(JSONParameter.USER_ID.toString(), user.getUserId());
+            json.accumulate(JSONParameter.USER_NAME.toString(), user.getName());
+            json.accumulate(JSONParameter.GOOGLE_ID.toString(), user.getGoogleId());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        
+        return json;
+        
+    }
 
     /**
      * Test method for
@@ -223,15 +242,15 @@ public class LoginServletTest {
      */
     @Test
     public void testDoGetWithLogin() {
-        JSONObject newJson;
+        JSONObject newJson = null;
         User user = newLoginUser();
-        String jsonStr = "";
+        String jsonStr = appendUserToJson(user,sendJSONLogin).toString();
         
         when(mockUsrMang.getUser(user.getUserId())).thenReturn(user);
         try {
             when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
             when(mockBuffRead.readLine()).thenReturn(jsonStr);
-            when(mockHttpRequest.getReader().readLine()).thenReturn(jsonStr);
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
         } catch (IOException e) {
             e.printStackTrace();
             fail();
@@ -245,7 +264,12 @@ public class LoginServletTest {
         }
 
         verify(mockPrintWriter).println(captor.capture());
-        newJson = new JSONObject(captor);
+        try {
+            newJson = new JSONObject(captor.getValue());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
         checkUser(newJson, user);
     }
 
@@ -255,9 +279,75 @@ public class LoginServletTest {
      * .
      */
     @Test
-    @Ignore
     public void testDoPostWithLogin() {
-        fail("Not yet implemented");
+        JSONObject newJson = null;
+        User user = newLoginUser();
+        String jsonStr = appendUserToJson(user,sendJSONLogin).toString();
+        
+        when(mockUsrMang.getUser(user.getUserId())).thenReturn(user);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(jsonStr);
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+        try {
+            newJson = new JSONObject(captor.getValue());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        checkUser(newJson, user);
+    }
+    
+    /**
+     * Test method for
+     * {@link edu.kit.pse.gruppe1.goApp.server.servlet.LoginServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)}
+     * .
+     */
+    @Test
+    public void testDoGetWithRegister() {
+        JSONObject newJson = null;
+        User user = newRegisterUser();
+        String jsonStr = appendUserToJson(user,sendJSONRegister).toString();
+        
+        when(mockUsrMang.add(user.getName(), user.getGoogleId())).thenReturn(user);
+        when(mockUsrMang.getUser(anyInt())).thenReturn(null);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(jsonStr);
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doGet(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+        try {
+            newJson = new JSONObject(captor.getValue());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        checkUser(newJson, user);
     }
 
 }
