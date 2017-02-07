@@ -28,7 +28,7 @@ import org.json.JSONObject;
 public class LocationService extends IntentService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String SERVLET = "LocationServlet";
     private static final String NAME = "LocationService";
-    private static final String RESULT_LOCATION = "resultLocation";
+    public static final String RESULT_LOCATION = "resultLocation";
 
     private GoogleApiClient mGoogleApiClient;
     private android.location.Location mLastLocation;
