@@ -30,7 +30,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.NotificationService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.NewEventActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
@@ -163,6 +165,9 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
     private class ResultReceiver extends BroadcastReceiver {
         private AlarmManager notifyAlarmMgr;
         private PendingIntent notifyAlarmIntent;
+        private AlarmManager eventAlarmMgr;
+        private PendingIntent eventAlarmIntent;
+        private int beforEvent = 900000;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -176,7 +181,13 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                         notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
                         notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
                         //900000 is 15 mins in millis
-                        notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime()- 900000, notifyAlarmIntent);
+                        notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime()-beforEvent, notifyAlarmIntent);
+
+                        eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                        Intent eventIntent = new  Intent(context, LocationService.class);
+                        eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
+                        eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
+                        eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime()-beforEvent, eventAlarmIntent);
 
                         GroupActivity.start(NewEventActivity.this);
                     }

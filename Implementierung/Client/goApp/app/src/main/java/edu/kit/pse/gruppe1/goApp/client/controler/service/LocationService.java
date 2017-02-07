@@ -1,10 +1,15 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -32,6 +37,11 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
 
     private GoogleApiClient mGoogleApiClient;
     private android.location.Location mLastLocation;
+    private int refreshTime = 15000;
+    private int eventLength = 3600000;
+    private AlarmManager eventAlarmMgr;
+    private PendingIntent eventAlarmIntent;
+    private Event event;
 
     public LocationService() {
         super(NAME);
@@ -54,13 +64,21 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
                 mGoogleApiClient);
 
         if (mLastLocation != null) {
-            Event event = intent.getParcelableExtra(UtilService.EVENT);
+            event = intent.getParcelableExtra(UtilService.EVENT);
             Location[] locations = syncLocation(event.getId());
             Intent resultIntent = new Intent();
             resultIntent.setAction(RESULT_LOCATION);
             resultIntent.putExtra(UtilService.LOCATIONS, locations);
             LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
             manager.sendBroadcast(resultIntent);
+        }
+
+        if (System.currentTimeMillis()+refreshTime < event.getTime().getTime()+eventLength) {
+            eventAlarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+            Intent eventIntent = new Intent(this, LocationService.class);
+            eventIntent.putExtra(UtilService.EVENT, event);
+            eventAlarmIntent = PendingIntent.getService(this, 0, eventIntent, 0);
+            eventAlarmMgr.setWindow(AlarmManager.RTC, System.currentTimeMillis() + refreshTime, refreshTime, eventAlarmIntent);
         }
     }
 
