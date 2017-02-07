@@ -141,7 +141,7 @@ public enum JSONParameter {
         READ_JSON(1, "JSON could not be read."),
 
         WRITE_JSON(2, "JSON could not be wrote."),
-        
+
         EMPTY_JSON(3, "Empty JSON String"),
 
         DB_ERROR(4, "Error in Database."),
@@ -151,8 +151,11 @@ public enum JSONParameter {
         GRP_LIMIT(6, "Group limit was reached."),
 
         IO_ERROR(7, "Error with IO Methods."),
-        
-        ALGO_Error(8, "Error while processing Clusering.");
+
+        ALGO_Error(8, "Error while processing Clusering."),
+
+        CONNECTION_FAILED(9, "Connection to server failed.");
+
 
         private final String fieldDescription;
         private final int errCode;
@@ -172,7 +175,7 @@ public enum JSONParameter {
         public int getErrorCode() {
             return errCode;
         }
-        
+
         // TODO: JavaDocs
         public static ErrorCodes fromString(String s) {
             for (ErrorCodes err : ErrorCodes.values()) {
@@ -182,7 +185,7 @@ public enum JSONParameter {
             }
             return null;
         }
-        
+
     }
 
     // TODO: JavaDocs
