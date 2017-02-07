@@ -43,7 +43,7 @@ public class ParticipateServlet extends HttpServlet {
         }
         Methods method;
         try {
-            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
@@ -81,12 +81,12 @@ public class ParticipateServlet extends HttpServlet {
 	private String accept(JSONObject json) {
         JSONObject response = new JSONObject();
         try {
-            int event = Integer.parseInt(json.getString(JSONParameter.EventID.toString()));
-            int user = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            int event = Integer.parseInt(json.getString(JSONParameter.EVENT_ID.toString()));
+            int user = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
             if (!eventUser.updateStatus(event, user, Status.PARTICIPATE)) {
                 return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
             }
-            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+            response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
@@ -102,12 +102,12 @@ public class ParticipateServlet extends HttpServlet {
 	private String reject(JSONObject json) {
         JSONObject response = new JSONObject();
         try {
-            int event = Integer.parseInt(json.getString(JSONParameter.EventID.toString()));
-            int user = Integer.parseInt(json.getString(JSONParameter.UserID.toString()));
+            int event = Integer.parseInt(json.getString(JSONParameter.EVENT_ID.toString()));
+            int user = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
             if (!eventUser.delete(event, user)) {
                 return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
             }
-            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+            response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();

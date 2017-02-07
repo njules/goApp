@@ -132,17 +132,17 @@ public final class ServletUtils {
     protected static JSONObject createJSONEvent(Event event) {
         JSONObject json = new JSONObject();
         try {
-            json.accumulate(JSONParameter.EventName.toString(), event.getName());
-            json.accumulate(JSONParameter.EventTime.toString(), event.getTimestamp().getTime());
-            json.accumulate(JSONParameter.EventID.toString(), event.getEventId());
+            json.accumulate(JSONParameter.EVENT_NAME.toString(), event.getName());
+            json.accumulate(JSONParameter.EVENT_TIME.toString(), event.getTimestamp().getTime());
+            json.accumulate(JSONParameter.EVENT_ID.toString(), event.getEventId());
 
-            json.accumulate(JSONParameter.LocationName.toString(), event.getLocation().getName());
-            json.accumulate(JSONParameter.Longitude.toString(), event.getLocation().getLongitude());
-            json.accumulate(JSONParameter.Latitude.toString(), event.getLocation().getLatitude());
+            json.accumulate(JSONParameter.LOC_NAME.toString(), event.getLocation().getName());
+            json.accumulate(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
+            json.accumulate(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
 
-            json.accumulate(JSONParameter.GroupID.toString(), event.getGroup().getGroupId());
-            json.accumulate(JSONParameter.UserID.toString(), event.getCreator().getUserId());
-            json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+            json.accumulate(JSONParameter.GRUOP_ID.toString(), event.getGroup().getGroupId());
+            json.accumulate(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -154,10 +154,10 @@ public final class ServletUtils {
         JSONObject json = new JSONObject();
 
         try {
-            json.accumulate(JSONParameter.LocationName.toString(), location.getName());
-            json.accumulate(JSONParameter.Longitude.toString(), location.getLongitude());
-            json.accumulate(JSONParameter.Latitude.toString(), location.getLatitude());
-            json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+            json.accumulate(JSONParameter.LOC_NAME.toString(), location.getName());
+            json.accumulate(JSONParameter.LONGITUDE.toString(), location.getLongitude());
+            json.accumulate(JSONParameter.LATITUDE.toString(), location.getLatitude());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -169,12 +169,12 @@ public final class ServletUtils {
         JSONObject json = new JSONObject();
 
         try {
-            json.accumulate(JSONParameter.UserID.toString(), group.getFounder().getUserId());
-            json.accumulate(JSONParameter.UserName.toString(), group.getFounder().getName());
-            json.accumulate(JSONParameter.GroupName.toString(), group.getName());
-            json.accumulate(JSONParameter.GroupID.toString(), group.getGroupId());
+            json.accumulate(JSONParameter.USER_ID.toString(), group.getFounder().getUserId());
+            json.accumulate(JSONParameter.USER_NAME.toString(), group.getFounder().getName());
+            json.accumulate(JSONParameter.GROUP_NAME.toString(), group.getName());
+            json.accumulate(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
 
-            json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -185,9 +185,9 @@ public final class ServletUtils {
     protected static JSONObject createJSONUser(User user) {
         JSONObject json = new JSONObject();
         try {
-            json.accumulate(JSONParameter.UserID.toString(), user.getUserId());
-            json.accumulate(JSONParameter.UserName.toString(), user.getName());
-            json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+            json.accumulate(JSONParameter.USER_ID.toString(), user.getUserId());
+            json.accumulate(JSONParameter.USER_NAME.toString(), user.getName());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -201,7 +201,7 @@ public final class ServletUtils {
             for (Event evt : event) {
                 json.append(JSONParameter.LIST_EVENT.toString(), createJSONEvent(evt));
             }
-            json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -215,7 +215,7 @@ public final class ServletUtils {
             for (User usr : user) {
                 json.append(JSONParameter.LIST_USER.toString(), createJSONUser(usr));
             }
-            json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -229,7 +229,7 @@ public final class ServletUtils {
             for (Group grp : group) {
                 json.append(JSONParameter.LIST_GROUP.toString(), createJSONGroup(grp));
             }
-            json.put(JSONParameter.ErrorCode.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -240,7 +240,7 @@ public final class ServletUtils {
     protected static JSONObject createJSONError(JSONParameter.ErrorCodes error) {
         JSONObject res = new JSONObject();
         try {
-            res.put(JSONParameter.ErrorCode.toString(), error.getErrorCode());
+            res.put(JSONParameter.ERROR_CODE.toString(), error.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

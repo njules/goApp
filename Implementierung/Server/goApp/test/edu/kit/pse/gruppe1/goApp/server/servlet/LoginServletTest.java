@@ -79,9 +79,9 @@ public class LoginServletTest {
         try {
             sendJSONLogin = new JSONObject();
             sendJSONRegister = new JSONObject();
-            sendJSONLogin.put(JSONParameter.Method.toString(),
+            sendJSONLogin.put(JSONParameter.METHOD.toString(),
                     JSONParameter.Methods.LOGIN.toString());
-            sendJSONRegister.put(JSONParameter.Method.toString(),
+            sendJSONRegister.put(JSONParameter.METHOD.toString(),
                     JSONParameter.Methods.REGISTER.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -137,8 +137,8 @@ public class LoginServletTest {
     private JSONObject loginMethod(User user) {
         JSONObject json = new JSONObject();
         try {
-            json.accumulate(JSONParameter.UserName.toString(), user.getName());
-            json.accumulate(JSONParameter.UserID.toString(), user.getUserId());
+            json.accumulate(JSONParameter.USER_NAME.toString(), user.getName());
+            json.accumulate(JSONParameter.USER_ID.toString(), user.getUserId());
             json.accumulate(JSONParameter.GOOGLE_ID.toString(), user.getGoogleId());
         } catch (JSONException e1) {
             e1.printStackTrace();
@@ -150,7 +150,7 @@ public class LoginServletTest {
     private JSONObject registerMethod(User user) {
         JSONObject json = new JSONObject();
         try {
-            json.accumulate(JSONParameter.UserName.toString(), user.getName());
+            json.accumulate(JSONParameter.USER_NAME.toString(), user.getName());
             json.accumulate(JSONParameter.GOOGLE_ID.toString(), user.getGoogleId());
         } catch (JSONException e1) {
             e1.printStackTrace();
@@ -205,8 +205,8 @@ public class LoginServletTest {
         if (newJson != null) {
             try {
                 assertEquals(ErrorCodes.OK.toString(),
-                        newJson.getString(JSONParameter.ErrorCode.toString()));
-                assertEquals(user.getName(), newJson.getString(JSONParameter.UserName.toString()));
+                        newJson.getString(JSONParameter.ERROR_CODE.toString()));
+                assertEquals(user.getName(), newJson.getString(JSONParameter.USER_NAME.toString()));
             } catch (JSONException e) {
                 e.printStackTrace();
                 fail();
