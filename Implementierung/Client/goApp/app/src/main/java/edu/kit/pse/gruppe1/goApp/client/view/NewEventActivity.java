@@ -76,6 +76,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         timepicker = (TimePicker) findViewById(R.id.time_picker);
         timepicker.setIs24HourView(true);
         datepicker = (DatePicker) findViewById(R.id.date_picker);
+
     }
 
     @Override
@@ -125,8 +126,6 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
                     notifyAlarmIntent = PendingIntent.getService(this, 0, notifyIntent, 0);
                     notifyAlarmMgr.setExact(AlarmManager.RTC_WAKEUP, timestamp.getTime(), notifyAlarmIntent);
-                    Toast.makeText(this, "TEST", Toast.LENGTH_SHORT).show();
-
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -145,7 +144,6 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         LatLng karlsruhe = new LatLng(49.0068901, 8.4036527);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(karlsruhe, 15));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
             ActivityCompat.requestPermissions(this, permissions, 0);
             return;
