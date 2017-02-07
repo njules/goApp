@@ -19,14 +19,15 @@ import org.json.JSONObject;
 public class EventService extends IntentService {
 
     public static final String NAME = "EventService";
-    public static final String ACTION_CREATE = "CREATE";
-    public static final String RESULT_CREATE = "RESULT_CREATE";
-    public static final String ACTION_GET = "GET";
-    public static final String RESULT_GET = "RESULT_GET";
-    public static final String ACTION_CHANGE = "CHANGE";
-    public static final String RESULT_CHANGE = "RESULT_CHANGE";
     public static final String SERVLET = "EventServlet";
-
+    //Intent actions to start the service
+    public static final String ACTION_CREATE = "CREATE";
+    public static final String ACTION_GET = "GET";
+    public static final String ACTION_CHANGE = "CHANGE";
+    //Intent actions to broadcast results
+    public static final String RESULT_CHANGE = "RESULT_CHANGE";
+    public static final String RESULT_CREATE = "RESULT_CREATE";
+    public static final String RESULT_GET = "RESULT_GET";
 
     public EventService() {
         super(NAME);
@@ -51,13 +52,13 @@ public class EventService extends IntentService {
             requestJson.put(JSONParameter.Latitude.toString(), destination.getLatitude());
             requestJson.put(JSONParameter.Longitude.toString(), destination.getLongitude());
             requestJson.put(JSONParameter.EventTime.toString(), time.getTime());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_CREATE);
+            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.CREATE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_CREATE);
 
         context.startService(requestIntent);
@@ -74,13 +75,13 @@ public class EventService extends IntentService {
 
         try {
             requestJson.put(JSONParameter.EventID.toString(), eventID);
-            requestJson.put(JSONParameter.Method.toString(), ACTION_GET);
+            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_EVENT.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_GET);
 
         startService(requestIntent);
@@ -99,13 +100,13 @@ public class EventService extends IntentService {
             //TODO add Eventattributes which should be able to be changed
             requestJson.put(JSONParameter.EventID.toString(), event.getId());
             requestJson.put(JSONParameter.EventName.toString(), event.getName());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_CHANGE);
+            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.CHANGE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_CHANGE);
 
         startService(requestIntent);
@@ -119,11 +120,11 @@ public class EventService extends IntentService {
         switch (intent.getAction()) {
             case ACTION_CREATE:
                 //TODO start alarm for notification and locationSync
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
                 resultIntent.setAction(intent.getAction());
                 try {
                     //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
+                    resultIntent.putExtra(UtilService.ERROR, result.getInt(JSONParameter.ErrorCode.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -131,27 +132,17 @@ public class EventService extends IntentService {
                 break;
             //TODO Methode soll Teilnehmer und "Mittelpunkte" laden.
             case ACTION_GET:
-                result = connection.sendGetRequest(intent.getStringExtra("JSON"));
+                result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
                 //TODO Exaptions and errors
-                Event event = null;
-                try {
-                    event = new Event(
-                            result.getInt(JSONParameter.EventID.toString()),
-                            result.getString(JSONParameter.EventName.toString()),
-                            new Date(result.getLong(JSONParameter.EventTime.toString())),
-                            new Location(result.getDouble(JSONParameter.Latitude.toString()), result.getDouble(JSONParameter.Longitude.toString()), result.getString(JSONParameter.LocationName.toString())));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                resultIntent.putExtra("Event", event);
+                resultIntent.putExtra(UtilService.EVENT, UtilService.getEvent(result));
                 resultIntent.setAction(RESULT_GET);
 
                 break;
             case ACTION_CHANGE:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
                 try {
                     //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
+                    resultIntent.putExtra(UtilService.ERROR, result.getInt(JSONParameter.ErrorCode.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
