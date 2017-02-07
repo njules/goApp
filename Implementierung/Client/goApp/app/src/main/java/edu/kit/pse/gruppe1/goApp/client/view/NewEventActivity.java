@@ -30,7 +30,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.NotificationService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.NewEventActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
@@ -76,6 +78,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         timepicker = (TimePicker) findViewById(R.id.time_picker);
         timepicker.setIs24HourView(true);
         datepicker = (DatePicker) findViewById(R.id.date_picker);
+
     }
 
     @Override
@@ -125,8 +128,6 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
                     notifyAlarmIntent = PendingIntent.getService(this, 0, notifyIntent, 0);
                     notifyAlarmMgr.setExact(AlarmManager.RTC_WAKEUP, timestamp.getTime(), notifyAlarmIntent);
-                    Toast.makeText(this, "TEST", Toast.LENGTH_SHORT).show();
-
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -145,7 +146,6 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         LatLng karlsruhe = new LatLng(49.0068901, 8.4036527);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(karlsruhe, 15));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
             ActivityCompat.requestPermissions(this, permissions, 0);
             return;
@@ -165,6 +165,9 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
     private class ResultReceiver extends BroadcastReceiver {
         private AlarmManager notifyAlarmMgr;
         private PendingIntent notifyAlarmIntent;
+        private AlarmManager eventAlarmMgr;
+        private PendingIntent eventAlarmIntent;
+        private int beforEvent = 900000;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -178,7 +181,13 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                         notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
                         notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
                         //900000 is 15 mins in millis
-                        notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime()- 900000, notifyAlarmIntent);
+                        notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime()-beforEvent, notifyAlarmIntent);
+
+                        eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                        Intent eventIntent = new  Intent(context, LocationService.class);
+                        eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
+                        eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
+                        eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime()-beforEvent, eventAlarmIntent);
 
                         GroupActivity.start(NewEventActivity.this);
                     }
