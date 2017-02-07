@@ -35,10 +35,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * @author Eva-Maria
- *
- */
 
 public class LoginServletTest {
     private LoginServlet servlet;
@@ -111,7 +107,7 @@ public class LoginServletTest {
         when(mockUsrMang.getUser(realUsr.getUserId())).thenReturn(realUsr);
 
         newJson = loginMethod(realUsr);
-        checkUser(newJson, realUsr);
+        ServletTestUtils.checkUser(newJson, realUsr);
     }
 
     @Test
@@ -122,7 +118,7 @@ public class LoginServletTest {
         when(mockUsrMang.add(user.getName(), user.getGoogleId())).thenReturn(user);
 
         newJson = registerMethod(user);
-        checkUser(newJson, user);
+        ServletTestUtils.checkUser(newJson, user);
 
     }
 
@@ -135,7 +131,7 @@ public class LoginServletTest {
         when(mockUsrMang.add(user.getName(), user.getGoogleId())).thenReturn(user);
 
         newJson = loginMethod(user);
-        checkUser(newJson, user);
+        ServletTestUtils.checkUser(newJson, user);
     }
 
     private JSONObject loginMethod(User user) {
@@ -205,20 +201,21 @@ public class LoginServletTest {
         return user;
     }
 
-    private void checkUser(JSONObject newJson, User user) {
-        if (newJson != null) {
-            try {
-                assertEquals(ErrorCodes.OK.toString(),
-                        newJson.getString(JSONParameter.ERROR_CODE.toString()));
-                assertEquals(user.getName(), newJson.getString(JSONParameter.USER_NAME.toString()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-                fail();
-            }
-        } else {
-            fail();
-        }
-    }
+    //  try shared
+//    private void checkUser(JSONObject newJson, User user) {
+//        if (newJson != null) {
+//            try {
+//                assertEquals(ErrorCodes.OK.toString(),
+//                        newJson.getString(JSONParameter.ERROR_CODE.toString()));
+//                assertEquals(user.getName(), newJson.getString(JSONParameter.USER_NAME.toString()));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//                fail();
+//            }
+//        } else {
+//            fail();
+//        }
+//    }
     
     private JSONObject appendUserToJson(User user, JSONObject json){
         try {
@@ -270,7 +267,7 @@ public class LoginServletTest {
             e.printStackTrace();
             fail();
         }
-        checkUser(newJson, user);
+        ServletTestUtils.checkUser(newJson, user);
     }
 
     /**
@@ -308,7 +305,7 @@ public class LoginServletTest {
             e.printStackTrace();
             fail();
         }
-        checkUser(newJson, user);
+        ServletTestUtils.checkUser(newJson, user);
     }
     
     /**
@@ -347,7 +344,7 @@ public class LoginServletTest {
             e.printStackTrace();
             fail();
         }
-        checkUser(newJson, user);
+        ServletTestUtils.checkUser(newJson, user);
     }
 
 }
