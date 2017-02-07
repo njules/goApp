@@ -59,8 +59,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         loginService = new LoginService();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver,new IntentFilter(LoginService.RESULT_LOGIN));
 
-        //String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
-        //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
+        ActivityCompat.requestPermissions(this, permissions, 0);
     }
 
     private void SignIn(){

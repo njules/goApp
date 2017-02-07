@@ -31,7 +31,7 @@ public class GroupSearchService extends IntentService {
     public static final String ACTION_GET_BY_NAME = "GET_BY_NAME";
     public static final String ACTION_GET_BY_MEMBER = "GET_BY_MEMBER";
     public static final String RESULT_GET_BY_MEMBER = "RESULT_BY_MEMBER";
-    public static final String RESULT_GET_BY_NAME = "RESULT_BY_MEMBER";
+    public static final String RESULT_GET_BY_NAME = "RESULT_BY_NAME";
     public static final String SERVLET = "GroupSearchServlet";
     private static final String name = "GroupSearchService";
 
@@ -52,13 +52,14 @@ public class GroupSearchService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_GET_BY_MEMBER);
+            //TODO ID als int und nicht String schicken
+            requestJson.put(JSONParameter.UserID.toString(), "" + user.getId());
+            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_GRP_MEM.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         Intent requestIntent = new Intent(context, GroupSearchService.class);
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra("JSON", requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_MEMBER);
         context.startService(requestIntent);
     }
@@ -75,19 +76,20 @@ public class GroupSearchService extends IntentService {
 
         try {
             requestJson.put(JSONParameter.GroupName.toString(), name);
-            requestJson.put(JSONParameter.Method.toString(), ACTION_GET_BY_NAME);
+            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_GRP_NAME.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra("JSON", requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_NAME);
         context.startService(requestIntent);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.i("GroupSearch",intent.getStringExtra("JSON"));
         Group[] groups = getGroups(intent.getStringExtra("JSON"));
         Intent resultIntent = new Intent();
         resultIntent.putExtra("groups", groups);
@@ -110,8 +112,10 @@ public class GroupSearchService extends IntentService {
     private Group[] getGroups(String json) {
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendGetRequest(json);
+        Log.i("SearchGroup",result.toString());
         try {
-            if (result.getInt(JSONParameter.ErrorCode.toString()) == JSONParameter.ErrorCodes.OK.getErrorCode()) {
+            //TODO Error Code nicht beschreibung senden
+            if (result.getJSONArray(JSONParameter.ErrorCode.toString()).getString(0).equals(JSONParameter.ErrorCodes.OK.toString())) {
                 JSONArray name = result.getJSONArray(JSONParameter.GroupName.toString());
                 JSONArray id = result.getJSONArray(JSONParameter.GroupID.toString());
                 Group[] groups = new Group[name.length()];
@@ -119,8 +123,9 @@ public class GroupSearchService extends IntentService {
                     User user = new User(0,"Test"+i);
                     // TODO : User user = new User(result.getInt(JSONParameter.UserID.toString()), result.getString(JSONParameter.UserName.toString()));
                     groups[i] = new Group(
-                            (int) name.get(i),
-                            (String) id.get(i), user);
+                            (int) id.get(i),
+                            (String) name.get(i),
+                            user);
                 }
                 return groups;
             }

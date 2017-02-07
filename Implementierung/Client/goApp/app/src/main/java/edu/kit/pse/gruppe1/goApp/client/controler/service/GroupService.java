@@ -37,6 +37,9 @@ public class GroupService extends IntentService {
     public static final String RESULT_GET_EVENTS = "RESULT_GET_EVENTS";
     public static final String SERVLET = "GroupServlet";
 
+    private HTTPConnection connection;
+    private JSONObject requestJson;
+
     public GroupService() {
         super(NAME);
     }
@@ -50,7 +53,7 @@ public class GroupService extends IntentService {
      * @return true, if method was successful, otherwise false
      */
     public void create(Context context, String name, User founder) {
-        JSONObject requestJson = new JSONObject();
+        requestJson = new JSONObject();
 
         try {
             requestJson.put(JSONParameter.GroupName.toString(), name);
@@ -61,7 +64,7 @@ public class GroupService extends IntentService {
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra(getString(R.string.JSON), requestJson.toString());
+        requestIntent.putExtra("JSON", requestJson.toString());
         requestIntent.setAction(ACTION_CREATE);
 
         context.startService(requestIntent);
@@ -200,7 +203,7 @@ public class GroupService extends IntentService {
         try {
             requestJson.put(JSONParameter.GroupID.toString(), group.getId());
             //TODO JSON Parameter
-            requestJson.put(JSONParameter.Method.toString(), ACTION_GET_EVENTS);
+            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_EVENT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -215,7 +218,7 @@ public class GroupService extends IntentService {
     //TODO change model classes of client after successful change
     @Override
     protected void onHandleIntent(Intent intent) {
-        HTTPConnection connection = new HTTPConnection(SERVLET);
+        connection = new HTTPConnection(SERVLET);
         Intent resultIntent = new Intent();
         JSONObject result;
         switch (intent.getAction()) {

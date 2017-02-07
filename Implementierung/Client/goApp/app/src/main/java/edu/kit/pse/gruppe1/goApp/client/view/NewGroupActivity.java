@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,22 +76,12 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestService.RESULT_CREATE));
     }
 
-    //TODO: Wieder löschen nur zum Testzweck
-    private Group[] fillGroupDataset() {
-        Group[] groups = new Group[15];
-        for (int i = 0; i < 15; i++) {
-            groups[i] = new Group(i, "name" + i, Preferences.getUser());
-        }
-        return groups;
-    }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
                 //TODO Tastatur ausblenden
                 String search = et.getText().toString();
-                receiver.onReceive(this,new Intent(GroupSearchService.RESULT_GET_BY_NAME));
-                //groupSearchService.getGroupsByName(this,search);
+                groupSearchService.getGroupsByName(this,search);
                 //Todo Hier nach den angefragten Gruppen suchen (GroupSearchService)
                 return true;
             default:
@@ -113,14 +104,17 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case GroupSearchService.RESULT_GET_BY_NAME:
-                    //groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
-                    groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
+                    if (intent.getParcelableArrayExtra("groups") == null){
+                        Toast.makeText(getApplicationContext(), getString(R.string.NoGroup), Toast.LENGTH_LONG).show();
+                        break;
+                    }
+                    groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
                             Group group = groupAdapter.getItem(position);
                             //requestService.create(NewGroupActivity.this,Preferences.getUser(),group);
                             //Todo Hier Anfrage erstellen
-                            String output = "" + group.getName() + R.string.request_send;
+                            String output = group.getName() + getString(R.string.request_send);
                             Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
                         }
                     });
