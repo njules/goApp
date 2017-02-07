@@ -174,8 +174,8 @@ public class StartActivity extends AppCompatActivity implements Communicator {
             switch (intent.getAction()) {
                 case GroupSearchService.RESULT_GET_BY_MEMBER:
                     Log.i("GroupSearch",intent.toString());
-                    if (intent.getParcelableArrayExtra("groups") == null){break;}
-                    groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
+                    if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null){break;}
+                    groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
                     //groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
@@ -187,7 +187,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     groupRecyclerView.setAdapter(groupAdapter);
                     break;
                 case RequestSearchService.RESULT_GET_BY_USER:
-                    //requestAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
+                    //requestAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
                     requestAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
@@ -199,7 +199,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
                 case RequestService.RESULT_REJECT:
-                    if (intent.getBooleanExtra("ERROR", false)) {
+                    if (intent.getBooleanExtra(UtilService.ERROR, false)) {
                         Toast.makeText(StartActivity.this,"Anfrage abgebrochen",Toast.LENGTH_SHORT).show();
                         //requestAdapter.deleteItem()
                         //TODO when to delete the request
@@ -207,7 +207,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     //TODO error?? Service shcickt anfangs requestIntent zurück
                     break;
                 case UserService.RESULT_CHANGE:
-                    if (intent.getBooleanExtra("ERROR", false)) {
+                    if (intent.getBooleanExtra(UtilService.ERROR, false)) {
                         Toast.makeText(StartActivity.this,"Name geändert",Toast.LENGTH_SHORT).show();
                         //user.setName();
                         //TODO when to change the name

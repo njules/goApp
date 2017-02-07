@@ -39,7 +39,7 @@ public class LoginService extends IntentService {
     public void login(Context context, GoogleSignInResult result) {
 
         Intent requestIntent = new Intent(context, LoginService.class);
-        requestIntent.putExtra("JSON", createJson(result).toString());
+        requestIntent.putExtra(UtilService.JSON, createJson(result).toString());
         requestIntent.setAction(ACTION_LOGIN);
         Log.i("Login",createJson(result).toString());
         context.startService(requestIntent);
@@ -71,7 +71,7 @@ public class LoginService extends IntentService {
         Log.i("Login","LoginService started");
         HTTPConnection connection = new HTTPConnection(SERVLET);
         Log.i("Login",intent.getStringExtra("JSON"));
-        JSONObject result = connection.sendPostRequest(intent.getStringExtra("JSON"));
+        JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
         Log.i("Login","server answer received" + result.toString());
         Intent resultIntent = new Intent();
         resultIntent.setAction(RESULT_LOGIN);
@@ -81,11 +81,11 @@ public class LoginService extends IntentService {
                 String name = result.getString(JSONParameter.UserName.toString());
                 int id = result.getInt(JSONParameter.UserID.toString());
                 Preferences.setUser(new User(id, name));
-                resultIntent.putExtra("ERROR", true);
-            } else resultIntent.putExtra("ERROR", false);
+                resultIntent.putExtra(UtilService.ERROR, true);
+            } else resultIntent.putExtra(UtilService.ERROR, false);
         } catch (JSONException e) {
             e.printStackTrace();
-            resultIntent.putExtra("ERROR", false);
+            resultIntent.putExtra(UtilService.ERROR, false);
         }
         resultIntent.setAction(RESULT_LOGIN);
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());

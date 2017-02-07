@@ -2,6 +2,7 @@ package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
 import java.sql.Date;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
@@ -130,11 +131,10 @@ public class EventService extends IntentService {
                 }
                 resultIntent.setAction(RESULT_CREATE);
                 break;
-            //TODO Methode soll Teilnehmer und "Mittelpunkte" laden.
             case ACTION_GET:
                 result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
-                //TODO Exaptions and errors
-                resultIntent.putExtra(UtilService.EVENT, UtilService.getEvent(result));
+                //TODO Exeptions and errors and Status of participants
+                resultIntent.putExtra(UtilService.USERS, UtilService.getUsers(result));
                 resultIntent.setAction(RESULT_GET);
 
                 break;
