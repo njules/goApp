@@ -64,7 +64,7 @@ public class RequestServlet extends HttpServlet {
 
         try {
             method = JSONParameter.Methods
-                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -131,8 +131,8 @@ public class RequestServlet extends HttpServlet {
         int userSum = 0;
 
         try {
-            userID = json.getInt(JSONParameter.UserID.toString());
-            newGroupID = json.getInt(JSONParameter.GroupID.toString());
+            userID = json.getInt(JSONParameter.USER_ID.toString());
+            newGroupID = json.getInt(JSONParameter.GRUOP_ID.toString());
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
@@ -191,8 +191,8 @@ public class RequestServlet extends HttpServlet {
 
         // read User and Group ID from JSON
         try {
-            userID = json.getInt(JSONParameter.UserID.toString());
-            groupID = json.getInt(JSONParameter.GroupID.toString());
+            userID = json.getInt(JSONParameter.USER_ID.toString());
+            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
@@ -223,8 +223,8 @@ public class RequestServlet extends HttpServlet {
 
         // read User and Group ID from JSON
         try {
-            userID = json.getInt(JSONParameter.UserID.toString());
-            groupID = json.getInt(JSONParameter.GroupID.toString());
+            userID = json.getInt(JSONParameter.USER_ID.toString());
+            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }

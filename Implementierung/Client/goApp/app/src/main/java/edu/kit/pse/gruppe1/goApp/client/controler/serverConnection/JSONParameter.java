@@ -1,11 +1,12 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.serverConnection;
 
-import android.support.annotation.Nullable;
 /**
  * Enumerations with all possible parameter-types for the JSON-strings.
  */
 public enum JSONParameter {
-    // TODO: Großbuchstaben
+  
+    // TODO: String weg machen ->�berfl�ssig?
+    // TODO: Gro�buchstaben -> mit Katha vorher abkl�ren -> wird zu Fehlern bei ihr f�hren.
     /**
      * 
      * ID of the request
@@ -20,7 +21,7 @@ public enum JSONParameter {
      * 
      */
 
-    UserID("UserID"),
+    USER_ID("UserID"),
 
     /**
      * 
@@ -28,7 +29,7 @@ public enum JSONParameter {
      * 
      */
 
-    GroupID("GroupID"),
+    GRUOP_ID("GroupID"),
 
     /**
      * 
@@ -36,7 +37,7 @@ public enum JSONParameter {
      * 
      */
 
-    EventID("EventID"),
+    EVENT_ID("EventID"),
 
     /**
      * 
@@ -44,7 +45,7 @@ public enum JSONParameter {
      * 
      */
 
-    UserName("UserName"),
+    USER_NAME("UserName"),
 
     /**
      * 
@@ -52,7 +53,7 @@ public enum JSONParameter {
      * 
      */
 
-    GroupName("GroupName"),
+    GROUP_NAME("GroupName"),
 
     /**
      * 
@@ -60,7 +61,7 @@ public enum JSONParameter {
      * 
      */
 
-    EventName("EventName"),
+    EVENT_NAME("EventName"),
 
     /**
      * 
@@ -68,7 +69,7 @@ public enum JSONParameter {
      * 
      */
 
-    EventTime("EventTime"),
+    EVENT_TIME("EventTime"),
 
     /**
      * 
@@ -76,32 +77,53 @@ public enum JSONParameter {
      * 
      */
 
-    Longitude("Longitude"),
+    LONGITUDE("Longitude"),
 
     /**
      * Latitude of an location
      * 
      */
 
-    Latitude("Latitude"),
+    LATITUDE("Latitude"),
 
     /**
      * name of an location
      */
 
-    LocationName("LocationName"),
+    LOC_NAME("LocationName"),
 
     /**
      * method (from enum Methods)
      */
 
-    Method("Method"),
+    METHOD("Method"),
 
     /**
      * ErrorCode (from enum ErrorCodes)
      */
 
-    ErrorCode("ErrorCode");
+    ERROR_CODE("ErrorCode"),
+
+    /**
+     * List of User
+     */
+    LIST_USER("ListUser"),
+
+    /**
+     * List of Group
+     */
+
+    LIST_GROUP("ListGroup"),
+
+    /**
+     * List of Group
+     */
+    LIST_EVENT("ListEvent"),
+
+    /**
+     * Google ID
+     */
+    GOOGLE_ID("GoogleId");
 
     private final String fieldDescription;
 
@@ -152,9 +174,12 @@ public enum JSONParameter {
 
         IO_ERROR(7, "Error with IO Methods."),
 
-        ALGO_Error(8, "Error while processing Clusering."),
+        ALGO_ERROR(8, "Error while processing Clusering."),
 
-        CONNECTION_FAILED(9, "Connection to server failed.");
+
+        METH_ERROR(9, "Method not found."),
+
+        CONNECTION_FAILED(10, "Connection to server failed.");
 
 
         private final String fieldDescription;
@@ -165,13 +190,13 @@ public enum JSONParameter {
             errCode = code;
         }
 
-        //TODO: JavaDocs
+        // TODO: JavaDocs
         @Override
         public String toString() {
             return fieldDescription;
         }
 
-        //TODO: JavaDocs
+        // TODO: JavaDocs
         public int getErrorCode() {
             return errCode;
         }
@@ -180,6 +205,16 @@ public enum JSONParameter {
         public static ErrorCodes fromString(String s) {
             for (ErrorCodes err : ErrorCodes.values()) {
                 if (err.toString().equals(s)) {
+                    return err;
+                }
+            }
+            return null;
+        }
+        
+        //TODO: JavDocs
+        public static ErrorCodes fromErCode(int i){
+            for (ErrorCodes err : ErrorCodes.values()) {
+                if (err.getErrorCode() == i) {
                     return err;
                 }
             }
@@ -293,7 +328,12 @@ public enum JSONParameter {
         /**
          * Participate.reject Request.reject
          */
-        REJECT;
+        REJECT,
+
+        /**
+         * No Method was found - equals null, but does not produce NullPointerException
+         */
+        NONE;
 
         // TODO: JavaDocs
         public static Methods fromString(String s) {
@@ -302,7 +342,7 @@ public enum JSONParameter {
                     return meth;
                 }
             }
-            return null;
+            return NONE;
         }
     }
 

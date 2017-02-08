@@ -29,6 +29,14 @@ public class EventUserManagement implements Management {
         return event.getParticipant(userId);
     }
 
+    public List<Participant> getParticipants(int eventId) {
+        Event event = new EventManagement().getEvent(eventId);
+        if (event == null) {
+            return null;
+        }
+        return new ArrayList<>(event.getParticipants());
+    }
+
     /**
      * adds new entry to table
      * 

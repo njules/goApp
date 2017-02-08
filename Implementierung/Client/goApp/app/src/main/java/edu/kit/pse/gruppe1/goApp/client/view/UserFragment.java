@@ -1,6 +1,9 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.DialogFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import edu.kit.pse.gruppe1.goApp.client.R;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoFragmentMemberBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
@@ -64,5 +69,19 @@ public class UserFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         //TODO delete Group
         StartActivity.start(getActivity());
+    }
+
+    private class ResultReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case GroupService.RESULT_GET_MEMBERS:
+                    if (intent.getBooleanExtra(UtilService.ERROR, false)) {
+                    }
+                    break;
+                //TODO default
+            }
+        }
     }
 }

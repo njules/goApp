@@ -38,7 +38,6 @@ public class NewGroupFragment extends DialogFragment {
                         //groupService.create(getActivity(),et.getText().toString(), Preferences.getUser());
                         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(GroupService.RESULT_CREATE));
                         //Todo Hier neue Gruppe erstellen(GroupService)
-                        StartActivity.start(getActivity());
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
