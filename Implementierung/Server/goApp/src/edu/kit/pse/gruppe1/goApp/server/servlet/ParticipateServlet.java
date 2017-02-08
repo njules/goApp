@@ -64,7 +64,7 @@ public class ParticipateServlet extends HttpServlet {
         default: 
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
         }
-=	}
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
