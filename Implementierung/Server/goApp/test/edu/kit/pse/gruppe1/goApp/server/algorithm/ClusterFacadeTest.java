@@ -1,81 +1,96 @@
 package edu.kit.pse.gruppe1.goApp.server.algorithm;
 
-import edu.kit.pse.gruppe1.goApp.server.database.management.*;
-import edu.kit.pse.gruppe1.goApp.server.model.*;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
+import org.junit.Before;
+
+import org.junit.Test;
+
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import edu.kit.pse.gruppe1.goApp.server.model.User;
+
+import java.lang.reflect.Field;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.math4.ml.clustering.Cluster;
-import org.apache.commons.math4.ml.clustering.Clusterer;
-import org.apache.commons.math4.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math4.ml.clustering.DoublePoint;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-
+import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Event;
+import edu.kit.pse.gruppe1.goApp.server.model.Location;
 
 public class ClusterFacadeTest {
 
-  
-    
-    
-    @Test 
+    private ClusterFacade facade = new ClusterFacade();
+    private int testId = 214124;
+
+    @Mock
+    private Event event;
+    @Mock
+    private EventUserManagement management;
+    @Mock
+    private User u1;
+    @Mock
+    private User u2;
+    @Mock
+    private User u3;
+    @Mock
+    private User u4;
+    @Mock
+    private User u5;
+    @Mock
+    private User u6;
+    @Mock
+    private User u7;
+
+    @Before
+    public void setUp() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+            IllegalAccessException {
+        String name = "management";
+        Field field = facade.getClass().getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(facade, management);
+    }
+
+    @Test
     public void testOne() {
-        
-        
-        EventUserManagement mockedManager = Mockito.mock(EventUserManagement.class);
-        Event event = Mockito.mock(Event.class);
-        ClusterFacade facade = Mockito.mock(ClusterFacade.class);
-        
-        
-        
+
         MockitoAnnotations.initMocks(this);
-        ArrayList<DoublePoint> list = new ArrayList<DoublePoint>();
-        list.add(new DoublePoint(new double[] {34,33}));
-        list.add(new DoublePoint(new double[] {34.3,33.001}));
-        list.add(new DoublePoint(new double[] {0.0,0.1}));
-        list.add(new DoublePoint(new double[] {1.0001,2}));
-        list.add(new DoublePoint(new double[] {1.00,2.003}));
-        list.add(new DoublePoint(new double[] {34.001,34.00001}));
-        list.add(new DoublePoint(new double[] {34,34.002}));
+
+        ArrayList<User> userList = new ArrayList<User>();
+        userList.add(u1);
+        userList.add(u2);
+        userList.add(u3);
+        userList.add(u4);
+        userList.add(u5);
+        userList.add(u6);
+        userList.add(u7);
+
+        doReturn(testId).when(event).getEventId();
+        doReturn(userList).when(management).getUsers(testId);
+        doReturn(new Location(34, 33, "test")).when(u1).getLocation();
+        doReturn(new Location(34.3, 33.001, "test")).when(u2).getLocation();
+        doReturn(new Location(0.0, 0.1, "test")).when(u3).getLocation();
+        doReturn(new Location(1.0001, 2, "test")).when(u4).getLocation();
+        doReturn(new Location(1.0, 2.003, "test")).when(u5).getLocation();
+        doReturn(new Location(34.001, 34.00001, "test")).when(u6).getLocation();
+        doReturn(new Location(34, 34.002, "test")).when(u7).getLocation();
         
-        
-        
-        doReturn(0).when(event).getEventId();
-        doReturn(list).when(facade).getEventsLocations(0);
-        
-        when(facade.getClusteredCentralPoints(event)).thenCallRealMethod();
-        
-        List<Cluster<DoublePoint>> clusters = new DBSCANClusterer<DoublePoint>(40,2).cluster(list);
-        doReturn(clusters).when(facade).getClusters(list);
-        
-        for(Cluster<DoublePoint> c : clusters) {            
-        
-        doReturn(new SimpleCentral().calculateCentralPoint(c)).when(facade).getCenter(c);
-        
-        }
-        
-       
-        
+
         List<DoublePoint> result = facade.getClusteredCentralPoints(event);
-        
+
         double xFirstDifference = result.get(0).getPoint()[0] - 34.07525;
         double xSecondDifference = result.get(1).getPoint()[0] - 0.6667;
         double yFirstDifference = result.get(0).getPoint()[1] - 33.5007525;
-        double ySecondDifference = result.get(1).getPoint()[1] - 1.3676667;   
-        
-        
-        assertTrue( xFirstDifference <= 0.0001 && xFirstDifference >= -0.0001);
-        assertTrue( yFirstDifference <= 0.0001 && yFirstDifference >= -0.0001);
-        assertTrue( xSecondDifference <= 0.0001 && xSecondDifference >= -0.0001);
-        assertTrue( ySecondDifference <= 0.0001 && ySecondDifference >= -0.0001);
+        double ySecondDifference = result.get(1).getPoint()[1] - 1.3676667;
+
+        assertTrue(xFirstDifference <= 0.0001 && xFirstDifference >= -0.0001);
+        assertTrue(yFirstDifference <= 0.0001 && yFirstDifference >= -0.0001);
+        assertTrue(xSecondDifference <= 0.0001 && xSecondDifference >= -0.0001);
+        assertTrue(ySecondDifference <= 0.0001 && ySecondDifference >= -0.0001);
     }
 }
