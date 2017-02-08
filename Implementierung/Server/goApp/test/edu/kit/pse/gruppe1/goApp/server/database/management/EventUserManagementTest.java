@@ -87,6 +87,16 @@ public class EventUserManagementTest {
     }
 
     @Test
+    public void testGetParticipants() {
+        List<Participant> participants = new EventUserManagement()
+                .getParticipants(createdEvent.getEventId());
+        assertThat(participants, is(notNullValue()));
+        assertThat(participants.size(), is(1));
+        assertThat(participants.get(0).getEvent().getEventId(), is(createdEvent.getEventId()));
+        assertThat(participants.get(0).getUser().getUserId(), is(createdUser.getUserId()));
+    }
+
+    @Test
     public void testDeleteParamsEventIdUserId() {
         assertThat(new EventUserManagement().getUsers(createdEvent.getEventId()).size(), is(1));
         assertThat(new EventUserManagement().getEvents(createdUser.getUserId()).size(), is(1));
