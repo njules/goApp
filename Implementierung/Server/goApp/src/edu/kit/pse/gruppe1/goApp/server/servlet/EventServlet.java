@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
+import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
@@ -16,6 +17,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,6 +42,7 @@ public class EventServlet extends HttpServlet {
     public EventServlet() {
         super();
         this.eventMang = new EventManagement();
+        this.eventUsrMang = new EventUserManagement();
     }
 
     /**
@@ -81,7 +85,7 @@ public class EventServlet extends HttpServlet {
             strResponse = create(jsonRequest);
             break;
         case GET_EVENT:
-            strResponse = getEvent(jsonRequest);
+            strResponse = getParticipates(jsonRequest);
             break;
         case CHANGE:
             strResponse = change(jsonRequest);
@@ -198,10 +202,23 @@ public class EventServlet extends HttpServlet {
 //
 //    }
     
-    private String getParticpates(JSONObject json){
+    private String getParticipates(JSONObject json){
         //TODO: rein eventID
         //TODO: raus, alle User, mit ihrem Status
         //Liste: User.ID + Status
+        
+      Event event = null;
+      JSONParameter.ErrorCodes error = ErrorCodes.OK;
+      Set<User> part;
+      try {
+          int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
+          event = this.eventMang.getEvent(eventID);
+          part = this.eventMang.getEvent(eventID).getParticipants();
+      } catch (JSONException e) {
+          error = ErrorCodes.READ_JSON;
+      }
+
+      return createJSONObject(event, error, false);
             
         return null;
     }
