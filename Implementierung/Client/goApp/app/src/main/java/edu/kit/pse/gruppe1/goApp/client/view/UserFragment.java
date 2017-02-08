@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoFragmentMemberBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
@@ -75,8 +76,8 @@ public class UserFragment extends Fragment implements View.OnClickListener{
         @Override
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
-                case GroupService.RESULT_GET:
-                    if (intent.getBooleanExtra("ERROR", false)) {
+                case GroupService.RESULT_GET_MEMBERS:
+                    if (intent.getBooleanExtra(UtilService.ERROR, false)) {
                     }
                     break;
                 //TODO default

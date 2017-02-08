@@ -113,7 +113,7 @@ public class Event implements Parcelable {
         out.writeParcelable(location,i);
     }
 
-    //TODO Usefull right?
+    //TODO Usefull?
     public void setClusterPoints(ArrayList<Location> clusterPoints) {
         this.clusterPoints = clusterPoints;
     }

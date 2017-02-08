@@ -8,7 +8,7 @@
 
         <!-- JDBC Database connection settings -->
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://i43pc164.ipd.kit.edu/PSEWS1617GoGruppe1</property>
+        <property name="connection.url">jdbc:mysql://localhost/PSEWS1617GoGruppe1</property>
         <property name="connection.username">PSEWS1617User1</property>
         <property name="connection.password">DTOxQ6yBnv4QR9pj</property>
         

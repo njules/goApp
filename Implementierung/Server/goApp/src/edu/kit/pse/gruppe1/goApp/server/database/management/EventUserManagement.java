@@ -71,7 +71,6 @@ public class EventUserManagement implements Management {
         return update(participant);
     }
 
-    
     private boolean update(Participant chParticipant) {
         if (chParticipant.getParticipantID() == null) {
             return false;
@@ -159,6 +158,21 @@ public class EventUserManagement implements Management {
             }
         }
         return users;
+    }
+
+    public List<Event> getEventsByStatus(Status status, int groupId, int userId) {
+        Group group = new GroupManagement().getGroup(groupId);
+        if (group == null) {
+            return null;
+        }
+        List<Event> events = new ArrayList<>();
+
+        for (Event event : group.getEvents()) {
+            if (Status.fromInteger(event.getParticipant(userId).getStatus()) == status) {
+                events.add(event);
+            }
+        }
+        return events;
     }
 
     @Override
