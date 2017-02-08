@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.serverConnection;
 
 
+import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,86 +20,95 @@ import javax.net.ssl.HttpsURLConnection;
  * For later requests the service can use the same HTTPConnection object.
  */
 public class HTTPConnection {
-	private static final String SERVER_URL = "https://i43pc164.ipd.kit.edu/PSEWS1617GoGruppe1/TestTomcat3/";
-	private URL url;
+    private static final String SERVER_URL = "https://i43pc164.ipd.kit.edu/PSEWS1617GoGruppe1/goApp/";
+    private URL url;
 
-	/**
-	 * Constructor which expects the name of the servlet.
-	 *
-	 * @param nameOfServlet The name of the servlet, the service wants to communicate with.
-	 */
-	public HTTPConnection(String nameOfServlet) {
-	try {
-			url = new URL(SERVER_URL + nameOfServlet);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Method that handles a get request.
-	 *
-	 * @param JSON The String which should be send to the server.
-	 */
-	public JSONObject sendGetRequest(String JSON) {
-		String res = send("GET",JSON);
-		return toJSONObject(res);
-	}
-
-	/**
-	 * Method that handles a get request.
-	 *
-	 * @param JSON The String which should be send to the server.
-	 */
-	public JSONObject sendPostRequest(String JSON) {
-		String res = send("POST",JSON);
-		return toJSONObject(res);
-	}
-
-	private JSONObject toJSONObject(String jsonString){
-		JSONObject json = null;
-		try {
-			json = new JSONObject(jsonString);
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-		return json;
-	}
+    /**
+     * Constructor which expects the name of the servlet.
+     *
+     * @param nameOfServlet The name of the servlet, the service wants to communicate with.
+     */
+    public HTTPConnection(String nameOfServlet) {
+        try {
+            url = new URL(SERVER_URL + nameOfServlet);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
+    /**
+     * Method that handles a get request.
+     *
+     * @param json The String which should be send to the server.
+     * @return The JSONObject the server send back
+     */
+    public JSONObject sendGetRequest(String json) {
+        return send("GET", json);
+    }
 
-	private String send(String requestMethod, String request) {
-		BufferedReader reader = null;
-		OutputStreamWriter out = null;
-		String response = null;
-		HttpsURLConnection conn = null;
-		try {
-			conn = (HttpsURLConnection) url.openConnection();
-			conn.setRequestMethod(requestMethod);
+    /**
+     * Method that handles a get request.
+     *
+     * @param json The String which should be send to the server.
+     * @return The JSONObject the server send back
+     */
+    public JSONObject sendPostRequest(String json) {
+        return send("POST", json);
+    }
 
-			conn.setDoOutput(true);
-			out = new OutputStreamWriter(
-					conn.getOutputStream());
-			out.write(request);
-			out.close();
-			reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			response = reader.readLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			close(out);
-			close(reader);
-		}
-		return response;
-	}
+    private JSONObject toJSONObject(String jsonString) {
+        JSONObject json = null;
+        try {
+            json = new JSONObject(jsonString);
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+        return json;
+    }
 
-	private void close(Closeable inputStream) {
-		if (inputStream != null) {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+
+    private JSONObject send(String requestMethod, String request) {
+        BufferedReader reader = null;
+        OutputStreamWriter out = null;
+        String response = null;
+        HttpsURLConnection conn = null;
+        try {
+            conn = (HttpsURLConnection) url.openConnection();
+            conn.setRequestMethod(requestMethod);
+
+            conn.setDoOutput(true);
+            out = new OutputStreamWriter(
+                    conn.getOutputStream());
+            out.write(request);
+            out.close();
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            response = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            close(out);
+            close(reader);
+        }
+        if (response == null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.CONNECTION_FAILED.getErrorCode());
+            } catch (JSONException e) {
+                return new JSONObject();
+            }
+            return jsonObject;
+        }
+        return toJSONObject(response);
+    }
+
+    private void close(Closeable inputStream) {
+        if (inputStream != null) {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

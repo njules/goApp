@@ -15,113 +15,154 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * An user describes an user of the goApp.
  */
 @Entity
-@Table(name = "userT")
+@Table(name = "userT", uniqueConstraints = @UniqueConstraint(columnNames = { "GOOGLE_ID" }))
 public class User {
 
-	/**
-	 * The Id is used to identify each user and is therefore unique.
-	 */
-	private Integer userId;
-	/**
-	 * The name of an user is selectable by the user and can also be changed.
-	 */
-	private String name;
-	private Location location;
-	private Set<Request> requests;
-	private Set<Group> groups;
-	private Set<Group> foundedGroups;
-	private Set<Event> createdEvents;
-	private Set<Participant> participations;
+    /**
+     * The Id is used to identify each user and is therefore unique.
+     */
+    private Integer userId;
+    private Integer googleId;
+    /**
+     * The name of an user is selectable by the user and can also be changed.
+     */
+    private String name;
+    private Location location;
+    private Set<Request> requests;
+    private Set<Group> groups;
+    private Set<Group> foundedGroups;
+    private Set<Event> createdEvents;
+    private Set<Participant> participations;
 
-	/**
-	 * 
-	 * @param id The Id of the user.
-	 * @param name The name of the user.
-	 */
-	public User(int id, String name) {
-		this.userId = id;
-		this.name = name;
-	}
+    public User() {
+    }
 
+    /**
+     * 
+     * @param id
+     *            The Id of the user.
+     * @param name
+     *            The name of the user.
+     */
+    public User(int googleId, String name) {
+        this.googleId = googleId;
+        this.name = name;
+    }
 
-	@Id	
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_ID")
-	public Integer getUserId() {
-		return userId;
-	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_ID", unique = true, nullable = false)
+    public Integer getUserId() {
+        return userId;
+    }
 
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	public Set<Request> getRequests() {
-		return requests;
-	}
+    @Column(name = "GOOGLE_ID", nullable = false)
+    public Integer getGoogleId() {
+        return googleId;
+    }
 
-	public void setRequests(Set<Request> requests) {
-		this.requests = requests;
-	}
+    public void setGoogleId(Integer googleId) {
+        this.googleId = googleId;
+    }
 
-	@Column(name = "name")
-	public String getName() {
-		return name;
-	}
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    public Set<Request> getRequests() {
+        return requests;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setRequests(Set<Request> requests) {
+        this.requests = requests;
+    }
 
+    @Column(name = "name", nullable = false)
+    public String getName() {
+        return name;
+    }
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "user_group", joinColumns = {
-			@JoinColumn(name = "USER_ID", nullable = false, updatable = false) },
-			inverseJoinColumns = { @JoinColumn(name = "GROUP_ID",
-					nullable = false, updatable = false) })
-	public Set<Group> getGroups() {
-		return groups;
-	}
-	public void setGroups(Set<Group> groups) {
-		this.groups = groups;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "founder")
-	public Set<Group> getFoundedGroups() {
-		return foundedGroups;
-	}
-	public void setFoundedGroups(Set<Group> foundedGroups) {
-		this.foundedGroups = foundedGroups;
-	}
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
+    public Set<Group> getGroups() {
+        return groups;
+    }
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
-	public Set<Event> getCreatedEvents() {
-		return createdEvents;
-	}
-	public void setCreatedEvents(Set<Event> createdEvents) {
-		this.createdEvents = createdEvents;
-	}
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	public Set<Participant> getParticipations() {
-		return participations;
-	}
-	public void setParticipations(Set<Participant> participations) {
-		this.participations = participations;
-	}
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "founder")
+    public Set<Group> getFoundedGroups() {
+        return foundedGroups;
+    }
 
-	@OneToOne
-	@JoinColumn(name="LOCATION_ID")
-	public Location getLocation() {
-		return location;
-	}
-	public void setLocation(Location location) {
-		this.location = location;
-	}	
-	
+    public void setFoundedGroups(Set<Group> foundedGroups) {
+        this.foundedGroups = foundedGroups;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+    public Set<Event> getCreatedEvents() {
+        return createdEvents;
+    }
+
+    public void setCreatedEvents(Set<Event> createdEvents) {
+        this.createdEvents = createdEvents;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    public Set<Participant> getParticipations() {
+        return participations;
+    }
+
+    public void setParticipations(Set<Participant> participations) {
+        this.participations = participations;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "LOCATION_ID")
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+  
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (userId == null) {
+            if (other.userId != null)
+                return false;
+        } else if (!userId.equals(other.userId))
+            return false;
+        return true;
+    }
 }

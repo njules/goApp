@@ -1,13 +1,25 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
+import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class LocationServlet
@@ -17,28 +29,55 @@ import org.json.JSONObject;
 @WebServlet("/LocationServlet")
 public class LocationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final EventManagement event;
+	private final EventUserManagement eventUser;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public LocationServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        event = new EventManagement();
+        eventUser = new EventUserManagement();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+	    JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+	    if (jsonRequest == null) {
+	        return;
+	    }
+        Methods method;
+        try {
+            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
+            return;
+        }
+        
+        if (method == null) {
+            method = Methods.NONE;
+        }
+        
+        switch (method) {
+        case GET_CLUSTER:
+            response.getWriter().println(getCluster(jsonRequest));
+            break;
+        case SET_GPS:
+            response.getWriter().println(setGPS(jsonRequest));
+            break;
+        default: 
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+        }
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	
@@ -48,8 +87,29 @@ public class LocationServlet extends HttpServlet {
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
 	private String setGPS(JSONObject json) {
-		// TODO - implement LocationServlet.setGPS
-		throw new UnsupportedOperationException();
+		JSONObject response = new JSONObject();
+		try {
+		    int event = json.getInt(JSONParameter.EVENT_ID.toString());
+		    int user = json.getInt(JSONParameter.USER_ID.toString());
+		    int lat = json.getInt(JSONParameter.LATITUDE.toString());
+		    int lon = json.getInt(JSONParameter.LONGITUDE.toString());
+		    Location location = new Location(lon, lat, null);
+		    List<User> userList = eventUser.getUserByStatus(Status.STARTED, event);
+		    for (User participant : userList) {
+		        if (participant.getUserId() == user) {
+		            participant.setLocation(location);
+		            location = null;
+		        }
+		    }
+		    if (location != null) {
+		        return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+		    }
+		    response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
+		} catch (JSONException e) {
+		    e.printStackTrace();
+		    return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+		}
+		return response.toString();
 	}
 
 	/**
@@ -58,8 +118,20 @@ public class LocationServlet extends HttpServlet {
 	 * @return Returns a JSON string containing the results of the clustering algorithm.
 	 */
 	private String getCluster(JSONObject json) {
-		// TODO - implement LocationServlet.getCluster
-		throw new UnsupportedOperationException();
+	    JSONObject response = new JSONObject();
+	    try {
+	        int eventID = Integer.parseInt(json.getString(JSONParameter.EVENT_ID.toString()));
+	        Set<Location> locations = event.getEvent(eventID).getClusterPoints();
+	        for (Location location:locations) {
+	            response.append(JSONParameter.LATITUDE.toString(), location.getLatitude());
+	            response.append(JSONParameter.LONGITUDE.toString(), location.getLongitude());
+	            response.append(JSONParameter.LOC_NAME.toString(), location.getName());
+	        }
+	        response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
+	    } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+	    }
+        return response.toString();
 	}
-
 }

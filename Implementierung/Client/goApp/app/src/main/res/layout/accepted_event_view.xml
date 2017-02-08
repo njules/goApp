@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="event" type="edu.kit.pse.gruppe1.goApp.client.model.Event"></variable>
+    </data>
+
+    <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:gravity="center">
+
+        <TextView android:id="@+id/event_info_user"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center|top"
+                  android:textAlignment="center"
+                  android:textSize="@dimen/viewholder_textsize"
+                  android:lines="3"
+                  android:background="@color/colorButton"
+                  android:text="@{event.name + '\n' + event.creator.name + '\n' + event.time.toString()}"/>
+
+        <Button android:id="@+id/start_event"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/event_info_user"
+                android:text="@string/go"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:background="@color/colorAccept"
+                android:textSize="20dp"/>
+    </RelativeLayout>
+</layout>

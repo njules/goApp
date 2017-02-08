@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -20,6 +21,10 @@ public class Event implements Parcelable {
      */
     private String name;
 
+    public Date getTime() {
+        return time;
+    }
+
     /**
      * The time of an event tells when the event is starting and set by the creator of the event.
      */
@@ -27,19 +32,19 @@ public class Event implements Parcelable {
 
     private Group group;
     private User creator;
-    private Set<Participant> participants;
-    private Set<Location> clusterPoints;
+    private ArrayList<Participant> participants;
+    private ArrayList<Location> clusterPoints;
     private Location location;
 
     public User getCreator() {
         return creator;
     }
 
-    public Set<Participant> getParticipants() {
+    public ArrayList<Participant> getParticipants() {
         return participants;
     }
 
-    public Set<Location> getClusterPoints() {
+    public ArrayList<Location> getClusterPoints() {
         return clusterPoints;
     }
 
@@ -50,6 +55,8 @@ public class Event implements Parcelable {
     protected Event(Parcel in) {
         id = in.readInt();
         name = in.readString();
+        time = new Date(in.readLong());
+        location = in.readParcelable(Location.class.getClassLoader());
     }
 
     public static final Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
@@ -86,10 +93,11 @@ public class Event implements Parcelable {
      * @param name The name of the event.
      * @param time The time of the event.
      */
-    public Event(int id, String name, Date time) {
+    public Event(int id, String name, Date time, Location location) {
         this.id = id;
         this.name = name;
         this.time = time;
+        this.location = location;
     }
 
     @Override
@@ -102,5 +110,11 @@ public class Event implements Parcelable {
         out.writeInt(id);
         out.writeString(name);
         out.writeLong(time.getTime());
+        out.writeParcelable(location,i);
+    }
+
+    //TODO Usefull?
+    public void setClusterPoints(ArrayList<Location> clusterPoints) {
+        this.clusterPoints = clusterPoints;
     }
 }

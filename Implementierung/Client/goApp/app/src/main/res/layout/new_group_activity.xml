@@ -2,43 +2,48 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-    </data>
 
-    <LinearLayout
-        android:background="#b1d2d9"
+    <android.support.design.widget.CoordinatorLayout
+        android:theme="@style/AppTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="1">
 
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/new_group_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:title="@string/search">
+            <EditText
+                android:id="@+id/search_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/groupName"/>
         </android.support.v7.widget.Toolbar>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/my_groups_recycler_view"
+            android:id="@+id/new_groups_recycler_view"
+            android:layout_marginTop="?attr/actionBarSize"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="350dp"/>
+            android:layout_height="match_parent"/>
 
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/new_group_button"
-            android:layout_width="54dp"
-            android:layout_height="52dp"
-            android:layout_gravity="bottom|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:layout_gravity="bottom|end"
             android:clickable="true"
-            android:backgroundTint="@color/colorPrimary"
-            app:fabSize="mini"
-            android:src="@drawable/ic_fab" />
+            app:fabSize="normal"
+            android:theme="@style/AppTheme"
+            android:src="@drawable/ic_fab_add" />
 
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

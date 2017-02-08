@@ -1,12 +1,14 @@
 package edu.kit.pse.gruppe1.goApp.client.model;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
  * An user describes an user of the goApp.
  */
-public class User implements Parcelable {
+public class User extends BaseObservable implements Parcelable {
 
     //TODO more attributes?
     /**
@@ -17,6 +19,8 @@ public class User implements Parcelable {
      * The name of an user is selectable by the user and can also be changed.
      */
     private String name;
+
+    private Location location;
 
     /**
      * @param id   The Id of the user.
@@ -48,12 +52,14 @@ public class User implements Parcelable {
         return id;
     }
 
+    @Bindable
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+        notifyChange();
     }
 
     @Override
@@ -65,5 +71,13 @@ public class User implements Parcelable {
     public void writeToParcel(Parcel out, int i) {
         out.writeInt(id);
         out.writeString(name);
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

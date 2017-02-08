@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"></variable>
+    </data>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical"
+                      android:layout_weight="1">
+            <TextView android:id="@+id/member_text"
+                      android:paddingStart="16dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:elevation="2dp"
+                      android:paddingBottom="5dp"
+                      android:paddingTop="5dp"
+                      android:textSize="26sp"
+                      android:textColor="#000000"
+                      android:background="@color/colorSecondary"
+                      android:text="@string/group_member"/>
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/member_recycler_view"
+                    android:scrollbars="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+        </LinearLayout>
+        <android.support.v7.widget.AppCompatButton
+                android:id="@+id/leave_group_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/member_recycler_view"
+                android:textAlignment="center"
+                android:background="@color/colorReject"
+                android:textSize="26sp"
+                android:text="@string/exit"/>
+    </LinearLayout>
+
+</layout>

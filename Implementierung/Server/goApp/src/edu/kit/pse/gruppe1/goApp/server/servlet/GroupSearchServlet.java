@@ -1,13 +1,22 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
+import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class GroupSearchServlet
@@ -17,28 +26,55 @@ import org.json.JSONObject;
 @WebServlet("/GroupSearchServlet")
 public class GroupSearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final GroupManagement groupM;
+    private final GroupUserManagement groupUM;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public GroupSearchServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        groupM = new GroupManagement();
+        groupUM = new GroupUserManagement();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+        JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            return;
+        }
+        Methods method;
+        try {
+            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
+            return;
+        }
+        
+        if (method == null) {
+            method = Methods.NONE;
+        }
+        
+        switch (method) {
+        case GET_GRP_NAME:
+            response.getWriter().println(getGroupsByName(jsonRequest));
+            break;
+        case GET_GRP_MEM:
+            response.getWriter().println(getGroupsByMember(jsonRequest));
+            break;
+        default: 
+            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+        }
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
@@ -48,8 +84,21 @@ public class GroupSearchServlet extends HttpServlet {
 	 * @return Returns a JSON string containing a list of all the groups associated with this name.
 	 */
 	private String getGroupsByName(JSONObject json) {
-		// TODO - implement GroupSearchServlet.getGroupsByName
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            String name = json.getString(JSONParameter.GROUP_NAME.toString());
+            List<Group> groups;
+            groups = groupM.getGroupsByName(name);
+            for (Group group : groups) {
+                response.append(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
+                response.append(JSONParameter.GROUP_NAME.toString(), group.getName());
+            }
+            response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 
 	/**
@@ -58,8 +107,21 @@ public class GroupSearchServlet extends HttpServlet {
 	 * @return Returns a JSON string containing a list of all the groups in which the given user is a member.
 	 */
 	private String getGroupsByMember(JSONObject json) {
-		// TODO - implement GroupSearchServlet.getGroupsByMember
-		throw new UnsupportedOperationException();
+        JSONObject response = new JSONObject();
+        try {
+            int ID = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
+            List<Group> groups;
+            groups = groupUM.getGroups(ID);
+            for (Group group : groups) {
+                response.append(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
+                response.append(JSONParameter.GROUP_NAME.toString(), group.getName());
+            }
+            response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+        }
+        return response.toString();
 	}
 	
 }

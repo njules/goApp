@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <variable name="user" type="edu.kit.pse.gruppe1.goApp.client.model.User"/>
-    </data>
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -17,6 +13,6 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:text="@{user.name}"/>
+        android:hint="@string/changeName"/>
     </LinearLayout>
 </layout>
