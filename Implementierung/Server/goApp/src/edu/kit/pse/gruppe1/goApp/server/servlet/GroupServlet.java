@@ -184,7 +184,7 @@ public class GroupServlet extends HttpServlet {
             int group = json.getInt(JSONParameter.GROUP_ID.toString());
             int member = json.getInt(JSONParameter.USER_ID.toString());
             //TODO different keys
-            return ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member));
+            return ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member)).toString();
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
