@@ -2,6 +2,9 @@ package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +15,8 @@ import android.view.*;
 import android.widget.Toast;
 import com.google.android.gms.maps.SupportMapFragment;
 import edu.kit.pse.gruppe1.goApp.client.R;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoFragmentAdminBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
@@ -39,10 +44,9 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+// Inflats the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.group_info_fragment_admin, container, false);
         binding.setGroup(group);
-        // Inflate the layout for this fragment
         return binding.getRoot();
     }
 
@@ -58,6 +62,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
         requestLinearLayoutManager = new LinearLayoutManager(getActivity());
         memberRecyclerView.setLayoutManager(memberLinearLayoutManager);
         requestRecyclerView.setLayoutManager(requestLinearLayoutManager);
+
         requestAdapter = new RequestAdapter(fillDataset(), this);
         requestRecyclerView.setAdapter(requestAdapter);
         memberAdapter = new MemberAdapter(fillDataset(),this);
@@ -106,5 +111,19 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
             StartActivity.start(getActivity());
         }
         //TODO else error massage
+    }
+
+    private class ResultReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case GroupService.RESULT_GET_MEMBERS:
+                    if (intent.getBooleanExtra(UtilService.ERROR, false)) {
+                    }
+                    break;
+                //TODO default
+            }
+        }
     }
 }

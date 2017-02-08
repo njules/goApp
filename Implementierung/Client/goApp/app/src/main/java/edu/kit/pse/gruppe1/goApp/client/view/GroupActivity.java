@@ -1,6 +1,10 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -15,6 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.NotificationService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
@@ -33,6 +40,9 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     private NewEventAdapter newEventAdapter;
     private AcceptedEventAdapter acceptedEventAdapter;
 
+    private GroupService groupService;
+    private ResultReceiver receiver;
+
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, GroupActivity.class);
         activity.startActivity(intent);
@@ -49,6 +59,9 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
 
         FloatingActionButton newEventFab = (FloatingActionButton) findViewById(R.id.create_event);
         newEventFab.setOnClickListener(this);
+
+        binding.setGroup(group);
+        groupService = new GroupService();
     }
 
     @Override
@@ -60,7 +73,8 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        binding.setGroup(group);
+
+
         newEventRecylcerView = (RecyclerView) findViewById(R.id.new_event_recycler_view);
         newEventRecylcerView.setHasFixedSize(true);
         acceptedEventRecyclerView = (RecyclerView) findViewById(R.id.accepted_event_recycler_view);
@@ -73,6 +87,25 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
 
         newEventRecylcerView.setLayoutManager(newEventLayoutManager);
         acceptedEventRecyclerView.setLayoutManager(acceptedEventLayoutManager);
+
+
+
+        acceptedEventAdapter = new AcceptedEventAdapter(fillDataset(), new ItemClickListener() {
+            @Override
+            public void onItemClicked(int position, View view) {
+                Event event = newEventAdapter.getItem(position);
+                switch (view.getId()) {
+                    case R.id.start_event:
+                        //TODO service.
+                        Log.i("GroupActivity", "go");
+                        break;
+                    default:
+                        EventActivity.start(GroupActivity.this, event);
+                        Log.i("GroupActivity", "info");
+                }
+            }
+        });
+        acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
 
         newEventAdapter = new NewEventAdapter(fillDataset(), new ItemClickListener() {
             @Override
@@ -95,22 +128,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         });
         newEventRecylcerView.setAdapter(newEventAdapter);
 
-        acceptedEventAdapter = new AcceptedEventAdapter(fillDataset(), new ItemClickListener() {
-            @Override
-            public void onItemClicked(int position, View view) {
-                Event event = newEventAdapter.getItem(position);
-                switch (view.getId()) {
-                    case R.id.start_event:
-                        //TODO service.
-                        Log.i("GroupActivity", "go");
-                        break;
-                    default:
-                        EventActivity.start(GroupActivity.this, event);
-                        Log.i("GroupActivity", "info");
-                }
-            }
-        });
-        acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
     }
 
     //Todo löschen, nur zum Testzweck
@@ -136,5 +153,42 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         NewEventActivity.start(this);
+    }
+
+    private class ResultReceiver extends BroadcastReceiver {
+        private AlarmManager notifyAlarmMgr;
+        private PendingIntent notifyAlarmIntent;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case GroupService.ACTION_GET_EVENTS:
+                    if(intent.getParcelableArrayExtra("events") == null){break;}
+                    Event[] groupEvents = (Event[]) intent.getParcelableArrayExtra("events");
+                    newEventAdapter = new NewEventAdapter(fillDataset(), new ItemClickListener() {
+                        @Override
+                        public void onItemClicked(int position, View view) {
+                            Event event = newEventAdapter.getItem(position);
+                            switch (view.getId()) {
+                                case R.id.accept_event:
+                                    //service.
+                                    Log.i("GroupActivity", "accept");
+                                    break;
+                                case R.id.reject_event:
+                                    //servide.
+                                    Log.i("GroupActivity", "reject");
+                                    break;
+                                default:
+                                    EventActivity.start(GroupActivity.this, event);
+                                    Log.i("GroupActivity", "info");
+                            }
+                        }
+                    });
+                    newEventRecylcerView.setAdapter(newEventAdapter);
+                    break;
+
+                    //TODO default
+            }
+        }
     }
 }

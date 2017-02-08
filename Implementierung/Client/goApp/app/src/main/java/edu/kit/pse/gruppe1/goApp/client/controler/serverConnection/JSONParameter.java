@@ -1,11 +1,11 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.serverConnection;
 
-import android.support.annotation.Nullable;
 /**
  * Enumerations with all possible parameter-types for the JSON-strings.
  */
 public enum JSONParameter {
-    // TODO: Großbuchstaben
+    // TODO: String weg machen ->�berfl�ssig?
+    // TODO: Gro�buchstaben -> mit Katha vorher abkl�ren -> wird zu Fehlern bei ihr f�hren.
     /**
      * 
      * ID of the request
@@ -101,7 +101,20 @@ public enum JSONParameter {
      * ErrorCode (from enum ErrorCodes)
      */
 
-    ErrorCode("ErrorCode");
+    ErrorCode("ErrorCode"),
+
+    /**
+     * List of User
+     */
+    LIST_USER("ListUser"),
+
+    /**
+     * List of Group
+     */
+    LIST_GROUP("ListGroup"), /**
+                              * List of Group
+                              */
+    LIST_EVENT("ListEvent");
 
     private final String fieldDescription;
 
@@ -152,9 +165,11 @@ public enum JSONParameter {
 
         IO_ERROR(7, "Error with IO Methods."),
 
-        ALGO_Error(8, "Error while processing Clusering."),
+        ALGO_ERROR(8, "Error while processing Clusering."),
 
-        CONNECTION_FAILED(9, "Connection to server failed.");
+        METH_ERROR(9, "Method not found."),
+
+        CONNECTION_FAILED(10, "Connection to server failed.");
 
 
         private final String fieldDescription;
@@ -165,13 +180,13 @@ public enum JSONParameter {
             errCode = code;
         }
 
-        //TODO: JavaDocs
+        // TODO: JavaDocs
         @Override
         public String toString() {
             return fieldDescription;
         }
 
-        //TODO: JavaDocs
+        // TODO: JavaDocs
         public int getErrorCode() {
             return errCode;
         }

@@ -1,6 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import edu.kit.pse.gruppe1.goApp.client.R;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
@@ -68,4 +71,5 @@ public class GroupInfoActivity extends AppCompatActivity implements Communicator
     public void respond(String response) {
         //TODO change name
     }
+
 }

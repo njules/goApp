@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -68,15 +70,6 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         return groups;
     }
 
-    //TODO: Wieder löschen nur zum Testzweck
-    private Group[] fillDataset() {
-        Group[] groups = new Group[3];
-        groups[0] = new Group(23, "Test", user);
-        groups[1] = new Group(243, "Beispiel", user);
-        groups[2] = new Group(123, "Penis", user);
-        return groups;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.start_menu, menu);
@@ -101,8 +94,8 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         groupRecyclerView.setHasFixedSize(true);
         groupLayoutManager = new LinearLayoutManager(this);
         groupRecyclerView.setLayoutManager(groupLayoutManager);
-        receiver.onReceive(this,new Intent(GroupSearchService.RESULT_GET_BY_MEMBER));
-        //groupSearchService.getGroupsByMember(this, user); //TODO doesnt work
+        //receiver.onReceive(this,new Intent(GroupSearchService.RESULT_GET_BY_MEMBER));
+        groupSearchService.getGroupsByMember(this, user); //TODO doesnt work
         // Todo: Test if Groups come back
         //Request Recycler View
         requestSearchService = new RequestSearchService();
@@ -180,9 +173,10 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case GroupSearchService.RESULT_GET_BY_MEMBER:
-                    //TODO cahnge Datatset
-                    //groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
-                    groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
+                    Log.i("GroupSearch",intent.toString());
+                    if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null){break;}
+                    groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
+                    //groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
                             Group group = groupAdapter.getItem(position);
@@ -193,7 +187,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     groupRecyclerView.setAdapter(groupAdapter);
                     break;
                 case RequestSearchService.RESULT_GET_BY_USER:
-                    //requestAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
+                    //requestAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
                     requestAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
@@ -205,7 +199,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
                 case RequestService.RESULT_REJECT:
-                    if (intent.getBooleanExtra("ERROR", false)) {
+                    if (intent.getBooleanExtra(UtilService.ERROR, false)) {
                         Toast.makeText(StartActivity.this,"Anfrage abgebrochen",Toast.LENGTH_SHORT).show();
                         //requestAdapter.deleteItem()
                         //TODO when to delete the request
@@ -213,17 +207,13 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     //TODO error?? Service shcickt anfangs requestIntent zurück
                     break;
                 case UserService.RESULT_CHANGE:
-                    if (intent.getBooleanExtra("ERROR", false)) {
+                    if (intent.getBooleanExtra(UtilService.ERROR, false)) {
                         Toast.makeText(StartActivity.this,"Name geändert",Toast.LENGTH_SHORT).show();
                         //user.setName();
                         //TODO when to change the name
                     }
                     break;
-                case GroupService.RESULT_CREATE:
-                    if (intent.getBooleanExtra("ERROR", false)) {
-                        Toast.makeText(StartActivity.this,"Gruppe hinzugefügt",Toast.LENGTH_SHORT).show();
-                        //TODO reload groups or add group to adapter
-                    }
+
 
                 //TODO default
             }

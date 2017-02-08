@@ -24,4 +24,9 @@
     <string name="event_location">Ziel</string>
     <string name="wrongTime">Dein Termin liegt in der Vergangenheit</string>
     <string name="noLocation">Du musst einen Treffpunkt auswählen</string>
+
+    <string name="clientId">425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com</string>
+    <string name="login_text">Bitte melde dich mit deinem Google Konto an</string>
+    <string name="json">JSON</string>
+    <string name="NoGroup">Sorry ... keine Gruppe mit diesem Namen gefunden.</string>
 </resources>
