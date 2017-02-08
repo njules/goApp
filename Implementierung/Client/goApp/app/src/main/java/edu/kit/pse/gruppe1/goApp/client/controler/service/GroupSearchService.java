@@ -52,8 +52,7 @@ public class GroupSearchService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            //TODO ID als int und nicht String schicken
-            requestJson.put(JSONParameter.UserID.toString(), "" + user.getId());
+            requestJson.put(JSONParameter.UserID.toString(),user.getId());
             requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_GRP_MEM.toString());
         } catch (JSONException e) {
             e.printStackTrace();
