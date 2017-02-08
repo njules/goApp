@@ -74,9 +74,9 @@ public class UserServlet extends HttpServlet {
         case CHANGE:
             strResponse = changeName(jsonRequest);
             break;
-        case GET_USER:
-            strResponse = getUser(jsonRequest);
-            break;
+//        case GET_USER:
+//            strResponse = getUser(jsonRequest);
+//            break;
         default:
             if (error.equals(ErrorCodes.OK)) {
                 error = ErrorCodes.READ_JSON;
@@ -143,25 +143,25 @@ public class UserServlet extends HttpServlet {
         return result.toString();
     }
 
-    /**
-     * A user can invoke this to retrieve any information about a given user such as groups he is a
-     * member of and events he wants to participate or is invited to.
-     * 
-     * @param json
-     *            This JSON object contains the user about whom the information shall be released.
-     * @return Returns a JSON string containing information about the success of this operation.
-     */
-    private String getUser(JSONObject json) {
-        User user = null;
-        JSONParameter.ErrorCodes error = ErrorCodes.OK;
-
-        try {
-            int userID = json.getInt(JSONParameter.USER_ID.toString());
-            user = this.usrMang.getUser(userID);
-        } catch (JSONException e) {
-            error = ErrorCodes.READ_JSON;
-        }
-        return createJSONObject(user, error);
-    }
+//    /**
+//     * A user can invoke this to retrieve any information about a given user such as groups he is a
+//     * member of and events he wants to participate or is invited to.
+//     * 
+//     * @param json
+//     *            This JSON object contains the user about whom the information shall be released.
+//     * @return Returns a JSON string containing information about the success of this operation.
+//     */
+//    private String getUser(JSONObject json) {
+//        User user = null;
+//        JSONParameter.ErrorCodes error = ErrorCodes.OK;
+//
+//        try {
+//            int userID = json.getInt(JSONParameter.USER_ID.toString());
+//            user = this.usrMang.getUser(userID);
+//        } catch (JSONException e) {
+//            error = ErrorCodes.READ_JSON;
+//        }
+//        return createJSONObject(user, error);
+//    }
 
 }
