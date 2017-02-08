@@ -19,12 +19,12 @@ import org.json.JSONObject;
  */
 public class EventService extends IntentService {
 
-    public static final String NAME = "EventService";
-    public static final String SERVLET = "EventServlet";
+    private static final String NAME = "EventService";
+    private static final String SERVLET = "EventServlet";
     //Intent actions to start the service
-    public static final String ACTION_CREATE = "CREATE";
-    public static final String ACTION_GET = "GET";
-    public static final String ACTION_CHANGE = "CHANGE";
+    private static final String ACTION_CREATE = "CREATE";
+    private static final String ACTION_GET = "GET";
+    private static final String ACTION_CHANGE = "CHANGE";
     //Intent actions to broadcast results
     public static final String RESULT_CHANGE = "RESULT_CHANGE";
     public static final String RESULT_CREATE = "RESULT_CREATE";
@@ -48,21 +48,21 @@ public class EventService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.EventName.toString(), name);
-            requestJson.put(JSONParameter.GroupID.toString(), group.getId());
-            requestJson.put(JSONParameter.UserID.toString(),eventAdmin.getId());
-            requestJson.put(JSONParameter.Latitude.toString(), destination.getLatitude());
-            requestJson.put(JSONParameter.Longitude.toString(), destination.getLongitude());
-            requestJson.put(JSONParameter.LocationName.toString(),destination.getName());
-            requestJson.put(JSONParameter.EventTime.toString(), time.getTime());
-            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.CREATE.toString());
+            requestJson.put(JSONParameter.EVENT_NAME.toString(), name);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.USER_ID.toString(), eventAdmin.getId());
+            requestJson.put(JSONParameter.LATITUDE.toString(), destination.getLatitude());
+            requestJson.put(JSONParameter.LONGITUDE.toString(), destination.getLongitude());
+            requestJson.put(JSONParameter.LOC_NAME.toString(), destination.getName());
+            requestJson.put(JSONParameter.EVENT_TIME.toString(), time.getTime());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CREATE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
-        requestIntent.putExtra(UtilService.EVENT,new Event(0,name,time,destination,eventAdmin));
+        requestIntent.putExtra(UtilService.EVENT, new Event(0, name, time, destination, eventAdmin));
         requestIntent.setAction(ACTION_CREATE);
 
         context.startService(requestIntent);
@@ -78,8 +78,8 @@ public class EventService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.EventID.toString(), eventID);
-            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_EVENT.toString());
+            requestJson.put(JSONParameter.EVENT_ID.toString(), eventID);
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_EVENT.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -102,9 +102,9 @@ public class EventService extends IntentService {
 
         try {
             //TODO add Eventattributes which should be able to be changed
-            requestJson.put(JSONParameter.EventID.toString(), event.getId());
-            requestJson.put(JSONParameter.EventName.toString(), event.getName());
-            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.CHANGE.toString());
+            requestJson.put(JSONParameter.EVENT_ID.toString(), event.getId());
+            requestJson.put(JSONParameter.EVENT_NAME.toString(), event.getName());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CHANGE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -125,34 +125,36 @@ public class EventService extends IntentService {
             case ACTION_CREATE:
                 //TODO start alarm for notification and locationSync
                 result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
-                resultIntent.setAction(intent.getAction());
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra(UtilService.ERROR, result.getInt(JSONParameter.ErrorCode.toString()));
-                    Event event = (Event) intent.getParcelableExtra(UtilService.EVENT);
-                    Event newEvent = new Event(result.getInt(JSONParameter.EventID.toString()),event.getName(),event.getTime(),event.getLocation(),event.getCreator());
-                    resultIntent.putExtra(UtilService.EVENT,newEvent);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 resultIntent.setAction(RESULT_CREATE);
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+                } else {
+                    try {
+                        int id = result.getInt(JSONParameter.EVENT_ID.toString());
+                        Event event = intent.getParcelableExtra(UtilService.EVENT);
+                        Event newEvent = new Event(id, event.getName(), event.getTime(), event.getLocation(), event.getCreator());
+                        resultIntent.putExtra(UtilService.EVENT, newEvent);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
             case ACTION_GET:
                 result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
-                //TODO Exeptions and errors and Status of participants
-                resultIntent.putExtra(UtilService.USERS, UtilService.getUsers(result));
                 resultIntent.setAction(RESULT_GET);
-
+                //TODO Status of participants
+                if(UtilService.isError(result)){
+                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+                } else {
+                    resultIntent.putExtra(UtilService.USERS, UtilService.getUsers(result));
+                }
                 break;
             case ACTION_CHANGE:
                 result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra(UtilService.ERROR, result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 resultIntent.setAction(RESULT_CHANGE);
+                if(UtilService.isError(result)){
+                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+                }
                 break;
             //TODO default case
         }

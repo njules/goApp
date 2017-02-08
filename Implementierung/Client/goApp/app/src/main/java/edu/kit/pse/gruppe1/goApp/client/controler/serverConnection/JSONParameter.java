@@ -120,6 +120,12 @@ public enum JSONParameter {
      */
     LIST_EVENT("ListEvent"),
 
+    STATUS("Status"),
+
+    ACC_EVENTS("AcceptedEvents"),
+
+    NEW_EVENTS("NewEvents"),
+
     /**
      * Google ID
      */
@@ -269,6 +275,10 @@ public enum JSONParameter {
          * Location.getCluster
          */
         GET_CLUSTER,
+
+        SYNC_LOC,
+
+        SET_STATUS,
 
         /**
          * RequestSearchServlet.getRequestsByUser
