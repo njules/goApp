@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
+import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
@@ -28,20 +29,25 @@ public final class UtilService {
     public static final String ERROR = "error";
     public static final String EVENTS = "events";
     public static final String NEW_EVENTS = "newEvents";
-    public static final String ACCEPTED_EVENTS = "acceptedEvents" ;
+    public static final String ACCEPTED_EVENTS = "acceptedEvents";
     public static final String EVENT = "event";
-//TODO Events laden
+    public static final String GROUP = "group";
+    private static final String USER_LIMIT = "Group is full";
+    private static final String GROUP_LIMIT = "You can only be in 20 groups";
+    private static final String SERVER_FAILED = "Our server has some problems";
+    private static final String CONNECTION_FAILED = "Please check your internet connection";
+    private static final String OK = "ok";
 
-    public static Group[] getGroups(JSONObject json){
+    public static Group[] getGroups(JSONObject json) {
         //TODO if(json == null)
         try {
             //TODO Error Code nicht beschreibung senden
-            if (json.getJSONArray(JSONParameter.ErrorCode.toString()).getString(0).equals(JSONParameter.ErrorCodes.OK.toString())) {
-                JSONArray name = json.getJSONArray(JSONParameter.GroupName.toString());
-                JSONArray id = json.getJSONArray(JSONParameter.GroupID.toString());
+            if (json.getJSONArray(JSONParameter.ERROR_CODE.toString()).getString(0).equals(JSONParameter.ErrorCodes.OK.toString())) {
+                JSONArray name = json.getJSONArray(JSONParameter.GROUP_NAME.toString());
+                JSONArray id = json.getJSONArray(JSONParameter.GRUOP_ID.toString());
                 Group[] groups = new Group[name.length()];
                 for (int i = 0; i < name.length(); i++) {
-                    User user = new User(json.getInt(JSONParameter.UserID.toString()), json.getString(JSONParameter.UserName.toString()));
+                    User user = new User(json.getInt(JSONParameter.USER_ID.toString()), json.getString(JSONParameter.USER_NAME.toString()));
                     groups[i] = new Group(
                             (int) id.get(i),
                             (String) name.get(i),
@@ -49,60 +55,109 @@ public final class UtilService {
                 }
                 return groups;
             }
-        }catch(JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static User[] getUsers(JSONObject json){
+    public static User[] getUsers(JSONObject json) {
         //TODO if(json == null)
         try {
-            //TODO Error Code nicht beschreibung senden
-            if (json.getJSONArray(JSONParameter.ErrorCode.toString()).getString(0).equals(JSONParameter.ErrorCodes.OK.toString())) {
-                JSONArray name = json.getJSONArray(JSONParameter.UserName.toString());
-                JSONArray id = json.getJSONArray(JSONParameter.UserID.toString());
+            if (json.getInt(JSONParameter.ERROR_CODE.toString()) == (JSONParameter.ErrorCodes.OK.getErrorCode())) {
+                JSONArray name = json.getJSONArray(JSONParameter.USER_NAME.toString());
+                JSONArray id = json.getJSONArray(JSONParameter.USER_ID.toString());
                 User[] users = new User[name.length()];
                 for (int i = 0; i < name.length(); i++) {
                     User user = new User((int) id.get(i), (String) name.get(i));
                 }
                 return users;
             }
-        }catch(JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static String getError(JSONObject json){
+    public static Location[] getLocations(JSONObject json) {
+        JSONArray latitude = null;
+        try {
+            latitude = json.getJSONArray(JSONParameter.LATITUDE.toString());
+
+            JSONArray longitude = json.getJSONArray(JSONParameter.LONGITUDE.toString());
+            JSONArray name = json.getJSONArray(JSONParameter.LOC_NAME.toString());
+            Location[] locations = new Location[latitude.length()];
+            for (int i = 0; i < name.length(); i++) {
+                locations[i] = new Location(
+                        (double) longitude.get(i),
+                        (double) latitude.get(i),
+                        (String) name.get(i));
+            }
+            return locations;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean isError(JSONObject json) {
+        try {
+            if (json.getInt(JSONParameter.ERROR_CODE.toString()) == JSONParameter.ErrorCodes.OK.getErrorCode()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+
+    public static String getError(JSONObject json) {
         //TODO Erro massages
-        return "ok";
+        int error = -1;
+        try {
+            error = json.getInt(JSONParameter.ERROR_CODE.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (error == JSONParameter.ErrorCodes.USR_LIMIT.getErrorCode()) {
+            return USER_LIMIT;
+        } else if (error == JSONParameter.ErrorCodes.GRP_LIMIT.getErrorCode()) {
+            return GROUP_LIMIT;
+        } else if (error == JSONParameter.ErrorCodes.CONNECTION_FAILED.getErrorCode()) {
+            return CONNECTION_FAILED;
+        } else if (error == JSONParameter.ErrorCodes.OK.getErrorCode()) {
+            return OK;
+        } else {
+            return SERVER_FAILED;
+        }
     }
 
     private static Event[] getEvents(JSONObject result) {
-        /*try {
-            JSONArray jsons = result.getJSONArray(JSONParameter.GroupName.toString());
+        try {
+            JSONArray jsons = result.getJSONArray(JSONParameter.GROUP_NAME.toString());
             Event[] events = new Event[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
+                Location destination = new Location(jsons.getJSONObject(i).getDouble(JSONParameter.LATITUDE.toString()), jsons.getJSONObject(i).getDouble(JSONParameter.LONGITUDE.toString()), result.getString(JSONParameter.LOC_NAME.toString()));
+                User founder = new User(jsons.getJSONObject(i).getInt(JSONParameter.USER_ID.toString()), jsons.getJSONObject(i).getString(JSONParameter.USER_NAME.toString()));
                 events[i] = new Event(
-                        jsons.getJSONObject(i).getInt(JSONParameter.EventID.toString()),
-                        jsons.getJSONObject(i).getString(JSONParameter.EventName.toString()),
-                        new Date(jsons.getJSONObject(i).getLong(JSONParameter.EventTime.toString())),
-                        new Location(result.getDouble(JSONParameter.Latitude.toString()), result.getDouble(JSONParameter.Longitude.toString()), result.getString(JSONParameter.LocationName.toString())),
-new User(jsons.getInt(JSONParameter.UserID.toString()),jsons.getString(JSONParameter.UserName.toString())  )              );;
+                        jsons.getJSONObject(i).getInt(JSONParameter.EVENT_ID.toString()),
+                        jsons.getJSONObject(i).getString(JSONParameter.EVENT_NAME.toString()),
+                        new Date(jsons.getJSONObject(i).getLong(JSONParameter.EVENT_TIME.toString())),
+                        destination, founder);
             }
             return events;
         } catch (JSONException e) {
             e.printStackTrace();
-        }*/
+        }
         return null;
 
     }
 
     public static Event[] getNewEvents(JSONObject result) {
         try {
-            //TODO JsonParameter
-            Event[] newEvents = getEvents(result.getJSONObject("newEvents"));
+            Event[] newEvents = getEvents(result.getJSONObject(JSONParameter.NEW_EVENTS.toString()));
             return newEvents;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -112,8 +167,7 @@ new User(jsons.getInt(JSONParameter.UserID.toString()),jsons.getString(JSONParam
 
     public static Event[] getAcceptedEvents(JSONObject result) {
         try {
-            //TODO JsonParameter
-            Event[] acceptedEvents = getEvents(result.getJSONObject("acceptedEvents"));
+            Event[] acceptedEvents = getEvents(result.getJSONObject(JSONParameter.ACC_EVENTS.toString()));
             return acceptedEvents;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -121,17 +175,19 @@ new User(jsons.getInt(JSONParameter.UserID.toString()),jsons.getString(JSONParam
         return null;
     }
 
-    public static Event getEvent(JSONObject result){
+    public static Event getEvent(JSONObject result) {
         Event event = null;
-        /*try {
+        try {
+            Location destination = new Location(result.getDouble(JSONParameter.LATITUDE.toString()), result.getDouble(JSONParameter.LONGITUDE.toString()), result.getString(JSONParameter.LOC_NAME.toString()));
+            User founder = new User(result.getInt(JSONParameter.USER_ID.toString()), result.getString(JSONParameter.USER_NAME.toString()));
             event = new Event(
-                    result.getInt(JSONParameter.EventID.toString()),
-                    result.getString(JSONParameter.EventName.toString()),
-                    new Date(result.getLong(JSONParameter.EventTime.toString())),
-                    new Location(result.getDouble(JSONParameter.Latitude.toString()), result.getDouble(JSONParameter.Longitude.toString()), result.getString(JSONParameter.LocationName.toString())));
+                    result.getInt(JSONParameter.EVENT_ID.toString()),
+                    result.getString(JSONParameter.EVENT_NAME.toString()),
+                    new Date(result.getLong(JSONParameter.EVENT_TIME.toString())),
+                    destination, founder);
         } catch (JSONException e) {
             e.printStackTrace();
-        }*/
+        }
         return event;
     }
 }

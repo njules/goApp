@@ -51,9 +51,9 @@ public class LoginService extends IntentService {
         if (result.getSignInAccount().getIdToken() != null) {
             try {
                 //TODO reichtiger JsonPArameter
-                requestJSON.put("GoogleId", result.getSignInAccount().getId());
-                requestJSON.put(JSONParameter.UserName.toString(), result.getSignInAccount().getDisplayName());
-                requestJSON.put(JSONParameter.Method.toString(), JSONParameter.Methods.REGISTER.toString());
+                requestJSON.put(JSONParameter.GOOGLE_ID.toString(), result.getSignInAccount().getId());
+                requestJSON.put(JSONParameter.USER_NAME.toString(), result.getSignInAccount().getDisplayName());
+                requestJSON.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.REGISTER.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -68,28 +68,27 @@ public class LoginService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i("Login","LoginService started");
+        Log.i("Login", "LoginService started");
         HTTPConnection connection = new HTTPConnection(SERVLET);
-        Log.i("Login",intent.getStringExtra("JSON"));
+        Log.i("Login", intent.getStringExtra("JSON"));
         JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
-        Log.i("Login","server answer received" + result.toString());
+        Log.i("Login", "server answer received" + result.toString());
         Intent resultIntent = new Intent();
         resultIntent.setAction(RESULT_LOGIN);
-        try {
-            int error = result.getInt(JSONParameter.ErrorCode.toString());
-            if (error == 0) {
-                String name = result.getString(JSONParameter.UserName.toString());
-                int id = result.getInt(JSONParameter.UserID.toString());
+        if (UtilService.isError(result)) {
+            resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+        } else {
+            try {
+                String name = result.getString(JSONParameter.USER_NAME.toString());
+                int id = result.getInt(JSONParameter.USER_ID.toString());
                 Preferences.setUser(new User(id, name));
-                resultIntent.putExtra(UtilService.ERROR, true);
-            } else resultIntent.putExtra(UtilService.ERROR, false);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            resultIntent.putExtra(UtilService.ERROR, false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                //TODO ERROR MASSAGE
+            }
         }
-        resultIntent.setAction(RESULT_LOGIN);
-        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
-        manager.sendBroadcast(resultIntent);
+            LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
+            manager.sendBroadcast(resultIntent);
 
     }
 }

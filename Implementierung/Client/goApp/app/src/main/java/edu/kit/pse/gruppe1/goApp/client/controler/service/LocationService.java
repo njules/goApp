@@ -65,6 +65,7 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
 
         if (mLastLocation != null) {
             event = intent.getParcelableExtra(UtilService.EVENT);
+            //TODO if error occured....location == null etc
             Location[] locations = syncLocation(event.getId());
             Intent resultIntent = new Intent();
             resultIntent.setAction(RESULT_LOCATION);
@@ -97,41 +98,26 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
 
     }
 
-    private Location[] syncLocation(int eventId){
+    private Location[] syncLocation(int eventId) {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.LocationName.toString(), Preferences.getUser().getName());
-            requestJson.put(JSONParameter.Longitude.toString(), mLastLocation.getLongitude());
-            requestJson.put(JSONParameter.Latitude.toString(), mLastLocation.getLatitude());
-            requestJson.put(JSONParameter.EventID.toString(), eventId);
-            requestJson.put(JSONParameter.UserID.toString(),Preferences.getUser().getId());
-            //TODO JsonParameter Methode Location
-            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_CLUSTER.toString());
+            requestJson.put(JSONParameter.LOC_NAME.toString(), Preferences.getUser().getName());
+            requestJson.put(JSONParameter.LONGITUDE.toString(), mLastLocation.getLongitude());
+            requestJson.put(JSONParameter.LATITUDE.toString(), mLastLocation.getLatitude());
+            requestJson.put(JSONParameter.EVENT_ID.toString(), eventId);
+            requestJson.put(JSONParameter.USER_ID.toString(), Preferences.getUser().getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SYNC_LOC.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendGetRequest(requestJson.toString());
-        try {
-            //TODO else & ErroCode parameter
-            if (result.getInt(JSONParameter.ErrorCode.toString()) == 0) {
-                JSONArray latitude = result.getJSONArray(JSONParameter.Latitude.toString());
-                JSONArray longitude = result.getJSONArray(JSONParameter.Longitude.toString());
-                JSONArray name = result.getJSONArray(JSONParameter.LocationName.toString());
-                Location[] locations = new Location[latitude.length()];
-                for (int i = 0; i < name.length(); i++) {
-                     locations[i] = new Location(
-                             (double) longitude.get(i),
-                             (double) latitude.get(i),
-                             (String) name.get(i));
-                }
-                return locations;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (UtilService.isError(result)) {
+            return null;
+        } else {
+            return UtilService.getLocations(result);
         }
-        return null;
     }
 }
