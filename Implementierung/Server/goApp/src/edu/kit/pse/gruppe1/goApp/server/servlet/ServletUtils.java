@@ -261,7 +261,7 @@ public final class ServletUtils {
         return json;
     }
     
-    protected static JSONObject createGroupID(Group grp){
+    protected static JSONObject createJSONGroupID(Group grp){
         JSONObject json = new JSONObject();
 
         try {

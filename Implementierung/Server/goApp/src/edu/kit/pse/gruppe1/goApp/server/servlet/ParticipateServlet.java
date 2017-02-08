@@ -114,5 +114,4 @@ public class ParticipateServlet extends HttpServlet {
         }
         return response.toString();
 	}
-
 }

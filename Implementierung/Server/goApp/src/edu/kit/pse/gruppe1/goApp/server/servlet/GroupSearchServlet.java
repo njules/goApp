@@ -1,8 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +12,6 @@ import org.json.JSONObject;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
-import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -83,21 +80,13 @@ public class GroupSearchServlet extends HttpServlet {
 	 * @return Returns a JSON string containing a list of all the groups associated with this name.
 	 */
 	private String getGroupsByName(JSONObject json) {
-        JSONObject response = new JSONObject();
         try {
             String name = json.getString(JSONParameter.GROUP_NAME.toString());
-            List<Group> groups;
-            groups = groupM.getGroupsByName(name);
-            for (Group group : groups) {
-                response.append(JSONParameter.GROUP_ID.toString(), group.getGroupId());
-                response.append(JSONParameter.GROUP_NAME.toString(), group.getName());
-            }
-            response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
+            return ServletUtils.createJSONListGrp(groupM.getGroupsByName(name)).toString();
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
         }
-        return response.toString();
 	}
 
 	/**
@@ -106,21 +95,13 @@ public class GroupSearchServlet extends HttpServlet {
 	 * @return Returns a JSON string containing a list of all the groups in which the given user is a member.
 	 */
 	private String getGroupsByMember(JSONObject json) {
-        JSONObject response = new JSONObject();
         try {
-            int ID = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
-            List<Group> groups;
-            groups = groupUM.getGroups(ID);
-            for (Group group : groups) {
-                response.append(JSONParameter.GROUP_ID.toString(), group.getGroupId());
-                response.append(JSONParameter.GROUP_NAME.toString(), group.getName());
-            }
-            response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
+            int ID = json.getInt(JSONParameter.USER_ID.toString());
+            return ServletUtils.createJSONListGrp(groupUM.getGroups(ID)).toString();
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
         }
-        return response.toString();
 	}
 	
 }
