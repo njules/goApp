@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
@@ -32,6 +34,7 @@ public class GroupServlet extends HttpServlet {
 	private final GroupManagement groupManager;
     private final GroupUserManagement groupUserManager;
     private final UserManagement userManager;
+    private final EventUserManagement eventUserManager;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -41,6 +44,7 @@ public class GroupServlet extends HttpServlet {
         groupManager = new GroupManagement();
         groupUserManager = new GroupUserManagement();
         userManager = new UserManagement();
+        eventUserManager = new EventUserManagement();
     }
 
 	/**
@@ -178,9 +182,9 @@ public class GroupServlet extends HttpServlet {
 	private String getEvents(JSONObject json) {
         try {
             int group = json.getInt(JSONParameter.GROUP_ID.toString());
-            int member = (json.getInt(JSONParameter.USER_ID.toString());
-            //TODO
-            return ServletUtils.createJSONListEvent(event);
+            int member = json.getInt(JSONParameter.USER_ID.toString());
+            //TODO different keys
+            return ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member));
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
