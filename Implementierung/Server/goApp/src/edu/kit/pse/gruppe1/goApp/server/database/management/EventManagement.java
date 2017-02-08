@@ -50,7 +50,11 @@ public class EventManagement implements Management {
         Event event = new Event(name, location, time, group, creator);
         Set<Participant> participants = new HashSet<>(group.getUsers().size());
         for (User user : group.getUsers()) {
-            participants.add(new Participant(Status.INVITED.getValue(), event, user));
+            if (user.getUserId().equals(creator.getUserId())) {
+                participants.add(new Participant(Status.PARTICIPATE.getValue(), event, user));
+            } else {
+                participants.add(new Participant(Status.INVITED.getValue(), event, user));
+            }
         }
         event.setParticipants(participants);
         Session session = DatabaseInitializer.getFactory().getCurrentSession();

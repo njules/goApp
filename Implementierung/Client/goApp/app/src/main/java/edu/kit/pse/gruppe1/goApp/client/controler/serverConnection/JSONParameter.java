@@ -1,10 +1,12 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.serverConnection;
 
-import android.support.annotation.Nullable;
 /**
  * Enumerations with all possible parameter-types for the JSON-strings.
  */
 public enum JSONParameter {
+  
+    // TODO: String weg machen ->�berfl�ssig?
+    // TODO: Gro�buchstaben -> mit Katha vorher abkl�ren -> wird zu Fehlern bei ihr f�hren.
     /**
      * 
      * ID of the request
@@ -110,6 +112,7 @@ public enum JSONParameter {
     /**
      * List of Group
      */
+
     LIST_GROUP("ListGroup"),
 
     /**
@@ -173,7 +176,11 @@ public enum JSONParameter {
 
         ALGO_ERROR(8, "Error while processing Clusering."),
 
-        METH_ERROR(9, "Method not found.");
+
+        METH_ERROR(9, "Method not found."),
+
+        CONNECTION_FAILED(10, "Connection to server failed.");
+
 
         private final String fieldDescription;
         private final int errCode;

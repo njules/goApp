@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.serverConnection;
 
 
+import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,7 +20,7 @@ import javax.net.ssl.HttpsURLConnection;
  * For later requests the service can use the same HTTPConnection object.
  */
 public class HTTPConnection {
-    private static final String SERVER_URL = "https://i43pc164.ipd.kit.edu/PSEWS1617GoGruppe1/TestTomcat3/";
+    private static final String SERVER_URL = "https://i43pc164.ipd.kit.edu/PSEWS1617GoGruppe1/goApp/";
     private URL url;
 
     /**
@@ -43,8 +44,7 @@ public class HTTPConnection {
      * @return The JSONObject the server send back
      */
     public JSONObject sendGetRequest(String json) {
-        String res = send("GET", json);
-        return toJSONObject(res);
+        return send("GET", json);
     }
 
     /**
@@ -54,8 +54,7 @@ public class HTTPConnection {
      * @return The JSONObject the server send back
      */
     public JSONObject sendPostRequest(String json) {
-        String res = send("POST", json);
-        return toJSONObject(res);
+        return send("POST", json);
     }
 
     private JSONObject toJSONObject(String jsonString) {
@@ -69,7 +68,7 @@ public class HTTPConnection {
     }
 
 
-    private String send(String requestMethod, String request) {
+    private JSONObject send(String requestMethod, String request) {
         BufferedReader reader = null;
         OutputStreamWriter out = null;
         String response = null;
@@ -91,7 +90,16 @@ public class HTTPConnection {
             close(out);
             close(reader);
         }
-        return response;
+        if (response == null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.CONNECTION_FAILED.getErrorCode());
+            } catch (JSONException e) {
+                return new JSONObject();
+            }
+            return jsonObject;
+        }
+        return toJSONObject(response);
     }
 
     private void close(Closeable inputStream) {

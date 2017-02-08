@@ -17,38 +17,17 @@ import static edu.kit.pse.gruppe1.goApp.client.controler.service.RequestService.
  */
 public class ParticipateService extends IntentService {
     private static final String NAME = "ParticipateService";
-    private static final String ACTION_ACCEPT = "ACCEPT";
-    private static final String ACTION_REJECT = "REJECT";
-    private static final String ACTION_GO = "GO";
     private static final String SERVLET = "ParticipateServlet";
+
+    private static final String ACTION_STATUS = "status";
+    private static final String RESULT_STATUS = "resultStatus";
+    //TODO real numbers
+    public static final int ACCEPT = 1;
+    public static final int REJECT = 2;
+    public static final int START = 3;
 
     public ParticipateService() {
         super(NAME);
-    }
-
-    /**
-     * The user is added to the event as a participant this includes starting a Timer for the Notification Broadcast. This method is used if the user wants to participate and enters this decision in the GroupActivity
-     *
-     * @param event the event which the user want to participate in. User and event have to be in the same group
-     * @param user  the user who wants to participate and is in the same group as the event
-     * @return true, if method was successful, otherwise false
-     */
-    public void accept(Context context, Event event, User user) {
-        JSONObject requestJson = new JSONObject();
-
-        try {
-            requestJson.put(JSONParameter.EventID.toString(), event.getId());
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_ACCEPT);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
-        requestIntent.setAction(ACTION_ACCEPT);
-
-        startService(requestIntent);
     }
 
     /**
@@ -58,81 +37,42 @@ public class ParticipateService extends IntentService {
      * @param user  the user who doesn't want to participate
      * @return true, if method was successful, otherwise false
      */
-    public void reject(Context context, Event event, User user) {
+    public void setStatus(Context context, Event event, User user, int status) {
         JSONObject requestJson = new JSONObject();
 
         try {
             requestJson.put(JSONParameter.EventID.toString(), event.getId());
             requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_REJECT);
+            //TODO jsonparameter setstatus & status
+            requestJson.put("STATUS", status);
+            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.SET_START.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
-        requestIntent.setAction(ACTION_REJECT);
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
+        requestIntent.putExtra(UtilService.STATUS, status);
+        requestIntent.setAction(ACTION_STATUS);
 
-        startService(requestIntent);
-
+        context.startService(requestIntent);
     }
-    public void setGo(Context context, Event event, User user) {
-        JSONObject requestJson = new JSONObject();
 
-        try {
-            requestJson.put(JSONParameter.EventID.toString(), event.getId());
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_GO);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
-        requestIntent.setAction(ACTION_GO);
-
-        startService(requestIntent);
-
-    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         HTTPConnection connection = new HTTPConnection(SERVLET);
         Intent resultIntent = new Intent();
-        JSONObject result;
-        switch (intent.getAction()) {
-            case ACTION_REJECT:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                break;
-            case ACTION_ACCEPT:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case ACTION_GO:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
-            //TODO default case
-
+        JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+        try {
+            //TODO what happens if error != 0
+            resultIntent.putExtra(UtilService.ERROR, result.getInt(JSONParameter.ErrorCode.toString()));
+            resultIntent.putExtra(UtilService.STATUS, intent.getIntExtra(UtilService.STATUS, 0));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        resultIntent.setAction(intent.getAction());
+        resultIntent.setAction(RESULT_STATUS);
+        //TODO default case
 
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);
