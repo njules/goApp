@@ -128,20 +128,32 @@ public final class ServletUtils {
 
         return true;
     }
+    
+    protected static JSONObject createJSONEventID(Event event){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
 
     protected static JSONObject createJSONEvent(Event event) {
         JSONObject json = new JSONObject();
         try {
-            json.accumulate(JSONParameter.EVENT_NAME.toString(), event.getName());
-            json.accumulate(JSONParameter.EVENT_TIME.toString(), event.getTimestamp().getTime());
-            json.accumulate(JSONParameter.EVENT_ID.toString(), event.getEventId());
+            json.put(JSONParameter.EVENT_NAME.toString(), event.getName());
+            json.put(JSONParameter.EVENT_TIME.toString(), event.getTimestamp().getTime());
+            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
 
-            json.accumulate(JSONParameter.LOC_NAME.toString(), event.getLocation().getName());
-            json.accumulate(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
-            json.accumulate(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
+            json.put(JSONParameter.LOC_NAME.toString(), event.getLocation().getName());
+            json.put(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
+            json.put(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
 
-            json.accumulate(JSONParameter.GRUOP_ID.toString(), event.getGroup().getGroupId());
-            json.accumulate(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
+            json.put(JSONParameter.GRUOP_ID.toString(), event.getGroup().getGroupId());
+            json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -154,9 +166,9 @@ public final class ServletUtils {
         JSONObject json = new JSONObject();
 
         try {
-            json.accumulate(JSONParameter.LOC_NAME.toString(), location.getName());
-            json.accumulate(JSONParameter.LONGITUDE.toString(), location.getLongitude());
-            json.accumulate(JSONParameter.LATITUDE.toString(), location.getLatitude());
+            json.put(JSONParameter.LOC_NAME.toString(), location.getName());
+            json.put(JSONParameter.LONGITUDE.toString(), location.getLongitude());
+            json.put(JSONParameter.LATITUDE.toString(), location.getLatitude());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -169,10 +181,10 @@ public final class ServletUtils {
         JSONObject json = new JSONObject();
 
         try {
-            json.accumulate(JSONParameter.USER_ID.toString(), group.getFounder().getUserId());
-            json.accumulate(JSONParameter.USER_NAME.toString(), group.getFounder().getName());
-            json.accumulate(JSONParameter.GROUP_NAME.toString(), group.getName());
-            json.accumulate(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
+            json.put(JSONParameter.USER_ID.toString(), group.getFounder().getUserId());
+            json.put(JSONParameter.USER_NAME.toString(), group.getFounder().getName());
+            json.put(JSONParameter.GROUP_NAME.toString(), group.getName());
+            json.put(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
 
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
@@ -185,8 +197,8 @@ public final class ServletUtils {
     protected static JSONObject createJSONUser(User user) {
         JSONObject json = new JSONObject();
         try {
-            json.accumulate(JSONParameter.USER_ID.toString(), user.getUserId());
-            json.accumulate(JSONParameter.USER_NAME.toString(), user.getName());
+            json.put(JSONParameter.USER_ID.toString(), user.getUserId());
+            json.put(JSONParameter.USER_NAME.toString(), user.getName());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
