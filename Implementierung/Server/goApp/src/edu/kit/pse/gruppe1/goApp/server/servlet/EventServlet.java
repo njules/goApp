@@ -79,13 +79,13 @@ public class EventServlet extends HttpServlet {
 
         switch (method) {
         case CREATE:
-            strResponse = create(jsonRequest);
+            strResponse = create(jsonRequest).toString();
             break;
         case GET_EVENT:
-            strResponse = getParticipates(jsonRequest);
+            strResponse = getParticipates(jsonRequest).toString();
             break;
         case CHANGE:
-            strResponse = change(jsonRequest);
+            strResponse = change(jsonRequest).toString();
             break;
         default:
             if (error.equals(ErrorCodes.OK)) {
@@ -103,7 +103,6 @@ public class EventServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         doGet(request, response);
     }
 
@@ -118,7 +117,7 @@ public class EventServlet extends HttpServlet {
      *            location, event name and the user creating this event.
      * @return A JSON string containing the previously created event is returned.
      */
-    private String create(JSONObject json) {
+    private JSONObject create(JSONObject json) {
         Event event = null;
         Timestamp time = null;
         String name = null;
@@ -149,31 +148,39 @@ public class EventServlet extends HttpServlet {
             err = ErrorCodes.DB_ERROR;
         }
 
-        return createJSONObject(event, err, true);
+        JSONObject result = null;
+        if (err.equals(ErrorCodes.OK)) {
+            result = ServletUtils.createJSONEventID(event);
+        } else {
+            result = ServletUtils.createJSONError(err);
+        }
+        return result;
     }
 
-    /**
-     * calls methods for creating Error or Event JSONObject
-     * 
-     * @param event
-     *            Event to serialize
-     * @param error
-     *            Error to serialize
-     * @return String with serialized JSONObject
-     */
-    private String createJSONObject(Event event, JSONParameter.ErrorCodes error, boolean onlyID) {
-        JSONObject result = null;
-        if (error.equals(ErrorCodes.OK)) {
-            if (onlyID) {
-                result = ServletUtils.createJSONEventID(event);
-            } else {
-                result = ServletUtils.createJSONEvent(event);
-            }
-        } else {
-            result = ServletUtils.createJSONError(error);
-        }
-        return result.toString();
-    }
+    // /**
+    // * calls methods for creating Error or Event JSONObject
+    // *
+    // * @param event
+    // * Event to serialize
+    // * @param error
+    // * Error to serialize
+    // * @return String with serialized JSONObject
+    // */
+    // private JSONObject createJSONObject(Event event, JSONParameter.ErrorCodes error, boolean
+    // onlyID) {
+    // //TODO: weg lassen
+    // JSONObject result = null;
+    // if (error.equals(ErrorCodes.OK)) {
+    // if (onlyID) {
+    // result = ServletUtils.createJSONEventID(event);
+    // } else {
+    // result = ServletUtils.createJSONEvent(event);
+    // }
+    // } else {
+    // result = ServletUtils.createJSONError(error);
+    // }
+    // return result;
+    // }
 
     // /**
     // * A method used to access information about an event. Every user, that can see this event may
@@ -199,7 +206,7 @@ public class EventServlet extends HttpServlet {
     //
     // }
 
-    private String getParticipates(JSONObject json) {
+    private JSONObject getParticipates(JSONObject json) {
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
         List<Participant> part = null;
         try {
@@ -209,7 +216,7 @@ public class EventServlet extends HttpServlet {
             error = ErrorCodes.READ_JSON;
         }
 
-        return ServletUtils.createJSONListPart(part).toString();
+        return ServletUtils.createJSONListPart(part);
     }
 
     /**
@@ -221,7 +228,7 @@ public class EventServlet extends HttpServlet {
      *            The JSON object contains an event with the updated information.
      * @return A JSON string containing the updated information about the event is returned.
      */
-    private String change(JSONObject json) {
+    private JSONObject change(JSONObject json) {
         Event event = null;
         boolean valuesChanged = false;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
@@ -232,7 +239,7 @@ public class EventServlet extends HttpServlet {
             event = this.eventMang.getEvent(eventID);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
-            return createJSONObject(event, error, false);
+            return ServletUtils.createJSONError(error);
         }
 
         // for the following part: if attribute is in json Object - change value in Event
@@ -304,7 +311,13 @@ public class EventServlet extends HttpServlet {
             eventMang.update(event);
         }
         event = this.eventMang.getEvent(eventID);
-        return createJSONObject(event, error, false);
+        JSONObject result = null;
+        if (error.equals(ErrorCodes.OK)) {
+            result = ServletUtils.createJSONEvent(event);
+        } else {
+            result = ServletUtils.createJSONError(error);
+        }
+        return result;
     }
 
 }

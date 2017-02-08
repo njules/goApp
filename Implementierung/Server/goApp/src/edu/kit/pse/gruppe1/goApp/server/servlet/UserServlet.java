@@ -50,10 +50,10 @@ public class UserServlet extends HttpServlet {
 
         jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
-            //response was set in extractJSON
+            // response was set in extractJSON
             return;
         }
-        
+
         try {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
@@ -67,16 +67,16 @@ public class UserServlet extends HttpServlet {
 
         if (method == null || !error.equals(ErrorCodes.OK)) {
             method = Methods.NONE;
-        }       
-        
-        
+        }
+
         switch (method) {
         case CHANGE:
-            strResponse = changeName(jsonRequest);
+            strResponse = changeName(jsonRequest).toString();
             break;
-//        case GET_USER:
-//            strResponse = getUser(jsonRequest);
-//            break;
+        // TODO
+        // case GET_USER:
+        // strResponse = getUser(jsonRequest);
+        // break;
         default:
             if (error.equals(ErrorCodes.OK)) {
                 error = ErrorCodes.READ_JSON;
@@ -92,7 +92,6 @@ public class UserServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         doGet(request, response);
     }
 
@@ -105,9 +104,10 @@ public class UserServlet extends HttpServlet {
      *            with the name the user wants to change it to.
      * @return Returns a JSON string containing information about the success of this operation.
      */
-    private String changeName(JSONObject json) {
+    private JSONObject changeName(JSONObject json) {
         User user = null;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
+        JSONObject result = null;
 
         try {
             int userID = json.getInt(JSONParameter.USER_ID.toString());
@@ -127,41 +127,42 @@ public class UserServlet extends HttpServlet {
             }
         }
 
-        return createJSONObject(user, error);
-
-    }
-
-    // TODO: JavaDocs
-    // TODO: überflüssig durch Util?
-    private String createJSONObject(User user, JSONParameter.ErrorCodes error) {
-        JSONObject result = null;
         if (error.equals(ErrorCodes.OK)) {
             result = ServletUtils.createJSONUser(user);
         } else {
             result = ServletUtils.createJSONError(error);
         }
-        return result.toString();
+
+        return result;
+
     }
 
-//    /**
-//     * A user can invoke this to retrieve any information about a given user such as groups he is a
-//     * member of and events he wants to participate or is invited to.
-//     * 
-//     * @param json
-//     *            This JSON object contains the user about whom the information shall be released.
-//     * @return Returns a JSON string containing information about the success of this operation.
-//     */
-//    private String getUser(JSONObject json) {
-//        User user = null;
-//        JSONParameter.ErrorCodes error = ErrorCodes.OK;
-//
-//        try {
-//            int userID = json.getInt(JSONParameter.USER_ID.toString());
-//            user = this.usrMang.getUser(userID);
-//        } catch (JSONException e) {
-//            error = ErrorCodes.READ_JSON;
-//        }
-//        return createJSONObject(user, error);
-//    }
+    /**
+     * A user can invoke this to retrieve any information about a given user such as groups he is a
+     * member of and events he wants to participate or is invited to.
+     * 
+     * @param json
+     *            This JSON object contains the user about whom the information shall be released.
+     * @return Returns a JSON string containing information about the success of this operation.
+     */
+    private JSONObject getUser(JSONObject json) {
+        User user = null;
+        JSONParameter.ErrorCodes error = ErrorCodes.OK;
+        JSONObject result = null;
+
+        try {
+            int userID = json.getInt(JSONParameter.USER_ID.toString());
+            user = this.usrMang.getUser(userID);
+        } catch (JSONException e) {
+            error = ErrorCodes.READ_JSON;
+        }
+        if (error.equals(ErrorCodes.OK)) {
+            result = ServletUtils.createJSONUser(user);
+        } else {
+            result = ServletUtils.createJSONError(error);
+        }
+
+        return result;
+    }
 
 }

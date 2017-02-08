@@ -54,7 +54,7 @@ public class LoginServlet extends HttpServlet {
 
         jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
-            //response was set in extractJSON
+            // response was set in extractJSON
             return;
         }
 
@@ -140,7 +140,6 @@ public class LoginServlet extends HttpServlet {
      */
     private JSONObject login(JSONObject json) {
         int userID = -1;
-        JSONParameter.ErrorCodes error = ErrorCodes.OK;
         User user = null;
 
         try {
