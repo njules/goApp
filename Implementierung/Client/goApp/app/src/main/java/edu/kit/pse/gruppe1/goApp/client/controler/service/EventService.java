@@ -50,8 +50,10 @@ public class EventService extends IntentService {
         try {
             requestJson.put(JSONParameter.EventName.toString(), name);
             requestJson.put(JSONParameter.GroupID.toString(), group.getId());
+            requestJson.put(JSONParameter.UserID.toString(),eventAdmin.getId());
             requestJson.put(JSONParameter.Latitude.toString(), destination.getLatitude());
             requestJson.put(JSONParameter.Longitude.toString(), destination.getLongitude());
+            requestJson.put(JSONParameter.LocationName.toString(),destination.getName());
             requestJson.put(JSONParameter.EventTime.toString(), time.getTime());
             requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.CREATE.toString());
         } catch (JSONException e) {
@@ -60,6 +62,7 @@ public class EventService extends IntentService {
 
         Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
+        requestIntent.putExtra(UtilService.EVENT,new Event(0,name,time,destination,eventAdmin));
         requestIntent.setAction(ACTION_CREATE);
 
         context.startService(requestIntent);
@@ -126,6 +129,9 @@ public class EventService extends IntentService {
                 try {
                     //TODO what happens if error != 0
                     resultIntent.putExtra(UtilService.ERROR, result.getInt(JSONParameter.ErrorCode.toString()));
+                    Event event = (Event) intent.getParcelableExtra(UtilService.EVENT);
+                    Event newEvent = new Event(result.getInt(JSONParameter.EventID.toString()),event.getName(),event.getTime(),event.getLocation(),event.getCreator());
+                    resultIntent.putExtra(UtilService.EVENT,newEvent);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

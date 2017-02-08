@@ -57,6 +57,7 @@ public class Event implements Parcelable {
         name = in.readString();
         time = new Date(in.readLong());
         location = in.readParcelable(Location.class.getClassLoader());
+        creator = in.readParcelable(User.class.getClassLoader());
     }
 
     public static final Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
@@ -93,11 +94,12 @@ public class Event implements Parcelable {
      * @param name The name of the event.
      * @param time The time of the event.
      */
-    public Event(int id, String name, Date time, Location location) {
+    public Event(int id, String name, Date time, Location location,User creator) {
         this.id = id;
         this.name = name;
         this.time = time;
         this.location = location;
+        this.creator = creator;
     }
 
     @Override
@@ -111,6 +113,7 @@ public class Event implements Parcelable {
         out.writeString(name);
         out.writeLong(time.getTime());
         out.writeParcelable(location,i);
+        out.writeParcelable(creator,i);
     }
 
     //TODO Usefull?

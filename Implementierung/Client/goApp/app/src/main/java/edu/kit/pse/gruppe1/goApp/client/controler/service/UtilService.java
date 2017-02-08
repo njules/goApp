@@ -30,7 +30,7 @@ public final class UtilService {
     public static final String NEW_EVENTS = "newEvents";
     public static final String ACCEPTED_EVENTS = "acceptedEvents" ;
     public static final String EVENT = "event";
-
+//TODO Events laden
 
     public static Group[] getGroups(JSONObject json){
         //TODO if(json == null)
@@ -41,8 +41,7 @@ public final class UtilService {
                 JSONArray id = json.getJSONArray(JSONParameter.GroupID.toString());
                 Group[] groups = new Group[name.length()];
                 for (int i = 0; i < name.length(); i++) {
-                    User user = new User(0,"Test"+i);
-                    // TODO : User user = new User(result.getInt(JSONParameter.UserID.toString()), result.getString(JSONParameter.UserName.toString()));
+                    User user = new User(json.getInt(JSONParameter.UserID.toString()), json.getString(JSONParameter.UserName.toString()));
                     groups[i] = new Group(
                             (int) id.get(i),
                             (String) name.get(i),
@@ -81,7 +80,7 @@ public final class UtilService {
     }
 
     private static Event[] getEvents(JSONObject result) {
-        try {
+        /*try {
             JSONArray jsons = result.getJSONArray(JSONParameter.GroupName.toString());
             Event[] events = new Event[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
@@ -89,12 +88,13 @@ public final class UtilService {
                         jsons.getJSONObject(i).getInt(JSONParameter.EventID.toString()),
                         jsons.getJSONObject(i).getString(JSONParameter.EventName.toString()),
                         new Date(jsons.getJSONObject(i).getLong(JSONParameter.EventTime.toString())),
-                        new Location(result.getDouble(JSONParameter.Latitude.toString()), result.getDouble(JSONParameter.Longitude.toString()), result.getString(JSONParameter.LocationName.toString())));;
+                        new Location(result.getDouble(JSONParameter.Latitude.toString()), result.getDouble(JSONParameter.Longitude.toString()), result.getString(JSONParameter.LocationName.toString())),
+new User(jsons.getInt(JSONParameter.UserID.toString()),jsons.getString(JSONParameter.UserName.toString())  )              );;
             }
             return events;
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
         return null;
 
     }
@@ -123,7 +123,7 @@ public final class UtilService {
 
     public static Event getEvent(JSONObject result){
         Event event = null;
-        try {
+        /*try {
             event = new Event(
                     result.getInt(JSONParameter.EventID.toString()),
                     result.getString(JSONParameter.EventName.toString()),
@@ -131,7 +131,7 @@ public final class UtilService {
                     new Location(result.getDouble(JSONParameter.Latitude.toString()), result.getDouble(JSONParameter.Longitude.toString()), result.getString(JSONParameter.LocationName.toString())));
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
         return event;
     }
 }
