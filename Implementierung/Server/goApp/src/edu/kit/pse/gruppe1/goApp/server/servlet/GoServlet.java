@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
-import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -47,7 +46,7 @@ public class GoServlet extends HttpServlet {
         }
         Methods method;
         try {
-            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
@@ -86,14 +85,14 @@ public class GoServlet extends HttpServlet {
 	private String getStartedParticipants(JSONObject json) {
         JSONObject response = new JSONObject();
         try {
-            int event = json.getInt(JSONParameter.EventID.toString());
+            int event = json.getInt(JSONParameter.EVENT_ID.toString());
             Status status = Status.STARTED;
             List<User> userList = eventUser.getUserByStatus(status, event);
             for (User user : userList) {
-                response.append(JSONParameter.UserID.toString(), user.getUserId());
-                response.append(JSONParameter.UserName.toString(), user.getName());
+                response.append(JSONParameter.USER_ID.toString(), user.getUserId());
+                response.append(JSONParameter.USER_NAME.toString(), user.getName());
             }
-            response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+            response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
@@ -109,11 +108,11 @@ public class GoServlet extends HttpServlet {
 	private String setStarted(JSONObject json) {
         JSONObject response = new JSONObject();
         try {
-            int user = json.getInt(JSONParameter.UserID.toString());
-            int event = json.getInt(JSONParameter.EventID.toString());
+            int user = json.getInt(JSONParameter.USER_ID.toString());
+            int event = json.getInt(JSONParameter.EVENT_ID.toString());
             Status status = Status.STARTED;
             if (eventUser.updateStatus(event, user, status)) {
-                response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+                response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
             } else {
                 return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
             }

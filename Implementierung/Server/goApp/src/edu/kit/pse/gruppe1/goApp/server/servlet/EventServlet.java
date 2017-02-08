@@ -63,7 +63,7 @@ public class EventServlet extends HttpServlet {
         
         try {
             method = JSONParameter.Methods
-                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -131,13 +131,13 @@ public class EventServlet extends HttpServlet {
 
         // get all parameter from json
         try {
-            name = json.getString(JSONParameter.EventName.toString());
-            longitude = json.getDouble(JSONParameter.Longitude.toString());
-            latitude = json.getDouble(JSONParameter.Latitude.toString());
-            locName = json.getString(JSONParameter.LocationName.toString());
-            time = new Timestamp(json.getLong(JSONParameter.EventTime.toString()));
-            creatorID = json.getInt(JSONParameter.UserID.toString());
-            groupID = json.getInt(JSONParameter.GroupID.toString());
+            name = json.getString(JSONParameter.EVENT_NAME.toString());
+            longitude = json.getDouble(JSONParameter.LONGITUDE.toString());
+            latitude = json.getDouble(JSONParameter.LATITUDE.toString());
+            locName = json.getString(JSONParameter.LOC_NAME.toString());
+            time = new Timestamp(json.getLong(JSONParameter.EVENT_TIME.toString()));
+            creatorID = json.getInt(JSONParameter.USER_ID.toString());
+            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
         } catch (JSONException e) {
             err = ErrorCodes.READ_JSON;
         }
@@ -184,7 +184,7 @@ public class EventServlet extends HttpServlet {
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
 
         try {
-            int eventID = json.getInt(JSONParameter.EventID.toString());
+            int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
             event = this.eventMang.getEvent(eventID);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
@@ -210,7 +210,7 @@ public class EventServlet extends HttpServlet {
         int eventID = -1;
 
         try {
-            eventID = json.getInt(JSONParameter.EventID.toString());
+            eventID = json.getInt(JSONParameter.EVENT_ID.toString());
             event = this.eventMang.getEvent(eventID);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
@@ -219,15 +219,15 @@ public class EventServlet extends HttpServlet {
 
         // for the following part: if attribute is in json Object - change value in Event
         try {
-            String name = json.getString(JSONParameter.EventName.toString());
+            String name = json.getString(JSONParameter.EVENT_NAME.toString());
             event.setName(name);
             valuesChanged = true;
         } catch (JSONException e) {
             // do nothing, because it can happen
         }
         try {
-            double longitude = json.getDouble(JSONParameter.Longitude.toString());
-            double latitude = json.getDouble(JSONParameter.Latitude.toString());
+            double longitude = json.getDouble(JSONParameter.LONGITUDE.toString());
+            double latitude = json.getDouble(JSONParameter.LATITUDE.toString());
             Location loc = event.getLocation();
             loc.setLatitude(latitude);
             loc.setLongitude(longitude);
@@ -238,7 +238,7 @@ public class EventServlet extends HttpServlet {
         }
 
         try {
-            String locName = json.getString(JSONParameter.LocationName.toString());
+            String locName = json.getString(JSONParameter.LOC_NAME.toString());
             Location loc = event.getLocation();
             loc.setName(locName);
             event.setLocation(loc);
@@ -248,7 +248,7 @@ public class EventServlet extends HttpServlet {
         }
 
         try {
-            Timestamp time = (Timestamp) json.get(JSONParameter.EventTime.toString());
+            Timestamp time = (Timestamp) json.get(JSONParameter.EVENT_TIME.toString());
             event.setTimestamp(time);
             valuesChanged = true;
         } catch (JSONException e) {
@@ -256,7 +256,7 @@ public class EventServlet extends HttpServlet {
         }
 
         try {
-            int creatorID = json.getInt(JSONParameter.UserID.toString());
+            int creatorID = json.getInt(JSONParameter.USER_ID.toString());
             UserManagement usMang = new UserManagement();
             User creator = usMang.getUser(creatorID);
             if (creator != null) {
@@ -269,7 +269,7 @@ public class EventServlet extends HttpServlet {
             // do nothing, because it can happen
         }
         try {
-            int groupID = json.getInt(JSONParameter.GroupID.toString());
+            int groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
             GroupManagement grMang = new GroupManagement();
             Group group = grMang.getGroup(groupID);
             if (group != null) {

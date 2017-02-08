@@ -51,7 +51,7 @@ public class LocationServlet extends HttpServlet {
 	    }
         Methods method;
         try {
-            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
@@ -89,10 +89,10 @@ public class LocationServlet extends HttpServlet {
 	private String setGPS(JSONObject json) {
 		JSONObject response = new JSONObject();
 		try {
-		    int event = json.getInt(JSONParameter.EventID.toString());
-		    int user = json.getInt(JSONParameter.UserID.toString());
-		    int lat = json.getInt(JSONParameter.Latitude.toString());
-		    int lon = json.getInt(JSONParameter.Longitude.toString());
+		    int event = json.getInt(JSONParameter.EVENT_ID.toString());
+		    int user = json.getInt(JSONParameter.USER_ID.toString());
+		    int lat = json.getInt(JSONParameter.LATITUDE.toString());
+		    int lon = json.getInt(JSONParameter.LONGITUDE.toString());
 		    Location location = new Location(lon, lat, null);
 		    List<User> userList = eventUser.getUserByStatus(Status.STARTED, event);
 		    for (User participant : userList) {
@@ -104,7 +104,7 @@ public class LocationServlet extends HttpServlet {
 		    if (location != null) {
 		        return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
 		    }
-		    response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+		    response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
 		} catch (JSONException e) {
 		    e.printStackTrace();
 		    return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
@@ -120,14 +120,14 @@ public class LocationServlet extends HttpServlet {
 	private String getCluster(JSONObject json) {
 	    JSONObject response = new JSONObject();
 	    try {
-	        int eventID = Integer.parseInt(json.getString(JSONParameter.EventID.toString()));
+	        int eventID = Integer.parseInt(json.getString(JSONParameter.EVENT_ID.toString()));
 	        Set<Location> locations = event.getEvent(eventID).getClusterPoints();
 	        for (Location location:locations) {
-	            response.append(JSONParameter.Latitude.toString(), location.getLatitude());
-	            response.append(JSONParameter.Longitude.toString(), location.getLongitude());
-	            response.append(JSONParameter.LocationName.toString(), location.getName());
+	            response.append(JSONParameter.LATITUDE.toString(), location.getLatitude());
+	            response.append(JSONParameter.LONGITUDE.toString(), location.getLongitude());
+	            response.append(JSONParameter.LOC_NAME.toString(), location.getName());
 	        }
-	        response.append(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.OK);
+	        response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
 	    } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();

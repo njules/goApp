@@ -64,7 +64,7 @@ public class LoginServlet extends HttpServlet {
 
         try {
             method = JSONParameter.Methods
-                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -119,7 +119,7 @@ public class LoginServlet extends HttpServlet {
 
         try {
             googleId = json.getInt(JSONParameter.GOOGLE_ID.toString());
-            String name = json.getString(JSONParameter.UserName.toString());
+            String name = json.getString(JSONParameter.USER_NAME.toString());
             user = usrMang.add(name, googleId);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
@@ -148,7 +148,7 @@ public class LoginServlet extends HttpServlet {
         User user = null;
 
         try {
-            userID = json.getInt(JSONParameter.UserID.toString());
+            userID = json.getInt(JSONParameter.USER_ID.toString());
         } catch (JSONException e) {
             // could happen, if no user exists and then no UserID was set;
             userID = -1;

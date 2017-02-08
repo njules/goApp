@@ -56,7 +56,7 @@ public class UserServlet extends HttpServlet {
         
         try {
             method = JSONParameter.Methods
-                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -110,12 +110,12 @@ public class UserServlet extends HttpServlet {
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
 
         try {
-            int userID = json.getInt(JSONParameter.UserID.toString());
+            int userID = json.getInt(JSONParameter.USER_ID.toString());
             user = usrMang.getUser(userID);
             if (user == null) {
                 error = ErrorCodes.DB_ERROR;
             }
-            String name = json.getString(JSONParameter.UserName.toString());
+            String name = json.getString(JSONParameter.USER_NAME.toString());
             user.setName(name);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
@@ -156,7 +156,7 @@ public class UserServlet extends HttpServlet {
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
 
         try {
-            int userID = json.getInt(JSONParameter.UserID.toString());
+            int userID = json.getInt(JSONParameter.USER_ID.toString());
             user = this.usrMang.getUser(userID);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
