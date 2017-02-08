@@ -18,6 +18,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -58,6 +59,11 @@ public class GroupServlet extends HttpServlet {
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
             return;
         }
+        
+        if (method == null) {
+            method = Methods.NONE;
+        }
+        
         switch (method) {
         case CREATE:
             response.getWriter().println(create(jsonRequest));

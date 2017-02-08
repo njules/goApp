@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -52,6 +53,11 @@ public class GoServlet extends HttpServlet {
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
             return;
         }
+        
+        if (method == null) {
+            method = Methods.NONE;
+        }
+        
         switch (method) {
         case GET_START:
             response.getWriter().println(getStartedParticipants(jsonRequest));

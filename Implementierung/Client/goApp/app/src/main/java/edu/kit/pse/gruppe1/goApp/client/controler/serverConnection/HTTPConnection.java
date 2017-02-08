@@ -44,8 +44,7 @@ public class HTTPConnection {
      * @return The JSONObject the server send back
      */
     public JSONObject sendGetRequest(String json) {
-        String res = send("GET", json);
-        return toJSONObject(res);
+        return send("GET", json);
     }
 
     /**
@@ -55,8 +54,7 @@ public class HTTPConnection {
      * @return The JSONObject the server send back
      */
     public JSONObject sendPostRequest(String json) {
-        String res = send("POST", json);
-        return toJSONObject(res);
+        return send("POST", json);
     }
 
     private JSONObject toJSONObject(String jsonString) {
@@ -70,7 +68,7 @@ public class HTTPConnection {
     }
 
 
-    private String send(String requestMethod, String request) {
+    private JSONObject send(String requestMethod, String request) {
         BufferedReader reader = null;
         OutputStreamWriter out = null;
         String response = null;
@@ -92,7 +90,16 @@ public class HTTPConnection {
             close(out);
             close(reader);
         }
-        return response;
+        if (response == null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.CONNECTION_FAILED.getErrorCode());
+            } catch (JSONException e) {
+                return new JSONObject();
+            }
+            return jsonObject;
+        }
+        return toJSONObject(response);
     }
 
     private void close(Closeable inputStream) {

@@ -167,7 +167,10 @@ public enum JSONParameter {
 
         ALGO_ERROR(8, "Error while processing Clusering."),
 
-        METH_ERROR(9, "Method not found.");
+        METH_ERROR(9, "Method not found."),
+
+        CONNECTION_FAILED(10, "Connection to server failed.");
+
 
         private final String fieldDescription;
         private final int errCode;
