@@ -120,7 +120,17 @@ public enum JSONParameter {
      * TODO
      */
     STATUS("Status"),
-
+    
+    /**
+     * TODO
+     */
+    ACC_Events("AcceptedEvents"),
+    
+    /**
+     * 
+     */
+    NEW_EVENTS("NewEvents"),
+    
     /**
      * Google ID
      * TODO
