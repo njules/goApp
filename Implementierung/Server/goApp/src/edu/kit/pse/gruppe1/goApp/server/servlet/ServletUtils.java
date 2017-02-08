@@ -128,20 +128,32 @@ public final class ServletUtils {
 
         return true;
     }
+    
+    protected static JSONObject createJSONEventID(Event event){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
 
     protected static JSONObject createJSONEvent(Event event) {
         JSONObject json = new JSONObject();
         try {
-            json.accumulate(JSONParameter.EVENT_NAME.toString(), event.getName());
-            json.accumulate(JSONParameter.EVENT_TIME.toString(), event.getTimestamp().getTime());
-            json.accumulate(JSONParameter.EVENT_ID.toString(), event.getEventId());
+            json.put(JSONParameter.EVENT_NAME.toString(), event.getName());
+            json.put(JSONParameter.EVENT_TIME.toString(), event.getTimestamp().getTime());
+            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
 
-            json.accumulate(JSONParameter.LOC_NAME.toString(), event.getLocation().getName());
-            json.accumulate(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
-            json.accumulate(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
+            json.put(JSONParameter.LOC_NAME.toString(), event.getLocation().getName());
+            json.put(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
+            json.put(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
 
-            json.accumulate(JSONParameter.GRUOP_ID.toString(), event.getGroup().getGroupId());
-            json.accumulate(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
+            json.put(JSONParameter.GRUOP_ID.toString(), event.getGroup().getGroupId());
+            json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
             e.printStackTrace();
