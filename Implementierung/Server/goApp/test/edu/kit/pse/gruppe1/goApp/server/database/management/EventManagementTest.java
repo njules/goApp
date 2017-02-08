@@ -3,14 +3,12 @@ package edu.kit.pse.gruppe1.goApp.server.database.management;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
