@@ -102,47 +102,47 @@ public enum JSONParameter {
     ERROR_CODE("ErrorCode"),
 
     /**
-     * List of User
+     * List of Users
      */
     LIST_USER("ListUser"),
 
     /**
-     * List of Group
+     * List of Groups
      */
     LIST_GROUP("ListGroup"),
 
     /**
-     * List of Group
+     * List of Events
      */
     LIST_EVENT("ListEvent"),
-    
+
     /**
-     * 
+     * List of Locations
      */
     LIST_LOC("ListLocation"),
+
     /**
-     * 
+     * List of Participates (UserID & Status)
      */
     LIST_PART("ListParticipate"),
-    
+
     /**
-     * TODO
+     * Status of USer in Event
      */
     STATUS("Status"),
-    
+
     /**
-     * TODO
+     * Accepted Events
      */
     ACC_Events("AcceptedEvents"),
-    
+
     /**
-     * 
+     * New Events
      */
     NEW_EVENTS("NewEvents"),
-    
+
     /**
-     * Google ID
-     * TODO
+     * Google ID TODO
      */
     GOOGLE_ID("GoogleId");
 
@@ -177,26 +177,59 @@ public enum JSONParameter {
         return null;
     }
 
-    // TODO: JavaDocs
+    /**
+     * Enum of all possible ErrorCodes
+     *
+     */
     public enum ErrorCodes {
+        /**
+         * No error occured
+         */
         OK(0, "No error"),
 
+        /**
+         * Error while reading JSONObject
+         */
         READ_JSON(1, "JSON could not be read."),
 
+        /**
+         * Error while writing JSONObject
+         */
         WRITE_JSON(2, "JSON could not be wrote."),
 
+        /**
+         * JSONObject was empty
+         */
         EMPTY_JSON(3, "Empty JSON String"),
 
+        /**
+         * Error while database interaction or in database
+         */
         DB_ERROR(4, "Error in Database."),
 
+        /**
+         * too many user in one group, user limit was reached
+         */
         USR_LIMIT(5, "User limit was reached."),
 
+        /**
+         * too many groups for one user, group limit was reached
+         */
         GRP_LIMIT(6, "Group limit was reached."),
 
+        /**
+         * Error while IO operations
+         */
         IO_ERROR(7, "Error with IO Methods."),
 
+        /**
+         * Error while clustering locations
+         */
         ALGO_ERROR(8, "Error while processing Clusering."),
 
+        /**
+         * Method is not valid
+         */
         METH_ERROR(9, "Method not found.");
 
         private final String fieldDescription;
@@ -207,18 +240,30 @@ public enum JSONParameter {
             errCode = code;
         }
 
-        // TODO: JavaDocs
+        /**
+         * return String of Enum
+         */
         @Override
         public String toString() {
             return fieldDescription;
         }
 
-        // TODO: JavaDocs
+        /**
+         * gets Error Code to enum value
+         * 
+         * @return error code
+         */
         public int getErrorCode() {
             return errCode;
         }
 
-        // TODO: JavaDocs
+        /**
+         * get enum value from String
+         * 
+         * @param s
+         *            String from enum
+         * @return enum value or null, if none exists with given String
+         */
         public static ErrorCodes fromString(String s) {
             for (ErrorCodes err : ErrorCodes.values()) {
                 if (err.toString().equals(s)) {
@@ -228,7 +273,13 @@ public enum JSONParameter {
             return null;
         }
 
-        // TODO: JavDocs
+        /**
+         * get enum value from error code
+         * 
+         * @param i
+         *            error code
+         * @return enum value or null, if none exists with given String
+         */
         public static ErrorCodes fromErCode(int i) {
             for (ErrorCodes err : ErrorCodes.values()) {
                 if (err.getErrorCode() == i) {
@@ -240,7 +291,10 @@ public enum JSONParameter {
 
     }
 
-    // TODO: JavaDocs
+    /**
+     * Enum with all possible methods
+     *
+     */
     public enum Methods {
         /**
          * Event.create Group.create Request.create
@@ -252,10 +306,10 @@ public enum JSONParameter {
          */
         CHANGE,
 
-//        /**
-//         * User.getUser
-//         */
-//        GET_USER,
+        // /**
+        // * User.getUser
+        // */
+        // GET_USER,
 
         /**
          * Event.getEvent Group.getEvents
@@ -263,10 +317,10 @@ public enum JSONParameter {
          */
         GET_EVENT,
 
-//        /**
-//         * Go.getStartedParticpants
-//         */
-//        GET_START,
+        // /**
+        // * Go.getStartedParticpants
+        // */
+        // GET_START,
 
         /**
          * Group.getGroup TODO: Methode umbenenen
@@ -327,7 +381,7 @@ public enum JSONParameter {
          * Location TODO: kombinierte Methode
          */
         SYNC_LOC,
-        
+
         /**
          * TODO: Particpate zusammenfassen, Status prüfen, dann methode aufrufen
          */
@@ -358,7 +412,13 @@ public enum JSONParameter {
          */
         NONE;
 
-        // TODO: JavaDocs
+        /**
+         * get enum value from given string
+         * 
+         * @param s
+         *            string to search for
+         * @return enum value or NONE, if no method existed with given string
+         */
         public static Methods fromString(String s) {
             for (Methods meth : Methods.values()) {
                 if (meth.toString().equals(s)) {

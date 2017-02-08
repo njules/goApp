@@ -117,10 +117,9 @@ public class RequestServlet extends HttpServlet {
      * @return Returns a JSON string containing information about the success of this operation.
      */
     private String create(JSONObject json) {
-        // TODO: constrains in Datei festlegen und diese hier auslesen
         // TODO: weniger returns
-        int userlimit = 20;
-        int grouplimit = 50;
+        int userlimit = ServletUtils.USERLIMIT;
+        int grouplimit = ServletUtils.GROUPLIMIT;
         int userID = -1;
         int newGroupID = -1;
         List<Group> groups = null;

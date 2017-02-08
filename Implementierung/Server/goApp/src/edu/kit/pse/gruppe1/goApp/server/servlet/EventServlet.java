@@ -2,13 +2,9 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
-import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
-import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
-import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.Participant;
-import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
@@ -19,7 +15,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -205,11 +200,6 @@ public class EventServlet extends HttpServlet {
     // }
 
     private String getParticipates(JSONObject json) {
-        // TODO: rein eventID
-        // TODO: raus, alle User, mit ihrem Status
-        // Liste: User.ID + Status
-
-        Event event = null;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
         List<Participant> part = null;
         try {

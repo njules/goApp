@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
-import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
