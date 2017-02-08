@@ -17,21 +17,8 @@ public class ClusterFacade {
 
     
     private CentralPointAlgo algorithm;
-    public void setAlgorithm(CentralPointAlgo algorithm) {
-        this.algorithm = algorithm;
-    }
-
-    public void setClusterer(Clusterer<DoublePoint> clusterer) {
-        this.clusterer = clusterer;
-    }
-
-
-
-
     private Clusterer<DoublePoint> clusterer;
-    
-    
-    
+    private EventUserManagement management;
     
     /*
      * default constructor with simpleCentral-Algorithm and DBSCAN
@@ -39,6 +26,7 @@ public class ClusterFacade {
     public ClusterFacade() {
         this.algorithm = new SimpleCentral(); 
         clusterer = new DBSCANClusterer<DoublePoint>(0.001, 2);
+        this.management = new EventUserManagement();
     }
     
     /*
@@ -47,6 +35,7 @@ public class ClusterFacade {
     public ClusterFacade(CentralPointAlgo algorithm) {
         this.algorithm = algorithm;
         this.clusterer = new DBSCANClusterer<DoublePoint>(0.001, 2);
+        this.management = new EventUserManagement();
     }
     
     /*
@@ -55,6 +44,7 @@ public class ClusterFacade {
     public ClusterFacade(Clusterer<DoublePoint> clusterer) {
         this.algorithm = new SimpleCentral(); 
         this.clusterer = clusterer;
+        this.management = new EventUserManagement();
     }
     
     /*
@@ -63,14 +53,21 @@ public class ClusterFacade {
     public ClusterFacade(Clusterer<DoublePoint> clusterer, CentralPointAlgo algorithm) {
         this.algorithm = algorithm; 
         this.clusterer = clusterer;
+        this.management = new EventUserManagement();
     }
     
     
-   
     
     
     
-    
+     public void setAlgorithm(CentralPointAlgo algorithm) {
+        this.algorithm = algorithm;
+    }
+
+    public void setClusterer(Clusterer<DoublePoint> clusterer) {
+        this.clusterer = clusterer;
+    }
+
     
     
   /**
@@ -107,9 +104,8 @@ public class ClusterFacade {
   /*
    * This class fetches the locations from the event, and builds a list of DoublePoint.class objects
    */
-  public List<DoublePoint> getEventsLocations(int eventId) {
+  private List<DoublePoint> getEventsLocations(int eventId) {
 
-    EventUserManagement management = new EventUserManagement();
     List<User> list = management.getUsers(eventId);
     List<DoublePoint> locations = new ArrayList<DoublePoint>(0);
     DoublePoint userPoint;
