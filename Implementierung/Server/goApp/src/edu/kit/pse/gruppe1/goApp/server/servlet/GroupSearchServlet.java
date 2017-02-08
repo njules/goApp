@@ -90,7 +90,7 @@ public class GroupSearchServlet extends HttpServlet {
             List<Group> groups;
             groups = groupM.getGroupsByName(name);
             for (Group group : groups) {
-                response.append(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
+                response.append(JSONParameter.GROUP_ID.toString(), group.getGroupId());
                 response.append(JSONParameter.GROUP_NAME.toString(), group.getName());
             }
             response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
@@ -113,7 +113,7 @@ public class GroupSearchServlet extends HttpServlet {
             List<Group> groups;
             groups = groupUM.getGroups(ID);
             for (Group group : groups) {
-                response.append(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
+                response.append(JSONParameter.GROUP_ID.toString(), group.getGroupId());
                 response.append(JSONParameter.GROUP_NAME.toString(), group.getName());
             }
             response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);

@@ -143,7 +143,7 @@ public class EventServlet extends HttpServlet {
             locName = json.getString(JSONParameter.LOC_NAME.toString());
             time = new Timestamp(json.getLong(JSONParameter.EVENT_TIME.toString()));
             creatorID = json.getInt(JSONParameter.USER_ID.toString());
-            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
+            groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
             err = ErrorCodes.READ_JSON;
         }

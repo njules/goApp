@@ -111,7 +111,7 @@ public class GroupServlet extends HttpServlet {
             String name = json.getString(JSONParameter.GROUP_NAME.toString());
             int founder = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
             group = groupManager.add(name, founder);
-            response.append(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
+            response.append(JSONParameter.GROUP_ID.toString(), group.getGroupId());
             response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class GroupServlet extends HttpServlet {
         JSONObject response = new JSONObject();
         try {
             int caller = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
-            int group = Integer.parseInt(json.getString(JSONParameter.GRUOP_ID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GROUP_ID.toString()));
             int groupFounder = groupManager.getGroup(group).getFounder().getUserId();
             if (groupFounder != caller) {
                 return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
@@ -155,7 +155,7 @@ public class GroupServlet extends HttpServlet {
         JSONObject response = new JSONObject();
         try {
             int caller = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
-            int group = Integer.parseInt(json.getString(JSONParameter.GRUOP_ID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GROUP_ID.toString()));
             String newName = json.getString(JSONParameter.GROUP_NAME.toString());
             int groupFounder = groupManager.getGroup(group).getFounder().getUserId();
             if (groupFounder != caller) {
@@ -182,7 +182,7 @@ public class GroupServlet extends HttpServlet {
         JSONObject response = new JSONObject();
         try {
             int caller = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
-            int group = Integer.parseInt(json.getString(JSONParameter.GRUOP_ID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GROUP_ID.toString()));
             int member = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
             int groupFounder = groupManager.getGroup(group).getFounder().getUserId();
             if (groupFounder != caller) {
@@ -209,7 +209,7 @@ public class GroupServlet extends HttpServlet {
         JSONObject response = new JSONObject();
         try {
             List<Event> groupEvents;
-            int group = Integer.parseInt(json.getString(JSONParameter.GRUOP_ID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GROUP_ID.toString()));
             int member = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
             groupUserManager.getUsers(group);
             groupEvents = groupManager.getEvents(group);
@@ -232,7 +232,7 @@ public class GroupServlet extends HttpServlet {
             List<User> members;
             List<Event> events;
             User founder;
-            int groupID = Integer.parseInt(json.getString(JSONParameter.GRUOP_ID.toString()));
+            int groupID = Integer.parseInt(json.getString(JSONParameter.GROUP_ID.toString()));
             Group group = groupManager.getGroup(groupID);
             members = groupUserManager.getUsers(groupID);
             events = groupManager.getEvents(groupID);
@@ -264,7 +264,7 @@ public class GroupServlet extends HttpServlet {
 	private String setFounder(JSONObject json) {
         JSONObject response = new JSONObject();
         try {
-            int group = Integer.parseInt(json.getString(JSONParameter.GRUOP_ID.toString()));
+            int group = Integer.parseInt(json.getString(JSONParameter.GROUP_ID.toString()));
             int newFounder = Integer.parseInt(json.getString(JSONParameter.USER_ID.toString()));
             User next = userManager.getUser(newFounder);
             groupManager.updateFounder(group, next);

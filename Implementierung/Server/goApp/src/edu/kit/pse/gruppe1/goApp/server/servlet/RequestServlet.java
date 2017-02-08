@@ -132,7 +132,7 @@ public class RequestServlet extends HttpServlet {
 
         try {
             userID = json.getInt(JSONParameter.USER_ID.toString());
-            newGroupID = json.getInt(JSONParameter.GRUOP_ID.toString());
+            newGroupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
@@ -192,7 +192,7 @@ public class RequestServlet extends HttpServlet {
         // read User and Group ID from JSON
         try {
             userID = json.getInt(JSONParameter.USER_ID.toString());
-            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
+            groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
@@ -224,7 +224,7 @@ public class RequestServlet extends HttpServlet {
         // read User and Group ID from JSON
         try {
             userID = json.getInt(JSONParameter.USER_ID.toString());
-            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
+            groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }

@@ -26,7 +26,7 @@ public enum JSONParameter {
      * 
      */
 
-    GRUOP_ID("GroupID"),
+    GROUP_ID("GroupID"),
 
     /**
      * 
@@ -115,6 +115,15 @@ public enum JSONParameter {
      * List of Group
      */
     LIST_EVENT("ListEvent"),
+    
+    /**
+     * 
+     */
+    LIST_LOC("ListLocation"),
+    /**
+     * 
+     */
+    LIST_PART("ListParticipate"),
     
     /**
      * TODO

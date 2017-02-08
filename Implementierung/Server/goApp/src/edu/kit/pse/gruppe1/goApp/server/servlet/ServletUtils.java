@@ -147,7 +147,7 @@ public final class ServletUtils {
         JSONObject json = new JSONObject();
         try {
             for (Participant p : part) {
-                json.append(JSONParameter.LIST_EVENT.toString(), createJSONParticipate(p));
+                json.append(JSONParameter.LIST_PART.toString(), createJSONParticipate(p));
             }
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
@@ -181,7 +181,7 @@ public final class ServletUtils {
             json.put(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
             json.put(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
 
-            json.put(JSONParameter.GRUOP_ID.toString(), event.getGroup().getGroupId());
+            json.put(JSONParameter.GROUP_ID.toString(), event.getGroup().getGroupId());
             json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
@@ -213,7 +213,7 @@ public final class ServletUtils {
             json.put(JSONParameter.USER_ID.toString(), group.getFounder().getUserId());
             json.put(JSONParameter.USER_NAME.toString(), group.getFounder().getName());
             json.put(JSONParameter.GROUP_NAME.toString(), group.getName());
-            json.put(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
+            json.put(JSONParameter.GROUP_ID.toString(), group.getGroupId());
 
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
@@ -269,6 +269,33 @@ public final class ServletUtils {
         try {
             for (Group grp : group) {
                 json.append(JSONParameter.LIST_GROUP.toString(), createJSONGroup(grp));
+            }
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+    
+    protected static JSONObject createGroupID(Group grp){
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put(JSONParameter.GROUP_ID.toString(), grp.getGroupId());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+    
+    protected static JSONObject createJSONListLoc(List<Location> locat){
+        JSONObject json = new JSONObject();
+        try {
+            for (Location loc : locat) {
+                json.append(JSONParameter.LIST_LOC.toString(), createJSONLocation(loc));
             }
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {

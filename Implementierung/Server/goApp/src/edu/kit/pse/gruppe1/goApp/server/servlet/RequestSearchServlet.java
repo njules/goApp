@@ -137,7 +137,7 @@ public class RequestSearchServlet extends HttpServlet {
         List<User> usrInGrp = null;
 
         try {
-            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
+            groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
