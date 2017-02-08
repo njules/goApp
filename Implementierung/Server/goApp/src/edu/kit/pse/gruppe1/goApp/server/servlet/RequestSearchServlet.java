@@ -59,7 +59,7 @@ public class RequestSearchServlet extends HttpServlet {
         
         try {
             method = JSONParameter.Methods
-                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -112,7 +112,7 @@ public class RequestSearchServlet extends HttpServlet {
         List<Group> grpFromUsr = null;
 
         try {
-            userID = json.getInt(JSONParameter.UserID.toString());
+            userID = json.getInt(JSONParameter.USER_ID.toString());
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
@@ -137,7 +137,7 @@ public class RequestSearchServlet extends HttpServlet {
         List<User> usrInGrp = null;
 
         try {
-            groupID = json.getInt(JSONParameter.GroupID.toString());
+            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
         }
