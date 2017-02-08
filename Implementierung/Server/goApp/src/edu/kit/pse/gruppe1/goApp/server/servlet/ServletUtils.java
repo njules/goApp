@@ -28,6 +28,7 @@ import com.google.api.client.json.JsonFactory;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.model.Participant;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
@@ -128,8 +129,36 @@ public final class ServletUtils {
 
         return true;
     }
-    
-    protected static JSONObject createJSONEventID(Event event){
+
+    protected static JSONObject createJSONParticipate(Participant part) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put(JSONParameter.USER_ID.toString(), part.getUser());
+            json.put(JSONParameter.STATUS.toString(), part.getStatus());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+    protected static JSONObject createJSONListPart(List<Participant> part){
+        JSONObject json = new JSONObject();
+        try {
+            for (Participant p : part) {
+                json.append(JSONParameter.LIST_EVENT.toString(), createJSONParticipate(p));
+            }
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+
+    }
+
+    protected static JSONObject createJSONEventID(Event event) {
         JSONObject json = new JSONObject();
         try {
             json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
