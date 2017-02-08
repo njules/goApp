@@ -1,36 +1,33 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.model.Participant;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
-import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Utils for all Servlets
@@ -39,6 +36,9 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
  */
 public final class ServletUtils {
 
+    protected static final int USERLIMIT = 20;
+    protected static final int GROUPLIMIT = 50;
+    
     /**
      * private constructor to make class static
      */
@@ -50,86 +50,98 @@ public final class ServletUtils {
      * 
      * @return
      */
-    protected static boolean isValidGoogleToken() {
-        // TODO: https://developers.google.com/identity/sign-in/web/backend-auth
-        // verfify ID signed by Google
-        // check if one User has this GoogleID == aud TODO: fehlt noch im kopierten Code
-        // iss == accounts.google.com oder https://accounts.google.com
-        // expired time has not passed exp
+    protected static String getUserIdByToken(String idTokenString) {
+        
 
-        // Copied from Google (URL siehe oben)
-        JsonFactory jsonFactory = null;
-        HttpTransport transport = null;
-        String CLIENT_ID = null;
-        String idTokenString = null;
+       String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
 
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                .setAudience(Collections.singletonList(CLIENT_ID))
-                // Or, if multiple clients access the backend:
-                // .setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
-                .build();
+        
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new ApacheHttpTransport(), new JacksonFactory())
+            .setAudience(Collections.singletonList(CLIENT_ID))
+            .build();
 
-        // (Receive idTokenString by HTTPS POST)
-
-        GoogleIdToken idToken = null;
+       
+        
+        GoogleIdToken idToken;
         try {
             idToken = verifier.verify(idTokenString);
         } catch (GeneralSecurityException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return null;
         }
+        
+       
         if (idToken != null) {
-            Payload payload = idToken.getPayload();
-
-            // Print user identifier
-            String userId = payload.getSubject();
-            System.out.println("User ID: " + userId);
-
-            // Get profile information from payload
-            String email = payload.getEmail();
-            boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-            String name = (String) payload.get("name");
-            String pictureUrl = (String) payload.get("picture");
-            String locale = (String) payload.get("locale");
-            String familyName = (String) payload.get("family_name");
-            String givenName = (String) payload.get("given_name");
-
-            // Use or store profile information
-            // ...
-
+          Payload payload = idToken.getPayload();     
+          String userId = payload.getSubject();
+          return userId;
+          
         } else {
-            System.out.println("Invalid ID token.");
+          return null;
         }
-
-        // kopiert bis hier.
-
-        // try:
-        // https://developers.google.com/api-client-library/java/google-api-java-client/reference/1.20.0/com/google/api/client/googleapis/auth/oauth2/GoogleAuthorizationCodeFlow#newAuthorizationUrl()
-        // com.google.api.client.http.HttpTransport transport = null;
-        // com.google.api.client.json.JsonFactory jsonFactory = null;
-        // String clientId = null;
-        // String clientSecret = null;
-        // Collection<String> scopes = null;
-        // Credential token = null;
-        //
-        // GoogleAuthorizationCodeFlow google = new GoogleAuthorizationCodeFlow(transport,
-        // jsonFactory,
-        // clientId, clientSecret, scopes);
-        // String userID = "123";
-        // try {
-        // token = google.loadCredential(userID);
-        // } catch (IOException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // if (token == null) {
-        // AuthorizationCodeRequestUrl url = google.newAuthorizationUrl();
-        // }
-
-        return true;
     }
     
-    protected static JSONObject createJSONEventID(Event event){
+    protected static String getUserNameByToken(String idTokenString) {
+        
+
+        String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
+
+         
+         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new ApacheHttpTransport(), new JacksonFactory())
+             .setAudience(Collections.singletonList(CLIENT_ID))
+             .build();
+
+        
+         
+         GoogleIdToken idToken;
+         try {
+             idToken = verifier.verify(idTokenString);
+         } catch (GeneralSecurityException | IOException e) {
+             return null;
+         }
+         
+        
+         if (idToken != null) {
+           Payload payload = idToken.getPayload();     
+           String Name = (String) payload.get("name");
+           return Name;
+           
+         } else {
+           return null;
+         }
+     }
+
+    
+    
+    
+    protected static JSONObject createJSONParticipate(Participant part) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put(JSONParameter.USER_ID.toString(), part.getUser());
+            json.put(JSONParameter.STATUS.toString(), part.getStatus());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+    protected static JSONObject createJSONListPart(List<Participant> part){
+        JSONObject json = new JSONObject();
+        try {
+            for (Participant p : part) {
+                json.append(JSONParameter.LIST_PART.toString(), createJSONParticipate(p));
+            }
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+
+    }
+
+    protected static JSONObject createJSONEventID(Event event) {
         JSONObject json = new JSONObject();
         try {
             json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
@@ -152,7 +164,7 @@ public final class ServletUtils {
             json.put(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
             json.put(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
 
-            json.put(JSONParameter.GRUOP_ID.toString(), event.getGroup().getGroupId());
+            json.put(JSONParameter.GROUP_ID.toString(), event.getGroup().getGroupId());
             json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
@@ -184,7 +196,7 @@ public final class ServletUtils {
             json.put(JSONParameter.USER_ID.toString(), group.getFounder().getUserId());
             json.put(JSONParameter.USER_NAME.toString(), group.getFounder().getName());
             json.put(JSONParameter.GROUP_NAME.toString(), group.getName());
-            json.put(JSONParameter.GRUOP_ID.toString(), group.getGroupId());
+            json.put(JSONParameter.GROUP_ID.toString(), group.getGroupId());
 
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {
@@ -240,6 +252,33 @@ public final class ServletUtils {
         try {
             for (Group grp : group) {
                 json.append(JSONParameter.LIST_GROUP.toString(), createJSONGroup(grp));
+            }
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+    
+    protected static JSONObject createJSONGroupID(Group grp){
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put(JSONParameter.GROUP_ID.toString(), grp.getGroupId());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+    
+    protected static JSONObject createJSONListLoc(List<Location> locat){
+        JSONObject json = new JSONObject();
+        try {
+            for (Location loc : locat) {
+                json.append(JSONParameter.LIST_LOC.toString(), createJSONLocation(loc));
             }
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
         } catch (JSONException e) {

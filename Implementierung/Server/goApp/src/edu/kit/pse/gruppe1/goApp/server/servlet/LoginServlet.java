@@ -27,8 +27,6 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserManagement usrMang;
-    // TODO: String test wieder rausnehmen
-    private String test;
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -36,7 +34,6 @@ public class LoginServlet extends HttpServlet {
     public LoginServlet() {
         super();
         usrMang = new UserManagement();
-        test = "inKlasse";
     }
 
     /**
@@ -44,7 +41,6 @@ public class LoginServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO: IO-Error/Servlet Error werfen?
 
         // TODO: wenn Methode register ->neues Token, bei LogIn prüfen
 
@@ -58,7 +54,7 @@ public class LoginServlet extends HttpServlet {
 
         jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
-            //response was set in extractJSON
+            // response was set in extractJSON
             return;
         }
 
@@ -144,7 +140,6 @@ public class LoginServlet extends HttpServlet {
      */
     private JSONObject login(JSONObject json) {
         int userID = -1;
-        JSONParameter.ErrorCodes error = ErrorCodes.OK;
         User user = null;
 
         try {

@@ -1,9 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,11 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
-import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
+import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
-import edu.kit.pse.gruppe1.goApp.server.model.Status;
-import edu.kit.pse.gruppe1.goApp.server.model.User;
-import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -30,7 +25,7 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 public class LocationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final EventManagement event;
-	private final EventUserManagement eventUser;
+	private final UserManagement eventUser;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -38,7 +33,7 @@ public class LocationServlet extends HttpServlet {
     public LocationServlet() {
         super();
         event = new EventManagement();
-        eventUser = new EventUserManagement();
+        eventUser = new UserManagement();
     }
 
 	/**
@@ -63,11 +58,12 @@ public class LocationServlet extends HttpServlet {
         }
         
         switch (method) {
-        case GET_CLUSTER:
-            response.getWriter().println(getCluster(jsonRequest));
-            break;
-        case SET_GPS:
-            response.getWriter().println(setGPS(jsonRequest));
+        case SYNC_LOC:
+            if (!setGPS(jsonRequest)) {
+                response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+            } else {
+                response.getWriter().println(getCluster(jsonRequest));
+            }
             break;
         default: 
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
@@ -86,30 +82,17 @@ public class LocationServlet extends HttpServlet {
 	 * @param json The JSON object must contain the next location of the user.
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
-	private String setGPS(JSONObject json) {
-		JSONObject response = new JSONObject();
+	private boolean setGPS(JSONObject json) {
 		try {
-		    int event = json.getInt(JSONParameter.EVENT_ID.toString());
 		    int user = json.getInt(JSONParameter.USER_ID.toString());
 		    int lat = json.getInt(JSONParameter.LATITUDE.toString());
 		    int lon = json.getInt(JSONParameter.LONGITUDE.toString());
-		    Location location = new Location(lon, lat, null);
-		    List<User> userList = eventUser.getUserByStatus(Status.STARTED, event);
-		    for (User participant : userList) {
-		        if (participant.getUserId() == user) {
-		            participant.setLocation(location);
-		            location = null;
-		        }
-		    }
-		    if (location != null) {
-		        return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
-		    }
-		    response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
+		    eventUser.getUser(user).setLocation(new Location(lon, lat, null));
+		    return true;
 		} catch (JSONException e) {
 		    e.printStackTrace();
-		    return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+		    return false;
 		}
-		return response.toString();
 	}
 
 	/**
@@ -118,20 +101,12 @@ public class LocationServlet extends HttpServlet {
 	 * @return Returns a JSON string containing the results of the clustering algorithm.
 	 */
 	private String getCluster(JSONObject json) {
-	    JSONObject response = new JSONObject();
 	    try {
-	        int eventID = Integer.parseInt(json.getString(JSONParameter.EVENT_ID.toString()));
-	        Set<Location> locations = event.getEvent(eventID).getClusterPoints();
-	        for (Location location:locations) {
-	            response.append(JSONParameter.LATITUDE.toString(), location.getLatitude());
-	            response.append(JSONParameter.LONGITUDE.toString(), location.getLongitude());
-	            response.append(JSONParameter.LOC_NAME.toString(), location.getName());
-	        }
-	        response.append(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK);
+	        int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
+	        return ServletUtils.createJSONListLoc(new ArrayList<Location>(event.getEvent(eventID).getClusterPoints())).toString();
 	    } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
 	    }
-        return response.toString();
 	}
 }

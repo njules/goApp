@@ -74,10 +74,10 @@ public class RequestSearchServlet extends HttpServlet {
 
         switch (method) {
         case GET_REQ_USR:
-            strResponse = getRequestsByUser(jsonRequest);
+            strResponse = getRequestsByUser(jsonRequest).toString();
             break;
         case GET_REQ_GRP:
-            strResponse = getRequestsByGroup(jsonRequest);
+            strResponse = getRequestsByGroup(jsonRequest).toString();
             break;
         default:
             if (error.equals(ErrorCodes.OK)) {
@@ -94,7 +94,6 @@ public class RequestSearchServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         doGet(request, response);
     }
 
@@ -107,19 +106,19 @@ public class RequestSearchServlet extends HttpServlet {
      * @return Returns a JSON string containing a list of all join requests issued by the given
      *         user.
      */
-    private String getRequestsByUser(JSONObject json) {
+    private JSONObject getRequestsByUser(JSONObject json) {
         int userID = -1;
         List<Group> grpFromUsr = null;
 
         try {
             userID = json.getInt(JSONParameter.USER_ID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         grpFromUsr = reqMang.getRequestByUser(userID);
 
-        return ServletUtils.createJSONListGrp(grpFromUsr).toString();
+        return ServletUtils.createJSONListGrp(grpFromUsr);
     }
 
     /**
@@ -132,19 +131,19 @@ public class RequestSearchServlet extends HttpServlet {
      * @return Returns a JSON string containing a list of all active join requests for the given
      *         group..
      */
-    private String getRequestsByGroup(JSONObject json) {
+    private JSONObject getRequestsByGroup(JSONObject json) {
         int groupID = -1;
         List<User> usrInGrp = null;
 
         try {
-            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
+            groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         usrInGrp = reqMang.getRequestByGroup(groupID);
 
-        return ServletUtils.createJSONListUsr(usrInGrp).toString();
+        return ServletUtils.createJSONListUsr(usrInGrp);
 
     }
 
