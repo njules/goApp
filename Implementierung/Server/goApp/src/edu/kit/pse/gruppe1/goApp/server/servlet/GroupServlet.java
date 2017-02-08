@@ -1,3 +1,4 @@
+
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class GroupServlet extends HttpServlet {
         case GET_EVENT:
             response.getWriter().println(getEvents(jsonRequest));
             break;
-        case GET_GROUP:
+        case GET_MEMBERS:
             response.getWriter().println(getGroup(jsonRequest));
             break;
         case SET_FOUNDER:

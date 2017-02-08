@@ -115,9 +115,15 @@ public enum JSONParameter {
      * List of Group
      */
     LIST_EVENT("ListEvent"),
+    
+    /**
+     * TODO
+     */
+    STATUS("Status"),
 
     /**
      * Google ID
+     * TODO
      */
     GOOGLE_ID("GoogleId");
 
@@ -202,9 +208,9 @@ public enum JSONParameter {
             }
             return null;
         }
-        
-        //TODO: JavDocs
-        public static ErrorCodes fromErCode(int i){
+
+        // TODO: JavDocs
+        public static ErrorCodes fromErCode(int i) {
             for (ErrorCodes err : ErrorCodes.values()) {
                 if (err.getErrorCode() == i) {
                     return err;
@@ -227,25 +233,26 @@ public enum JSONParameter {
          */
         CHANGE,
 
-        /**
-         * User.getUser
-         */
-        GET_USER,
+//        /**
+//         * User.getUser
+//         */
+//        GET_USER,
 
         /**
          * Event.getEvent Group.getEvents
+         * 
          */
         GET_EVENT,
 
-        /**
-         * Go.getStartedParticpants
-         */
-        GET_START,
+//        /**
+//         * Go.getStartedParticpants
+//         */
+//        GET_START,
 
         /**
-         * Group.getGroup
+         * Group.getGroup TODO: Methode umbenenen
          */
-        GET_GROUP,
+        GET_MEMBERS,
 
         /**
          * GroupSearch.getGroupsByName
@@ -257,10 +264,10 @@ public enum JSONParameter {
          */
         GET_GRP_MEM,
 
-        /**
-         * Location.getCluster
-         */
-        GET_CLUSTER,
+        // /**
+        // * Location.getCluster
+        // */
+        // GET_CLUSTER,
 
         /**
          * RequestSearchServlet.getRequestsByUser
@@ -298,9 +305,14 @@ public enum JSONParameter {
         SET_FOUNDER,
 
         /**
-         * Location.setGPS
+         * Location TODO: kombinierte Methode
          */
-        SET_GPS,
+        SYNC_LOC,
+        
+        /**
+         * TODO: Particpate zusammenfassen, Status prüfen, dann methode aufrufen
+         */
+        SET_STATUS,
 
         /**
          * Login.register
