@@ -43,7 +43,17 @@ public final class UtilService {
     public static Group[] getGroups(JSONObject json) {
         //TODO if(json == null)
         try {
-                JSONArray name = json.getJSONArray(JSONParameter.GROUP_NAME.toString());
+            JSONArray jsons = json.getJSONArray(JSONParameter.LIST_GROUP.toString());
+            Group[] groups = new Group[jsons.length()];
+            for (int i = 0; i < jsons.length() ; i++) {
+                JSONObject group = jsons.getJSONObject(i);
+                User founder = new User(group.getInt(JSONParameter.USER_ID.toString()),
+                        group.getString(JSONParameter.USER_NAME.toString()));
+                groups[i] = new Group(group.getInt(JSONParameter.GRUOP_ID.toString()),
+                        group.getString(JSONParameter.GROUP_NAME.toString()),
+                        founder);
+            }
+                /*JSONArray name = json.getJSONArray(JSONParameter.GROUP_NAME.toString());
                 JSONArray id = json.getJSONArray(JSONParameter.GRUOP_ID.toString());
                 Group[] groups = new Group[name.length()];
                 for (int i = 0; i < name.length(); i++) {
@@ -52,8 +62,8 @@ public final class UtilService {
                             (int) id.get(i),
                             (String) name.get(i),
                             user);
-                return groups;
-            }
+            }*/
+            return groups;
         } catch (JSONException e) {
             e.printStackTrace();
         }
