@@ -154,11 +154,11 @@ public class GroupService extends IntentService {
      * @param groupID The unique id of the group to find it
      * @return the group with the given id or null if it doesn't exist
      */
-    public void getMembers(Context context, int groupID) {
+    public void getMembers(Context context, Group group) {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), groupID);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
             //TODO GET_MEMBER
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_GRP_MEM.toString());
         } catch (JSONException e) {

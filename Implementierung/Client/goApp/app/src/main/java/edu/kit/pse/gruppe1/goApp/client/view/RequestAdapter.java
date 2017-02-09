@@ -11,16 +11,20 @@ import edu.kit.pse.gruppe1.goApp.client.databinding.RequestUserViewBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Tobias on 27.01.2017.
  */
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
-    private User[] dataset;
+    private List<User> dataset;
     private final ItemClickListener itemClickListener;
 
     public RequestAdapter(User[] userDataset, ItemClickListener icl) {
-        dataset = userDataset;
+        dataset = new ArrayList<>(Arrays.asList(userDataset));
         itemClickListener = icl;
     }
 
@@ -32,18 +36,22 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     @Override
     public void onBindViewHolder(RequestViewHolder holder, int position) {
-        final User user = dataset[position];
+        final User user = dataset.get(position);
         holder.getBinding().setUser(user);
         holder.getBinding().executePendingBindings();
     }
 
     @Override
     public int getItemCount() {
-        return dataset.length;
+        return dataset.size();
     }
 
     public User getItem(int position) {
-        return dataset[position];
+        return dataset.get(position);
+    }
+    public void delete(int position){
+        dataset.remove(position);
+        notifyItemRemoved(position);
     }
 
     public static class RequestViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
