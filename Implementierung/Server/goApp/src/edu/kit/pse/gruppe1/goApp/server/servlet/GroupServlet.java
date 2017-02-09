@@ -18,9 +18,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
-import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Status;
-import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -183,7 +181,10 @@ public class GroupServlet extends HttpServlet {
         try {
             int group = json.getInt(JSONParameter.GROUP_ID.toString());
             int member = json.getInt(JSONParameter.USER_ID.toString());
-            //TODO different keys
+            ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member));
+            List<Event> eventList2 = eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, member);
+            eventList2.addAll(eventUserManager.getEventsByStatus(Status.STARTED, group, member));
+            //TODO return both lists seperateley
             return ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member)).toString();
         } catch (JSONException e) {
             e.printStackTrace();
