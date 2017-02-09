@@ -179,7 +179,9 @@ public enum JSONParameter {
 
         METH_ERROR(9, "Method not found."),
 
-        CONNECTION_FAILED(10, "Connection to server failed.");
+        CONNECTION_FAILED(10, "Connection to server failed."),
+
+        ERROR_ON_SERVER(11, "Internal Server Error");
 
 
         private final String fieldDescription;
