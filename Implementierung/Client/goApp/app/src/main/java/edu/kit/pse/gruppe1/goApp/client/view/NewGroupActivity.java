@@ -76,6 +76,7 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
         //Receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(GroupSearchService.RESULT_GET_BY_NAME));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestService.RESULT_CREATE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(GroupService.RESULT_CREATE));
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

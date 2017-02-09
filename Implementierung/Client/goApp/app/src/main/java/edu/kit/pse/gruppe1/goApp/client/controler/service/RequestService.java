@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;

@@ -112,6 +112,7 @@ public final class UtilService {
             if (json.getString(JSONParameter.ERROR_CODE.toString()).equals(JSONParameter.ErrorCodes.OK.toString())) {
                 return false;
             } else {
+                Log.i("ERROR", json.getString(JSONParameter.ERROR_CODE.toString()));
                 return true;
             }
         } catch (JSONException e) {
