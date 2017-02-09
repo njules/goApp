@@ -136,8 +136,8 @@ public class RequestServlet extends HttpServlet {
 
         // Check Users Memberships and Group size
         if (userID != -1 && newGroupID != -1) {
-            groups = grUsrMang.getGroups(userID);
-            users = grUsrMang.getUsers(newGroupID);
+            groups = grUsrMang.getGroups(newGroupID);
+            users = grUsrMang.getUsers(userID);
             reqGroups = reqMang.getRequestByUser(userID);
             reqUsers = reqMang.getRequestByGroup(newGroupID);
 
