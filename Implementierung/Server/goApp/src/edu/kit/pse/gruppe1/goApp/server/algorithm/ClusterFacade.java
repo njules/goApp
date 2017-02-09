@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.algorithm;
 
+import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.*;
 
@@ -15,52 +16,47 @@ import org.apache.commons.math4.ml.clustering.*;
  */
 public class ClusterFacade {
 
-    
     private CentralPointAlgo algorithm;
     private Clusterer<DoublePoint> clusterer;
-    private EventUserManagement management;
-    
+    private EventManagement management;
+
     /*
      * default constructor with simpleCentral-Algorithm and DBSCAN
      */
     public ClusterFacade() {
-        this.algorithm = new SimpleCentral(); 
-        clusterer = new DBSCANClusterer<DoublePoint>(0.001, 2);
-        this.management = new EventUserManagement();
+        this.algorithm = new SimpleCentral();
+        clusterer = new DBSCANClusterer<DoublePoint>(2, 1);
+        this.management = new EventManagement();
     }
-    
+
     /*
      * Constructor with DBSCAN, CentralPointAlgo selectable.
      */
     public ClusterFacade(CentralPointAlgo algorithm) {
         this.algorithm = algorithm;
-        this.clusterer = new DBSCANClusterer<DoublePoint>(0.001, 2);
-        this.management = new EventUserManagement();
+        this.clusterer = new DBSCANClusterer<DoublePoint>(2, 1);
+        this.management = new EventManagement();
     }
-    
+
     /*
      * Constructor with SimpleCentralAlgo, Clusterer selectable.
      */
     public ClusterFacade(Clusterer<DoublePoint> clusterer) {
-        this.algorithm = new SimpleCentral(); 
+        this.algorithm = new SimpleCentral();
         this.clusterer = clusterer;
-        this.management = new EventUserManagement();
+        this.management = new EventManagement();
     }
-    
+
     /*
      * Clusterer and midpoint-algorithm selectable.
      */
     public ClusterFacade(Clusterer<DoublePoint> clusterer, CentralPointAlgo algorithm) {
-        this.algorithm = algorithm; 
+        this.algorithm = algorithm;
         this.clusterer = clusterer;
-        this.management = new EventUserManagement();
+        this.management = new EventManagement();
     }
-    
-    
-    
-    
-    
-     public void setAlgorithm(CentralPointAlgo algorithm) {
+
+    public void setAlgorithm(CentralPointAlgo algorithm) {
         this.algorithm = algorithm;
     }
 
@@ -68,80 +64,75 @@ public class ClusterFacade {
         this.clusterer = clusterer;
     }
 
-    
-    
-  /**
-   * This method fetches all locations from the database which belong to the event and calls the
-   * cluster algorithm to get it clustered. After that it calls the MidpointAlgo to get the
-   * midpoints from the calculated clusters.
-   * 
-   * @return central points of the calculated clusters
-   * @param event
-   *          List of points which should clustered and which central point should be calculated.
-   */
-  public List<DoublePoint> getClusteredCentralPoints(Event event) {
-    
-    int eventId = event.getEventId();
+    /**
+     * This method fetches all locations from the database which belong to the event and calls the
+     * cluster algorithm to get it clustered. After that it calls the MidpointAlgo to get the
+     * midpoints from the calculated clusters.
+     * 
+     * @return central points of the calculated clusters
+     * @param event
+     *            List of points which should clustered and which central point should be
+     *            calculated.
+     */
+    public List<DoublePoint> getClusteredCentralPoints(Event event) {
 
-    List<DoublePoint> locations = getEventsLocations(eventId);
-    List<? extends Cluster<DoublePoint>> clusters = getClusters(locations);
+        int eventId = event.getEventId();
 
-    
-    List<DoublePoint> result = new ArrayList<DoublePoint>(0);
-    
-    for (Cluster<DoublePoint> c : clusters) {
-      
-      if(c.getPoints().size() >= 2) {
-        
-        result.add(getCenter(c));
-      }
-    }
-    
-    return result;
+        List<DoublePoint> locations = getEventsLocations(eventId);
+        List<? extends Cluster<DoublePoint>> clusters = getClusters(locations);
 
-  }
+        List<DoublePoint> result = new ArrayList<DoublePoint>();
 
-  /*
-   * This class fetches the locations from the event, and builds a list of DoublePoint.class objects
-   */
-  private List<DoublePoint> getEventsLocations(int eventId) {
+        for (Cluster<DoublePoint> c : clusters) {
 
-    List<User> list = management.getUsers(eventId);
-    List<DoublePoint> locations = new ArrayList<DoublePoint>(0);
-    DoublePoint userPoint;
-    Location userLocation;
+            if (c.getPoints().size() >= 2) {
 
-    for (User user : list) {
+                result.add(getCenter(c));
+            }
 
-      userLocation = user.getLocation();
-      if (!user.getLocation().equals(null)) {
+        }
 
-        userPoint = new DoublePoint(
-            new double[] { userLocation.getLongitude(), userLocation.getLatitude() }); // Build a
-                                                                                       // DoublePoint
-                                                                                       // from the
-                                                                                       // Location
-        locations.add(userPoint);
-      }
+        return result;
 
     }
 
-    return locations;
+    /*
+     * This class fetches the locations from the event, and builds a list of DoublePoint.class
+     * objects
+     */
+    private List<DoublePoint> getEventsLocations(int eventId) {
 
-  }
+        List<Location> list = management.getUserLocations(eventId);
+        List<DoublePoint> locations = new ArrayList<DoublePoint>(0);
+        DoublePoint userPoint;
 
-  
-  
-  
-  public List<? extends Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
-      
-    return clusterer.cluster(points);
-    
+        for (Location userLocation : list) {
 
-  }
+            if (!(userLocation == null)) {
 
-  
-  public DoublePoint getCenter(Cluster<DoublePoint> cluster) {
-      return algorithm.calculateCentralPoint(cluster);
-  }
+                userPoint = new DoublePoint(
+                        new double[] { userLocation.getLongitude(), userLocation.getLatitude() }); // Build
+                                                                                                   // a
+                                                                                                   // DoublePoint
+                                                                                                   // from
+                                                                                                   // the
+                                                                                                   // Location
+                locations.add(userPoint);
+            }
+
+        }
+
+        return locations;
+
+    }
+
+    public List<? extends Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
+
+        return clusterer.cluster(points);
+
+    }
+
+    public DoublePoint getCenter(Cluster<DoublePoint> cluster) {
+        return algorithm.calculateCentralPoint(cluster);
+    }
 }
