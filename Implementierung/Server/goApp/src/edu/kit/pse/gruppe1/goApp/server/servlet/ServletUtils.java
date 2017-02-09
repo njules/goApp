@@ -52,21 +52,21 @@ public final class ServletUtils {
      * 
      * @return
      */
-    
+
     protected static boolean isUserAlreadyRegistrated(String googleId) {
-        
+
         UserManagement management = new UserManagement();
-        
+
         User user = management.getUserByGoogleId(googleId);
-        
-        if(user == null) {
+
+        if (user == null) {
             return false;
         } else {
             return true;
         }
-        
-        
+
     }
+
     protected static String getGoogleIdByToken(String idTokenString) {
 
         String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
@@ -170,6 +170,7 @@ public final class ServletUtils {
 
             json.put(JSONParameter.GROUP_ID.toString(), event.getGroup().getGroupId());
             json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
+            json.put(JSONParameter.USER_NAME.toString(), event.getCreator().getName());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
