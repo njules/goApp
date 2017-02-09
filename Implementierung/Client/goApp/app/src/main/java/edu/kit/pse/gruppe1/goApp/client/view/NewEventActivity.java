@@ -115,7 +115,6 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     location.setName(el.getText().toString());
                 }
 
-
                 String timeString = datepicker.getDayOfMonth() + "-" + (datepicker.getMonth() + 1) + "-" + datepicker.getYear() + " " + timepicker.getCurrentHour() + ":" + timepicker.getCurrentMinute();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm");
                 try {
@@ -128,16 +127,6 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                         Toast.makeText(this, getString(R.string.wrongTime), Toast.LENGTH_SHORT).show();
                         return true;
                     }
-
-
-                    //TODO löschen
-                    AlarmManager notifyAlarmMgr;
-                    PendingIntent notifyAlarmIntent;
-                    notifyAlarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-                    Intent notifyIntent = new Intent(this, NotificationService.class);
-                    notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
-                    notifyAlarmIntent = PendingIntent.getService(this, 0, notifyIntent, 0);
-                    notifyAlarmMgr.setExact(AlarmManager.RTC_WAKEUP, timestamp.getTime(), notifyAlarmIntent);
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -194,13 +183,16 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
 
                         notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         Intent notifyIntent = new Intent(context, NotificationService.class);
-                        notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
+                        notifyIntent.putExtra(UtilService.GROUP.toString(), Preferences.getGroup());
                         notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
                         //900000 is 15 mins in millis
                         notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime() - beforEvent, notifyAlarmIntent);
 
+                        Log.i("MainThread", Thread.currentThread().getId()+"");
+
                         eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         Intent eventIntent = new Intent(context, LocationService.class);
+                        eventIntent.setAction("TEST");
                         eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
                         eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
                         eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime() - beforEvent, eventAlarmIntent);
@@ -208,7 +200,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                         GroupActivity.start(NewEventActivity.this);
                     break;
                 case LocationService.RESULT_MY_LOCATION:
-                    Log.i("NEWEVENTACTIVITY", "TEST");
+                    Toast.makeText(NewEventActivity.this, "TEST", Toast.LENGTH_LONG).show();
                     android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
             }

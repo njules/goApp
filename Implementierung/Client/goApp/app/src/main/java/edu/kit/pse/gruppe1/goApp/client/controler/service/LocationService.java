@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -44,6 +45,7 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
     private AlarmManager eventAlarmMgr;
     private PendingIntent eventAlarmIntent;
     private Event event;
+    private Intent intentTest;
 
     public LocationService() {
         super(NAME);
@@ -51,50 +53,59 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.i("onHandleIntent", Thread.currentThread().getId() + "");
         // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-        mGoogleApiClient.connect();
-
-        Intent resultIntent = new Intent();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-
-        if (mLastLocation != null) {
-            if (intent.getAction().equals(ACTION_MY_LOCATION)) {
-                resultIntent.setAction(RESULT_MY_LOCATION);
-                resultIntent.putExtra(UtilService.LOCATION , mLastLocation);
-            } else {
-                event = intent.getParcelableExtra(UtilService.EVENT);
-                //TODO if error occured....location == null etc
-                Location[] locations = syncLocation(event.getId());
-                resultIntent.setAction(RESULT_LOCATION);
-                resultIntent.putExtra(UtilService.LOCATIONS, locations);
+        if (intent.getAction().equals("NEW_THREAD")) {
+            Intent resultIntent = new Intent();
+            if (mLastLocation != null) {
+                if (intentTest.getAction().equals(ACTION_MY_LOCATION)) {
+                    resultIntent.setAction(RESULT_MY_LOCATION);
+                    resultIntent.putExtra(UtilService.LOCATION, mLastLocation);
+                } else {
+                    event = intent.getParcelableExtra(UtilService.EVENT);
+                    //TODO if error occured....location == null etc
+                    Location[] locations = syncLocation(event.getId());
+                    resultIntent.setAction(RESULT_LOCATION);
+                    resultIntent.putExtra(UtilService.LOCATIONS, locations);
 
 
-                if (System.currentTimeMillis() + refreshTime < event.getTime().getTime() + eventLength) {
-                    eventAlarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-                    Intent eventIntent = new Intent(this, LocationService.class);
-                    eventIntent.putExtra(UtilService.EVENT, event);
-                    eventAlarmIntent = PendingIntent.getService(this, 0, eventIntent, 0);
-                    eventAlarmMgr.setWindow(AlarmManager.RTC, System.currentTimeMillis() + refreshTime, refreshTime, eventAlarmIntent);
+                    if (System.currentTimeMillis() + refreshTime < event.getTime().getTime() + eventLength) {
+                        eventAlarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                        Intent eventIntent = new Intent(this, LocationService.class);
+                        eventIntent.putExtra(UtilService.EVENT, event);
+                        eventAlarmIntent = PendingIntent.getService(this, 0, eventIntent, 0);
+                        eventAlarmMgr.setWindow(AlarmManager.RTC, System.currentTimeMillis() + refreshTime, refreshTime, eventAlarmIntent);
+                    }
                 }
             }
+            LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
+            manager.sendBroadcast(resultIntent);
+        } else {
+            if (mGoogleApiClient == null) {
+                mGoogleApiClient = new GoogleApiClient.Builder(this)
+                        .addConnectionCallbacks(this)
+                        .addOnConnectionFailedListener(this)
+                        .addApi(LocationServices.API)
+                        .build();
+            }
+            mGoogleApiClient.connect();
+            intentTest = intent;
         }
-        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
-        manager.sendBroadcast(resultIntent);
+
+
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
+        Log.i("onConnected", Thread.currentThread().getId() + "");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        Intent intentNewThread = new Intent(this, LocationService.class);
+        intentNewThread.setAction("NEW_THREAD");
+        this.startService(intentNewThread);
     }
 
     @Override
