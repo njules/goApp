@@ -69,6 +69,7 @@ public class HTTPConnection {
 
 
     private JSONObject send(String requestMethod, String request) {
+        int status = 0;
         BufferedReader reader = null;
         OutputStreamWriter out = null;
         String response = null;
@@ -82,6 +83,7 @@ public class HTTPConnection {
                     conn.getOutputStream());
             out.write(request);
             out.close();
+            status = conn.getResponseCode();
             reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             response = reader.readLine();
         } catch (IOException e) {
@@ -91,15 +93,23 @@ public class HTTPConnection {
             close(reader);
         }
         if (response == null) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.CONNECTION_FAILED.getErrorCode());
-            } catch (JSONException e) {
-                return new JSONObject();
-            }
-            return jsonObject;
+            return requestFailed(status);
         }
         return toJSONObject(response);
+    }
+
+    private JSONObject requestFailed(int status) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (status == 500) {
+                jsonObject.put(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.ERROR_ON_SERVER.getErrorCode());
+            } else {
+                jsonObject.put(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.CONNECTION_FAILED.getErrorCode());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     private void close(Closeable inputStream) {

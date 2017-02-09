@@ -47,21 +47,141 @@
 	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können. 
 	
 	\subsection{JSONParameter}
-	-unter Enums hinzugefügt für Fehler und Methoden
+	-untergeordnete Enums hinzugefügt für Fehler und Methoden
 	\newpage
 	\section{Kriterien}
-	\subsection{Musskriterien}
-	\subsection{Wunschkritereien}
+	
+	\subsection{Erfüllte Kriterien}
+	\subsubsection{Kontoverwaltung}
+	\begin{itemize}
+		\item[FA10] Anmeldung eines Benutzers in der App über Google Services
+		\item[FA20] Ersterfassung und Änderung des Benutzernamens
+	\end{itemize}
+	\subsubsection{Qualitative Anforderungen}
+	
+	\newpage
+	\subsection{Nicht erfüllte Kriterien}
+		\subsubsection{Kontoverwaltung}
+		\begin{itemize}
+			\item[WFA15] Der Benutzer kann zwischen Sprachen wählen
+		\end{itemize}
+
+	\subsubsection{Qualitative Anforderungen}
+	
+	\newpage
+	\section{ungeordnete Kriterien aus Pflichtenheft kopiert}
+	%TODO: Einsortieren, dann Punkt hier löschen
+		\subsection{Gruppenverwaltung}
+		\begin{itemize}
+			\hypertarget{FA30}{}
+			\item[FA30] Jeder Benutzer kann eine Gruppe erstellen
+			\hypertarget{FA35}{}
+			\item[FA35] Ersterfassung und spätere Änderung des Gruppennamens durch den Gruppengründer
+			\hypertarget{FA40}{}
+			\item[FA40] Gruppen können über den Gruppennamen gesucht werden
+			\hypertarget{FA45}{}
+			\item[FA45] Benutzer können Beitrittsanfragen an eine Gruppe senden
+			\hypertarget{FA50}{}
+			\item[FA50] Der Gruppengründer kann Beitrittsanfragen der Gruppe verwalten:
+			\begin{itemize}
+				\item Anfragen bestätigen, wodurch der Anfragende ein Mitglied der Gruppe wird und die Anfrage gelöscht wird
+			\end{itemize}
+			\begin{itemize}
+				\item Anfragen ablehnen, wodurch die Anfrage gelöscht wird
+			\end{itemize}
+			\begin{itemize}
+				\item Anfragen ignorieren, wodurch die Anfrage bestehen und sichtbar bleibt
+			\end{itemize}
+			\hypertarget{FA60}{}
+			\item[FA60] Der Gruppengründer kann Mitglieder aus der Gruppe entfernen
+			\hypertarget{FA70}{}
+			\item[FA70] Die Gruppe kann durch den Gruppengründer gelöscht werden
+			\hypertarget{FA80}{}
+			\item[FA80] Mitglieder der Gruppen, ausgenommen des Gruppengründers, können die Gruppe verlassen
+			\hypertarget{WFA85}{}
+			\item[WFA85] Der Gruppengründer kann seinen Status als Gruppengründer an ein Mitglied übergeben
+			\hypertarget{FA90}{}
+			\item[FA90] Gruppenmitglieder können sich andere Gruppenmitglieder anzeigen lassen
+			\hypertarget{WFA95}{}
+			\item[WFA95] Gruppenmitglieder können die Teilnahmequoten anderer Gruppenmitglieder einsehen
+			
+		\end{itemize}
+		
+		\subsection{Terminverwaltung}
+		\begin{itemize}
+			\hypertarget{FA100}{}
+			\item[FA100] Jedes Mitglied einer Gruppe kann einen Termin erstellen
+			
+			\begin{itemize}
+				\item Ersterfassung von Terminnamen, Terminzeit (in der Zukunft) und Terminort
+			\end{itemize}
+			
+			\begin{itemize}
+				\item Visuelle Darstellung des gewählten Terminortes
+			\end{itemize}
+			\hypertarget{WFA105}{}
+			\item[WFA105] Der Terminersteller kann den Terminnamen, Terminzeit und Terminort nachträglich ändern oder gegebenenfalls löschen
+			\hypertarget{FA110}{}
+			\item[FA110] Der Gruppenmittelpunkt wird anhand der Standorte aller Teilnehmer berechnet		
+			\hypertarget{FA120}{}
+			\item[FA120] Jeder Termin wird jedem Gruppenmitglied angezeigt
+			\hypertarget{FA130}{}
+			\item[FA130] Jedes Gruppenmitglied kann bei einem Termin zu- oder absagen
+			
+		\end{itemize}
+		
+		\subsection{Terminablauf}
+		\begin{itemize}
+			\hypertarget{FA140}{}
+			\item[FA140] Jeder Teilnehmer wird 30 Minuten vor Beginn des Termins benachrichtigt
+			\hypertarget{WFA145}{}
+			\item[WFA145] Teilnehmer werden auch bei geschlossener App benachrichtigt
+			\hypertarget{FA150}{}
+			\item[FA150] Jeder Teilnehmer kann den Gruppenmittelpunkt ab 15 Minuten vor Beginn des Termins in einer Karte darstellen lassen
+			\hypertarget{WFA155}{}
+			\item[WFA155] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort 
+			\hypertarget{WFA160}{}
+			\item[WFA160] Teilnehmer können in der App anderen Teilnehmern mitteilen,
+			\begin{itemize}
+				\item dass sie bereits unterwegs sind
+				\item dass sie zu spät kommen
+				\item dass sie schon am Terminort angekommen sind
+			\end{itemize}
+			\hypertarget{FA170}{}
+			\item[FA170] Der Termin löscht sich nach der Dauer des Termins (standardmäßig 60 Minuten)
+			\hypertarget{WFA175}{}
+			\item[WFA175] Die Dauer des Termins kann individuell festgelegt werden
+		\end{itemize}
+		
+			\subsection{Qualitative Anforderungen}
+			Die Qualitativen Anforderungen beziehen sich auf unser Referenzgerät.
+			\begin{itemize}
+				\item[QA10] Die App soll auf jede Anfrage in durchschnittlich unter 5 Sekunden reagieren
+				\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch
+				\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm der App zu erreichen
+				\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App
+				\item[QA50] Unterstützt bis zu 50 Benutzer pro Gruppe
+				\item[QA60] Jeder Benutzer kann in bis zu 20 Gruppen Mitglied sein
+				\item[QA70] Der Server unterstützt das Anlegen von mindestens 30000 Benutzern
+			\end{itemize}
+	
 	
 	\newpage
 	\section{Verzögerungen}
-	1. geplante Diagramm
-	2. "richtige" Diagramm
+	1. geplantes Diagramm
+	2. "richtiges" Diagramm
 	
 	\newpage
 	\section{Unit-Tests}
 	Hier Übersicht über Unit-Tests bzw. andere Tests der Phase
 	\subsection{Server}
-	\subsection{Client}
+	\subsubsection{Datenbank}
+	\subsubsection{Algorithmus}
+	\subsubsection{Servlet}
 	
+	\subsection{Client}
+	\subsubsection{HTTPConnection}
+	\subsubsection{Model}
+	\subsubsection{View}
+	\subsubsection{Controller}
 \end{document}

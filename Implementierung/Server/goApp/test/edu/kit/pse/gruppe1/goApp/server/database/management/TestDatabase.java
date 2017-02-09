@@ -1,8 +1,17 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
@@ -84,5 +93,24 @@ public class TestDatabase {
         for (User user : users) {
             new UserManagement().delete(user.getUserId());
         }
+    }
+
+    public boolean isEqualToDatabase() {
+        List<Group> dbGroups = new GroupManagement().getGroupsByName("");
+        Set<Event> events = new HashSet<>();
+        assertThat(groups.containsAll(dbGroups), is(true));
+        assertThat(groups.containsAll(groups), is(true));
+        for (Group group : dbGroups) {
+            assertThat(actual, matcher);
+        }
+    }
+
+    private Event getEvent(int eventId) {
+        for (Event event : events) {
+            if (event.getEventId().equals(eventId)) {
+                return event;
+            }
+        }
+        return null;
     }
 }
