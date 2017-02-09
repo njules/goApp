@@ -84,7 +84,7 @@ public class UserFragment extends Fragment implements View.OnClickListener{
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getActivity().getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
                 return;
             }
             switch (intent.getAction()) {
