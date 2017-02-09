@@ -54,7 +54,7 @@ public class ParticipateServlet extends HttpServlet {
         }
         
         switch (method) {
-        //TODO call setStatus
+         //TODO call setStatus
         case ACCEPT:
             response.getWriter().println(accept(jsonRequest));
             break;
@@ -74,7 +74,7 @@ public class ParticipateServlet extends HttpServlet {
 	}
 	
 	/**
-	 * A user may accept an invitation to any event in a group he is a member of. He may accept or reject any event only once and can not invoke any of these two methods again later on for the same event.
+ 	 * A user may accept an invitation to any event in a group he is a member of. He may accept or reject any event only once and can not invoke any of these two methods again later on for the same event.
 	 * @param json A JSON object that contains the user wanting to accept the invite and the event he wants to participate in.
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
@@ -125,7 +125,7 @@ public class ParticipateServlet extends HttpServlet {
             int event = json.getInt(JSONParameter.EVENT_ID.toString());
             int user = json.getInt(JSONParameter.USER_ID.toString());
             //TODO read status
-            Status status;
+            Status status = null;
             if (!eventUser.updateStatus(event, user, status)) {
                 return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
             }

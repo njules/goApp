@@ -33,8 +33,8 @@ public final class ServletTestUtils {
     protected static void checkUser(JSONObject newJson, User user) {
         if (newJson != null) {
             try {
-                assertEquals(ErrorCodes.OK.toString(),
-                        newJson.getString(JSONParameter.ERROR_CODE.toString()));
+                assertEquals(ErrorCodes.OK.getErrorCode(),
+                        newJson.getInt(JSONParameter.ERROR_CODE.toString()));
                 assertEquals(user.getName(), newJson.getString(JSONParameter.USER_NAME.toString()));
             } catch (JSONException e) {
                 e.printStackTrace();

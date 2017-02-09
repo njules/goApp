@@ -118,7 +118,7 @@ public final class ServletUtils {
         try {
             json.put(JSONParameter.USER_ID.toString(), part.getUser());
             json.put(JSONParameter.STATUS.toString(), part.getStatus());
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -132,7 +132,7 @@ public final class ServletUtils {
             for (Participant p : part) {
                 json.append(JSONParameter.LIST_PART.toString(), createJSONParticipate(p));
             }
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -145,7 +145,7 @@ public final class ServletUtils {
         JSONObject json = new JSONObject();
         try {
             json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -166,7 +166,7 @@ public final class ServletUtils {
 
             json.put(JSONParameter.GROUP_ID.toString(), event.getGroup().getGroupId());
             json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -181,7 +181,7 @@ public final class ServletUtils {
             json.put(JSONParameter.LOC_NAME.toString(), location.getName());
             json.put(JSONParameter.LONGITUDE.toString(), location.getLongitude());
             json.put(JSONParameter.LATITUDE.toString(), location.getLatitude());
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -198,7 +198,7 @@ public final class ServletUtils {
             json.put(JSONParameter.GROUP_NAME.toString(), group.getName());
             json.put(JSONParameter.GROUP_ID.toString(), group.getGroupId());
 
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -211,7 +211,7 @@ public final class ServletUtils {
         try {
             json.put(JSONParameter.USER_ID.toString(), user.getUserId());
             json.put(JSONParameter.USER_NAME.toString(), user.getName());
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -225,7 +225,7 @@ public final class ServletUtils {
             for (Event evt : event) {
                 json.append(JSONParameter.LIST_EVENT.toString(), createJSONEvent(evt));
             }
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -239,7 +239,7 @@ public final class ServletUtils {
             for (User usr : user) {
                 json.append(JSONParameter.LIST_USER.toString(), createJSONUser(usr));
             }
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -253,7 +253,7 @@ public final class ServletUtils {
             for (Group grp : group) {
                 json.append(JSONParameter.LIST_GROUP.toString(), createJSONGroup(grp));
             }
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -266,7 +266,7 @@ public final class ServletUtils {
 
         try {
             json.put(JSONParameter.GROUP_ID.toString(), grp.getGroupId());
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -280,7 +280,7 @@ public final class ServletUtils {
             for (Location loc : locat) {
                 json.append(JSONParameter.LIST_LOC.toString(), createJSONLocation(loc));
             }
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
