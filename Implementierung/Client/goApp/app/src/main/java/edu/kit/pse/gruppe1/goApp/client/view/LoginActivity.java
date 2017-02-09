@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if(result.isSuccess()){
                 String idToken = result.getSignInAccount().getIdToken();
                 Preferences.setIdToken(idToken);
-                loginService.login(this, result);
+                loginService.register(this, idToken);
             } else {
                 Log.i("Login", result.getStatus().toString());
             }

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -21,14 +22,14 @@ public class Event implements Parcelable {
      */
     private String name;
 
-    public Date getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
     /**
      * The time of an event tells when the event is starting and set by the creator of the event.
      */
-    private Date time;
+    private Timestamp time;
 
     private Group group;
     private User creator;
@@ -55,7 +56,7 @@ public class Event implements Parcelable {
     protected Event(Parcel in) {
         id = in.readInt();
         name = in.readString();
-        time = new Date(in.readLong());
+        time = new Timestamp(in.readLong());
         location = in.readParcelable(Location.class.getClassLoader());
         creator = in.readParcelable(User.class.getClassLoader());
     }
@@ -84,7 +85,7 @@ public class Event implements Parcelable {
         this.name = name;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 
@@ -94,7 +95,7 @@ public class Event implements Parcelable {
      * @param name The name of the event.
      * @param time The time of the event.
      */
-    public Event(int id, String name, Date time, Location location,User creator) {
+    public Event(int id, String name, Timestamp time, Location location,User creator) {
         this.id = id;
         this.name = name;
         this.time = time;

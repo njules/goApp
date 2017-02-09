@@ -47,7 +47,7 @@ public class Group implements Parcelable{
 		name = in.readString();
         Log.i("Parcel",""+id);
         founder = in.readParcelable(User.class.getClassLoader());
-        Log.i("Founder","NAme: "+founder.getName());
+        Log.i("Founder","Name: "+founder.getName());
 	}
 
 	public static final Creator<Group> CREATOR = new Creator<Group>() {

@@ -6,9 +6,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.NotificationService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.*;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
@@ -30,9 +30,11 @@ import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
 import java.sql.Date;
 
-public class GroupActivity extends AppCompatActivity implements View.OnClickListener{
+public class GroupActivity extends AppCompatActivity implements View.OnClickListener {
     private GroupActivityBinding binding;
     private Group group;
+    private Event eventMove;
+    private int deletePosition;
     private RecyclerView newEventRecylcerView;
     private RecyclerView acceptedEventRecyclerView;
     private LinearLayoutManager newEventLayoutManager;
@@ -40,6 +42,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     private NewEventAdapter newEventAdapter;
     private AcceptedEventAdapter acceptedEventAdapter;
 
+    private ParticipateService participateService;
     private GroupService groupService;
     private ResultReceiver receiver;
 
@@ -59,9 +62,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
 
         FloatingActionButton newEventFab = (FloatingActionButton) findViewById(R.id.create_event);
         newEventFab.setOnClickListener(this);
-
-        binding.setGroup(group);
-        groupService = new GroupService();
     }
 
     @Override
@@ -74,6 +74,12 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
 
+        participateService = new ParticipateService();
+        groupService = new GroupService();
+        receiver = new ResultReceiver();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(GroupService.RESULT_GET_EVENTS));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ParticipateService.RESULT_STATUS));
 
         newEventRecylcerView = (RecyclerView) findViewById(R.id.new_event_recycler_view);
         newEventRecylcerView.setHasFixedSize(true);
@@ -88,55 +94,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         newEventRecylcerView.setLayoutManager(newEventLayoutManager);
         acceptedEventRecyclerView.setLayoutManager(acceptedEventLayoutManager);
 
-
-
-        acceptedEventAdapter = new AcceptedEventAdapter(fillDataset(), new ItemClickListener() {
-            @Override
-            public void onItemClicked(int position, View view) {
-                Event event = newEventAdapter.getItem(position);
-                switch (view.getId()) {
-                    case R.id.start_event:
-                        //TODO service.
-                        Log.i("GroupActivity", "go");
-                        break;
-                    default:
-                        EventActivity.start(GroupActivity.this, event);
-                        Log.i("GroupActivity", "info");
-                }
-            }
-        });
-        acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
-
-        newEventAdapter = new NewEventAdapter(fillDataset(), new ItemClickListener() {
-            @Override
-            public void onItemClicked(int position, View view) {
-                Event event = newEventAdapter.getItem(position);
-                switch (view.getId()) {
-                    case R.id.accept_event:
-                        //service.
-                        Log.i("GroupActivity", "accept");
-                        break;
-                    case R.id.reject_event:
-                        //servide.
-                        Log.i("GroupActivity", "reject");
-                        break;
-                    default:
-                        EventActivity.start(GroupActivity.this, event);
-                        Log.i("GroupActivity", "info");
-                }
-            }
-        });
-        newEventRecylcerView.setAdapter(newEventAdapter);
-
-    }
-
-    //Todo löschen, nur zum Testzweck
-    private Event[] fillDataset() {
-        Event[] events = new Event[20];
-        for (int i = 0; i < 20; i++) {
-            events[i] = new Event(i, "name" + i, new Date(100000 * i), new Location(i, i, "Random Location" + i));
-        }
-        return events;
+        groupService.getEvents(this, group, Preferences.getUser());
     }
 
     @Override
@@ -158,36 +116,97 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     private class ResultReceiver extends BroadcastReceiver {
         private AlarmManager notifyAlarmMgr;
         private PendingIntent notifyAlarmIntent;
+        private AlarmManager eventAlarmMgr;
+        private PendingIntent eventAlarmIntent;
+        private int beforEvent = 900000;;
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getStringExtra(UtilService.ERROR) != null) {
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                return;
+            }
             switch (intent.getAction()) {
-                case GroupService.ACTION_GET_EVENTS:
-                    if(intent.getParcelableArrayExtra("events") == null){break;}
-                    Event[] groupEvents = (Event[]) intent.getParcelableArrayExtra("events");
-                    newEventAdapter = new NewEventAdapter(fillDataset(), new ItemClickListener() {
-                        @Override
-                        public void onItemClicked(int position, View view) {
-                            Event event = newEventAdapter.getItem(position);
-                            switch (view.getId()) {
-                                case R.id.accept_event:
-                                    //service.
-                                    Log.i("GroupActivity", "accept");
-                                    break;
-                                case R.id.reject_event:
-                                    //servide.
-                                    Log.i("GroupActivity", "reject");
-                                    break;
-                                default:
-                                    EventActivity.start(GroupActivity.this, event);
-                                    Log.i("GroupActivity", "info");
-                            }
-                        }
-                    });
-                    newEventRecylcerView.setAdapter(newEventAdapter);
+                case GroupService.RESULT_GET_EVENTS:
+                    loadEvents(intent);
+                    break;
+                case ParticipateService.RESULT_STATUS:
+                    int resultStatus = intent.getIntExtra(UtilService.STATUS, 0);
+                    if(resultStatus == ParticipateService.ACCEPT){
+                        accept(context);
+                    }
+                     else if(resultStatus == ParticipateService.REJECT){
+                        newEventAdapter.deleteItem(deletePosition);
+                    }
+                    else if(resultStatus == ParticipateService.START){
+                        EventActivity.start(GroupActivity.this, eventMove);
+                    }
                     break;
 
-                    //TODO default
+                //TODO default
+            }
+        }
+
+        private void accept(Context context){
+            newEventAdapter.deleteItem(deletePosition);
+            acceptedEventAdapter.insertItem(eventMove);
+
+            notifyAlarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+            Intent notifyIntent = new Intent(context, NotificationService.class);
+            notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
+            notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
+            notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, eventMove.getTime().getTime()-beforEvent, notifyAlarmIntent);
+
+            eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            Intent eventIntent = new  Intent(context, LocationService.class);
+            eventIntent.putExtra(UtilService.EVENT, eventMove);
+            eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
+            eventAlarmMgr.setExact(AlarmManager.RTC, eventMove.getTime().getTime()-beforEvent, eventAlarmIntent);
+        }
+
+
+        private void loadEvents(Intent intent){
+            if (intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS) != null) {
+                acceptedEventAdapter = new AcceptedEventAdapter((Event[]) intent.getParcelableArrayExtra("AngenommeneEvents"), new ItemClickListener() {
+                    @Override
+                    public void onItemClicked(int position, View view) {
+                        Event event = acceptedEventAdapter.getItem(position);
+                        eventMove = event;
+                        switch (view.getId()) {
+                            case R.id.start_event:
+                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), ParticipateService.START);
+                                break;
+                            default:
+                                EventActivity.start(GroupActivity.this, event);
+                                Log.i("GroupActivity", "info");
+                        }
+                    }
+                });
+                acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
+            }
+            if(intent.getParcelableArrayExtra(UtilService.NEW_EVENTS) != null){
+                newEventAdapter = new NewEventAdapter((Event[]) intent.getParcelableArrayExtra("NeueEvents"), new ItemClickListener() {
+                    @Override
+                    public void onItemClicked(int position, View view) {
+                        Event event = newEventAdapter.getItem(position);
+                        eventMove = event;
+                        deletePosition = position;
+                        switch (view.getId()) {
+                            case R.id.accept_event:
+                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), ParticipateService.ACCEPT);
+                                Log.i("GroupActivity", "accept");
+                                break;
+                            case R.id.reject_event:
+                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), ParticipateService.REJECT);
+                                Log.i("GroupActivity", "reject");
+                                break;
+                            default:
+                                EventActivity.start(GroupActivity.this, event);
+                                Log.i("GroupActivity", "info");
+                        }
+                    }
+                });
+                newEventRecylcerView.setAdapter(newEventAdapter);
             }
         }
     }

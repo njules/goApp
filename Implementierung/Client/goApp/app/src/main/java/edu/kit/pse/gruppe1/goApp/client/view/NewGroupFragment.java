@@ -24,20 +24,18 @@ public class NewGroupFragment extends DialogFragment {
     private GroupService groupService;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState){
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         groupService = new GroupService();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View text = inflater.inflate(R.layout.new_group_dialog,null);
+        final View text = inflater.inflate(R.layout.new_group_dialog, null);
 
         builder.setMessage(R.string.newGroup)
                 .setView(text)
                 .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         EditText et = (EditText) text.findViewById(R.id.new_group_name);
-                        //groupService.create(getActivity(),et.getText().toString(), Preferences.getUser());
-                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(GroupService.RESULT_CREATE));
-                        //Todo Hier neue Gruppe erstellen(GroupService)
+                        groupService.create(getActivity(), et.getText().toString(), Preferences.getUser());
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

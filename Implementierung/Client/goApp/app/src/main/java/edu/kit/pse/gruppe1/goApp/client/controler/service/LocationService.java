@@ -34,6 +34,8 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
     private static final String SERVLET = "LocationServlet";
     private static final String NAME = "LocationService";
     public static final String RESULT_LOCATION = "resultLocation";
+    public static final String ACTION_MY_LOCATION = "myLocation";
+    public static final String RESULT_MY_LOCATION = "myLocation";
 
     private GoogleApiClient mGoogleApiClient;
     private android.location.Location mLastLocation;
@@ -45,6 +47,10 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
 
     public LocationService() {
         super(NAME);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -54,32 +60,36 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
                     .build();
         }
         mGoogleApiClient.connect();
-    }
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
+        Intent resultIntent = new Intent();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
 
         if (mLastLocation != null) {
-            event = intent.getParcelableExtra(UtilService.EVENT);
-            Location[] locations = syncLocation(event.getId());
-            Intent resultIntent = new Intent();
-            resultIntent.setAction(RESULT_LOCATION);
-            resultIntent.putExtra(UtilService.LOCATIONS, locations);
-            LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
-            manager.sendBroadcast(resultIntent);
-        }
+            if (intent.getAction().equals(ACTION_MY_LOCATION)) {
+                resultIntent.setAction(RESULT_MY_LOCATION);
+                resultIntent.putExtra(UtilService.LOCATION , mLastLocation);
+            } else {
+                event = intent.getParcelableExtra(UtilService.EVENT);
+                //TODO if error occured....location == null etc
+                Location[] locations = syncLocation(event.getId());
+                resultIntent.setAction(RESULT_LOCATION);
+                resultIntent.putExtra(UtilService.LOCATIONS, locations);
 
-        if (System.currentTimeMillis()+refreshTime < event.getTime().getTime()+eventLength) {
-            eventAlarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-            Intent eventIntent = new Intent(this, LocationService.class);
-            eventIntent.putExtra(UtilService.EVENT, event);
-            eventAlarmIntent = PendingIntent.getService(this, 0, eventIntent, 0);
-            eventAlarmMgr.setWindow(AlarmManager.RTC, System.currentTimeMillis() + refreshTime, refreshTime, eventAlarmIntent);
+
+                if (System.currentTimeMillis() + refreshTime < event.getTime().getTime() + eventLength) {
+                    eventAlarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                    Intent eventIntent = new Intent(this, LocationService.class);
+                    eventIntent.putExtra(UtilService.EVENT, event);
+                    eventAlarmIntent = PendingIntent.getService(this, 0, eventIntent, 0);
+                    eventAlarmMgr.setWindow(AlarmManager.RTC, System.currentTimeMillis() + refreshTime, refreshTime, eventAlarmIntent);
+                }
+            }
         }
+        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
+        manager.sendBroadcast(resultIntent);
     }
 
     @Override
@@ -97,41 +107,26 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
 
     }
 
-    private Location[] syncLocation(int eventId){
+    private Location[] syncLocation(int eventId) {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.LocationName.toString(), Preferences.getUser().getName());
-            requestJson.put(JSONParameter.Longitude.toString(), mLastLocation.getLongitude());
-            requestJson.put(JSONParameter.Latitude.toString(), mLastLocation.getLatitude());
-            requestJson.put(JSONParameter.EventID.toString(), eventId);
-            requestJson.put(JSONParameter.UserID.toString(),Preferences.getUser().getId());
-            //TODO JsonParameter Methode Location
-            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_CLUSTER.toString());
+            requestJson.put(JSONParameter.LOC_NAME.toString(), Preferences.getUser().getName());
+            requestJson.put(JSONParameter.LONGITUDE.toString(), mLastLocation.getLongitude());
+            requestJson.put(JSONParameter.LATITUDE.toString(), mLastLocation.getLatitude());
+            requestJson.put(JSONParameter.EVENT_ID.toString(), eventId);
+            requestJson.put(JSONParameter.USER_ID.toString(), Preferences.getUser().getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SYNC_LOC.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendGetRequest(requestJson.toString());
-        try {
-            //TODO else & ErroCode parameter
-            if (result.getInt(JSONParameter.ErrorCode.toString()) == 0) {
-                JSONArray latitude = result.getJSONArray(JSONParameter.Latitude.toString());
-                JSONArray longitude = result.getJSONArray(JSONParameter.Longitude.toString());
-                JSONArray name = result.getJSONArray(JSONParameter.LocationName.toString());
-                Location[] locations = new Location[latitude.length()];
-                for (int i = 0; i < name.length(); i++) {
-                     locations[i] = new Location(
-                             (double) longitude.get(i),
-                             (double) latitude.get(i),
-                             (String) name.get(i));
-                }
-                return locations;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (UtilService.isError(result)) {
+            return null;
+        } else {
+            return UtilService.getLocations(result);
         }
-        return null;
     }
 }

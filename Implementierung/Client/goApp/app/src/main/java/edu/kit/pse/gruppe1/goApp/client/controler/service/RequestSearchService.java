@@ -13,18 +13,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService.ACTION_GET_EVENTS;
-
 /**
  * This Service is used to list Requests
  */
 public class RequestSearchService extends IntentService {
 
-    public static final String NAME = "RequestSearchService";
-    public static final String SERVLET = "RequestSearchServlet";
+    private static final String NAME = "RequestSearchService";
+    private static final String SERVLET = "RequestSearchServlet";
     //intent actions
-    public static final String ACTION_GET_BY_USER = "GET_BY_USER";
-    public static final String ACTION_GET_BY_GROUP = "GET_BY_GROUP";
+    private static final String ACTION_GET_BY_USER = "GET_BY_USER";
+    private static final String ACTION_GET_BY_GROUP = "GET_BY_GROUP";
     public static final String RESULT_GET_BY_GROUP = "RESULT_BY_GROUP";
     public static final String RESULT_GET_BY_USER = "RESULT_BY_USER";
 
@@ -43,8 +41,8 @@ public class RequestSearchService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_REQ_USR.toString());
+            requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_REQ_USR.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -67,8 +65,8 @@ public class RequestSearchService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GroupID.toString(), group.getId());
-            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.GET_REQ_GRP.toString());
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_REQ_GRP.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -87,13 +85,21 @@ public class RequestSearchService extends IntentService {
         switch (intent.getAction()) {
             case ACTION_GET_BY_USER:
                 result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
-                resultIntent.putExtra(UtilService.GROUPS, UtilService.getGroups(result));
                 resultIntent.setAction(RESULT_GET_BY_USER);
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+                } else {
+                    resultIntent.putExtra(UtilService.GROUPS, UtilService.getGroups(result));
+                }
                 break;
             case ACTION_GET_BY_GROUP:
                 result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
-                resultIntent.putExtra(UtilService.USERS, UtilService.getUsers(result));
                 resultIntent.setAction(RESULT_GET_BY_GROUP);
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+                } else {
+                    resultIntent.putExtra(UtilService.USERS, UtilService.getUsers(result));
+                }
                 break;
             //TODO default case
         }

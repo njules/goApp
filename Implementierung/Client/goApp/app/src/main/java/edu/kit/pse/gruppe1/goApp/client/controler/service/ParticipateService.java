@@ -10,8 +10,6 @@ import edu.kit.pse.gruppe1.goApp.client.model.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static edu.kit.pse.gruppe1.goApp.client.controler.service.RequestService.ACTION_ACCEPT;
-
 /**
  * This Service provides methods to handle a users reaction towards an event
  */
@@ -20,11 +18,12 @@ public class ParticipateService extends IntentService {
     private static final String SERVLET = "ParticipateServlet";
 
     private static final String ACTION_STATUS = "status";
-    private static final String RESULT_STATUS = "resultStatus";
-    //TODO real numbers
+    public static final String RESULT_STATUS = "resultStatus";
+    //TODO real numbers and JsonPArameter
     public static final int ACCEPT = 1;
     public static final int REJECT = 2;
     public static final int START = 3;
+    //reject == delete Event
 
     public ParticipateService() {
         super(NAME);
@@ -41,11 +40,11 @@ public class ParticipateService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.EventID.toString(), event.getId());
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
+            requestJson.put(JSONParameter.EVENT_ID.toString(), event.getId());
+            requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
             //TODO jsonparameter setstatus & status
-            requestJson.put("STATUS", status);
-            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.SET_START.toString());
+            requestJson.put(JSONParameter.STATUS.toString(), status);
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_STATUS.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -64,15 +63,13 @@ public class ParticipateService extends IntentService {
         HTTPConnection connection = new HTTPConnection(SERVLET);
         Intent resultIntent = new Intent();
         JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
-        try {
-            //TODO what happens if error != 0
-            resultIntent.putExtra(UtilService.ERROR, result.getInt(JSONParameter.ErrorCode.toString()));
-            resultIntent.putExtra(UtilService.STATUS, intent.getIntExtra(UtilService.STATUS, 0));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         resultIntent.setAction(RESULT_STATUS);
-        //TODO default case
+        if(UtilService.isError(result)){
+            resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+        }else {
+            //TODO Nur Status?
+            resultIntent.putExtra(UtilService.STATUS, intent.getIntExtra(UtilService.STATUS, 0));
+        }
 
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);

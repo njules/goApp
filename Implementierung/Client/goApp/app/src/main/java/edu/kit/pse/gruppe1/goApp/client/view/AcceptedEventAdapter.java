@@ -10,16 +10,20 @@ import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.AcceptedEventViewBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Tobias on 27.01.2017.
  */
 
 public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdapter.AcceptedEventViewHolder> {
-    private Event[] dataset;
+    private List<Event> dataset;
     private final ItemClickListener itemClickListener;
 
     public AcceptedEventAdapter(Event[] eventDataset, ItemClickListener icl) {
-        dataset = eventDataset;
+        dataset = new ArrayList<>(Arrays.asList(eventDataset));
         itemClickListener = icl;
     }
 
@@ -31,18 +35,23 @@ public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdap
 
     @Override
     public void onBindViewHolder(AcceptedEventViewHolder holder, int position) {
-        final Event event = dataset[position];
+        final Event event = dataset.get(position);
         holder.getBinding().setEvent(event);
         holder.getBinding().executePendingBindings();
     }
 
     @Override
     public int getItemCount() {
-        return dataset.length;
+        return dataset.size();
     }
 
     public Event getItem(int position) {
-        return dataset[position];
+        return dataset.get(position);
+    }
+
+    public void insertItem(Event event) {
+        dataset.add(0, event);
+        notifyItemInserted(0);
     }
 
     public static class AcceptedEventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -69,4 +78,5 @@ public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdap
         }
         //private final Listener;
     }
+
 }
