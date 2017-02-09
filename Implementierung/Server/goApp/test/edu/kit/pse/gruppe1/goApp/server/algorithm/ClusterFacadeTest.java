@@ -11,8 +11,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import edu.kit.pse.gruppe1.goApp.server.model.User;
-
 import java.lang.reflect.Field;
 
 import java.util.ArrayList;
@@ -21,7 +19,6 @@ import java.util.List;
 import org.apache.commons.math4.ml.clustering.DoublePoint;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
-import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
 
@@ -33,21 +30,7 @@ public class ClusterFacadeTest {
     @Mock
     private Event event;
     @Mock
-    public EventManagement management;
-    @Mock
-    private User u1;
-    @Mock
-    private User u2;
-    @Mock
-    private User u3;
-    @Mock
-    private User u4;
-    @Mock
-    private User u5;
-    @Mock
-    private User u6;
-    @Mock
-    private User u7;
+    private EventManagement management;
 
     @Before
     public void setUp() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
@@ -63,9 +46,6 @@ public class ClusterFacadeTest {
 
     @Test
     public void testOne() {
-
-        
-        
 
         ArrayList<Location> locationList = new ArrayList<Location>();
         locationList.add(new Location(34.00, 33.00, "test"));          
