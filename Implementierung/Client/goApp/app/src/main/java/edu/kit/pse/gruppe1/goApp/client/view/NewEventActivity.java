@@ -208,6 +208,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                         GroupActivity.start(NewEventActivity.this);
                     break;
                 case LocationService.RESULT_MY_LOCATION:
+                    Log.i("NEWEVENTACTIVITY", "TEST");
                     android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
             }

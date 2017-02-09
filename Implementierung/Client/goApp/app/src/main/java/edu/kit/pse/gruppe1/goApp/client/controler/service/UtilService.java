@@ -109,7 +109,7 @@ public final class UtilService {
 
     public static boolean isError(JSONObject json) {
         try {
-            if (json.getString(JSONParameter.ERROR_CODE.toString()).equals(JSONParameter.ErrorCodes.OK.toString())) {
+            if (json.getInt(JSONParameter.ERROR_CODE.toString()) == JSONParameter.ErrorCodes.OK.getErrorCode()) {
                 return false;
             } else {
                 Log.i("ERROR", json.getString(JSONParameter.ERROR_CODE.toString()));

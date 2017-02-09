@@ -47,6 +47,10 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
 
     public LocationService() {
         super(NAME);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -56,10 +60,7 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
                     .build();
         }
         mGoogleApiClient.connect();
-    }
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
         Intent resultIntent = new Intent();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
