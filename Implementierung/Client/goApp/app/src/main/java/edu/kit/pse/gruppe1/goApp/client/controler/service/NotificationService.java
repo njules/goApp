@@ -37,7 +37,7 @@ public class NotificationService extends IntentService{
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.i("NOTIFICATION SERVICE", "Start");
-		Group group = intent.getParcelableExtra("GRUPPE");
+		Group group = intent.getParcelableExtra(UtilService.GROUP);
         notifyUser(group);
 	}
 
@@ -50,7 +50,7 @@ public class NotificationService extends IntentService{
 		NotificationCompat.Builder mBuilder =
 				new NotificationCompat.Builder(this)
 						.setSmallIcon(R.mipmap.ic_launcher)
-						.setContentTitle("Bald geht ein Termin los:")
+						.setContentTitle(getString(R.string.notification_massage))
 						.setContentText(group.getName());
 		Intent resultIntent = new Intent(this, GroupActivity.class);
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);

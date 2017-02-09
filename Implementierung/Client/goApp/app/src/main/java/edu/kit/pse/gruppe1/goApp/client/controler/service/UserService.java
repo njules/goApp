@@ -15,10 +15,10 @@ import org.json.JSONObject;
  */
 public class UserService extends IntentService{
 
-	public static final String NAME = "UserService";
-    public static final String SERVLET = "UserServlet";
-    //Intnt actions
-	public static final String ACTION_CHANGE = "CHANGE";
+	private static final String NAME = "UserService";
+    private static final String SERVLET = "UserServlet";
+    //Intent actions
+	private static final String ACTION_CHANGE = "CHANGE";
 	public static final String RESULT_CHANGE = "RESULT_CHANGE";
 
 
@@ -36,10 +36,9 @@ public class UserService extends IntentService{
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.UserName.toString(), name);
-
-            requestJson.put(JSONParameter.Method.toString(), JSONParameter.Methods.CHANGE.toString());
+            requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
+            requestJson.put(JSONParameter.USER_NAME.toString(), name);
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CHANGE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -57,11 +56,8 @@ public class UserService extends IntentService{
         Intent resultIntent = new Intent();
         JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
         resultIntent.setAction(RESULT_CHANGE);
-        try {
-            //TODO what happens if error != 0
-            resultIntent.putExtra(UtilService.ERROR, result.getInt(JSONParameter.ErrorCode.toString()));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(UtilService.isError(result)){
+            resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
         }
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);

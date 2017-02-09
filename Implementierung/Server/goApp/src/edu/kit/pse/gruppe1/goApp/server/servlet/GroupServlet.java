@@ -181,11 +181,24 @@ public class GroupServlet extends HttpServlet {
         try {
             int group = json.getInt(JSONParameter.GROUP_ID.toString());
             int member = json.getInt(JSONParameter.USER_ID.toString());
+          //TODO: Merge Conflict lösen
+//Ab hier Code aus Servlet
             ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member));
             List<Event> eventList2 = eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, member);
             eventList2.addAll(eventUserManager.getEventsByStatus(Status.STARTED, group, member));
             //TODO return both lists seperateley
             return ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member)).toString();
+//bis hier =======
+            //TODO different keys
+            JSONObject result = new JSONObject();
+            List<Event> events = eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, member);
+            events.addAll(eventUserManager.getEventsByStatus(Status.STARTED, group, member));
+            result.put(JSONParameter.ACC_Events.toString(), ServletUtils.createJSONListEvent(events));
+            result.put(JSONParameter.NEW_EVENTS.toString(), ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member)));
+           //TODO real ErrorCode
+            result.put(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK.getErrorCode());
+            return result.toString();
+//und bis hier aus Master
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();

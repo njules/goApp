@@ -94,6 +94,7 @@ public class HTTPConnection {
         }
         if (response == null) {
             return requestFailed(status);
+
         }
         return toJSONObject(response);
     }

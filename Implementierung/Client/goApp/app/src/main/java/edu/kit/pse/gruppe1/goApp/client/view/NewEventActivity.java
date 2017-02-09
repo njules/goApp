@@ -22,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,6 +53,8 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
     private EditText en;
     private EditText el;
     private Timestamp timestamp;
+    private EventService eventService;
+    private LocationService locationService;
 
     GoogleMap googleMap;
     MarkerOptions marker;
@@ -92,8 +95,11 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         super.onStart();
         SupportMapFragment map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         map.getMapAsync(this);
+        eventService = new EventService();
+        locationService = new LocationService();
         receiver = new ResultReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_CREATE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationService.RESULT_MY_LOCATION));
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -101,6 +107,9 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
             case R.id.make_event:
                 if (location == null) {
                     Toast.makeText(this, getString(R.string.noLocation), Toast.LENGTH_SHORT).show();
+                    return true;
+                } else if (en.getText().toString().isEmpty()) {
+                    Toast.makeText(this, getString(R.string.nameMissing), Toast.LENGTH_SHORT).show();
                     return true;
                 } else {
                     location.setName(el.getText().toString());
@@ -114,15 +123,16 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     Log.i("ourTime", timestamp.toString());
                     Log.i("sysTime", new Timestamp(System.currentTimeMillis()).toString());
                     if (timestamp.after(new Timestamp(System.currentTimeMillis()))) {
-                        //TODO hier mit Event Service neues event erstellen.
+                        eventService.create(this, en.getText().toString(), location, Preferences.getUser(), timestamp, Preferences.getGroup());
                     } else {
                         Toast.makeText(this, getString(R.string.wrongTime), Toast.LENGTH_SHORT).show();
                         return true;
                     }
 
+
+                    //TODO löschen
                     AlarmManager notifyAlarmMgr;
                     PendingIntent notifyAlarmIntent;
-
                     notifyAlarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
                     Intent notifyIntent = new Intent(this, NotificationService.class);
                     notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
@@ -143,8 +153,11 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         this.googleMap = googleMap;
         googleMap.setOnMapLongClickListener(this);
         marker = new MarkerOptions();
-        LatLng karlsruhe = new LatLng(49.0068901, 8.4036527);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(karlsruhe, 15));
+
+        Intent intent = new Intent(this, LocationService.class);
+        intent.setAction(LocationService.ACTION_MY_LOCATION);
+        this.startService(intent);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
             ActivityCompat.requestPermissions(this, permissions, 0);
@@ -171,28 +184,33 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getStringExtra(UtilService.ERROR) != null) {
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                return;
+            }
             switch (intent.getAction()) {
                 case EventService.RESULT_CREATE:
-                    if (intent.getBooleanExtra("ERROR", false)) {
-                        Toast.makeText(NewEventActivity.this,"Neues Event erstellt",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewEventActivity.this, "Neues Event erstellt", Toast.LENGTH_SHORT).show();
 
-                        notifyAlarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                        notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         Intent notifyIntent = new Intent(context, NotificationService.class);
                         notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
                         notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
                         //900000 is 15 mins in millis
-                        notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime()-beforEvent, notifyAlarmIntent);
+                        notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime() - beforEvent, notifyAlarmIntent);
 
                         eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        Intent eventIntent = new  Intent(context, LocationService.class);
+                        Intent eventIntent = new Intent(context, LocationService.class);
                         eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
                         eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
-                        eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime()-beforEvent, eventAlarmIntent);
+                        eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime() - beforEvent, eventAlarmIntent);
 
                         GroupActivity.start(NewEventActivity.this);
-                    }
                     break;
-                    //TODO default
+                case LocationService.RESULT_MY_LOCATION:
+                    Log.i("NEWEVENTACTIVITY", "TEST");
+                    android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
             }
         }
     }

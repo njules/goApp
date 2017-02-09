@@ -73,6 +73,7 @@ public final class ServletUtils {
      *            The Token which should be tested
      * @return If token is valid return the GoogleId else return null.
      */
+
     protected static String getGoogleIdByToken(String idTokenString) {
 
         String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
@@ -183,6 +184,7 @@ public final class ServletUtils {
 
             json.put(JSONParameter.GROUP_ID.toString(), event.getGroup().getGroupId());
             json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
+            json.put(JSONParameter.USER_NAME.toString(), event.getCreator().getName());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();

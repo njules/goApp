@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
  */
 
 public class GroupServiceTest {
-    GroupService service;
+   /* GroupService service;
     JSONObject requestJson;
     User user;
     Group group;
@@ -66,5 +66,5 @@ public class GroupServiceTest {
         when(mockConnection.sendGetRequest(requestJson.toString())).thenReturn(response);
     }
 
-
+*/
 }

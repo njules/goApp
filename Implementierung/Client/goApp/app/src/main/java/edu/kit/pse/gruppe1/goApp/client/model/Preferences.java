@@ -5,7 +5,7 @@ package edu.kit.pse.gruppe1.goApp.client.model;
  */
 
 public class Preferences {
-    private static User user = new User(1, "user1");
+    private static User user = new User(2, "user1");
     private static Group group;
     private static String idToken;
 
