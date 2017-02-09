@@ -47,26 +47,32 @@ public final class ServletUtils {
     private ServletUtils() {
     }
 
-    /**
-     * TODO: checks if GoogleTokenisValid atm always true, and parameters will change in the future
+    /**Checks wether a User is already in the Database.
      * 
-     * @return
+     * @param googleId which should be testet
+     * @return true if googleId user is in the database
      */
-    
     protected static boolean isUserAlreadyRegistrated(String googleId) {
-        
+
         UserManagement management = new UserManagement();
-        
+
         User user = management.getUserByGoogleId(googleId);
-        
-        if(user == null) {
+
+        if (user == null) {
             return false;
         } else {
             return true;
         }
-        
-        
+
     }
+
+    /**
+     * Method which validates an GoogleToken and returns the GoogleId String.
+     * 
+     * @param idTokenString:
+     *            The Token which should be tested
+     * @return If token is valid return the GoogleId else return null.
+     */
     protected static String getGoogleIdByToken(String idTokenString) {
 
         String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
@@ -92,6 +98,13 @@ public final class ServletUtils {
         }
     }
 
+    /**
+     * Method which validates an GoogleToken and returns the name.
+     * 
+     * @param idTokenString:
+     *            The Token which should be tested
+     * @return If token is valid return the GoogleName else return null.
+     */
     protected static String getGoogleNameByToken(String idTokenString) {
 
         String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
