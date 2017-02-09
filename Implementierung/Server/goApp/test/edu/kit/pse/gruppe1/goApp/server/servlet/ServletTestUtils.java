@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.kit.pse.gruppe1.goApp.server.model.Event;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
@@ -47,6 +51,20 @@ public final class ServletTestUtils {
         } else {
             fail();
         }
+    }
+    
+    protected Event createEvent() {
+        String name = "Test Event";
+        Location loc = new Location(49.014352, 8.404579, "Test Location");
+        // Location is somewhere in Karlsruhe
+        Timestamp time = new Timestamp(1000);
+        Group grp = new Group();
+        grp.setGroupId(1);
+        User usr = new User();
+        usr.setUserId(2);
+        Event event = new Event(name, loc, time, grp, usr);
+        event.setEventId(3);
+        return event;
     }
     
     /**

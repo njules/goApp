@@ -142,9 +142,9 @@ public enum JSONParameter {
     NEW_EVENTS("NewEvents"),
 
     /**
-     * Google ID TODO
+     * Google Token
      */
-    GOOGLE_ID("GoogleId");
+    GOOGLE_TOKEN("GoogleToken");
 
     private final String fieldDescription;
 

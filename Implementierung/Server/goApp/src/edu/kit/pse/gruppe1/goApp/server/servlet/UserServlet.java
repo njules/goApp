@@ -128,7 +128,8 @@ public class UserServlet extends HttpServlet {
         }
 
         if (error.equals(ErrorCodes.OK)) {
-            result = ServletUtils.createJSONUser(user);
+            //result = ServletUtils.createJSONUser(user);
+            //TODO: Error Code reicht
         } else {
             result = ServletUtils.createJSONError(error);
         }

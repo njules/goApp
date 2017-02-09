@@ -101,7 +101,7 @@ public class UserManagement implements Management {
         return user;
     }
 
-    public User getUserByGoogleId(int googleId) {
+    public User getUserByGoogleId(String googleId) {
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
         session.beginTransaction();
 
