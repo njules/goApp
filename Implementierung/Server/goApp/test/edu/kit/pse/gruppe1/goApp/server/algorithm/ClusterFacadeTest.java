@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.algorithm;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import static org.mockito.Mockito.*;
 
@@ -33,14 +34,21 @@ public class ClusterFacadeTest {
     private EventManagement management;
 
     @Before
-    public void setUp() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
-            IllegalAccessException {
-        
+    public void setUp() {
+       
         MockitoAnnotations.initMocks(this);
         String name = "management";
-        Field field = facade.getClass().getDeclaredField(name);
-        field.setAccessible(true);
-        field.set(facade, management);
+        Field field;
+        try {
+            field = facade.getClass().getDeclaredField(name);
+            field.setAccessible(true);
+            field.set(facade, management);
+        } catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
+            e.printStackTrace();
+            fail();
+        }
+        
+        
         
     }
 
