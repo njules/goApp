@@ -52,6 +52,7 @@ public class GroupSearchService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
+            //TODO Server liest noch string
             requestJson.put(JSONParameter.USER_ID.toString(),user.getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_GRP_MEM.toString());
         } catch (JSONException e) {
@@ -93,13 +94,12 @@ public class GroupSearchService extends IntentService {
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
         Log.i("SearchGroup",result.toString());
-        Group[] groups = UtilService.getGroups(result);
         //result for the activtiy
         Intent resultIntent = new Intent();
         if(UtilService.isError(result)){
             resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
         } else {
-            resultIntent.putExtra(UtilService.GROUPS, groups);
+            resultIntent.putExtra(UtilService.GROUPS, UtilService.getGroups(result));
         }
         switch (intent.getAction()) {
             case ACTION_GET_BY_MEMBER:

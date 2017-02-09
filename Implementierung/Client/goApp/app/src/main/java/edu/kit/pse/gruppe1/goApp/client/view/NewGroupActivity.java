@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupSearchService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.RequestService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
@@ -79,10 +81,13 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                //TODO Tastatur ausblenden
+                View view = this.getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 String search = et.getText().toString();
-                groupSearchService.getGroupsByName(this,search);
-                //Todo Hier nach den angefragten Gruppen suchen (GroupSearchService)
+                groupSearchService.getGroupsByName(this, search);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -102,37 +107,32 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getStringExtra(UtilService.ERROR) != null) {
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                return;
+            }
             switch (intent.getAction()) {
                 case GroupSearchService.RESULT_GET_BY_NAME:
-                    if (intent.getParcelableArrayExtra("groups") == null){
+                    if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null) {
                         Toast.makeText(getApplicationContext(), getString(R.string.NoGroup), Toast.LENGTH_LONG).show();
                         break;
                     }
-                    groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
+                    groupAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
                             Group group = groupAdapter.getItem(position);
-                            //requestService.create(NewGroupActivity.this,Preferences.getUser(),group);
-                            //Todo Hier Anfrage erstellen
-                            String output = group.getName() + getString(R.string.request_send);
-                            Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
+                            requestService.create(NewGroupActivity.this, Preferences.getUser(), group);
                         }
                     });
                     groupRecyclerView.setAdapter(groupAdapter);
                     break;
                 case RequestService.RESULT_CREATE:
-                    if (intent.getBooleanExtra("ERROR", false)) {
-                        Toast.makeText(NewGroupActivity.this,"Anfrage gesendet",Toast.LENGTH_SHORT).show();
-                        //TODO reload groups or add group to adapter
-                    }
+                    Toast.makeText(getApplicationContext(), getString(R.string.request_send), Toast.LENGTH_LONG).show();
                     break;
                 case GroupService.RESULT_CREATE:
-                    if (intent.getBooleanExtra("ERROR", false)) {
-                        Toast.makeText(NewGroupActivity.this,"Gruppe hinzugefügt",Toast.LENGTH_SHORT).show();
-                        StartActivity.start(NewGroupActivity.this);
-                    }
+                    Toast.makeText(NewGroupActivity.this, getString(R.string.groupCreated), Toast.LENGTH_SHORT).show();
+                    StartActivity.start(NewGroupActivity.this);
                     break;
-                    //TODO reaction to errors and how to updat view
             }
         }
     }

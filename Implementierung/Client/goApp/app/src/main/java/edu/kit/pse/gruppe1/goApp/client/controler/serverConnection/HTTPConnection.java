@@ -93,7 +93,7 @@ public class HTTPConnection {
         if (response == null) {
             JSONObject jsonObject = new JSONObject();
             try {
-                jsonObject.put(JSONParameter.ErrorCode.toString(), JSONParameter.ErrorCodes.CONNECTION_FAILED.getErrorCode());
+                jsonObject.put(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.CONNECTION_FAILED.getErrorCode());
             } catch (JSONException e) {
                 return new JSONObject();
             }

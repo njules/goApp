@@ -10,16 +10,20 @@ import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.NewEventViewBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Tobias on 27.01.2017.
  */
 
 public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.NewEventViewHolder> {
-    private Event[] dataset;
+    private List<Event> dataset;
     private final ItemClickListener itemClickListener;
 
     public NewEventAdapter(Event[] eventDataset, ItemClickListener icl) {
-        dataset = eventDataset;
+        dataset = new ArrayList<>(Arrays.asList(eventDataset));
         itemClickListener = icl;
     }
 
@@ -31,18 +35,23 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.NewEve
 
     @Override
     public void onBindViewHolder(NewEventViewHolder holder, int position) {
-        final Event event = dataset[position];
+        final Event event = dataset.get(position);
         holder.getBinding().setEvent(event);
         holder.getBinding().executePendingBindings();
     }
 
     @Override
     public int getItemCount() {
-        return dataset.length;
+        return dataset.size();
     }
 
     public Event getItem(int position) {
-        return dataset[position];
+        return dataset.get(position);
+    }
+
+    public void deleteItem(int position) {
+        dataset.remove(position);
+        notifyItemRemoved(position);
     }
 
     public static class NewEventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

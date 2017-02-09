@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -44,7 +45,7 @@ public class EventService extends IntentService {
      * @param group       the group in which the event is created and which members are all invited
      * @return true, if method was successful, otherwise false
      */
-    public void create(Context context, String name, Location destination, User eventAdmin, Date time, Group group) {
+    public void create(Context context, String name, Location destination, User eventAdmin, Timestamp time, Group group) {
         JSONObject requestJson = new JSONObject();
 
         try {

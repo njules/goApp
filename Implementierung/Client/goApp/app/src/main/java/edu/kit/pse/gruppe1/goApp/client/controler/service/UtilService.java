@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
+import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
@@ -11,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 
 /**
@@ -41,8 +43,6 @@ public final class UtilService {
     public static Group[] getGroups(JSONObject json) {
         //TODO if(json == null)
         try {
-            //TODO Error Code nicht beschreibung senden
-            if (json.getJSONArray(JSONParameter.ERROR_CODE.toString()).getString(0).equals(JSONParameter.ErrorCodes.OK.toString())) {
                 JSONArray name = json.getJSONArray(JSONParameter.GROUP_NAME.toString());
                 JSONArray id = json.getJSONArray(JSONParameter.GRUOP_ID.toString());
                 Group[] groups = new Group[name.length()];
@@ -52,7 +52,6 @@ public final class UtilService {
                             (int) id.get(i),
                             (String) name.get(i),
                             user);
-                }
                 return groups;
             }
         } catch (JSONException e) {
@@ -64,13 +63,11 @@ public final class UtilService {
     public static User[] getUsers(JSONObject json) {
         //TODO if(json == null)
         try {
-            if (json.getInt(JSONParameter.ERROR_CODE.toString()) == (JSONParameter.ErrorCodes.OK.getErrorCode())) {
                 JSONArray name = json.getJSONArray(JSONParameter.USER_NAME.toString());
                 JSONArray id = json.getJSONArray(JSONParameter.USER_ID.toString());
                 User[] users = new User[name.length()];
                 for (int i = 0; i < name.length(); i++) {
                     User user = new User((int) id.get(i), (String) name.get(i));
-                }
                 return users;
             }
         } catch (JSONException e) {
@@ -102,7 +99,7 @@ public final class UtilService {
 
     public static boolean isError(JSONObject json) {
         try {
-            if (json.getInt(JSONParameter.ERROR_CODE.toString()) == JSONParameter.ErrorCodes.OK.getErrorCode()) {
+            if (json.getString(JSONParameter.ERROR_CODE.toString()).equals(JSONParameter.ErrorCodes.OK.toString())) {
                 return false;
             } else {
                 return true;
@@ -144,7 +141,7 @@ public final class UtilService {
                 events[i] = new Event(
                         jsons.getJSONObject(i).getInt(JSONParameter.EVENT_ID.toString()),
                         jsons.getJSONObject(i).getString(JSONParameter.EVENT_NAME.toString()),
-                        new Date(jsons.getJSONObject(i).getLong(JSONParameter.EVENT_TIME.toString())),
+                        new Timestamp(jsons.getJSONObject(i).getLong(JSONParameter.EVENT_TIME.toString())),
                         destination, founder);
             }
             return events;
@@ -183,7 +180,7 @@ public final class UtilService {
             event = new Event(
                     result.getInt(JSONParameter.EVENT_ID.toString()),
                     result.getString(JSONParameter.EVENT_NAME.toString()),
-                    new Date(result.getLong(JSONParameter.EVENT_TIME.toString())),
+                    new Timestamp(result.getLong(JSONParameter.EVENT_TIME.toString())),
                     destination, founder);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -10,8 +10,6 @@ import edu.kit.pse.gruppe1.goApp.client.model.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static edu.kit.pse.gruppe1.goApp.client.controler.service.RequestService.ACTION_ACCEPT;
-
 /**
  * This Service provides methods to handle a users reaction towards an event
  */

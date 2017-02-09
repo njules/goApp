@@ -2,12 +2,10 @@ package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -42,6 +40,8 @@ public class StartActivity extends AppCompatActivity implements Communicator {
 
     private User user;
     private StartActivityBinding binding;
+    private int deletePosition;
+    private String newUserName;
 
     private GroupSearchService groupSearchService;
     private RequestSearchService requestSearchService;
@@ -53,21 +53,10 @@ public class StartActivity extends AppCompatActivity implements Communicator {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.start_activity);
-        user = Preferences.getUser(); //Stattdessen wird der User in der LoginActivity geholt
+        user = Preferences.getUser();
         binding.setUser(user);
         Toolbar startToolbar = (Toolbar) findViewById(R.id.start_toolbar);
         setSupportActionBar(startToolbar);
-    }
-
-
-    //TODO: Wieder löschen nur zum Testzweck
-    private Group[] fillGroupDataset() {
-        Group[] groups = new Group[20];
-        groups[0] = new Group(0, "Test", new User(12948, "Sven"));
-        for (int i = 1; i < 20; i++) {
-            groups[i] = new Group(i, "name" + i, user);
-        }
-        return groups;
     }
 
     @Override
@@ -87,50 +76,22 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestSearchService.RESULT_GET_BY_USER));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestService.RESULT_REJECT));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(UserService.RESULT_CHANGE));
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(GroupService.RESULT_CREATE));
+
         //Group Recycler View
         groupSearchService = new GroupSearchService();
         groupRecyclerView = (RecyclerView) findViewById(R.id.my_groups_recycler_view);
         groupRecyclerView.setHasFixedSize(true);
         groupLayoutManager = new LinearLayoutManager(this);
         groupRecyclerView.setLayoutManager(groupLayoutManager);
-        //receiver.onReceive(this,new Intent(GroupSearchService.RESULT_GET_BY_MEMBER));
-        groupSearchService.getGroupsByMember(this, user); //TODO doesnt work
-        // Todo: Test if Groups come back
+        groupSearchService.getGroupsByMember(this, user);
+
         //Request Recycler View
         requestSearchService = new RequestSearchService();
         requestRecyclerView = (RecyclerView) findViewById(R.id.my_requests_recycler_view);
         requestRecyclerView.setHasFixedSize(true);
         requestLayoutManager = new LinearLayoutManager(this);
         requestRecyclerView.setLayoutManager(requestLayoutManager);
-        receiver.onReceive(this,new Intent(RequestSearchService.RESULT_GET_BY_USER));
-        //requestSearchService.getRequestsByUser(this, user); //TODO doesnt work
-        //Todo: Test if Requests come back
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+        requestSearchService.getRequestsByUser(this, user); //TODO doesnt work
     }
 
     @Override
@@ -153,13 +114,8 @@ public class StartActivity extends AppCompatActivity implements Communicator {
 
     @Override
     public void respond(String response) {
-        user.setName(response);
-        Preferences.setUser(user);
-        String output = getString(R.string.changeName) + " " + user.getName();
-        //userService.changeName(this, user, response);
-        //Todo hier Benutzernamen ändern
-
-        Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
+        newUserName = response;
+        userService.changeName(this, user, response);
     }
 
     public static void start(Activity activity) {
@@ -169,14 +125,38 @@ public class StartActivity extends AppCompatActivity implements Communicator {
 
     private class ResultReceiver extends BroadcastReceiver {
 
+        private void showDialog(final Group group) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+
+            builder.setMessage(R.string.deleteRequest)
+                    .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            requestService.reject(StartActivity.this, new Request(user, group));
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.show();
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getStringExtra(UtilService.ERROR) != null) {
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                return;
+            }
             switch (intent.getAction()) {
                 case GroupSearchService.RESULT_GET_BY_MEMBER:
+
                     Log.i("GroupSearch",intent.toString());
                     if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null){break;}
                     groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
                     //groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
+
                         @Override
                         public void onItemClicked(int position, View view) {
                             Group group = groupAdapter.getItem(position);
@@ -187,35 +167,27 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     groupRecyclerView.setAdapter(groupAdapter);
                     break;
                 case RequestSearchService.RESULT_GET_BY_USER:
-                    //requestAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
-                    requestAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
+                    if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null){break;}
+                    requestAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
+                            deletePosition = position;
                             Group group = requestAdapter.getItem(position);
-                            //requestService.reject(StartActivity.this, new Request(user, group));
-                            //TODO reject request in RequestService
+                            showDialog(group);
                         }
                     });
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
                 case RequestService.RESULT_REJECT:
-                    if (intent.getBooleanExtra(UtilService.ERROR, false)) {
-                        Toast.makeText(StartActivity.this,"Anfrage abgebrochen",Toast.LENGTH_SHORT).show();
-                        //requestAdapter.deleteItem()
-                        //TODO when to delete the request
-                    }
-                    //TODO error?? Service shcickt anfangs requestIntent zurück
+                    Toast.makeText(StartActivity.this, getString(R.string.deletedRequest), Toast.LENGTH_SHORT).show();
+                    requestAdapter.deleteItem(deletePosition);
                     break;
                 case UserService.RESULT_CHANGE:
-                    if (intent.getBooleanExtra(UtilService.ERROR, false)) {
-                        Toast.makeText(StartActivity.this,"Name geändert",Toast.LENGTH_SHORT).show();
-                        //user.setName();
-                        //TODO when to change the name
-                    }
+                    user.setName(newUserName);
+                    Preferences.setUser(user);
+                    String output = getString(R.string.changeName) + " " + user.getName();
+                    Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
                     break;
-
-
-                //TODO default
             }
         }
     }
