@@ -109,7 +109,7 @@ public class LoginServlet extends HttpServlet {
      */
     private JSONObject register(JSONObject json) {
         String googleTk = null;
-        int googleId = -1;
+        String googleId = null;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
         User user = null;
         JSONObject result = null;
