@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,6 +25,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
@@ -54,6 +57,8 @@ public class LocationServletTest {
 
     @Before
     public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        
         servlet = new LocationServlet();
         Field field = servlet.getClass().getDeclaredField("event");
         field.setAccessible(true);
@@ -96,13 +101,13 @@ public class LocationServletTest {
         }
         // initialize mocking
         try {
-            org.mockito.Mockito.when(httpRequest.getReader()).thenReturn(request);
-            org.mockito.Mockito.when(httpResponse.getWriter()).thenReturn(response);
-            org.mockito.Mockito.when(request.readLine()).thenReturn(jsonRequest);
-            org.mockito.Mockito.when(userManager.getUser(user)).thenReturn(fakeUser);
-            org.mockito.Mockito.when(eventManager.getEvent(evt)).thenReturn(fakeEvent);
-            org.mockito.Mockito.when(fakeEvent.getClusterPoints()).thenReturn(fakeLocations);
-        } catch (IOException | NullPointerException e) {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(userManager.getUser(user)).thenReturn(fakeUser);
+            when(eventManager.getEvent(evt)).thenReturn(fakeEvent);
+            when(fakeEvent.getClusterPoints()).thenReturn(fakeLocations);
+       } catch (IOException | NullPointerException e) {
             e.printStackTrace();
             fail("Failed mocking!\n");
         }
@@ -116,7 +121,7 @@ public class LocationServletTest {
         // test for correctly updated location
         assertEquals(fakeUser.getLocation(), new Location(3, 3, null));
         // test for correct location list
-        org.mockito.Mockito.verify(response).println(argCap);
+        verify(response).println(argCap.capture());
         List<Location> cluster = new ArrayList<Location>();
         try {
             JSONObject json = new JSONObject(argCap.getValue());
