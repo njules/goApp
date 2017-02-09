@@ -129,7 +129,7 @@ public enum JSONParameter {
     /**
      * Google ID
      */
-    GOOGLE_ID("GoogleId");
+    GOOGLE_TOKEN("GoogleToken");
 
     private final String fieldDescription;
 
@@ -160,6 +160,20 @@ public enum JSONParameter {
             }
         }
         return null;
+    }
+
+    public enum Status{
+        REJECT(1),
+        ACCEPT(2),
+        GO(3);
+
+        private final int status;
+        private Status(int status){
+            this.status = status;
+        }
+        public int getStatus(){
+            return status;
+        }
     }
 
     // TODO: JavaDocs

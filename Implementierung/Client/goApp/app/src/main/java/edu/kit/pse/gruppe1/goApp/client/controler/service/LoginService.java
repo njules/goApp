@@ -37,22 +37,16 @@ public class LoginService extends IntentService {
      * @return the user who is now logged in
      */
     public void login(Context context, GoogleSignInResult result) {
+//TODO Login und silentSign in
 
-        Intent requestIntent = new Intent(context, LoginService.class);
-        requestIntent.putExtra(UtilService.JSON, createJson(result).toString());
-        requestIntent.setAction(ACTION_LOGIN);
-        Log.i("Login",createJson(result).toString());
-        context.startService(requestIntent);
     }
     // TODO - implement LoginService.login
 
-    private JSONObject createJson(GoogleSignInResult result) {
+    private JSONObject createJson(String token) {
         JSONObject requestJSON = new JSONObject();
-        if (result.getSignInAccount().getIdToken() != null) {
+        if (token != null) {
             try {
-                //TODO reichtiger JsonPArameter
-                requestJSON.put(JSONParameter.GOOGLE_ID.toString(), result.getSignInAccount().getId());
-                requestJSON.put(JSONParameter.USER_NAME.toString(), result.getSignInAccount().getDisplayName());
+                requestJSON.put(JSONParameter.GOOGLE_TOKEN.toString(), token);
                 requestJSON.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.REGISTER.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -60,10 +54,12 @@ public class LoginService extends IntentService {
         } else{Log.i("Login","idToken is null");}
         return requestJSON;
     }
-@Deprecated
-    private User register() {
-        // TODO - implement LoginService.register
-        throw new UnsupportedOperationException();
+    public void register(Context context, String token) {
+    Intent requestIntent = new Intent(context, LoginService.class);
+    requestIntent.putExtra(UtilService.JSON, createJson(token).toString());
+    requestIntent.setAction(ACTION_LOGIN);
+    Log.i("Login",createJson(token).toString());
+    context.startService(requestIntent);
     }
 
     @Override

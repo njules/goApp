@@ -38,7 +38,6 @@ public class UserService extends IntentService{
         try {
             requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
             requestJson.put(JSONParameter.USER_NAME.toString(), name);
-
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CHANGE.toString());
         } catch (JSONException e) {
             e.printStackTrace();

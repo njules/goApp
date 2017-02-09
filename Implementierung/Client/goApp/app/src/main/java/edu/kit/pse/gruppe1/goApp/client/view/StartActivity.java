@@ -151,7 +151,6 @@ public class StartActivity extends AppCompatActivity implements Communicator {
             }
             switch (intent.getAction()) {
                 case GroupSearchService.RESULT_GET_BY_MEMBER:
-
                     Log.i("GroupSearch",intent.toString());
                     if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null){break;}
                     groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
