@@ -54,7 +54,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
     private EditText el;
     private Timestamp timestamp;
     private EventService eventService;
-    private GoogleApiClient mGoogleApiClient;
+    private LocationService locationService;
 
     GoogleMap googleMap;
     MarkerOptions marker;
@@ -96,8 +96,10 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         SupportMapFragment map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         map.getMapAsync(this);
         eventService = new EventService();
+        locationService = new LocationService();
         receiver = new ResultReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_CREATE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationService.RESULT_MY_LOCATION));
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -151,8 +153,11 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         this.googleMap = googleMap;
         googleMap.setOnMapLongClickListener(this);
         marker = new MarkerOptions();
-        LatLng karlsruhe = new LatLng(49.0068901, 8.4036527);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(karlsruhe, 15));
+
+        Intent intent = new Intent(this, LocationService.class);
+        intent.setAction(LocationService.ACTION_MY_LOCATION);
+        this.startService(intent);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
             ActivityCompat.requestPermissions(this, permissions, 0);
@@ -179,9 +184,12 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getStringExtra(UtilService.ERROR) != null) {
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                return;
+            }
             switch (intent.getAction()) {
                 case EventService.RESULT_CREATE:
-                    if (intent.getBooleanExtra("ERROR", false)) {
                         Toast.makeText(NewEventActivity.this, "Neues Event erstellt", Toast.LENGTH_SHORT).show();
 
                         notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -198,9 +206,10 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                         eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime() - beforEvent, eventAlarmIntent);
 
                         GroupActivity.start(NewEventActivity.this);
-                    }
                     break;
-                //TODO default
+                case LocationService.RESULT_MY_LOCATION:
+                    android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
             }
         }
     }
