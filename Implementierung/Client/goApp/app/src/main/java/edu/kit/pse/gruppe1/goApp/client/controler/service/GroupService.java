@@ -7,6 +7,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
@@ -263,15 +264,16 @@ public class GroupService extends IntentService {
             case ACTION_DELETE_MEMBER:
                 result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
                 resultIntent.setAction(RESULT_DELETE_MEMBER);
-                if(UtilService.isError(result)){
-                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
                 }
                 break;
             case ACTION_GET_EVENTS:
                 result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
                 resultIntent.setAction(RESULT_GET_EVENTS);
-                if(UtilService.isError(result)){
-                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+                Log.i("GetEvents", result.toString());
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
                 } else {
                     resultIntent.putExtra(UtilService.NEW_EVENTS, UtilService.getNewEvents(result));
                     resultIntent.putExtra(UtilService.ACCEPTED_EVENTS, UtilService.getAcceptedEvents(result));
@@ -280,15 +282,15 @@ public class GroupService extends IntentService {
             case ACTION_SET_FOUNDER:
                 result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
                 resultIntent.setAction(RESULT_SET_FOUNDER);
-                if(UtilService.isError(result)){
-                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
                 }
                 break;
             case ACTION_SET_NAME:
                 result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
                 resultIntent.setAction(RESULT_SET_NAME);
-                if(UtilService.isError(result)){
-                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
                 }
                 break;
             //TODO default case

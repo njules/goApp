@@ -166,8 +166,8 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
 
 
         private void loadEvents(Intent intent){
-            if (intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS) != null) {
-                acceptedEventAdapter = new AcceptedEventAdapter((Event[]) intent.getParcelableArrayExtra("AngenommeneEvents"), new ItemClickListener() {
+            if (intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS ) != null) {
+                acceptedEventAdapter = new AcceptedEventAdapter((Event[]) intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS), new ItemClickListener() {
                     @Override
                     public void onItemClicked(int position, View view) {
                         Event event = acceptedEventAdapter.getItem(position);
@@ -185,7 +185,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
             }
             if(intent.getParcelableArrayExtra(UtilService.NEW_EVENTS) != null){
-                newEventAdapter = new NewEventAdapter((Event[]) intent.getParcelableArrayExtra("NeueEvents"), new ItemClickListener() {
+                newEventAdapter = new NewEventAdapter((Event[]) intent.getParcelableArrayExtra(UtilService.NEW_EVENTS), new ItemClickListener() {
                     @Override
                     public void onItemClicked(int position, View view) {
                         Event event = newEventAdapter.getItem(position);
