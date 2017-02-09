@@ -89,6 +89,7 @@ public class UserFragment extends Fragment implements View.OnClickListener{
             }
             switch (intent.getAction()) {
                 case GroupService.RESULT_GET_MEMBERS:
+                    if (intent.getParcelableArrayExtra(UtilService.USERS) == null){break;}
                         memberAdapter = new UserAdapter((User[])intent.getParcelableArrayExtra(UtilService.USERS));
                         memberRecyclerView.setAdapter(memberAdapter);
                     break;

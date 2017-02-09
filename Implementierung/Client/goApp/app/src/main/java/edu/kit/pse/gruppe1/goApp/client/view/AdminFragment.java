@@ -162,10 +162,12 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
             }
             switch (intent.getAction()) {
                 case GroupService.RESULT_GET_MEMBERS:
+                    if (intent.getParcelableArrayExtra(UtilService.USERS) == null){break;}
                     memberAdapter = new MemberAdapter((User[]) intent.getParcelableArrayExtra(UtilService.USERS), AdminFragment.this);
                     memberRecyclerView.setAdapter(memberAdapter);
                     break;
                 case RequestSearchService.RESULT_GET_BY_GROUP:
+                    if (intent.getParcelableArrayExtra(UtilService.USERS) == null){break;}
                     requestAdapter = new RequestAdapter((User[]) intent.getParcelableArrayExtra(UtilService.GROUPS), AdminFragment.this);
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
