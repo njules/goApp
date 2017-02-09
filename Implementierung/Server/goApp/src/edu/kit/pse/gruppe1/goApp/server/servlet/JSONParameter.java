@@ -178,6 +178,28 @@ public enum JSONParameter {
     }
 
     /**
+     * enum with status codes
+     *
+     */
+    public enum Status {
+        REJECT(1), 
+        
+        ACCEPT(2), 
+        
+        GO(3);
+
+        private final int status;
+
+        private Status(int status) {
+            this.status = status;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+    }
+
+    /**
      * Enum of all possible ErrorCodes
      *
      */
