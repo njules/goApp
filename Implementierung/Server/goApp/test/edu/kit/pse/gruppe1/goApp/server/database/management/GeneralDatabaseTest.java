@@ -38,7 +38,9 @@ public class GeneralDatabaseTest {
 
     @Test
     public void test() {
-
+        new UserManagement().delete(users.get(0).getUserId());
+        users.delete()
+        assertThat(actual, matcher);
     }
 
 }
