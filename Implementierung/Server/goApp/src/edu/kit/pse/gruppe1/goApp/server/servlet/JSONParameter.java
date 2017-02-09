@@ -392,6 +392,7 @@ public enum JSONParameter {
         /**
          * Go.setStarted
          */
+        @Deprecated
         SET_START,
 
         /**
@@ -405,7 +406,8 @@ public enum JSONParameter {
         SYNC_LOC,
 
         /**
-         * TODO: Particpate zusammenfassen, Status prüfen, dann methode aufrufen
+         * Participate.setStatus
+         * replaces accept, reject and set_start
          */
         SET_STATUS,
 
@@ -422,11 +424,13 @@ public enum JSONParameter {
         /**
          * Participate.accept Request.accept
          */
+        @Deprecated
         ACCEPT,
 
         /**
          * Participate.reject Request.reject
          */
+        @Deprecated
         REJECT,
 
         /**

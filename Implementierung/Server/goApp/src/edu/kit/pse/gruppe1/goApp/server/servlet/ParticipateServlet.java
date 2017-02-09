@@ -54,13 +54,8 @@ public class ParticipateServlet extends HttpServlet {
         }
         
         switch (method) {
-         //TODO call setStatus
-        case ACCEPT:
-            response.getWriter().println(accept(jsonRequest));
-            break;
-        case REJECT:
-            response.getWriter().println(reject(jsonRequest));
-            break;
+        case SET_STATUS:
+            response.getWriter().println(setStatus(jsonRequest));
         default: 
             response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
         }
@@ -78,6 +73,7 @@ public class ParticipateServlet extends HttpServlet {
 	 * @param json A JSON object that contains the user wanting to accept the invite and the event he wants to participate in.
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
+    @Deprecated
 	private String accept(JSONObject json) {
         JSONObject response = new JSONObject();
         try {
@@ -99,6 +95,7 @@ public class ParticipateServlet extends HttpServlet {
 	 * @param json A JSON object that contains the user wanting to decline the invite and the event he wants to abstain from.
 	 * @return Returns a JSON string containing information about the success of this operation.
 	 */
+    @Deprecated
 	private String reject(JSONObject json) {
         JSONObject response = new JSONObject();
         try {
