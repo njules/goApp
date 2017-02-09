@@ -141,7 +141,7 @@ public class RequestServlet extends HttpServlet {
             reqGroups = reqMang.getRequestByUser(userID);
             reqUsers = reqMang.getRequestByGroup(newGroupID);
 
-            if (groups != null && users != null) {
+            if (groups == null || users == null) {
                 return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
             }
             groupSum += groups.size();

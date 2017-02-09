@@ -1,4 +1,5 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
+
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -22,6 +23,7 @@ import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
@@ -38,7 +40,7 @@ public final class ServletUtils {
 
     protected static final int USERLIMIT = 20;
     protected static final int GROUPLIMIT = 50;
-    
+
     /**
      * private constructor to make class static
      */
@@ -50,69 +52,71 @@ public final class ServletUtils {
      * 
      * @return
      */
-    protected static String getUserIdByToken(String idTokenString) {
+    
+    protected static boolean isUserAlreadyRegistrated(String googleId) {
         
-
-       String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
-
+        UserManagement management = new UserManagement();
         
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new ApacheHttpTransport(), new JacksonFactory())
-            .setAudience(Collections.singletonList(CLIENT_ID))
-            .build();
-
-       
+        User user = management.getUserByGoogleId(googleId);
         
+        if(user == null) {
+            return false;
+        } else {
+            return true;
+        }
+        
+        
+    }
+    protected static String getGoogleIdByToken(String idTokenString) {
+
+        String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
+
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                new ApacheHttpTransport(), new JacksonFactory())
+                        .setAudience(Collections.singletonList(CLIENT_ID)).build();
+
         GoogleIdToken idToken;
         try {
             idToken = verifier.verify(idTokenString);
         } catch (GeneralSecurityException | IOException e) {
             return null;
         }
-        
-       
+
         if (idToken != null) {
-          Payload payload = idToken.getPayload();     
-          String userId = payload.getSubject();
-          return userId;
-          
+            Payload payload = idToken.getPayload();
+            String googleId = payload.getSubject();
+            return googleId;
+
         } else {
-          return null;
+            return null;
         }
     }
-    
-    protected static String getUserNameByToken(String idTokenString) {
-        
+
+    protected static String getGoogleNameByToken(String idTokenString) {
 
         String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
 
-         
-         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new ApacheHttpTransport(), new JacksonFactory())
-             .setAudience(Collections.singletonList(CLIENT_ID))
-             .build();
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                new ApacheHttpTransport(), new JacksonFactory())
+                        .setAudience(Collections.singletonList(CLIENT_ID)).build();
 
-        
-         
-         GoogleIdToken idToken;
-         try {
-             idToken = verifier.verify(idTokenString);
-         } catch (GeneralSecurityException | IOException e) {
-             return null;
-         }
-         
-        
-         if (idToken != null) {
-           Payload payload = idToken.getPayload();     
-           String Name = (String) payload.get("name");
-           return Name;
-           
-         } else {
-           return null;
-         }
-     }
+        GoogleIdToken idToken;
+        try {
+            idToken = verifier.verify(idTokenString);
+        } catch (GeneralSecurityException | IOException e) {
+            return null;
+        }
 
-    
-    
-    
+        if (idToken != null) {
+            Payload payload = idToken.getPayload();
+            String Name = (String) payload.get("name");
+            return Name;
+
+        } else {
+            return null;
+        }
+    }
+
     protected static JSONObject createJSONParticipate(Participant part) {
         JSONObject json = new JSONObject();
         try {
@@ -126,7 +130,7 @@ public final class ServletUtils {
         return json;
     }
 
-    protected static JSONObject createJSONListPart(List<Participant> part){
+    protected static JSONObject createJSONListPart(List<Participant> part) {
         JSONObject json = new JSONObject();
         try {
             for (Participant p : part) {
@@ -260,8 +264,8 @@ public final class ServletUtils {
         }
         return json;
     }
-    
-    protected static JSONObject createJSONGroupID(Group grp){
+
+    protected static JSONObject createJSONGroupID(Group grp) {
         JSONObject json = new JSONObject();
 
         try {
@@ -273,8 +277,8 @@ public final class ServletUtils {
         }
         return json;
     }
-    
-    protected static JSONObject createJSONListLoc(List<Location> locat){
+
+    protected static JSONObject createJSONListLoc(List<Location> locat) {
         JSONObject json = new JSONObject();
         try {
             for (Location loc : locat) {

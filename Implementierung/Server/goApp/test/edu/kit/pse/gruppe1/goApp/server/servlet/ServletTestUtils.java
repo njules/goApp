@@ -3,6 +3,10 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -33,8 +37,8 @@ public final class ServletTestUtils {
     protected static void checkUser(JSONObject newJson, User user) {
         if (newJson != null) {
             try {
-                assertEquals(ErrorCodes.OK.toString(),
-                        newJson.getString(JSONParameter.ERROR_CODE.toString()));
+                assertEquals(ErrorCodes.OK.getErrorCode(),
+                        newJson.getInt(JSONParameter.ERROR_CODE.toString()));
                 assertEquals(user.getName(), newJson.getString(JSONParameter.USER_NAME.toString()));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -43,6 +47,35 @@ public final class ServletTestUtils {
         } else {
             fail();
         }
+    }
+    
+    /**
+     * calls private method and returns JSOnObject (which is result)
+     * 
+     * @param servlet servlet to test
+     * @param json json object to put into method
+     * @param name mehtod name
+     * @return result of method
+     */
+    protected static JSONObject callMethod(HttpServlet servlet, JSONObject json, String name) {
+        Method method;
+        JSONObject newJson = null;
+
+        // Call Method
+        try {
+            method = servlet.getClass().getDeclaredMethod(name, JSONObject.class);
+            method.setAccessible(true);
+            Object returnValue = method.invoke(servlet, json);
+
+            // assert Object returnValue is JSONObject
+            newJson = (JSONObject) returnValue;
+
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+            fail();
+        }
+        return newJson;
     }
 
 }
