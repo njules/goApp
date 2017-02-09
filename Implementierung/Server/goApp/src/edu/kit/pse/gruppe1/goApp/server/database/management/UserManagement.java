@@ -23,7 +23,7 @@ public class UserManagement implements Management {
      *            googleID of User
      * @return userID of entry
      */
-    public User add(String name, int googleId) {
+    public User add(String name, String googleId) {
         User user = new User(googleId, name);
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
         session.beginTransaction();
@@ -101,7 +101,7 @@ public class UserManagement implements Management {
         return user;
     }
 
-    public User getUserByGoogleId(int googleId) {
+    public User getUserByGoogleId(String googleId) {
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
         session.beginTransaction();
 

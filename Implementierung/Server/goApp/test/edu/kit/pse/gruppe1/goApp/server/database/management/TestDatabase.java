@@ -8,8 +8,10 @@ import static org.junit.Assert.assertThat;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
@@ -95,11 +97,11 @@ public class TestDatabase {
 
     public boolean isEqualToDatabase() {
         List<Group> dbGroups = new GroupManagement().getGroupsByName("");
-        Map<Event> events = new HashMap<>();
+        Set<Event> events = new HashSet<>();
         assertThat(groups.containsAll(dbGroups), is(true));
         assertThat(groups.containsAll(groups), is(true));
         for (Group group : dbGroups) {
-            events.addAll(group.getEvents());
+            assertThat(actual, matcher);
         }
     }
 
