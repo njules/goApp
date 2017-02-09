@@ -53,16 +53,7 @@ public final class UtilService {
                         group.getString(JSONParameter.GROUP_NAME.toString()),
                         founder);
             }
-                /*JSONArray name = json.getJSONArray(JSONParameter.GROUP_NAME.toString());
-                JSONArray id = json.getJSONArray(JSONParameter.GRUOP_ID.toString());
-                Group[] groups = new Group[name.length()];
-                for (int i = 0; i < name.length(); i++) {
-                    User user = new User(json.getInt(JSONParameter.USER_ID.toString()), json.getString(JSONParameter.USER_NAME.toString()));
-                    groups[i] = new Group(
-                            (int) id.get(i),
-                            (String) name.get(i),
-                            user);
-            }*/
+
             return groups;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -71,40 +62,38 @@ public final class UtilService {
     }
 
     public static User[] getUsers(JSONObject json) {
-        //TODO if(json == null)
+        User[] users = null;
         try {
-                JSONArray name = json.getJSONArray(JSONParameter.USER_NAME.toString());
-                JSONArray id = json.getJSONArray(JSONParameter.USER_ID.toString());
-                User[] users = new User[name.length()];
-                for (int i = 0; i < name.length(); i++) {
-                    User user = new User((int) id.get(i), (String) name.get(i));
-                return users;
+            JSONArray jsons = json.getJSONArray(JSONParameter.LIST_USER.toString());
+            for (int i = 0; i < jsons.length(); i++) {
+                JSONObject user = jsons.getJSONObject(i);
+                users[i] = new User(user.getInt(JSONParameter.USER_ID.toString()),
+                user.getString(JSONParameter.USER_NAME.toString()));
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return users;
     }
 
     public static Location[] getLocations(JSONObject json) {
-        JSONArray latitude = null;
+        Location[] locations = null;
         try {
-            latitude = json.getJSONArray(JSONParameter.LATITUDE.toString());
 
-            JSONArray longitude = json.getJSONArray(JSONParameter.LONGITUDE.toString());
-            JSONArray name = json.getJSONArray(JSONParameter.LOC_NAME.toString());
-            Location[] locations = new Location[latitude.length()];
-            for (int i = 0; i < name.length(); i++) {
-                locations[i] = new Location(
-                        (double) longitude.get(i),
-                        (double) latitude.get(i),
-                        (String) name.get(i));
+        JSONArray jsons = json.getJSONArray(JSONParameter.LIST_LOC.toString());
+            locations = new Location[jsons.length()];
+            for (int i = 0; i < jsons.length(); i++) {
+                JSONObject location = jsons.getJSONObject(i);
+                locations[i] = new Location(location.getDouble(JSONParameter.LATITUDE.toString()),
+                        location.getDouble(JSONParameter.LONGITUDE.toString()),
+                        location.getString(JSONParameter.LOC_NAME.toString()));
             }
             return locations;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return locations;
     }
 
     public static boolean isError(JSONObject json) {
@@ -144,15 +133,16 @@ public final class UtilService {
 
     private static Event[] getEvents(JSONObject result) {
         try {
-            JSONArray jsons = result.getJSONArray(JSONParameter.GROUP_NAME.toString());
+            JSONArray jsons = result.getJSONArray(JSONParameter.LIST_EVENT.toString());
             Event[] events = new Event[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
-                Location destination = new Location(jsons.getJSONObject(i).getDouble(JSONParameter.LATITUDE.toString()), jsons.getJSONObject(i).getDouble(JSONParameter.LONGITUDE.toString()), result.getString(JSONParameter.LOC_NAME.toString()));
-                User founder = new User(jsons.getJSONObject(i).getInt(JSONParameter.USER_ID.toString()), jsons.getJSONObject(i).getString(JSONParameter.USER_NAME.toString()));
+                JSONObject event = jsons.getJSONObject(i);
+                Location destination = new Location(event.getDouble(JSONParameter.LATITUDE.toString()), event.getDouble(JSONParameter.LONGITUDE.toString()), event.getString(JSONParameter.LOC_NAME.toString()));
+                User founder = new User(event.getInt(JSONParameter.USER_ID.toString()), event.getString(JSONParameter.USER_NAME.toString()));
                 events[i] = new Event(
-                        jsons.getJSONObject(i).getInt(JSONParameter.EVENT_ID.toString()),
-                        jsons.getJSONObject(i).getString(JSONParameter.EVENT_NAME.toString()),
-                        new Timestamp(jsons.getJSONObject(i).getLong(JSONParameter.EVENT_TIME.toString())),
+                        event.getInt(JSONParameter.EVENT_ID.toString()),
+                        event.getString(JSONParameter.EVENT_NAME.toString()),
+                        new Timestamp(event.getLong(JSONParameter.EVENT_TIME.toString())),
                         destination, founder);
             }
             return events;

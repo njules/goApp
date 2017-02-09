@@ -120,6 +120,8 @@ public enum JSONParameter {
      */
     LIST_EVENT("ListEvent"),
 
+    LIST_LOC("ListLocation"),
+
     STATUS("Status"),
 
     ACC_EVENTS("AcceptedEvents"),
