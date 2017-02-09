@@ -2,12 +2,9 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
-import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
-import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
-import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
-import edu.kit.pse.gruppe1.goApp.server.model.User;
+import edu.kit.pse.gruppe1.goApp.server.model.Participant;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
@@ -18,7 +15,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 public class EventServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private EventManagement eventMang;
+    private EventUserManagement eventUsrMang;
 
     /**
      * Default constructor.
@@ -64,7 +61,7 @@ public class EventServlet extends HttpServlet {
             // response was set in extractJSON
             return;
         }
-        
+
         try {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
@@ -82,13 +79,13 @@ public class EventServlet extends HttpServlet {
 
         switch (method) {
         case CREATE:
-            strResponse = create(jsonRequest);
+            strResponse = create(jsonRequest).toString();
             break;
         case GET_EVENT:
-            strResponse = getParticipates(jsonRequest);
+            strResponse = getParticipates(jsonRequest).toString();
             break;
         case CHANGE:
-            strResponse = change(jsonRequest);
+            strResponse = change(jsonRequest).toString();
             break;
         default:
             if (error.equals(ErrorCodes.OK)) {
@@ -106,7 +103,6 @@ public class EventServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         doGet(request, response);
     }
 
@@ -121,7 +117,7 @@ public class EventServlet extends HttpServlet {
      *            location, event name and the user creating this event.
      * @return A JSON string containing the previously created event is returned.
      */
-    private String create(JSONObject json) {
+    private JSONObject create(JSONObject json) {
         Event event = null;
         Timestamp time = null;
         String name = null;
@@ -141,7 +137,7 @@ public class EventServlet extends HttpServlet {
             locName = json.getString(JSONParameter.LOC_NAME.toString());
             time = new Timestamp(json.getLong(JSONParameter.EVENT_TIME.toString()));
             creatorID = json.getInt(JSONParameter.USER_ID.toString());
-            groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
+            groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
             err = ErrorCodes.READ_JSON;
         }
@@ -152,75 +148,75 @@ public class EventServlet extends HttpServlet {
             err = ErrorCodes.DB_ERROR;
         }
 
-        return createJSONObject(event, err, true);
-    }
-
-    /**
-     * calls methods for creating Error or Event JSONObject
-     * 
-     * @param event
-     *            Event to serialize
-     * @param error
-     *            Error to serialize
-     * @return String with serialized JSONObject
-     */
-    private String createJSONObject(Event event, JSONParameter.ErrorCodes error, boolean onlyID) {
         JSONObject result = null;
-        if (error.equals(ErrorCodes.OK)) {
-            if(onlyID){
-                result = ServletUtils.createJSONEventID(event);
-            } else{
-                result = ServletUtils.createJSONEvent(event);
-            }
+        if (err.equals(ErrorCodes.OK)) {
+            result = ServletUtils.createJSONEventID(event);
         } else {
-            result = ServletUtils.createJSONError(error);
+            result = ServletUtils.createJSONError(err);
         }
-        return result.toString();
+        return result;
     }
 
-//    /**
-//     * A method used to access information about an event. Every user, that can see this event may
-//     * request information about it. Users that are not a member of the group may not view the
-//     * groups events. Accessible information includes name, location, admin and time.
-//     * 
-//     * @param json
-//     *            A JSON object containing the event about which the information is requested.
-//     * @return A JSON string containing all information about the given event is returned.
-//     */
-//    private String getEvent(JSONObject json) {
-//        Event event = null;
-//        JSONParameter.ErrorCodes error = ErrorCodes.OK;
-//
-//        try {
-//            int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
-//            event = this.eventMang.getEvent(eventID);
-//        } catch (JSONException e) {
-//            error = ErrorCodes.READ_JSON;
-//        }
-//
-//        return createJSONObject(event, error, false);
-//
-//    }
-    
-    private String getParticipates(JSONObject json){
-        //TODO: rein eventID
-        //TODO: raus, alle User, mit ihrem Status
-        //Liste: User.ID + Status
-        
-      Event event = null;
-      JSONParameter.ErrorCodes error = ErrorCodes.OK;
-      Set<User> part;
-      try {
-          int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
-          event = this.eventMang.getEvent(eventID);
-          part = this.eventMang.getEvent(eventID).getParticipants();
-      } catch (JSONException e) {
-          error = ErrorCodes.READ_JSON;
-      }
+    // /**
+    // * calls methods for creating Error or Event JSONObject
+    // *
+    // * @param event
+    // * Event to serialize
+    // * @param error
+    // * Error to serialize
+    // * @return String with serialized JSONObject
+    // */
+    // private JSONObject createJSONObject(Event event, JSONParameter.ErrorCodes error, boolean
+    // onlyID) {
+    // //TODO: weg lassen
+    // JSONObject result = null;
+    // if (error.equals(ErrorCodes.OK)) {
+    // if (onlyID) {
+    // result = ServletUtils.createJSONEventID(event);
+    // } else {
+    // result = ServletUtils.createJSONEvent(event);
+    // }
+    // } else {
+    // result = ServletUtils.createJSONError(error);
+    // }
+    // return result;
+    // }
 
-      return createJSONObject(event, error, false);
-            
-        return null;
+    // /**
+    // * A method used to access information about an event. Every user, that can see this event may
+    // * request information about it. Users that are not a member of the group may not view the
+    // * groups events. Accessible information includes name, location, admin and time.
+    // *
+    // * @param json
+    // * A JSON object containing the event about which the information is requested.
+    // * @return A JSON string containing all information about the given event is returned.
+    // */
+    // private String getEvent(JSONObject json) {
+    // Event event = null;
+    // JSONParameter.ErrorCodes error = ErrorCodes.OK;
+    //
+    // try {
+    // int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
+    // event = this.eventMang.getEvent(eventID);
+    // } catch (JSONException e) {
+    // error = ErrorCodes.READ_JSON;
+    // }
+    //
+    // return createJSONObject(event, error, false);
+    //
+    // }
+
+    private JSONObject getParticipates(JSONObject json) {
+        JSONParameter.ErrorCodes error = ErrorCodes.OK;
+        List<Participant> part = null;
+        try {
+            int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
+            part = this.eventUsrMang.getParticipants(eventID);
+        } catch (JSONException e) {
+            error = ErrorCodes.READ_JSON;
+        }
+
+        return ServletUtils.createJSONListPart(part);
     }
 
     /**
@@ -232,7 +228,7 @@ public class EventServlet extends HttpServlet {
      *            The JSON object contains an event with the updated information.
      * @return A JSON string containing the updated information about the event is returned.
      */
-    private String change(JSONObject json) {
+    private JSONObject change(JSONObject json) {
         Event event = null;
         boolean valuesChanged = false;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
@@ -243,7 +239,7 @@ public class EventServlet extends HttpServlet {
             event = this.eventMang.getEvent(eventID);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
-            return createJSONObject(event, error, false);
+            return ServletUtils.createJSONError(error);
         }
 
         // for the following part: if attribute is in json Object - change value in Event
@@ -283,39 +279,45 @@ public class EventServlet extends HttpServlet {
         } catch (JSONException e) {
             // do nothing, because it can happen
         }
-//TODO: gibts noch nicht
-//        try {
-//            int creatorID = json.getInt(JSONParameter.USER_ID.toString());
-//            UserManagement usMang = new UserManagement();
-//            User creator = usMang.getUser(creatorID);
-//            if (creator != null) {
-//                event.setCreator(creator);
-//                valuesChanged = true;
-//            } else {
-//                error = ErrorCodes.DB_ERROR;
-//            }
-//        } catch (JSONException e) {
-//            // do nothing, because it can happen
-//        }
-//        try {
-//            int groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
-//            GroupManagement grMang = new GroupManagement();
-//            Group group = grMang.getGroup(groupID);
-//            if (group != null) {
-//                event.setGroup(group);
-//                valuesChanged = true;
-//            } else {
-//                error = ErrorCodes.DB_ERROR;
-//            }
-//        } catch (JSONException e) {
-//            // do nothing, because it can happen
-//        }
+        // TODO: gibts noch nicht
+        // try {
+        // int creatorID = json.getInt(JSONParameter.USER_ID.toString());
+        // UserManagement usMang = new UserManagement();
+        // User creator = usMang.getUser(creatorID);
+        // if (creator != null) {
+        // event.setCreator(creator);
+        // valuesChanged = true;
+        // } else {
+        // error = ErrorCodes.DB_ERROR;
+        // }
+        // } catch (JSONException e) {
+        // // do nothing, because it can happen
+        // }
+        // try {
+        // int groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
+        // GroupManagement grMang = new GroupManagement();
+        // Group group = grMang.getGroup(groupID);
+        // if (group != null) {
+        // event.setGroup(group);
+        // valuesChanged = true;
+        // } else {
+        // error = ErrorCodes.DB_ERROR;
+        // }
+        // } catch (JSONException e) {
+        // // do nothing, because it can happen
+        // }
 
         if (valuesChanged) {
             eventMang.update(event);
         }
         event = this.eventMang.getEvent(eventID);
-        return createJSONObject(event, error, false);
+        JSONObject result = null;
+        if (error.equals(ErrorCodes.OK)) {
+            result = ServletUtils.createJSONEvent(event);
+        } else {
+            result = ServletUtils.createJSONError(error);
+        }
+        return result;
     }
 
 }

@@ -1,6 +1,11 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
+import java.util.List;
+
 import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 
 import edu.kit.pse.gruppe1.goApp.server.model.*;
 
@@ -18,7 +23,7 @@ public class UserManagement implements Management {
      *            googleID of User
      * @return userID of entry
      */
-    public User add(String name, int googleId) {
+    public User add(String name, String googleId) {
         User user = new User(googleId, name);
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
         session.beginTransaction();
@@ -94,6 +99,21 @@ public class UserManagement implements Management {
         User user = (User) session.get(User.class, userId);
         session.getTransaction().commit();
         return user;
+    }
+
+    public User getUserByGoogleId(String googleId) {
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
+
+        @SuppressWarnings("unchecked")
+        List<User> users = session.createCriteria(User.class)
+                .add(Restrictions.eq("googleId", googleId)).list();
+        session.getTransaction().commit();
+        if (users.size() != 1) {
+            return null;
+        }
+
+        return users.get(0);
     }
 
     @Override
