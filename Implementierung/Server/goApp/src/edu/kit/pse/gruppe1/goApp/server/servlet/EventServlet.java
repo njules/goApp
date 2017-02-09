@@ -317,6 +317,7 @@ public class EventServlet extends HttpServlet {
         } else {
             result = ServletUtils.createJSONError(error);
         }
+        //TODO: nur Fehlercode zurückgeben
         return result;
     }
 

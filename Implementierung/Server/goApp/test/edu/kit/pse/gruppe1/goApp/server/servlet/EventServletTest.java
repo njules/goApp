@@ -3,12 +3,14 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +35,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
+import edu.kit.pse.gruppe1.goApp.server.model.Participant;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
 public class EventServletTest {
@@ -137,7 +140,7 @@ public class EventServletTest {
         when(mockEventMang.add(event.getName(), event.getLocation(), event.getTimestamp(),
                 event.getCreator().getUserId(), event.getGroup().getGroupId())).thenReturn(event);
 
-        newJson = method(json, "create");
+        newJson = ServletTestUtils.callMethod(servlet, json, "create");
         try {
             assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
                     ErrorCodes.OK.getErrorCode());
@@ -150,32 +153,31 @@ public class EventServletTest {
             fail();
         }
     }
+    
+    private List<Participant> createPartList(){
+        List<Participant> part = new ArrayList<Participant>();
+        Event e1 = createEvent();
+        User u1 = new User();
+                
+        return part;
+    }
 
-    private JSONObject method(JSONObject json, String name) {
-        Method method;
+    @Test
+    public void testGetParticipates() {
+        JSONObject json = new JSONObject();
         JSONObject newJson = null;
-
-        // Call Method
+        List<Participant> part = createPartList();
         try {
-            method = servlet.getClass().getDeclaredMethod(name, JSONObject.class);
-            method.setAccessible(true);
-            Object returnValue = method.invoke(servlet, json);
-
-            // assert Object returnValue is JSONObject
-            newJson = (JSONObject) returnValue;
-
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException e) {
+            json.put(JSONParameter.EVENT_ID.toString(), 128);
+        } catch (JSONException e) {
             e.printStackTrace();
             fail();
         }
-        return newJson;
-    }
 
-    @Ignore
-    @Test
-    public void testGetParticipates() {
-        fail("Not yet implemented");
+        /*
+         * this.status = status; this.event = event; this.user = user;
+         */
+        // part = this.eventUsrMang.getParticipants(eventID);
     }
 
     @Ignore

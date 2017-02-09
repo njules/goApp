@@ -142,9 +142,9 @@ public enum JSONParameter {
     NEW_EVENTS("NewEvents"),
 
     /**
-     * Google ID TODO
+     * Google Token
      */
-    GOOGLE_ID("GoogleId");
+    GOOGLE_TOKEN("GoogleToken");
 
     private final String fieldDescription;
 
@@ -175,6 +175,28 @@ public enum JSONParameter {
             }
         }
         return null;
+    }
+
+    /**
+     * enum with status codes
+     *
+     */
+    public enum Status {
+        REJECT(1), 
+        
+        ACCEPT(2), 
+        
+        GO(3);
+
+        private final int status;
+
+        private Status(int status) {
+            this.status = status;
+        }
+
+        public int getStatus() {
+            return status;
+        }
     }
 
     /**
@@ -370,6 +392,7 @@ public enum JSONParameter {
         /**
          * Go.setStarted
          */
+        @Deprecated
         SET_START,
 
         /**
@@ -383,7 +406,8 @@ public enum JSONParameter {
         SYNC_LOC,
 
         /**
-         * TODO: Particpate zusammenfassen, Status prüfen, dann methode aufrufen
+         * Participate.setStatus
+         * replaces accept, reject and set_start
          */
         SET_STATUS,
 
@@ -400,11 +424,13 @@ public enum JSONParameter {
         /**
          * Participate.accept Request.accept
          */
+        @Deprecated
         ACCEPT,
 
         /**
          * Participate.reject Request.reject
          */
+        @Deprecated
         REJECT,
 
         /**
