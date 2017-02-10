@@ -23,7 +23,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
-import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Status;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
 
 public class ParticipateServletTest {
     private ParticipateServlet servlet;
@@ -63,14 +63,14 @@ public class ParticipateServletTest {
         // set up input
         final int event = 5;
         final int user = 7;
-        final Status status = Status.ACCEPT;
+        final Status status = Status.PARTICIPATE;
         // prepare input JSON parameter
         try {
             JSONObject json = new JSONObject();
             json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_STATUS);
             json.put(JSONParameter.USER_ID.toString(), user);
             json.put(JSONParameter.EVENT_ID.toString(), event);
-            json.put(JSONParameter.STATUS.toString(), status.getStatus());
+            json.put(JSONParameter.STATUS.toString(), status.getValue());
             jsonRequest = json.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -81,7 +81,7 @@ public class ParticipateServletTest {
             when(httpRequest.getReader()).thenReturn(request);
             when(httpResponse.getWriter()).thenReturn(response);
             when(request.readLine()).thenReturn(jsonRequest);
-            when(eventUserManager.updateStatus(event, user, edu.kit.pse.gruppe1.goApp.server.model.Status.PARTICIPATE)).thenReturn(true);
+            when(eventUserManager.updateStatus(event, user, status)).thenReturn(true);
        } catch (IOException e) {
             e.printStackTrace();
             fail("Failed mocking!\n");
@@ -97,6 +97,7 @@ public class ParticipateServletTest {
         verify(response).println(argCap.capture());
         try {
             JSONObject json = new JSONObject(argCap.getValue());
+            System.out.println(json.getInt(JSONParameter.ERROR_CODE.toString()));
             assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
