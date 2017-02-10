@@ -47,9 +47,11 @@ public final class ServletUtils {
     private ServletUtils() {
     }
 
-    /**Checks wether a User is already in the Database.
+    /**
+     * Checks wether a User is already in the Database.
      * 
-     * @param googleId which should be testet
+     * @param googleId
+     *            which should be testet
      * @return true if googleId user is in the database
      */
     protected static boolean isUserAlreadyRegistrated(String googleId) {
@@ -147,6 +149,15 @@ public final class ServletUtils {
 
     protected static JSONObject createJSONListPart(List<Participant> part) {
         JSONObject json = new JSONObject();
+        if (part.isEmpty()) {
+            try {
+                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
+                return json;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
         try {
             for (Participant p : part) {
                 json.append(JSONParameter.LIST_PART.toString(), createJSONParticipate(p));
@@ -241,6 +252,15 @@ public final class ServletUtils {
 
     protected static JSONObject createJSONListEvent(List<Event> event) {
         JSONObject json = new JSONObject();
+        if (event.isEmpty()) {
+            try {
+                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
+                return json;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
         try {
             for (Event evt : event) {
                 json.append(JSONParameter.LIST_EVENT.toString(), createJSONEvent(evt));
@@ -252,11 +272,15 @@ public final class ServletUtils {
         }
         return json;
     }
-    
+
     /**
      * creates two separate lists of events, both of which are relevant to the user.
-     * @param list1 containing all events the user actively participates in (JSONParameter.ACC_EVENTS)
-     * @param list2 containing all new events the user has yet to decide if he wants to participate or decline (JSONParameter.NEW_EVENTS)
+     * 
+     * @param list1
+     *            containing all events the user actively participates in (JSONParameter.ACC_EVENTS)
+     * @param list2
+     *            containing all new events the user has yet to decide if he wants to participate or
+     *            decline (JSONParameter.NEW_EVENTS)
      * @return JSONObject containing both lists and ErrorCodes.OK
      */
     protected static JSONObject createJSONDoubleListEvent(List<Event> list1, List<Event> list2) {
@@ -278,6 +302,15 @@ public final class ServletUtils {
 
     protected static JSONObject createJSONListUsr(List<User> user) {
         JSONObject json = new JSONObject();
+        if (user.isEmpty()) {
+            try {
+                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
+                return json;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
         try {
             for (User usr : user) {
                 json.append(JSONParameter.LIST_USER.toString(), createJSONUser(usr));
@@ -292,6 +325,15 @@ public final class ServletUtils {
 
     protected static JSONObject createJSONListGrp(List<Group> group) {
         JSONObject json = new JSONObject();
+        if (group.isEmpty()) {
+            try {
+                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
+                return json;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
         try {
             for (Group grp : group) {
                 json.append(JSONParameter.LIST_GROUP.toString(), createJSONGroup(grp));
@@ -319,6 +361,15 @@ public final class ServletUtils {
 
     protected static JSONObject createJSONListLoc(List<Location> locat) {
         JSONObject json = new JSONObject();
+        if (locat.isEmpty()) {
+            try {
+                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
+                return json;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
         try {
             for (Location loc : locat) {
                 json.append(JSONParameter.LIST_LOC.toString(), createJSONLocation(loc));
