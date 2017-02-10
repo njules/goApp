@@ -119,7 +119,7 @@ public class GroupServletTest {
         try {
             JSONObject json = new JSONObject(argCap.getValue());
             assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
-            assertEquals(json.getInt(JSONParameter.GROUP_ID.toString()), group.getGroupId());
+            assertEquals(json.getInt(JSONParameter.GROUP_ID.toString()), group.getGroupId().intValue());
         } catch (JSONException e) {
             e.printStackTrace();
             fail("Failed to read JSON response!\n");
@@ -128,7 +128,44 @@ public class GroupServletTest {
 
     @Test
     public void testGroupDeleting() {
-        fail("Not yet implemented");
+        // set up input
+        final int group = 2;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DELETE);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(groupManager.delete(group)).thenReturn(true);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
     }
 
     @Test
