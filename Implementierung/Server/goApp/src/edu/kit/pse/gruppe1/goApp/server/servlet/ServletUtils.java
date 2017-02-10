@@ -135,6 +135,7 @@ public final class ServletUtils {
         JSONObject json = new JSONObject();
         try {
             json.put(JSONParameter.USER_ID.toString(), part.getUser().getUserId());
+            json.put(JSONParameter.USER_NAME.toString(), part.getUser().getName());
             json.put(JSONParameter.STATUS.toString(), part.getStatus());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {

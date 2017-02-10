@@ -179,15 +179,16 @@ public enum JSONParameter {
 
     /**
      * enum with status codes
+     * 
      * @See #edu.kit.pse.gruppe1.goApp.server.model.Status
      *
      */
     @Deprecated
     public enum Status {
-        REJECT(1), 
-        
-        ACCEPT(2), 
-        
+        REJECT(1),
+
+        ACCEPT(2),
+
         GO(3);
 
         private final int status;
@@ -254,7 +255,22 @@ public enum JSONParameter {
         /**
          * Method is not valid
          */
-        METH_ERROR(9, "Method not found.");
+        METH_ERROR(9, "Method not found."),
+
+        /**
+         * Connection to server had some problems
+         */
+        CONNECTION_FAILED(10, "Connection to server failed."),
+
+        /**
+         * Internal Server Error
+         */
+        ERROR_ON_SERVER(11, "Internal Server Error"),
+
+        /**
+         * A list could not be created
+         */
+        EMPTY_LIST(12, "No entry matching arguments was found.");
 
         private final String fieldDescription;
         private final int errCode;
@@ -330,11 +346,10 @@ public enum JSONParameter {
          */
         CHANGE,
 
-         /**
+        /**
          * User.getUser
          */
-        @Deprecated
-         GET_USER,
+        @Deprecated GET_USER,
 
         /**
          * Event.getEvent Group.getEvents
@@ -342,11 +357,10 @@ public enum JSONParameter {
          */
         GET_EVENT,
 
-         /**
+        /**
          * Go.getStartedParticpants
          */
-        @Deprecated
-         GET_START,
+        @Deprecated GET_START,
 
         /**
          * Group.getMembers (former Group.getGroup)
@@ -363,11 +377,10 @@ public enum JSONParameter {
          */
         GET_GRP_MEM,
 
-         /**
+        /**
          * Location.getCluster
          */
-        @Deprecated
-         GET_CLUSTER,
+        @Deprecated GET_CLUSTER,
 
         /**
          * RequestSearchServlet.getRequestsByUser
@@ -397,8 +410,7 @@ public enum JSONParameter {
         /**
          * Go.setStarted
          */
-        @Deprecated
-        SET_START,
+        @Deprecated SET_START,
 
         /**
          * Group.setFounder
@@ -411,8 +423,7 @@ public enum JSONParameter {
         SYNC_LOC,
 
         /**
-         * Participate.setStatus
-         * replaces accept, reject and set_start
+         * Participate.setStatus replaces accept, reject and set_start
          */
         SET_STATUS,
 
@@ -427,14 +438,12 @@ public enum JSONParameter {
         LOGIN,
 
         /**
-         * @Deprecated only for Participate.accept
-         *  Request.accept
+         * @Deprecated only for Participate.accept Request.accept
          */
         ACCEPT,
 
         /**
-         * @Deprecated only for Participate.reject 
-         * Request.reject
+         * @Deprecated only for Participate.reject Request.reject
          */
         REJECT,
 
