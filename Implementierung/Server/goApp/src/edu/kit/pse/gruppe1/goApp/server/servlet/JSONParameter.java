@@ -134,7 +134,7 @@ public enum JSONParameter {
     /**
      * Accepted Events
      */
-    ACC_Events("AcceptedEvents"),
+    ACC_EVENTS("AcceptedEvents"),
 
     /**
      * New Events
@@ -179,8 +179,10 @@ public enum JSONParameter {
 
     /**
      * enum with status codes
+     * @See #edu.kit.pse.gruppe1.goApp.server.model.Status
      *
      */
+    @Deprecated
     public enum Status {
         REJECT(1), 
         
@@ -328,10 +330,11 @@ public enum JSONParameter {
          */
         CHANGE,
 
-        // /**
-        // * User.getUser
-        // */
-        // GET_USER,
+         /**
+         * User.getUser
+         */
+        @Deprecated
+         GET_USER,
 
         /**
          * Event.getEvent Group.getEvents
@@ -339,13 +342,14 @@ public enum JSONParameter {
          */
         GET_EVENT,
 
-        // /**
-        // * Go.getStartedParticpants
-        // */
-        // GET_START,
+         /**
+         * Go.getStartedParticpants
+         */
+        @Deprecated
+         GET_START,
 
         /**
-         * Group.getGroup TODO: Methode umbenenen
+         * Group.getMembers (former Group.getGroup)
          */
         GET_MEMBERS,
 
@@ -359,10 +363,11 @@ public enum JSONParameter {
          */
         GET_GRP_MEM,
 
-        // /**
-        // * Location.getCluster
-        // */
-        // GET_CLUSTER,
+         /**
+         * Location.getCluster
+         */
+        @Deprecated
+         GET_CLUSTER,
 
         /**
          * RequestSearchServlet.getRequestsByUser
@@ -401,7 +406,7 @@ public enum JSONParameter {
         SET_FOUNDER,
 
         /**
-         * Location TODO: kombinierte Methode
+         * Location.getCluster and Location.setGPS
          */
         SYNC_LOC,
 
@@ -422,15 +427,15 @@ public enum JSONParameter {
         LOGIN,
 
         /**
-         * Participate.accept Request.accept
+         * @Deprecated only for Participate.accept
+         *  Request.accept
          */
-        @Deprecated
         ACCEPT,
 
         /**
-         * Participate.reject Request.reject
+         * @Deprecated only for Participate.reject 
+         * Request.reject
          */
-        @Deprecated
         REJECT,
 
         /**

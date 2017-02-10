@@ -83,7 +83,7 @@ public class GroupServlet extends HttpServlet {
             response.getWriter().println(getEvents(jsonRequest));
             break;
         case GET_MEMBERS:
-            response.getWriter().println(getGroup(jsonRequest));
+            response.getWriter().println(getMembers(jsonRequest));
             break;
         case SET_FOUNDER:
             response.getWriter().println(setFounder(jsonRequest));
@@ -181,24 +181,9 @@ public class GroupServlet extends HttpServlet {
         try {
             int group = json.getInt(JSONParameter.GROUP_ID.toString());
             int member = json.getInt(JSONParameter.USER_ID.toString());
-          //TODO: Merge Conflict lösen
-//Ab hier Code aus Servlet
-            ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member));
-            List<Event> eventList2 = eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, member);
-            eventList2.addAll(eventUserManager.getEventsByStatus(Status.STARTED, group, member));
-            //TODO return both lists seperateley
-            return ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member)).toString();
-//bis hier =======
-            //TODO different keys
-            JSONObject result = new JSONObject();
             List<Event> events = eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, member);
             events.addAll(eventUserManager.getEventsByStatus(Status.STARTED, group, member));
-            result.put(JSONParameter.ACC_Events.toString(), ServletUtils.createJSONListEvent(events));
-            result.put(JSONParameter.NEW_EVENTS.toString(), ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member)));
-           //TODO real ErrorCode
-            result.put(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK.getErrorCode());
-            return result.toString();
-//und bis hier aus Master
+            return ServletUtils.createJSONDoubleListEvent(events, eventUserManager.getEventsByStatus(Status.INVITED, group, member)).toString();
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
@@ -207,10 +192,10 @@ public class GroupServlet extends HttpServlet {
 
 	/**
 	 * This method returns all members of a given group and may be invoked by any member of that group.
-	 * @param json JSON object containing the ID of the group about which the information is requested.
-	 * @return Returns a JSON string containing  the groups members.
+	 * @param json JSON object containing the ID of the group about which the members are requested.
+	 * @return Returns a JSON string containing the groups members.
 	 */
-	private String getGroup(JSONObject json) {
+	private String getMembers(JSONObject json) {
         try {
             int groupID = json.getInt(JSONParameter.GROUP_ID.toString());
             return ServletUtils.createJSONListUsr(groupUserManager.getUsers(groupID)).toString();

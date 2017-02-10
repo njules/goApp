@@ -7,19 +7,17 @@ import java.util.List;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -36,7 +34,9 @@ import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.model.Participant;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 public class EventServletTest {
     private EventServlet servlet;
@@ -119,17 +119,6 @@ public class EventServletTest {
         return event;
     }
 
-    private JSONObject createJSONEventwID(Event event) {
-        JSONObject json = createJSONEvent(event);
-        try {
-            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            fail();
-        }
-        return json;
-    }
-
     @Test
     public void testCreate() {
         Event event = createEvent();
@@ -144,55 +133,105 @@ public class EventServletTest {
         try {
             assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
                     ErrorCodes.OK.getErrorCode());
-
-            // needed to cast, because event.getEventId return Integer instead of int
-            assertEquals(newJson.getInt(JSONParameter.EVENT_ID.toString()),
-                    (int) event.getEventId());
         } catch (JSONException e) {
             e.printStackTrace();
             fail();
         }
     }
-    
-    private List<Participant> createPartList(){
+
+    private List<Participant> createPartList() {
         List<Participant> part = new ArrayList<Participant>();
         Event e1 = createEvent();
         User u1 = new User();
-                
+        User u2 = new User();
+        u1.setUserId(1);
+        u2.setUserId(2);
+        part.add(new Participant(Status.INVITED.getValue(), e1, u1));
+        part.add(new Participant(Status.PARTICIPATE.getValue(), e1, u2));
         return part;
     }
 
     @Test
     public void testGetParticipates() {
         JSONObject json = new JSONObject();
+        JSONObject internJson = null;
+        JSONArray arrJson = null;
         JSONObject newJson = null;
         List<Participant> part = createPartList();
+        int eventID = createEvent().getEventId();
+        int userID = -1;
+        String name = "getParticipates";
         try {
-            json.put(JSONParameter.EVENT_ID.toString(), 128);
+            json.put(JSONParameter.EVENT_ID.toString(), eventID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        when(mockEventUsrMang.getParticipants(eventID)).thenReturn(part);
+        newJson = ServletTestUtils.callMethod(servlet, json, name);
+
+        try {
+            arrJson = newJson.getJSONArray(JSONParameter.LIST_PART.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             fail();
         }
 
-        /*
-         * this.status = status; this.event = event; this.user = user;
-         */
-        // part = this.eventUsrMang.getParticipants(eventID);
+        for (int i = 0; i < arrJson.length(); i++) {
+            try {
+                internJson = arrJson.getJSONObject(i);
+                userID = internJson.getInt(JSONParameter.USER_ID.toString());
+
+                for (Participant p : part) {
+                    if (p.getUser().getUserId() == userID) {
+                        assertEquals((int) p.getStatus(),
+                                internJson.getInt(JSONParameter.STATUS.toString()));
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                fail();
+            }
+        }
     }
 
-    @Ignore
     @Test
     public void testChange() {
-        fail("Not yet implemented");
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        Event event = createEvent();
+        String name = "change";
+        
+        when(mockEventMang.getEvent(event.getEventId())).thenReturn(event);
+        
+        try {
+            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
+            json.put(JSONParameter.METHOD.toString(), Methods.CHANGE.toString());
+            json.put(JSONParameter.EVENT_NAME.toString(),"New Name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockEventMang.update(any(Event.class))).thenReturn(true);
+        newJson = ServletTestUtils.callMethod(servlet,json,name);
+        
+        try {
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()), ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
-    @Ignore
+
     @Test
     public void testDoGet() {
         fail("Not yet implemented");
     }
 
-    @Ignore
+
     @Test
     public void testDo() {
         fail("Not yet implemented");

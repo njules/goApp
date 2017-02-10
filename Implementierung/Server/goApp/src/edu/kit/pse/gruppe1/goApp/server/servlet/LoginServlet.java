@@ -42,8 +42,6 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // TODO: wenn Methode register ->neues Token, bei LogIn prüfen
-
         String strResponse = null;
         JSONObject jsonRequest = null;
         JSONParameter.Methods method = null;
@@ -94,7 +92,6 @@ public class LoginServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO: was hier tun?
         doGet(request, response);
     }
 
@@ -108,26 +105,29 @@ public class LoginServlet extends HttpServlet {
      * @return Returns a JSON string containing the user that just registered.
      */
     private JSONObject register(JSONObject json) {
-        String googleTk = null;
+        String googleToken = null;
         String googleId = null;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
+        String name = null;
         User user = null;
         JSONObject result = null;
 
         try {
-            googleTk = json.getString(JSONParameter.GOOGLE_TOKEN.toString());
-            //Nutzername von Jörn
-            //getGoogleId, isuseralreadyegistrated , getgooglenamebytoken
-            String name = json.getString(JSONParameter.USER_NAME.toString());
-            //hier googleID von token holen
-            user = usrMang.add(name, googleId);
+            googleToken = json.getString(JSONParameter.GOOGLE_TOKEN.toString());
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
             return ServletUtils.createJSONError(error);
         }
+        googleId = ServletUtils.getGoogleIdByToken(googleToken);
+        name = ServletUtils.getGoogleNameByToken(googleToken);
+        user = usrMang.add(name, googleId);
+
         if (user != null) {
             result = ServletUtils.createJSONUser(user);
-        } else if (!error.equals(ErrorCodes.OK)) {
+        } else {
+            error = ErrorCodes.DB_ERROR;
+        }
+        if (error.equals(ErrorCodes.OK)) {
             result = ServletUtils.createJSONError(error);
         }
         return result;
@@ -143,24 +143,23 @@ public class LoginServlet extends HttpServlet {
      * @return Returns a JSON string containing the user that just logged in.
      */
     private JSONObject login(JSONObject json) {
-        int userID = -1;
+        String googleToken = null;
+        String googleId = null;
         User user = null;
 
         try {
-            userID = json.getInt(JSONParameter.USER_ID.toString());
-            //GoogleToken - String - als einziges
+            googleToken = json.getString(JSONParameter.GOOGLE_TOKEN.toString());
         } catch (JSONException e) {
-            // could happen, if no user exists and then no UserID was set;
-            userID = -1;
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
-        //GetUserbyGoogleID
-        //GoogleID auch String
-        //user = usrMang.getUser(userID);
-        if (user != null) {
+        googleId = ServletUtils.getGoogleIdByToken(googleToken);
+        
+        if(ServletUtils.isUserAlreadyRegistrated(googleId)){
+            user = usrMang.getUserByGoogleId(googleId);
             return ServletUtils.createJSONUser(user);
+        }else{
+            return register(json);
         }
-        // if User does not exist yet (getUser == null) register new User
-        return register(json);
     }
 
 }
