@@ -57,7 +57,7 @@ public class Event {
      *            the name of the Event
      * @param location
      *            the location of the Event
-     * @param time
+     * @param timestamp
      *            the time of the Event
      * @param group
      *            the group in which the Event is created
@@ -119,7 +119,7 @@ public class Event {
 
     /**
      * 
-     * @param time
+     * @param timestamp
      *            the time when the Event starts
      */
     public void setTimestamp(Timestamp timestamp) {

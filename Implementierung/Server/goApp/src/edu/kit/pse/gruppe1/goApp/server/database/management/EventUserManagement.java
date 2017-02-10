@@ -13,6 +13,13 @@ import edu.kit.pse.gruppe1.goApp.server.model.*;
  */
 public class EventUserManagement implements Management {
 
+    /**
+     * Constructor
+     */
+    public EventUserManagement() {
+        super();
+    }
+
     private Participant getParticipant(int participantId) {
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
         session.beginTransaction();
@@ -62,9 +69,9 @@ public class EventUserManagement implements Management {
     /**
      * updates Status of given user and eventID
      * 
-     * @param eventID
+     * @param eventId
      *            eventID to upate
-     * @param userID
+     * @param userId
      *            userID to update
      * @param newStatus
      *            new Status to set
@@ -93,9 +100,9 @@ public class EventUserManagement implements Management {
     /**
      * removes entry (with userID and eventID)
      * 
-     * @param eventID
+     * @param eventId
      *            eventID to remove
-     * @param userID
+     * @param userId
      *            userID to remove
      * @return true, if update was successfull, otherwise false
      */
@@ -107,7 +114,7 @@ public class EventUserManagement implements Management {
     /**
      * get all events in which given user participates
      * 
-     * @param userID
+     * @param userId
      *            ID of user
      * @return List of matching Events
      */
@@ -127,7 +134,7 @@ public class EventUserManagement implements Management {
     /**
      * get all users which participate in given Event
      * 
-     * @param eventID
+     * @param eventId
      *            ID of event
      * @return List of matching User
      */
@@ -149,7 +156,7 @@ public class EventUserManagement implements Management {
      * 
      * @param status
      *            status to search for
-     * @param eventID
+     * @param eventId
      *            ID of event to search for
      * @return List of matching Users
      */

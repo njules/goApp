@@ -172,10 +172,24 @@ public class Group {
         return null;
     }
 
+    /**
+     * adds user to group
+     * 
+     * @param user
+     *            user to add
+     * @return true, if success, otherwise false
+     */
     public boolean addUser(User user) {
         return users.add(user);
     }
 
+    /**
+     * removes user to group
+     * 
+     * @param userId
+     *            id of user to add
+     * @return true, if success, otherwise false
+     */
     public boolean removeUser(int userId) {
         if (founder.getUserId().equals(new Integer(userId))) {
             return false;
@@ -213,6 +227,13 @@ public class Group {
         return true;
     }
 
+    /**
+     * adds new request
+     * 
+     * @param request
+     *            request to add
+     * @return true, if success, otherwise false
+     */
     public boolean addRequest(Request request) {
         return requests.add(request);
     }
