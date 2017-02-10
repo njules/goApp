@@ -47,26 +47,33 @@ public final class ServletUtils {
     private ServletUtils() {
     }
 
-    /**
-     * TODO: checks if GoogleTokenisValid atm always true, and parameters will change in the future
+    /**Checks wether a User is already in the Database.
      * 
-     * @return
+     * @param googleId which should be testet
+     * @return true if googleId user is in the database
      */
-    
     protected static boolean isUserAlreadyRegistrated(String googleId) {
-        
+
         UserManagement management = new UserManagement();
-        
+
         User user = management.getUserByGoogleId(googleId);
-        
-        if(user == null) {
+
+        if (user == null) {
             return false;
         } else {
             return true;
         }
-        
-        
+
     }
+
+    /**
+     * Method which validates an GoogleToken and returns the GoogleId String.
+     * 
+     * @param idTokenString:
+     *            The Token which should be tested
+     * @return If token is valid return the GoogleId else return null.
+     */
+
     protected static String getGoogleIdByToken(String idTokenString) {
 
         String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
@@ -92,6 +99,13 @@ public final class ServletUtils {
         }
     }
 
+    /**
+     * Method which validates an GoogleToken and returns the name.
+     * 
+     * @param idTokenString:
+     *            The Token which should be tested
+     * @return If token is valid return the GoogleName else return null.
+     */
     protected static String getGoogleNameByToken(String idTokenString) {
 
         String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
@@ -120,7 +134,8 @@ public final class ServletUtils {
     protected static JSONObject createJSONParticipate(Participant part) {
         JSONObject json = new JSONObject();
         try {
-            json.put(JSONParameter.USER_ID.toString(), part.getUser());
+            json.put(JSONParameter.USER_ID.toString(), part.getUser().getUserId());
+            json.put(JSONParameter.USER_NAME.toString(), part.getUser().getName());
             json.put(JSONParameter.STATUS.toString(), part.getStatus());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
@@ -170,6 +185,7 @@ public final class ServletUtils {
 
             json.put(JSONParameter.GROUP_ID.toString(), event.getGroup().getGroupId());
             json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
+            json.put(JSONParameter.USER_NAME.toString(), event.getCreator().getName());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -228,6 +244,29 @@ public final class ServletUtils {
         try {
             for (Event evt : event) {
                 json.append(JSONParameter.LIST_EVENT.toString(), createJSONEvent(evt));
+            }
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+    
+    /**
+     * creates two separate lists of events, both of which are relevant to the user.
+     * @param list1 containing all events the user actively participates in (JSONParameter.ACC_EVENTS)
+     * @param list2 containing all new events the user has yet to decide if he wants to participate or decline (JSONParameter.NEW_EVENTS)
+     * @return JSONObject containing both lists and ErrorCodes.OK
+     */
+    protected static JSONObject createJSONDoubleListEvent(List<Event> list1, List<Event> list2) {
+        JSONObject json = new JSONObject();
+        try {
+            for (Event event : list1) {
+                json.append(JSONParameter.ACC_EVENTS.toString(), createJSONEvent(event));
+            }
+            for (Event event : list2) {
+                json.append(JSONParameter.NEW_EVENTS.toString(), createJSONEvent(event));
             }
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {

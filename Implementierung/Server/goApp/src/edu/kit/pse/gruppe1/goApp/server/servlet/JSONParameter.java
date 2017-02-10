@@ -134,7 +134,7 @@ public enum JSONParameter {
     /**
      * Accepted Events
      */
-    ACC_Events("AcceptedEvents"),
+    ACC_EVENTS("AcceptedEvents"),
 
     /**
      * New Events
@@ -142,9 +142,9 @@ public enum JSONParameter {
     NEW_EVENTS("NewEvents"),
 
     /**
-     * Google ID TODO
+     * Google Token
      */
-    GOOGLE_ID("GoogleId");
+    GOOGLE_TOKEN("GoogleToken");
 
     private final String fieldDescription;
 
@@ -175,6 +175,31 @@ public enum JSONParameter {
             }
         }
         return null;
+    }
+
+    /**
+     * enum with status codes
+     * 
+     * @See #edu.kit.pse.gruppe1.goApp.server.model.Status
+     *
+     */
+    @Deprecated
+    public enum Status {
+        REJECT(1),
+
+        ACCEPT(2),
+
+        GO(3);
+
+        private final int status;
+
+        private Status(int status) {
+            this.status = status;
+        }
+
+        public int getStatus() {
+            return status;
+        }
     }
 
     /**
@@ -230,7 +255,22 @@ public enum JSONParameter {
         /**
          * Method is not valid
          */
-        METH_ERROR(9, "Method not found.");
+        METH_ERROR(9, "Method not found."),
+
+        /**
+         * Connection to server had some problems
+         */
+        CONNECTION_FAILED(10, "Connection to server failed."),
+
+        /**
+         * Internal Server Error
+         */
+        ERROR_ON_SERVER(11, "Internal Server Error"),
+
+        /**
+         * A list could not be created
+         */
+        EMPTY_LIST(12, "No entry matching arguments was found.");
 
         private final String fieldDescription;
         private final int errCode;
@@ -306,10 +346,10 @@ public enum JSONParameter {
          */
         CHANGE,
 
-        // /**
-        // * User.getUser
-        // */
-        // GET_USER,
+        /**
+         * User.getUser
+         */
+        @Deprecated GET_USER,
 
         /**
          * Event.getEvent Group.getEvents
@@ -317,13 +357,13 @@ public enum JSONParameter {
          */
         GET_EVENT,
 
-        // /**
-        // * Go.getStartedParticpants
-        // */
-        // GET_START,
+        /**
+         * Go.getStartedParticpants
+         */
+        @Deprecated GET_START,
 
         /**
-         * Group.getGroup TODO: Methode umbenenen
+         * Group.getMembers (former Group.getGroup)
          */
         GET_MEMBERS,
 
@@ -337,10 +377,10 @@ public enum JSONParameter {
          */
         GET_GRP_MEM,
 
-        // /**
-        // * Location.getCluster
-        // */
-        // GET_CLUSTER,
+        /**
+         * Location.getCluster
+         */
+        @Deprecated GET_CLUSTER,
 
         /**
          * RequestSearchServlet.getRequestsByUser
@@ -370,7 +410,7 @@ public enum JSONParameter {
         /**
          * Go.setStarted
          */
-        SET_START,
+        @Deprecated SET_START,
 
         /**
          * Group.setFounder
@@ -378,12 +418,12 @@ public enum JSONParameter {
         SET_FOUNDER,
 
         /**
-         * Location TODO: kombinierte Methode
+         * Location.getCluster and Location.setGPS
          */
         SYNC_LOC,
 
         /**
-         * TODO: Particpate zusammenfassen, Status prüfen, dann methode aufrufen
+         * Participate.setStatus replaces accept, reject and set_start
          */
         SET_STATUS,
 
@@ -398,12 +438,12 @@ public enum JSONParameter {
         LOGIN,
 
         /**
-         * Participate.accept Request.accept
+         * @Deprecated only for Participate.accept Request.accept
          */
         ACCEPT,
 
         /**
-         * Participate.reject Request.reject
+         * @Deprecated only for Participate.reject Request.reject
          */
         REJECT,
 
