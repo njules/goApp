@@ -94,7 +94,7 @@ public class ParticipateServletTest {
             e.printStackTrace();
             fail("Failed to post HTTP request!\n");
         }
-        // test for correct location list
+        // test for correctly updated status
         verify(response).println(argCap.capture());
         try {
             JSONObject json = new JSONObject(argCap.getValue());
