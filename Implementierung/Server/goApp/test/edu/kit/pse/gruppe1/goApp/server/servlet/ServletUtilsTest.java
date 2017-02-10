@@ -17,6 +17,36 @@ public class ServletUtilsTest {
     }
 
     @Test
+    public void testIsUserAlreadyRegistrated() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testGetGoogleIdByToken() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testGetGoogleNameByToken() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testCreateJSONParticipate() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testCreateJSONListPart() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testCreateJSONEventID() {
+        fail("Not yet implemented");
+    }
+
+    @Test
     public void testCreateJSONEvent() {
         fail("Not yet implemented");
     }
@@ -37,6 +67,16 @@ public class ServletUtilsTest {
     }
 
     @Test
+    public void testCreateJSONListEvent() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testCreateJSONDoubleListEvent() {
+        fail("Not yet implemented");
+    }
+
+    @Test
     public void testCreateJSONListUsr() {
         fail("Not yet implemented");
     }
@@ -47,13 +87,24 @@ public class ServletUtilsTest {
     }
 
     @Test
+    public void testCreateJSONGroupID() {
+        fail("Not yet implemented");
+    }
+
+    @Test
+    public void testCreateJSONListLoc() {
+        fail("Not yet implemented");
+    }
+
+    @Test
     public void testCreateJSONError() {
         fail("Not yet implemented");
     }
 
     @Test
-    public void testGetMethod() {
+    public void testExtractJSON() {
         fail("Not yet implemented");
     }
+
 
 }
