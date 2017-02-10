@@ -45,7 +45,7 @@ public final class UtilService {
         try {
             JSONArray jsons = json.getJSONArray(JSONParameter.LIST_GROUP.toString());
             Group[] groups = new Group[jsons.length()];
-            for (int i = 0; i < jsons.length() ; i++) {
+            for (int i = 0; i < jsons.length(); i++) {
                 JSONObject group = jsons.getJSONObject(i);
                 User founder = new User(group.getInt(JSONParameter.USER_ID.toString()),
                         group.getString(JSONParameter.USER_NAME.toString()));
@@ -62,27 +62,26 @@ public final class UtilService {
     }
 
     public static User[] getUsers(JSONObject json) {
-        User[] users = null;
         try {
             JSONArray jsons = json.getJSONArray(JSONParameter.LIST_USER.toString());
+            User[] users = new User[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
                 JSONObject user = jsons.getJSONObject(i);
                 users[i] = new User(user.getInt(JSONParameter.USER_ID.toString()),
-                user.getString(JSONParameter.USER_NAME.toString()));
+                        user.getString(JSONParameter.USER_NAME.toString()));
             }
-
+            return users;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return users;
+        return null;
     }
 
     public static Location[] getLocations(JSONObject json) {
-        Location[] locations = null;
         try {
 
-        JSONArray jsons = json.getJSONArray(JSONParameter.LIST_LOC.toString());
-            locations = new Location[jsons.length()];
+            JSONArray jsons = json.getJSONArray(JSONParameter.LIST_LOC.toString());
+            Location[] locations = new Location[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
                 JSONObject location = jsons.getJSONObject(i);
                 locations[i] = new Location(location.getDouble(JSONParameter.LATITUDE.toString()),
@@ -93,7 +92,7 @@ public final class UtilService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return locations;
+        return null;
     }
 
     public static boolean isError(JSONObject json) {

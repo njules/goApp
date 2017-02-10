@@ -89,7 +89,7 @@ public class EventService extends IntentService {
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_GET);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
@@ -114,7 +114,7 @@ public class EventService extends IntentService {
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_CHANGE);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     @Override

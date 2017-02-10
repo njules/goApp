@@ -10,7 +10,7 @@
             android:orientation="vertical">
         <android.support.v7.widget.Toolbar
                 android:id="@+id/event_info_toolbar"
-                app:title="@{event.name + ' ' + event.time.toString()}"
+                app:title="@{event.name}"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="4dp"

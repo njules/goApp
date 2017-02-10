@@ -178,6 +178,7 @@ public enum JSONParameter {
         return null;
     }
 
+
     /**
      * enum with status codes
      * @See #edu.kit.pse.gruppe1.goApp.server.model.Status
@@ -201,6 +202,7 @@ public enum JSONParameter {
             return status;
         }
     }
+
 
     /**
      * Enum of all possible ErrorCodes
@@ -365,6 +367,8 @@ public enum JSONParameter {
         /**
          * Group.getMembers (former Group.getGroup)
          */
+        GET_MEMBERS,
+
         GET_MEMBERS,
 
         /**
