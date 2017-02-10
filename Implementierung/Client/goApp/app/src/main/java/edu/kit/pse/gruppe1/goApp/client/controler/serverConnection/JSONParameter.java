@@ -5,9 +5,7 @@ package edu.kit.pse.gruppe1.goApp.client.controler.serverConnection;
  */
 public enum JSONParameter {
   
-    // TODO: String weg machen ->�berfl�ssig?
-    // TODO: Gro�buchstaben -> mit Katha vorher abkl�ren -> wird zu Fehlern bei ihr f�hren.
-    /**
+	/**
      * 
      * ID of the request
      * 
@@ -29,7 +27,7 @@ public enum JSONParameter {
      * 
      */
 
-    GRUOP_ID("GroupID"),
+    GROUP_ID("GroupID"),
 
     /**
      * 
@@ -105,31 +103,47 @@ public enum JSONParameter {
     ERROR_CODE("ErrorCode"),
 
     /**
-     * List of User
+     * List of Users
      */
     LIST_USER("ListUser"),
 
     /**
-     * List of Group
+     * List of Groups
      */
-
     LIST_GROUP("ListGroup"),
 
     /**
-     * List of Group
+     * List of Events
      */
     LIST_EVENT("ListEvent"),
 
+    /**
+     * List of Locations
+     */
     LIST_LOC("ListLocation"),
 
+    /**
+     * List of Participates (UserID & Status)
+     */
+    LIST_PART("ListParticipate"),
+
+    /**
+     * Status of USer in Event
+     */
     STATUS("Status"),
 
+    /**
+     * Accepted Events
+     */
     ACC_EVENTS("AcceptedEvents"),
 
+    /**
+     * New Events
+     */
     NEW_EVENTS("NewEvents"),
 
     /**
-     * Google ID
+     * Google Token
      */
     GOOGLE_TOKEN("GoogleToken");
 
@@ -164,47 +178,99 @@ public enum JSONParameter {
         return null;
     }
 
-    public enum Status{
-        REJECT(1),
-        ACCEPT(2),
+    /**
+     * enum with status codes
+     * @See #edu.kit.pse.gruppe1.goApp.server.model.Status
+     *
+     */
+    @Deprecated
+    public enum Status {
+        REJECT(1), 
+        
+        ACCEPT(2), 
+        
         GO(3);
 
         private final int status;
-        private Status(int status){
+
+        private Status(int status) {
             this.status = status;
         }
-        public int getStatus(){
+
+        public int getStatus() {
             return status;
         }
     }
 
-    // TODO: JavaDocs
+    /**
+     * Enum of all possible ErrorCodes
+     *
+     */
     public enum ErrorCodes {
+        /**
+         * No error occured
+         */
         OK(0, "No error"),
 
+        /**
+         * Error while reading JSONObject
+         */
         READ_JSON(1, "JSON could not be read."),
 
+        /**
+         * Error while writing JSONObject
+         */
         WRITE_JSON(2, "JSON could not be wrote."),
 
+        /**
+         * JSONObject was empty
+         */
         EMPTY_JSON(3, "Empty JSON String"),
 
+        /**
+         * Error while database interaction or in database
+         */
         DB_ERROR(4, "Error in Database."),
 
+        /**
+         * too many user in one group, user limit was reached
+         */
         USR_LIMIT(5, "User limit was reached."),
 
+        /**
+         * too many groups for one user, group limit was reached
+         */
         GRP_LIMIT(6, "Group limit was reached."),
 
+        /**
+         * Error while IO operations
+         */
         IO_ERROR(7, "Error with IO Methods."),
 
+        /**
+         * Error while clustering locations
+         */
         ALGO_ERROR(8, "Error while processing Clusering."),
 
-
+        /**
+         * Method is not valid
+         */
         METH_ERROR(9, "Method not found."),
 
+        /**
+         * Connection to server had some problems
+         */
         CONNECTION_FAILED(10, "Connection to server failed."),
 
-        ERROR_ON_SERVER(11, "Internal Server Error");
+        /**
+         * Internal Server Error
+         */
+        ERROR_ON_SERVER(11, "Internal Server Error"),
 
+        /**
+         * A list could not be created
+         */
+        EMPTY_LIST(12, "No entry matching arguments was found.");
 
         private final String fieldDescription;
         private final int errCode;
@@ -214,18 +280,30 @@ public enum JSONParameter {
             errCode = code;
         }
 
-        // TODO: JavaDocs
+        /**
+         * return String of Enum
+         */
         @Override
         public String toString() {
             return fieldDescription;
         }
 
-        // TODO: JavaDocs
+        /**
+         * gets Error Code to enum value
+         * 
+         * @return error code
+         */
         public int getErrorCode() {
             return errCode;
         }
 
-        // TODO: JavaDocs
+        /**
+         * get enum value from String
+         * 
+         * @param s
+         *            String from enum
+         * @return enum value or null, if none exists with given String
+         */
         public static ErrorCodes fromString(String s) {
             for (ErrorCodes err : ErrorCodes.values()) {
                 if (err.toString().equals(s)) {
@@ -234,9 +312,15 @@ public enum JSONParameter {
             }
             return null;
         }
-        
-        //TODO: JavDocs
-        public static ErrorCodes fromErCode(int i){
+
+        /**
+         * get enum value from error code
+         * 
+         * @param i
+         *            error code
+         * @return enum value or null, if none exists with given String
+         */
+        public static ErrorCodes fromErCode(int i) {
             for (ErrorCodes err : ErrorCodes.values()) {
                 if (err.getErrorCode() == i) {
                     return err;
@@ -247,7 +331,10 @@ public enum JSONParameter {
 
     }
 
-    // TODO: JavaDocs
+    /**
+     * Enum with all possible methods
+     *
+     */
     public enum Methods {
         /**
          * Event.create Group.create Request.create
@@ -262,22 +349,23 @@ public enum JSONParameter {
         /**
          * User.getUser
          */
-        GET_USER,
+        @Deprecated GET_USER,
 
         /**
          * Event.getEvent Group.getEvents
+         * 
          */
         GET_EVENT,
 
         /**
          * Go.getStartedParticpants
          */
-        GET_START,
+        @Deprecated GET_START,
 
         /**
-         * Group.getGroup
+         * Group.getMembers (former Group.getGroup)
          */
-        GET_GROUP,
+        GET_MEMBERS,
 
         /**
          * GroupSearch.getGroupsByName
@@ -292,11 +380,7 @@ public enum JSONParameter {
         /**
          * Location.getCluster
          */
-        GET_CLUSTER,
-
-        SYNC_LOC,
-
-        SET_STATUS,
+        @Deprecated GET_CLUSTER,
 
         /**
          * RequestSearchServlet.getRequestsByUser
@@ -326,7 +410,7 @@ public enum JSONParameter {
         /**
          * Go.setStarted
          */
-        SET_START,
+        @Deprecated SET_START,
 
         /**
          * Group.setFounder
@@ -334,9 +418,14 @@ public enum JSONParameter {
         SET_FOUNDER,
 
         /**
-         * Location.setGPS
+         * Location.getCluster and Location.setGPS
          */
-        SET_GPS,
+        SYNC_LOC,
+
+        /**
+         * Participate.setStatus replaces accept, reject and set_start
+         */
+        SET_STATUS,
 
         /**
          * Login.register
@@ -349,12 +438,12 @@ public enum JSONParameter {
         LOGIN,
 
         /**
-         * Participate.accept Request.accept
+         * @Deprecated only for Participate.accept Request.accept
          */
         ACCEPT,
 
         /**
-         * Participate.reject Request.reject
+         * @Deprecated only for Participate.reject Request.reject
          */
         REJECT,
 
@@ -363,7 +452,13 @@ public enum JSONParameter {
          */
         NONE;
 
-        // TODO: JavaDocs
+        /**
+         * get enum value from given string
+         * 
+         * @param s
+         *            string to search for
+         * @return enum value or NONE, if no method existed with given string
+         */
         public static Methods fromString(String s) {
             for (Methods meth : Methods.values()) {
                 if (meth.toString().equals(s)) {
