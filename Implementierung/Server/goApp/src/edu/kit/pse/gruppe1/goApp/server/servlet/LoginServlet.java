@@ -39,6 +39,7 @@ public class LoginServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -90,6 +91,7 @@ public class LoginServlet extends HttpServlet {
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
@@ -153,11 +155,11 @@ public class LoginServlet extends HttpServlet {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
         googleId = ServletUtils.getGoogleIdByToken(googleToken);
-        
-        if(ServletUtils.isUserAlreadyRegistrated(googleId)){
+
+        if (ServletUtils.isUserAlreadyRegistrated(googleId)) {
             user = usrMang.getUserByGoogleId(googleId);
             return ServletUtils.createJSONUser(user);
-        }else{
+        } else {
             return register(json);
         }
     }
