@@ -3,8 +3,6 @@ package edu.kit.pse.gruppe1.goApp.server.database.management;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
 import edu.kit.pse.gruppe1.goApp.server.model.*;
@@ -13,6 +11,13 @@ import edu.kit.pse.gruppe1.goApp.server.model.*;
  * Manages User Table
  */
 public class UserManagement implements Management {
+
+    /**
+     * Constructor
+     */
+    public UserManagement() {
+        super();
+    }
 
     /**
      * creates new User and adds new entry to table
@@ -53,7 +58,7 @@ public class UserManagement implements Management {
     /**
      * updates Name of User
      * 
-     * @param userID
+     * @param userId
      *            ID from user to update
      * @param newName
      *            name to set
@@ -89,7 +94,7 @@ public class UserManagement implements Management {
     /**
      * get User with given userID
      * 
-     * @param userID
+     * @param userId
      *            ID of User to search for
      * @return found User
      */

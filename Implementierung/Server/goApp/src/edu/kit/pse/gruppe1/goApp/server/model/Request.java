@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "requestT", uniqueConstraints = @UniqueConstraint(columnNames = { "USER_ID",
-        "GROUP_ID" }))
+        "GROUP_ID" }) )
 public class Request {
 
     private Integer requestId;

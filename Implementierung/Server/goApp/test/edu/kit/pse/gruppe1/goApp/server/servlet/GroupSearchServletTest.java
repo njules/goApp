@@ -33,7 +33,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.User;
 public class GroupSearchServletTest {
     private GroupSearchServlet servlet;
     private String jsonRequest;
-    
+
     @Mock
     private HttpServletRequest httpRequest;
     @Mock
@@ -46,14 +46,14 @@ public class GroupSearchServletTest {
     private GroupManagement groupManager;
     @Mock
     private GroupUserManagement groupUserManager;
-    
+
     @Captor
     private ArgumentCaptor<String> argCap;
-    
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        
+
         servlet = new GroupSearchServlet();
         Field field = servlet.getClass().getDeclaredField("groupM");
         field.setAccessible(true);
@@ -92,7 +92,7 @@ public class GroupSearchServletTest {
             when(httpResponse.getWriter()).thenReturn(response);
             when(request.readLine()).thenReturn(jsonRequest);
             when(groupManager.getGroupsByName(name)).thenReturn(fakeGroups);
-       } catch (IOException | NullPointerException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
             fail("Failed mocking!\n");
         }
@@ -108,11 +108,13 @@ public class GroupSearchServletTest {
         List<Group> returnedGroups = new ArrayList<Group>();
         try {
             JSONObject json = new JSONObject(argCap.getValue());
-            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    JSONParameter.ErrorCodes.OK.getErrorCode());
             JSONArray array = json.getJSONArray(JSONParameter.LIST_GROUP.toString());
             for (int i = 0; i < array.length(); i++) {
                 JSONObject jsonGrp = array.getJSONObject(i);
-                returnedGroups.add(new Group(jsonGrp.getString(JSONParameter.GROUP_NAME.toString()), null));
+                returnedGroups.add(
+                        new Group(jsonGrp.getString(JSONParameter.GROUP_NAME.toString()), null));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -147,7 +149,7 @@ public class GroupSearchServletTest {
             when(httpResponse.getWriter()).thenReturn(response);
             when(request.readLine()).thenReturn(jsonRequest);
             when(groupUserManager.getGroups(member)).thenReturn(fakeGroups);
-       } catch (IOException | NullPointerException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
             fail("Failed mocking!\n");
         }
@@ -163,11 +165,13 @@ public class GroupSearchServletTest {
         List<Group> returnedGroups = new ArrayList<Group>();
         try {
             JSONObject json = new JSONObject(argCap.getValue());
-            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    JSONParameter.ErrorCodes.OK.getErrorCode());
             JSONArray array = json.getJSONArray(JSONParameter.LIST_GROUP.toString());
             for (int i = 0; i < array.length(); i++) {
                 JSONObject jsonGrp = array.getJSONObject(i);
-                returnedGroups.add(new Group(jsonGrp.getString(JSONParameter.GROUP_NAME.toString()), null));
+                returnedGroups.add(
+                        new Group(jsonGrp.getString(JSONParameter.GROUP_NAME.toString()), null));
             }
         } catch (JSONException e) {
             e.printStackTrace();

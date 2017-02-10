@@ -31,21 +31,17 @@ public class Location {
      */
     private String name;
 
+
     public Location() {
     }
 
-    /**
-     * 
-     * @param longitude
-     * @param latitude
-     * @param name
-     */
     public Location(double longitude, double latitude, String name) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.name = name;
     }
 
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "LOCATION_ID", unique = true, nullable = false)
@@ -56,6 +52,7 @@ public class Location {
     public void setLocationId(Integer locationId) {
         this.locationId = locationId;
     }
+
 
     @Column(name = "longitude")
     public Double getLongitude() {
