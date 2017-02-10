@@ -30,10 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.NotificationService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.*;
 import edu.kit.pse.gruppe1.goApp.client.databinding.NewEventActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
@@ -54,10 +51,10 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
     private EditText el;
     private Timestamp timestamp;
     private EventService eventService;
-    private LocationService locationService;
+    private LocationServiceNeu locationService;
 
-    GoogleMap googleMap;
-    MarkerOptions marker;
+    private GoogleMap googleMap;
+    private MarkerOptions marker;
 
 
     private ResultReceiver receiver;
@@ -96,10 +93,10 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         SupportMapFragment map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         map.getMapAsync(this);
         eventService = new EventService();
-        locationService = new LocationService();
+        locationService = new LocationServiceNeu();
         receiver = new ResultReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_CREATE));
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationService.RESULT_MY_LOCATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationServiceNeu.RESULT_MY_LOCATION));
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -143,16 +140,16 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         googleMap.setOnMapLongClickListener(this);
         marker = new MarkerOptions();
 
-        Intent intent = new Intent(this, LocationService.class);
-        intent.setAction(LocationService.ACTION_MY_LOCATION);
-        this.startService(intent);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
             ActivityCompat.requestPermissions(this, permissions, 0);
             return;
         }
         googleMap.setMyLocationEnabled(true);
+
+        Intent intent = new Intent(this, LocationServiceNeu.class);
+        intent.setAction(LocationServiceNeu.ACTION_MY_LOCATION);
+        this.startService(intent);
     }
 
     @Override
@@ -191,7 +188,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                         Log.i("MainThread", Thread.currentThread().getId()+"");
 
                         eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        Intent eventIntent = new Intent(context, LocationService.class);
+                        Intent eventIntent = new Intent(context, LocationServiceNeu.class);
                         eventIntent.setAction("TEST");
                         eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
                         eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
@@ -199,10 +196,10 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
 
                         GroupActivity.start(NewEventActivity.this);
                     break;
-                case LocationService.RESULT_MY_LOCATION:
-                    Toast.makeText(NewEventActivity.this, "TEST", Toast.LENGTH_LONG).show();
+                case LocationServiceNeu.RESULT_MY_LOCATION:
                     android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+                    break;
             }
         }
     }

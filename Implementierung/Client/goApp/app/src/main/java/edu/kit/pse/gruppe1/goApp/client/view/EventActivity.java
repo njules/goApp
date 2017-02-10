@@ -1,18 +1,23 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -21,6 +26,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationService;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationServiceNeu;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.EventInfoActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Location;
@@ -36,6 +43,10 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     private UserAdapter userAdapter;
     private Event event;
     private ResultReceiver receiver;
+    private EventService eventService;
+
+    private GoogleMap googleMap;
+    private MarkerOptions marker;
 
     public static void start(Activity activity, Event event) {
         Intent intent = new Intent(activity, EventActivity.class);
@@ -58,62 +69,56 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onStart(){
         super.onStart();
+        eventService = new EventService();
+        receiver = new ResultReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_GET));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationServiceNeu.RESULT_MY_LOCATION));
+
         binding.setEvent(event);
         participantRecyclerView = (RecyclerView) findViewById(R.id.participants_recycler_view);
         participantRecyclerView.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this);
         participantRecyclerView.setLayoutManager(linearLayoutManager);
-        userAdapter = new UserAdapter(fillDataset());
-        participantRecyclerView.setAdapter(userAdapter);
-        receiver = new ResultReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_GET));
-        //TODO hier getEvent von eventService starten
-    }
-
-    //TODO For Tests
-    private User[] fillDataset() {
-        User[] user = new User[20];
-        for (int i = 0; i < 20; i++) {
-            user[i] = new User(i,"Maxi"+i);
-        }
-        return user;
-    }
-
-    //TODO for Tests real methodes Location Service Cluster + own Location
-    private void cluster(){
-        ArrayList<Location> locations = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            locations.add(new Location(i*0.01,i*2,"Group"));
-        }
-        event.setClusterPoints(locations);
+        eventService.getEvent(this, event.getId());
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.i("Maps", "Map Ready");
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude())).title(event.getLocation().getName()));
-        cluster();
-        LocationService service = new LocationService();
-        Iterator<Location> iter = event.getClusterPoints().iterator();
-        while(iter.hasNext()){
-            Location location = iter.next();
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),location.getLongitude())).title(location.getName()));
+        this.googleMap = googleMap;
+        marker = new MarkerOptions();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
+            ActivityCompat.requestPermissions(this, permissions, 0);
+            return;
         }
+        googleMap.setMyLocationEnabled(true);
+
+        Intent intent = new Intent(this, LocationServiceNeu.class);
+        intent.setAction(LocationServiceNeu.ACTION_MY_LOCATION);
+        this.startService(intent);
     }
 
     private class ResultReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getStringExtra(UtilService.ERROR) != null) {
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                return;
+            }
             switch (intent.getAction()) {
                 case EventService.RESULT_GET:
-                    if (intent.getBooleanExtra("ERROR", false)) {
-                        userAdapter = new UserAdapter(fillDataset());
+                    if (intent.getParcelableArrayExtra(UtilService.USERS ) != null) {
+                        userAdapter = new UserAdapter((User[]) intent.getParcelableArrayExtra(UtilService.USERS));
                         participantRecyclerView.setAdapter(userAdapter);
                     }
                     break;
-                    //TODO default
+                case LocationServiceNeu.RESULT_MY_LOCATION:
+                    android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+                    break;
             }
         }
     }

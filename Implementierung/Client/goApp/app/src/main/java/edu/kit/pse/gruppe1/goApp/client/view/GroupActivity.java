@@ -155,7 +155,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
             notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, eventMove.getTime().getTime()-beforEvent, notifyAlarmIntent);
 
             eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            Intent eventIntent = new  Intent(context, LocationService.class);
+            Intent eventIntent = new  Intent(context, LocationServiceNeu.class);
             eventIntent.putExtra(UtilService.EVENT, eventMove);
             eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
             eventAlarmMgr.setExact(AlarmManager.RTC, eventMove.getTime().getTime()-beforEvent, eventAlarmIntent);
