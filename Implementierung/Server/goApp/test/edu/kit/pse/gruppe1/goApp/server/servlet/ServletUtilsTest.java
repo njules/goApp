@@ -6,6 +6,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.kit.pse.gruppe1.goApp.server.model.Participant;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+
 public class ServletUtilsTest {
 
     @Before
@@ -16,24 +20,18 @@ public class ServletUtilsTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
-    public void testIsUserAlreadyRegistrated() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testGetGoogleIdByToken() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testGetGoogleNameByToken() {
-        fail("Not yet implemented");
-    }
+    // Do not test: testIsUserAlreadyRegistrated(), testGetGoogleIdByToken() and
+    // testGetGoogleNameByToken()
 
     @Test
     public void testCreateJSONParticipate() {
         fail("Not yet implemented");
+        /* Participant part = new Participant(Status.STARTED);
+        
+        json.put(JSONParameter.USER_ID.toString(), part.getUser().getUserId());
+        json.put(JSONParameter.USER_NAME.toString(), part.getUser().getName());
+        json.put(JSONParameter.STATUS.toString(), part.getStatus());
+        json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());*/
     }
 
     @Test
@@ -105,6 +103,5 @@ public class ServletUtilsTest {
     public void testExtractJSON() {
         fail("Not yet implemented");
     }
-
 
 }
