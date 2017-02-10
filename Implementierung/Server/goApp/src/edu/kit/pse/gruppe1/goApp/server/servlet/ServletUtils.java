@@ -251,6 +251,29 @@ public final class ServletUtils {
         }
         return json;
     }
+    
+    /**
+     * creates two separate lists of events, both of which are relevant to the user.
+     * @param list1 containing all events the user actively participates in (JSONParameter.ACC_EVENTS)
+     * @param list2 containing all new events the user has yet to decide if he wants to participate or decline (JSONParameter.NEW_EVENTS)
+     * @return JSONObject containing both lists and ErrorCodes.OK
+     */
+    protected static JSONObject createJSONDoubleListEvent(List<Event> list1, List<Event> list2) {
+        JSONObject json = new JSONObject();
+        try {
+            for (Event event : list1) {
+                json.append(JSONParameter.ACC_EVENTS.toString(), createJSONEvent(event));
+            }
+            for (Event event : list2) {
+                json.append(JSONParameter.NEW_EVENTS.toString(), createJSONEvent(event));
+            }
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
 
     protected static JSONObject createJSONListUsr(List<User> user) {
         JSONObject json = new JSONObject();

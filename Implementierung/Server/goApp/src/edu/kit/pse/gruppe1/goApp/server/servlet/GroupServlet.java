@@ -181,13 +181,9 @@ public class GroupServlet extends HttpServlet {
         try {
             int group = json.getInt(JSONParameter.GROUP_ID.toString());
             int member = json.getInt(JSONParameter.USER_ID.toString());
-            JSONObject result = new JSONObject();
             List<Event> events = eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, member);
             events.addAll(eventUserManager.getEventsByStatus(Status.STARTED, group, member));
-            result.put(JSONParameter.ACC_EVENTS.toString(), ServletUtils.createJSONListEvent(events));
-            result.put(JSONParameter.NEW_EVENTS.toString(), ServletUtils.createJSONListEvent(eventUserManager.getEventsByStatus(Status.INVITED, group, member)));
-            result.put(JSONParameter.ERROR_CODE.toString(), JSONParameter.ErrorCodes.OK.getErrorCode());
-            return result.toString();
+            return ServletUtils.createJSONDoubleListEvent(events, eventUserManager.getEventsByStatus(Status.INVITED, group, member)).toString();
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
