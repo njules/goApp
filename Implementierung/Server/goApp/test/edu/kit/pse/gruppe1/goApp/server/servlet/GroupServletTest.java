@@ -350,9 +350,61 @@ public class GroupServletTest {
         assertTrue(going.isEmpty());
     }
     
+    //TODO
     @Test
     public void testMemberRequesting() {
-        fail("Not yet implemented");
+        // set up input
+        final List<User> fakeUsers = new ArrayList<User>();
+        fakeUsers.add(new User("0", "4ever"));
+        fakeUsers.add(new User("1", "alone"));
+        final int group = 65;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SYNC_LOC);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(groupUserManager.getUsers(group)).thenReturn(fakeUsers);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct location list
+        verify(response).println(argCap.capture());
+        List<User> result = new ArrayList<User>();
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
+            JSONArray array = json.getJSONArray(JSONParameter.LIST_USER.toString());
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jsonUsr = array.getJSONObject(i);
+                result.add(new User(jsonUsr.getString(JSONParameter.USER_ID.toString()), jsonUsr.getString(JSONParameter.USER_NAME.toString())));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+        for (User user : result) {
+            assertTrue(fakeUsers.contains(user));
+            fakeUsers.remove(user);
+        }
+        assertTrue(fakeUsers.isEmpty());
     }
     
     @Test
