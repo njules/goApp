@@ -59,6 +59,7 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
             Intent resultIntent = new Intent();
             if (mLastLocation != null) {
                 if (intentTest.getAction().equals(ACTION_MY_LOCATION)) {
+
                     resultIntent.setAction(RESULT_MY_LOCATION);
                     resultIntent.putExtra(UtilService.LOCATION, mLastLocation);
                 } else {
