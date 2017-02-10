@@ -148,72 +148,21 @@ public class EventServlet extends HttpServlet {
             err = ErrorCodes.DB_ERROR;
         }
 
-        JSONObject result = null;
-        if (err.equals(ErrorCodes.OK)) {
-            result = ServletUtils.createJSONEventID(event);
-        } else {
-            result = ServletUtils.createJSONError(err);
-        }
-        return result;
+        return ServletUtils.createJSONError(err);
     }
 
-    // /**
-    // * calls methods for creating Error or Event JSONObject
-    // *
-    // * @param event
-    // * Event to serialize
-    // * @param error
-    // * Error to serialize
-    // * @return String with serialized JSONObject
-    // */
-    // private JSONObject createJSONObject(Event event, JSONParameter.ErrorCodes error, boolean
-    // onlyID) {
-    // //TODO: weg lassen
-    // JSONObject result = null;
-    // if (error.equals(ErrorCodes.OK)) {
-    // if (onlyID) {
-    // result = ServletUtils.createJSONEventID(event);
-    // } else {
-    // result = ServletUtils.createJSONEvent(event);
-    // }
-    // } else {
-    // result = ServletUtils.createJSONError(error);
-    // }
-    // return result;
-    // }
-
-    // /**
-    // * A method used to access information about an event. Every user, that can see this event may
-    // * request information about it. Users that are not a member of the group may not view the
-    // * groups events. Accessible information includes name, location, admin and time.
-    // *
-    // * @param json
-    // * A JSON object containing the event about which the information is requested.
-    // * @return A JSON string containing all information about the given event is returned.
-    // */
-    // private String getEvent(JSONObject json) {
-    // Event event = null;
-    // JSONParameter.ErrorCodes error = ErrorCodes.OK;
-    //
-    // try {
-    // int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
-    // event = this.eventMang.getEvent(eventID);
-    // } catch (JSONException e) {
-    // error = ErrorCodes.READ_JSON;
-    // }
-    //
-    // return createJSONObject(event, error, false);
-    //
-    // }
-
-    private JSONObject getParticipates(JSONObject json) {
-        JSONParameter.ErrorCodes error = ErrorCodes.OK;
+   /**
+    * gets all participates to given event
+    * @param json jsonString with eventID
+    * @return List of Participates
+    */
+   private JSONObject getParticipates(JSONObject json) {
         List<Participant> part = null;
         try {
             int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
             part = this.eventUsrMang.getParticipants(eventID);
         } catch (JSONException e) {
-            error = ErrorCodes.READ_JSON;
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         return ServletUtils.createJSONListPart(part);
@@ -279,7 +228,7 @@ public class EventServlet extends HttpServlet {
         } catch (JSONException e) {
             // do nothing, because it can happen
         }
-        // TODO: gibts noch nicht
+        // TODO: Use in later Version
         // try {
         // int creatorID = json.getInt(JSONParameter.USER_ID.toString());
         // UserManagement usMang = new UserManagement();
@@ -308,17 +257,11 @@ public class EventServlet extends HttpServlet {
         // }
 
         if (valuesChanged) {
-            eventMang.update(event);
+            if(!eventMang.update(event)){
+                error = ErrorCodes.DB_ERROR;
+            }
         }
-        event = this.eventMang.getEvent(eventID);
-        JSONObject result = null;
-        if (error.equals(ErrorCodes.OK)) {
-            result = ServletUtils.createJSONEvent(event);
-        } else {
-            result = ServletUtils.createJSONError(error);
-        }
-        //TODO: nur Fehlercode zurückgeben
-        return result;
+        return ServletUtils.createJSONError(error);
     }
 
 }

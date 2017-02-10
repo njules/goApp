@@ -134,7 +134,7 @@ public final class ServletUtils {
     protected static JSONObject createJSONParticipate(Participant part) {
         JSONObject json = new JSONObject();
         try {
-            json.put(JSONParameter.USER_ID.toString(), part.getUser());
+            json.put(JSONParameter.USER_ID.toString(), part.getUser().getUserId());
             json.put(JSONParameter.STATUS.toString(), part.getStatus());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
