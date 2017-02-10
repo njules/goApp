@@ -345,7 +345,7 @@ public enum JSONParameter {
         // GET_START,
 
         /**
-         * Group.getGroup TODO: Methode umbenenen
+         * Group.getMembers (former Group.getGroup)
          */
         GET_MEMBERS,
 
@@ -401,7 +401,7 @@ public enum JSONParameter {
         SET_FOUNDER,
 
         /**
-         * Location TODO: kombinierte Methode
+         * Location.getCluster and Location.setGPS
          */
         SYNC_LOC,
 

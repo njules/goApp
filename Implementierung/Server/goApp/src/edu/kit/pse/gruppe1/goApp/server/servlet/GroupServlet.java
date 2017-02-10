@@ -83,7 +83,7 @@ public class GroupServlet extends HttpServlet {
             response.getWriter().println(getEvents(jsonRequest));
             break;
         case GET_MEMBERS:
-            response.getWriter().println(getGroup(jsonRequest));
+            response.getWriter().println(getMembers(jsonRequest));
             break;
         case SET_FOUNDER:
             response.getWriter().println(setFounder(jsonRequest));
@@ -192,10 +192,10 @@ public class GroupServlet extends HttpServlet {
 
 	/**
 	 * This method returns all members of a given group and may be invoked by any member of that group.
-	 * @param json JSON object containing the ID of the group about which the information is requested.
-	 * @return Returns a JSON string containing  the groups members.
+	 * @param json JSON object containing the ID of the group about which the members are requested.
+	 * @return Returns a JSON string containing the groups members.
 	 */
-	private String getGroup(JSONObject json) {
+	private String getMembers(JSONObject json) {
         try {
             int groupID = json.getInt(JSONParameter.GROUP_ID.toString());
             return ServletUtils.createJSONListUsr(groupUserManager.getUsers(groupID)).toString();
