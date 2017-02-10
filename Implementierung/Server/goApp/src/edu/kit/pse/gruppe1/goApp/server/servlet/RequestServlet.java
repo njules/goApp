@@ -45,6 +45,7 @@ public class RequestServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -100,6 +101,7 @@ public class RequestServlet extends HttpServlet {
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
@@ -194,10 +196,9 @@ public class RequestServlet extends HttpServlet {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
-        req = reqMang.getRequest(groupID,userID);
+        req = reqMang.getRequest(groupID, userID);
         if (req != null) {
-            if(!grUsrMang.add(groupID, userID) &&
-            !reqMang.delete(groupID, userID)){
+            if (!grUsrMang.add(groupID, userID) && !reqMang.delete(groupID, userID)) {
                 error = ErrorCodes.DB_ERROR;
             }
         } else {
@@ -229,7 +230,7 @@ public class RequestServlet extends HttpServlet {
         }
 
         // delete request, if exists
-        req = reqMang.getRequest(groupID,userID);
+        req = reqMang.getRequest(groupID, userID);
         if (req != null) {
             reqMang.delete(groupID, userID);
         } else {

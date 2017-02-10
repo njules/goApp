@@ -180,15 +180,24 @@ public enum JSONParameter {
     /**
      * enum with status codes
      * 
-     * @See #edu.kit.pse.gruppe1.goApp.server.model.Status
+     * @see #edu.kit.pse.gruppe1.goApp.server.model.Status
      *
      */
     @Deprecated
     public enum Status {
+        /**
+         * do not use anymore
+         */
         REJECT(1),
 
+        /**
+         * do not use anymore
+         */
         ACCEPT(2),
 
+        /**
+         * do not use anymore
+         */
         GO(3);
 
         private final int status;
@@ -197,6 +206,11 @@ public enum JSONParameter {
             this.status = status;
         }
 
+        /**
+         * do not use anymore
+         * 
+         * @return int
+         */
         public int getStatus() {
             return status;
         }

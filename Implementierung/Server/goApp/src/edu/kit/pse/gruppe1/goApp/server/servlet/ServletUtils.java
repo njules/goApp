@@ -15,12 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.apache.ApacheHttpTransport;
-import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
@@ -38,8 +33,20 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
  */
 public final class ServletUtils {
 
+    /**
+     * Limit of Groups for one User
+     */
     protected static final int USERLIMIT = 20;
+
+    /**
+     * Limit of Members in Group
+     */
     protected static final int GROUPLIMIT = 50;
+
+    /**
+     * Client ID to user for Google Verifing
+     */
+    private static final String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
 
     /**
      * private constructor to make class static
@@ -48,10 +55,10 @@ public final class ServletUtils {
     }
 
     /**
-     * Checks wether a User is already in the Database.
+     * Checks whether a User is already in the Database.
      * 
      * @param googleId
-     *            which should be testet
+     *            which should be tested
      * @return true if googleId user is in the database
      */
     protected static boolean isUserAlreadyRegistrated(String googleId) {
@@ -71,15 +78,12 @@ public final class ServletUtils {
     /**
      * Method which validates an GoogleToken and returns the GoogleId String.
      * 
-     * @param idTokenString:
+     * @param idTokenString
      *            The Token which should be tested
      * @return If token is valid return the GoogleId else return null.
      */
 
     protected static String getGoogleIdByToken(String idTokenString) {
-
-        String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
-
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                 new ApacheHttpTransport(), new JacksonFactory())
                         .setAudience(Collections.singletonList(CLIENT_ID)).build();
@@ -104,14 +108,11 @@ public final class ServletUtils {
     /**
      * Method which validates an GoogleToken and returns the name.
      * 
-     * @param idTokenString:
+     * @param idTokenString
      *            The Token which should be tested
      * @return If token is valid return the GoogleName else return null.
      */
     protected static String getGoogleNameByToken(String idTokenString) {
-
-        String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
-
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                 new ApacheHttpTransport(), new JacksonFactory())
                         .setAudience(Collections.singletonList(CLIENT_ID)).build();
@@ -125,8 +126,8 @@ public final class ServletUtils {
 
         if (idToken != null) {
             Payload payload = idToken.getPayload();
-            String Name = (String) payload.get("name");
-            return Name;
+            String name = (String) payload.get("name");
+            return name;
 
         } else {
             return null;

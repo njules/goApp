@@ -17,13 +17,14 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 /**
  * Servlet implementation class ParticipateServlet
  * 
- * Users can access methods in this servlet to indicate whether they want to participate in an event from the group.
+ * Users can access methods in this servlet to indicate whether they want to participate in an event
+ * from the group.
  */
 @WebServlet("/ParticipateServlet")
 public class ParticipateServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private final EventUserManagement eventUser;
-       
+    private static final long serialVersionUID = 1L;
+    private final EventUserManagement eventUser;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -32,48 +33,62 @@ public class ParticipateServlet extends HttpServlet {
         eventUser = new EventUserManagement();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
             return;
         }
         Methods method;
         try {
-            method = JSONParameter.Methods.fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
-            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
+            response.getWriter()
+                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
             return;
         }
-        
+
         if (method == null) {
             method = Methods.NONE;
         }
-        
+
         switch (method) {
         case SET_STATUS:
             response.getWriter().println(setStatus(jsonRequest));
-        default: 
-            response.getWriter().println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+        default:
+            response.getWriter()
+                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
         }
-	}
-	
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    doGet(request, response);
-	}
-	
-	/**
-     * A user may reject and accept an invitation to any event in a group he is a member of. He may accept or reject any event only once and can not invoke any of these two methods again later on for the same event. Has he accepted an event, he is participating in it. While participating he can update his status to "go" in order to get access to the groups position and get tracked himself.
-     * @param json A JSON object that contains the user wanting to update his status, the status he wants it to be set to and the event for which this action shall take place.
+    }
+
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+
+    /**
+     * A user may reject and accept an invitation to any event in a group he is a member of. He may
+     * accept or reject any event only once and can not invoke any of these two methods again later
+     * on for the same event. Has he accepted an event, he is participating in it. While
+     * participating he can update his status to "go" in order to get access to the groups position
+     * and get tracked himself.
+     * 
+     * @param json
+     *            A JSON object that contains the user wanting to update his status, the status he
+     *            wants it to be set to and the event for which this action shall take place.
      * @return Returns a JSON string containing information about the success of this operation.
      */
-	private String setStatus(JSONObject json) {
+    private String setStatus(JSONObject json) {
         try {
             int event = json.getInt(JSONParameter.EVENT_ID.toString());
             int user = json.getInt(JSONParameter.USER_ID.toString());
@@ -86,5 +101,5 @@ public class ParticipateServlet extends HttpServlet {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
         }
-	}
+    }
 }
