@@ -194,10 +194,12 @@ public class RequestServlet extends HttpServlet {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
-        req = reqMang.getRequest(userID, groupID);
+        req = reqMang.getRequest(groupID,userID);
         if (req != null) {
-            grUsrMang.add(groupID, userID);
-            reqMang.delete(groupID, userID);
+            if(!grUsrMang.add(groupID, userID) &&
+            !reqMang.delete(groupID, userID)){
+                error = ErrorCodes.DB_ERROR;
+            }
         } else {
             error = ErrorCodes.DB_ERROR;
         }
@@ -227,7 +229,7 @@ public class RequestServlet extends HttpServlet {
         }
 
         // delete request, if exists
-        req = reqMang.getRequest(userID, groupID);
+        req = reqMang.getRequest(groupID,userID);
         if (req != null) {
             reqMang.delete(groupID, userID);
         } else {
