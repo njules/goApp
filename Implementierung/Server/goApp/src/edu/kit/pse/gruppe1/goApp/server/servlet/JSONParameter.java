@@ -179,8 +179,10 @@ public enum JSONParameter {
 
     /**
      * enum with status codes
+     * @See #edu.kit.pse.gruppe1.goApp.server.model.Status
      *
      */
+    @Deprecated
     public enum Status {
         REJECT(1), 
         
@@ -328,10 +330,11 @@ public enum JSONParameter {
          */
         CHANGE,
 
-        // /**
-        // * User.getUser
-        // */
-        // GET_USER,
+         /**
+         * User.getUser
+         */
+        @Deprecated
+         GET_USER,
 
         /**
          * Event.getEvent Group.getEvents
@@ -339,10 +342,11 @@ public enum JSONParameter {
          */
         GET_EVENT,
 
-        // /**
-        // * Go.getStartedParticpants
-        // */
-        // GET_START,
+         /**
+         * Go.getStartedParticpants
+         */
+        @Deprecated
+         GET_START,
 
         /**
          * Group.getMembers (former Group.getGroup)
@@ -359,10 +363,11 @@ public enum JSONParameter {
          */
         GET_GRP_MEM,
 
-        // /**
-        // * Location.getCluster
-        // */
-        // GET_CLUSTER,
+         /**
+         * Location.getCluster
+         */
+        @Deprecated
+         GET_CLUSTER,
 
         /**
          * RequestSearchServlet.getRequestsByUser
