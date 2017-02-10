@@ -21,7 +21,6 @@ import org.mockito.junit.MockitoRule;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
-import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 import java.io.BufferedReader;
@@ -35,10 +34,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 public class LoginServletTest {
     private LoginServlet servlet;
-    // private JSONObject sendJSONLogin;
-    // private JSONObject sendJSONRegister;
 
     @Mock
     private UserManagement mockUsrMang;
@@ -71,21 +69,8 @@ public class LoginServletTest {
         field.setAccessible(true);
         field.set(servlet, mockUsrMang);
 
-        // setSendJSON();
     }
 
-    // private void setSendJSON() {
-    // try {
-    // sendJSONLogin = new JSONObject();
-    // sendJSONRegister = new JSONObject();
-    // sendJSONLogin.put(JSONParameter.METHOD.toString(),
-    // JSONParameter.Methods.LOGIN.toString());
-    // sendJSONRegister.put(JSONParameter.METHOD.toString(),
-    // JSONParameter.Methods.REGISTER.toString());
-    // } catch (JSONException e) {
-    // e.printStackTrace();
-    // }
-    // }
 
     /**
      * @throws java.lang.Exception
@@ -126,12 +111,14 @@ public class LoginServletTest {
         JSONObject newJson = new JSONObject();
         String googleToken = "TOKEN"; // no real token, but there are no tokens from google to test
         User user = new User("12334", "Test User");
-        ServletUtils servletUtils = spy(ServletUtils.class);
-
+//        PowerMockito.spy(ServletUtils.class);
+//        ServletUtils spy = spy(ServletUtils.class);
+        
         // TODO: sehen wie das mit static ist
-        doReturn(false).when(servletUtils).isUserAlreadyRegistrated(user.getGoogleId());
-        doReturn(user.getGoogleId()).when(servletUtils).getGoogleIdByToken(googleToken);
-        doReturn(user.getName()).when(servletUtils).getGoogleNameByToken(googleToken);
+      //  Mockito.when(ServletUtils.isUserAlreadyRegistrated(user.getGoogleId())).thenReturn(false);
+//       doReturn(false).when(spy).isUserAlreadyRegistrated(user.getGoogleId());
+//        doReturn(user.getGoogleId()).when(spy).getGoogleIdByToken(googleToken);
+//        doReturn(user.getName()).when(spy).getGoogleNameByToken(googleToken);
 
         when(mockUsrMang.add(user.getName(), user.getGoogleId())).thenReturn(user);
 
@@ -230,8 +217,10 @@ public class LoginServletTest {
     public void testDoGetWithLogin() {
         // TODO: an Änderungen anpassen
         JSONObject newJson = null;
-        User user = null; // newLoginUser();
+        User user = new User(); // newLoginUser();
+        user.setUserId(1);
         String jsonStr = null;
+
 
         when(mockUsrMang.getUser(user.getUserId())).thenReturn(user);
         try {
