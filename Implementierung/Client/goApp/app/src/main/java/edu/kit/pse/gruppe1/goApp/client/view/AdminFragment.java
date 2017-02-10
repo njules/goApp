@@ -157,7 +157,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getActivity(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
@@ -168,12 +168,12 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
                     break;
                 case RequestSearchService.RESULT_GET_BY_GROUP:
                     if (intent.getParcelableArrayExtra(UtilService.USERS) == null){break;}
-                    requestAdapter = new RequestAdapter((User[]) intent.getParcelableArrayExtra(UtilService.GROUPS), AdminFragment.this);
+                    requestAdapter = new RequestAdapter((User[]) intent.getParcelableArrayExtra(UtilService.USERS), AdminFragment.this);
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
                 case GroupService.RESULT_DELETE_MEMBER:
                     memberAdapter.deleteItem(memberPosition);
-                    Toast.makeText(getActivity(), "Du hast " + memberAdapter.getItem(memberPosition).getName() + " entfernt", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Du hast " + memberAdapter.getItem(memberPosition).getName() + " entfernt", Toast.LENGTH_SHORT).show();
                     break;
                 case GroupService.RESULT_DELETE:
                     Toast.makeText(getActivity(), "Gruppe wird gelöscht", Toast.LENGTH_SHORT).show();
@@ -189,7 +189,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
                     requestAdapter.delete(requestPosition);
                     break;
                 case GroupService.RESULT_SET_NAME:
-                    Toast.makeText(getActivity(),"Neuer Name: " + newName,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Neuer Name: " + newName,Toast.LENGTH_SHORT).show();
                     Preferences.getGroup().setName(newName);
                     group = Preferences.getGroup();
                     break;

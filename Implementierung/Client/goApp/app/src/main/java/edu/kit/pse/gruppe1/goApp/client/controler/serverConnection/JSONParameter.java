@@ -129,7 +129,7 @@ public enum JSONParameter {
     NEW_EVENTS("NewEvents"),
 
     /**
-     * Google ID
+     * Google Token
      */
     GOOGLE_TOKEN("GoogleToken");
 
@@ -164,19 +164,7 @@ public enum JSONParameter {
         return null;
     }
 
-    public enum Status{
-        REJECT(1),
-        ACCEPT(2),
-        GO(3);
 
-        private final int status;
-        private Status(int status){
-            this.status = status;
-        }
-        public int getStatus(){
-            return status;
-        }
-    }
 
     // TODO: JavaDocs
     public enum ErrorCodes {
@@ -278,6 +266,8 @@ public enum JSONParameter {
          * Group.getGroup
          */
         GET_GROUP,
+
+        GET_MEMBERS,
 
         /**
          * GroupSearch.getGroupsByName

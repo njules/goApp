@@ -33,16 +33,18 @@ public class LoginService extends IntentService {
     /**
      * checks if the user is already registers and gets the users data from the server database
      *
-     * @param result the id of the user which has to be found in the server database
+     * @param token the id of the user which has to be found in the server database
      * @return the user who is now logged in
      */
-    public void login(Context context, GoogleSignInResult result) {
-//TODO Login und silentSign in
+    public void login(Context context, String token) {
+        Intent requestIntent = new Intent(context, LoginService.class);
+        requestIntent.putExtra(UtilService.JSON, createLogin(token).toString());
+        requestIntent.setAction(ACTION_LOGIN);
+        context.startService(requestIntent);
 
     }
-    // TODO - implement LoginService.login
 
-    private JSONObject createJson(String token) {
+    private JSONObject createRegister(String token) {
         JSONObject requestJSON = new JSONObject();
         if (token != null) {
             try {
@@ -51,24 +53,39 @@ public class LoginService extends IntentService {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else{Log.i("Login","idToken is null");}
+        } else {
+            Log.i("Login", "idToken is null");
+        }
+        return requestJSON;
+
+    }private JSONObject createLogin(String token) {
+        JSONObject requestJSON = new JSONObject();
+        if (token != null) {
+            try {
+                requestJSON.put(JSONParameter.GOOGLE_TOKEN.toString(), token);
+                requestJSON.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.LOGIN.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.i("Login", "idToken is null");
+        }
         return requestJSON;
     }
+
     public void register(Context context, String token) {
-    Intent requestIntent = new Intent(context, LoginService.class);
-    requestIntent.putExtra(UtilService.JSON, createJson(token).toString());
-    requestIntent.setAction(ACTION_LOGIN);
-    Log.i("Login",createJson(token).toString());
-    context.startService(requestIntent);
+        Intent requestIntent = new Intent(context, LoginService.class);
+        requestIntent.putExtra(UtilService.JSON, createRegister(token).toString());
+        requestIntent.setAction(ACTION_LOGIN);
+        context.startService(requestIntent);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.i("Login", "LoginService started");
         HTTPConnection connection = new HTTPConnection(SERVLET);
-        Log.i("Login", intent.getStringExtra("JSON"));
         JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
-        Log.i("Login", "server answer received" + result.toString());
+        Log.i("Login", result.toString());
         Intent resultIntent = new Intent();
         resultIntent.setAction(RESULT_LOGIN);
         if (UtilService.isError(result)) {
@@ -83,8 +100,8 @@ public class LoginService extends IntentService {
                 //TODO ERROR MASSAGE
             }
         }
-            LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
-            manager.sendBroadcast(resultIntent);
+        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
+        manager.sendBroadcast(resultIntent);
 
     }
 }

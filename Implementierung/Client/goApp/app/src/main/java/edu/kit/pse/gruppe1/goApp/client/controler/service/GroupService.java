@@ -161,7 +161,7 @@ public class GroupService extends IntentService {
         try {
             requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
             //TODO GET_MEMBER
-            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_GRP_MEM.toString());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_MEMBERS.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

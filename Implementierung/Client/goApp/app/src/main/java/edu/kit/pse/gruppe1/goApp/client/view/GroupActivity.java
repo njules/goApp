@@ -23,10 +23,7 @@ import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.*;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
-import edu.kit.pse.gruppe1.goApp.client.model.Event;
-import edu.kit.pse.gruppe1.goApp.client.model.Group;
-import edu.kit.pse.gruppe1.goApp.client.model.Location;
-import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
+import edu.kit.pse.gruppe1.goApp.client.model.*;
 
 import java.sql.Date;
 
@@ -132,13 +129,13 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                     break;
                 case ParticipateService.RESULT_STATUS:
                     int resultStatus = intent.getIntExtra(UtilService.STATUS, 0);
-                    if(resultStatus == ParticipateService.ACCEPT){
+                    if(resultStatus == Status.PARTICIPATE.getValue()){
                         accept(context);
                     }
-                     else if(resultStatus == ParticipateService.REJECT){
+                     else if(resultStatus == Status.REJECTED.getValue()){
                         newEventAdapter.deleteItem(deletePosition);
                     }
-                    else if(resultStatus == ParticipateService.START){
+                    else if(resultStatus == Status.STARTED.getValue()){
                         EventActivity.start(GroupActivity.this, eventMove);
                     }
                     break;
@@ -174,7 +171,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                         eventMove = event;
                         switch (view.getId()) {
                             case R.id.start_event:
-                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), ParticipateService.START);
+                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.STARTED);
                                 break;
                             default:
                                 EventActivity.start(GroupActivity.this, event);
@@ -193,11 +190,11 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                         deletePosition = position;
                         switch (view.getId()) {
                             case R.id.accept_event:
-                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), ParticipateService.ACCEPT);
+                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.PARTICIPATE);
                                 Log.i("GroupActivity", "accept");
                                 break;
                             case R.id.reject_event:
-                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), ParticipateService.REJECT);
+                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.REJECTED);
                                 Log.i("GroupActivity", "reject");
                                 break;
                             default:
