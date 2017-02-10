@@ -134,7 +134,7 @@ public enum JSONParameter {
     /**
      * Accepted Events
      */
-    ACC_Events("AcceptedEvents"),
+    ACC_EVENTS("AcceptedEvents"),
 
     /**
      * New Events
