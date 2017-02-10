@@ -26,7 +26,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Status;
 
 public class ParticipateServletTest {
-    private LocationServlet servlet;
+    private ParticipateServlet servlet;
     private String jsonRequest;
 
     @Mock
@@ -47,7 +47,7 @@ public class ParticipateServletTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         
-        servlet = new LocationServlet();
+        servlet = new ParticipateServlet();
         Field field = servlet.getClass().getDeclaredField("eventUser");
         field.setAccessible(true);
         field.set(servlet, eventUserManager);

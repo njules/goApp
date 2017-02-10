@@ -62,6 +62,13 @@ public class ParticipateServlet extends HttpServlet {
 	}
 	
 	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    doGet(request, response);
+	}
+	
+	/**
      * A user may reject and accept an invitation to any event in a group he is a member of. He may accept or reject any event only once and can not invoke any of these two methods again later on for the same event. Has he accepted an event, he is participating in it. While participating he can update his status to "go" in order to get access to the groups position and get tracked himself.
      * @param json A JSON object that contains the user wanting to update his status, the status he wants it to be set to and the event for which this action shall take place.
      * @return Returns a JSON string containing information about the success of this operation.
