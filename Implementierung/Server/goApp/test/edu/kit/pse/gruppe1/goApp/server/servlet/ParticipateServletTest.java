@@ -56,6 +56,7 @@ public class ParticipateServletTest {
     @After
     public void tearDown() throws Exception {
         servlet = null;
+        jsonRequest = null;
     }
 
     @Test

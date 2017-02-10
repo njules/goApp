@@ -71,6 +71,7 @@ public class LocationServletTest {
     @After
     public void tearDown() throws Exception {
         servlet = null;
+        jsonRequest = null;
     }
     
     //TODO test edge cases such as invalid user/event/location/method
