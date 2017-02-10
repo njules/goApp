@@ -46,7 +46,6 @@ public class NotificationService extends IntentService{
 	 */
 	private void notifyUser(Group group) {
 		Preferences.setGroup(group);
-
 		NotificationCompat.Builder mBuilder =
 				new NotificationCompat.Builder(this)
 						.setSmallIcon(R.mipmap.ic_launcher)

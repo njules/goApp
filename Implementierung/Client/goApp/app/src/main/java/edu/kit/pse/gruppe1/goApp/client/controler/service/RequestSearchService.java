@@ -6,6 +6,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
@@ -94,6 +95,7 @@ public class RequestSearchService extends IntentService {
                 break;
             case ACTION_GET_BY_GROUP:
                 result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
+                Log.i("Requests",result.toString());
                 resultIntent.setAction(RESULT_GET_BY_GROUP);
                 if (UtilService.isError(result)) {
                     resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));

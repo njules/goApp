@@ -19,11 +19,6 @@ public class ParticipateService extends IntentService {
 
     private static final String ACTION_STATUS = "status";
     public static final String RESULT_STATUS = "resultStatus";
-    //TODO real numbers and JsonPArameter
-    public static final int ACCEPT = 1;
-    public static final int REJECT = 2;
-    public static final int START = 3;
-    //reject == delete Event
 
     public ParticipateService() {
         super(NAME);
@@ -36,14 +31,14 @@ public class ParticipateService extends IntentService {
      * @param user  the user who doesn't want to participate
      * @return true, if method was successful, otherwise false
      */
-    public void setStatus(Context context, Event event, User user, int status) {
+    public void setStatus(Context context, Event event, User user, Status status) {
         JSONObject requestJson = new JSONObject();
 
         try {
             requestJson.put(JSONParameter.EVENT_ID.toString(), event.getId());
             requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
             //TODO jsonparameter setstatus & status
-            requestJson.put(JSONParameter.STATUS.toString(), status);
+            requestJson.put(JSONParameter.STATUS.toString(), status.getValue());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_STATUS.toString());
         } catch (JSONException e) {
             e.printStackTrace();
