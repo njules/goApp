@@ -2,11 +2,17 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -14,6 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
@@ -21,23 +30,12 @@ import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
+@Deprecated
 public final class ServletTestUtils {
-    
-    public static HttpServletRequest simulateRequest(){
-        //HttpServletRequest request = new HttpServletRequestWrapper(request);
-        return null;
-    }
-    
-    public static HttpServletResponse simulateResponse(){
-        return null;
-    }
-    
-    protected static JSONObject getJSONfromString(String str){
-       return  null;
-    }
     
     /**used from LoginServlet*/
     /**atm for testing what works shared*/
+    @Deprecated
     protected static void checkUser(JSONObject newJson, User user) {
         if (newJson != null) {
             try {
@@ -53,6 +51,7 @@ public final class ServletTestUtils {
         }
     }
     
+    @Deprecated
     protected Event createEvent() {
         String name = "Test Event";
         Location loc = new Location(49.014352, 8.404579, "Test Location");
@@ -75,6 +74,7 @@ public final class ServletTestUtils {
      * @param name mehtod name
      * @return result of method
      */
+    @Deprecated
     protected static JSONObject callMethod(HttpServlet servlet, JSONObject json, String name) {
         Method method;
         JSONObject newJson = null;
