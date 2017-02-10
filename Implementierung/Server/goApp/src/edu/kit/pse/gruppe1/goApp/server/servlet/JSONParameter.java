@@ -427,15 +427,15 @@ public enum JSONParameter {
         LOGIN,
 
         /**
-         * Participate.accept Request.accept
+         * @Deprecated only for Participate.accept
+         *  Request.accept
          */
-        @Deprecated
         ACCEPT,
 
         /**
-         * Participate.reject Request.reject
+         * @Deprecated only for Participate.reject 
+         * Request.reject
          */
-        @Deprecated
         REJECT,
 
         /**
