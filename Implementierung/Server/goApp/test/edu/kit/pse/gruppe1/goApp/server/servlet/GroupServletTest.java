@@ -176,7 +176,6 @@ public class GroupServletTest {
         }
     }
 
-    //TODO DB_ERROR is returned by servlet
     @Test
     public void testNameChanges() {
         // set up input
@@ -185,7 +184,7 @@ public class GroupServletTest {
         // prepare input JSON parameter
         try {
             JSONObject json = new JSONObject();
-            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DELETE);
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_NAME);
             json.put(JSONParameter.GROUP_NAME.toString(), name);
             json.put(JSONParameter.GROUP_ID.toString(), group);
             jsonRequest = json.toString();
@@ -353,13 +352,13 @@ public class GroupServletTest {
     public void testMemberRequesting() {
         // set up input
         final List<User> fakeUsers = new ArrayList<User>();
-        fakeUsers.add(new User("0", "4ever"));
+        fakeUsers.add(new User(null, "4ever"));
         fakeUsers.add(new User("1", "alone"));
         final int group = 65;
         // prepare input JSON parameter
         try {
             JSONObject json = new JSONObject();
-            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SYNC_LOC);
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_MEMBERS);
             json.put(JSONParameter.GROUP_ID.toString(), group);
             jsonRequest = json.toString();
         } catch (JSONException e) {
@@ -389,8 +388,8 @@ public class GroupServletTest {
         try {
             JSONObject json = new JSONObject(argCap.getValue());
             assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
-            JSONArray array = json.getJSONArray(JSONParameter.LIST_USER.toString());
-            for (int i = 0; i < array.length(); i++) {
+            JSONArray array = json.getJSONArray(JSONParameter.LIST_USER.toString());//TODO no user id is returned 
+            for (int i = 0; i < array.length(); i++) {System.out.println(array);
                 JSONObject jsonUsr = array.getJSONObject(i);
                 result.add(new User(jsonUsr.getString(JSONParameter.USER_ID.toString()), jsonUsr.getString(JSONParameter.USER_NAME.toString())));
             }
