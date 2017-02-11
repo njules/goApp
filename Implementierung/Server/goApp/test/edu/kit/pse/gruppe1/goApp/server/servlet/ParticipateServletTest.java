@@ -83,6 +83,7 @@ public class ParticipateServletTest {
             when(httpResponse.getWriter()).thenReturn(response);
             when(request.readLine()).thenReturn(jsonRequest);
             when(eventUserManager.updateStatus(event, user, status)).thenReturn(true);
+            when(eventUserManager.delete(event, user)).thenReturn(true);
        } catch (IOException e) {
             e.printStackTrace();
             fail("Failed mocking!\n");
@@ -98,7 +99,6 @@ public class ParticipateServletTest {
         verify(response).println(argCap.capture());
         try {
             JSONObject json = new JSONObject(argCap.getValue());
-            System.out.println(json.getInt(JSONParameter.ERROR_CODE.toString()));
             assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();

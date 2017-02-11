@@ -18,7 +18,12 @@ public enum Status {
     /**
      * If the user clicks on started he get the status started
      */
-    STARTED(2);
+    STARTED(2),
+    
+    /**
+     * If a user decides not to participate in an event
+     */
+    REJECTED(3);
 
     private final Integer value;
 
