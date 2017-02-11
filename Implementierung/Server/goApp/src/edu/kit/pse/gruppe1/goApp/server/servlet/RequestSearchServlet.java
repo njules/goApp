@@ -82,7 +82,7 @@ public class RequestSearchServlet extends HttpServlet {
             break;
         default:
             if (error.equals(ErrorCodes.OK)) {
-                error = ErrorCodes.READ_JSON;
+                error = ErrorCodes.METH_ERROR;
             }
             strResponse = ServletUtils.createJSONError(error).toString();
             break;
