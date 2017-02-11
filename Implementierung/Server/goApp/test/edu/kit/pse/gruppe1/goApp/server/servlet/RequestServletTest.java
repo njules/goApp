@@ -138,7 +138,6 @@ public class RequestServletTest {
     public void testAccept() {
         JSONObject json = new JSONObject();
         JSONObject newJson = null;
-        String name = "accept";
         int userID = 1;
         int groupID = 2;
         Request req = new Request();

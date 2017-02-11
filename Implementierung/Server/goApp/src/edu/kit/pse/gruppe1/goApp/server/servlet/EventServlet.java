@@ -240,7 +240,7 @@ public class EventServlet extends HttpServlet {
         return ServletUtils.createJSONError(error);
     }
     
-    // TODO: Code for use in future Version in change
+    // Code for use in future Version in change
     // try {
     // int creatorID = json.getInt(JSONParameter.USER_ID.toString());
     // UserManagement usMang = new UserManagement();
