@@ -70,12 +70,19 @@
 		
 	\subsubsection{Algorithmus}	
 	\paragraph{Clusteralgorithmus}
-	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können. 
+	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können.
 	
 	\subsection{Model}
-	
+	\paragraph{Event}
+	Die Zeit eines Events wird nicht als Time sondern als Timestamp gespeichert, dann ist das Datum mit dabei.
 
+	\paragraph{Participant \& Status}
+	Der Status in Participant ist zu einem Enum geworden.
+	Der Status kann Inivted, Participate, Started oder Rejected sein.
+	
 	\subsection{Client}
+	\subsubsection{View}
+	\subsubsection{Controller}
 	\newpage
 	\section{Kriterien}
 	Im Pflichtenheft wurden Kriterien für unsere App definiert. Im folgenden unterteilen wir diese in erfüllt bzw. nicht erfüllt.
