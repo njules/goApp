@@ -176,7 +176,7 @@ public final class UtilService {
 
     public static Event[] getAcceptedEvents(JSONObject result) {
         try {
-            JSONArray jsons = result.getJSONArray(JSONParameter.NEW_EVENTS.toString());
+            JSONArray jsons = result.getJSONArray(JSONParameter.ACC_EVENTS.toString());
             return getEvents(jsons);
         } catch (JSONException e) {
             e.printStackTrace();

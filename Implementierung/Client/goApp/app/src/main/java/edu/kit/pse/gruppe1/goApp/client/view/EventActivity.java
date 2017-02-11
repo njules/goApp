@@ -101,6 +101,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private class ResultReceiver extends BroadcastReceiver {
+        private LatLng positionEvent;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -116,9 +117,20 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                     }
                     break;
                 case LocationServiceNeu.RESULT_MY_LOCATION:
+                    positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
+                    googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
                     android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;
+                case LocationServiceNeu.RESULT_LOCATION:
+                    googleMap.clear();
+                    positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
+                    googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
+                    Location[] locations = (Location[]) intent.getParcelableArrayExtra(UtilService.LOCATIONS);
+                    for (int i = 0; i < locations.length; i++) {
+                        LatLng position = new LatLng(locations[i].getLatitude(), locations[i].getLongitude());
+                        googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position));
+                    }
             }
         }
     }

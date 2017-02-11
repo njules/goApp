@@ -50,6 +50,7 @@ public class NotificationService extends IntentService{
 				new NotificationCompat.Builder(this)
 						.setSmallIcon(R.mipmap.ic_launcher)
 						.setContentTitle(getString(R.string.notification_massage))
+						.setAutoCancel(true)
 						.setContentText(group.getName());
 		Intent resultIntent = new Intent(this, GroupActivity.class);
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
