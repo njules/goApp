@@ -134,6 +134,13 @@ public final class ServletUtils {
         }
     }
 
+    /**
+     * create JSONObject for a Participant
+     * 
+     * @param part
+     *            Participant to serialize
+     * @return Serialized object
+     */
     protected static JSONObject createJSONParticipate(Participant part) {
         JSONObject json = new JSONObject();
         try {
@@ -148,6 +155,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for a LIst of Participants
+     * 
+     * @param part
+     *            Participant List to serialize
+     * @return Serialized objects
+     */
     protected static JSONObject createJSONListPart(List<Participant> part) {
         JSONObject json = new JSONObject();
         if (part.isEmpty()) {
@@ -172,6 +186,13 @@ public final class ServletUtils {
 
     }
 
+    /**
+     * create JSONObject for an eventId
+     * 
+     * @param event
+     *            Event to serialize
+     * @return Serialized object
+     */
     protected static JSONObject createJSONEventID(Event event) {
         JSONObject json = new JSONObject();
         try {
@@ -184,6 +205,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for an event
+     * 
+     * @param event
+     *            Event to serialize
+     * @return Serialized object
+     */
     protected static JSONObject createJSONEvent(Event event) {
         JSONObject json = new JSONObject();
         try {
@@ -206,6 +234,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for a location
+     * 
+     * @param location
+     *            Location to serialize
+     * @return Serialized object
+     */
     protected static JSONObject createJSONLocation(Location location) {
         JSONObject json = new JSONObject();
 
@@ -221,6 +256,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for a group
+     * 
+     * @param group
+     *            Group to serialize
+     * @return Serialized object
+     */
     protected static JSONObject createJSONGroup(Group group) {
         JSONObject json = new JSONObject();
 
@@ -238,6 +280,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for an user
+     * 
+     * @param user
+     *            User to serialize
+     * @return Serialized object
+     */
     protected static JSONObject createJSONUser(User user) {
         JSONObject json = new JSONObject();
         try {
@@ -251,6 +300,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for an List of event
+     * 
+     * @param event
+     *            Event List to serialize
+     * @return Serialized objects
+     */
     protected static JSONObject createJSONListEvent(List<Event> event) {
         JSONObject json = new JSONObject();
         if (event.isEmpty()) {
@@ -301,6 +357,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for an List of user
+     * 
+     * @param user
+     *            User List to serialize
+     * @return Serialized objects
+     */
     protected static JSONObject createJSONListUsr(List<User> user) {
         JSONObject json = new JSONObject();
         if (user.isEmpty()) {
@@ -324,6 +387,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for an List of groups
+     * 
+     * @param group
+     *            Group List to serialize
+     * @return Serialized objects
+     */
     protected static JSONObject createJSONListGrp(List<Group> group) {
         JSONObject json = new JSONObject();
         if (group.isEmpty()) {
@@ -347,6 +417,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for a groupId
+     * 
+     * @param grp
+     *            Group List to serialize
+     * @return Serialized object
+     */
     protected static JSONObject createJSONGroupID(Group grp) {
         JSONObject json = new JSONObject();
 
@@ -360,6 +437,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for an List of locations
+     * 
+     * @param locat
+     *            Location List to serialize
+     * @return Serialized objects
+     */
     protected static JSONObject createJSONListLoc(List<Location> locat) {
         JSONObject json = new JSONObject();
         if (locat.isEmpty()) {
@@ -383,6 +467,13 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for errors
+     * 
+     * @param error
+     *            ErrorCode to serialize
+     * @return Serialized object
+     */
     protected static JSONObject createJSONError(JSONParameter.ErrorCodes error) {
         JSONObject res = new JSONObject();
         try {
@@ -393,45 +484,6 @@ public final class ServletUtils {
         }
         return res;
     }
-
-    // maybe not needed anymore
-    // /**
-    // * extract Method from request
-    // *
-    // * @param request
-    // * Incoming Request
-    // * @param jsonRequest
-    // * jsonRequest (to set here)
-    // * @return Method (Enum Value)
-    // * @throws ServletException
-    // * if Servlet Exception happens
-    // * @throws JSONException
-    // * if JSONException happens - either with Message if JSON was empty or without (Read
-    // * Error)
-    // * @throws IOException
-    // * if problems with IO operation happened
-    // */
-    // public static Methods getMethod(HttpServletRequest request, JSONObject jsonRequest)
-    // throws ServletException, JSONException, IOException {
-    //
-    //
-    // String jsonString = null;
-    // JSONParameter.Methods method = Methods.NONE;
-    // jsonString = request.getReader().readLine();
-    //
-    // if (jsonString == null) {
-    // throw new JSONException(ErrorCodes.EMPTY_JSON.toString());
-    // }
-    // jsonRequest = new JSONObject(jsonString);
-    // method = JSONParameter.Methods
-    // .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
-    //
-    // // do this to prevent null-pointer exception in switch-case in every Servlet
-    // if (method == null) {
-    // method = Methods.NONE;
-    // }
-    // return method;
-    // }
 
     /**
      * extracts JSONObject from HTTP Request

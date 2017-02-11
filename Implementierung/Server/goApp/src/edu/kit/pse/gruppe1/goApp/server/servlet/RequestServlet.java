@@ -232,7 +232,9 @@ public class RequestServlet extends HttpServlet {
         // delete request, if exists
         req = reqMang.getRequest(groupID, userID);
         if (req != null) {
-            reqMang.delete(groupID, userID);
+            if(!reqMang.delete(groupID, userID)){
+                error = ErrorCodes.DB_ERROR;
+            }
         } else {
             error = ErrorCodes.DB_ERROR;
         }
