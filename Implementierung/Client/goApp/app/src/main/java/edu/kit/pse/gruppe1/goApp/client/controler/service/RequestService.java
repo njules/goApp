@@ -43,7 +43,7 @@ public class RequestService extends IntentService{
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CREATE.toString());
         } catch (JSONException e) {
@@ -66,7 +66,7 @@ public class RequestService extends IntentService{
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), request.getGroup().getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), request.getGroup().getId());
             requestJson.put(JSONParameter.USER_ID.toString(), request.getUser().getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.ACCEPT);
         } catch (JSONException e) {
@@ -89,7 +89,7 @@ public class RequestService extends IntentService{
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), request.getGroup().getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), request.getGroup().getId());
             requestJson.put(JSONParameter.USER_ID.toString(), request.getUser().getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.REJECT);
         } catch (JSONException e) {

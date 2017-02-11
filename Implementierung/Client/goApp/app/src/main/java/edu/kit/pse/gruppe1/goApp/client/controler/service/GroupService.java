@@ -86,7 +86,7 @@ public class GroupService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DELETE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -110,7 +110,7 @@ public class GroupService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DEL_MEM.toString());
         } catch (JSONException e) {
@@ -135,7 +135,7 @@ public class GroupService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             requestJson.put(JSONParameter.GROUP_NAME.toString(), newName);
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_NAME.toString());
         } catch (JSONException e) {
@@ -152,14 +152,14 @@ public class GroupService extends IntentService {
     /**
      * gets the group from the server database
      *
-     * @param groupID The unique id of the group to find it
+     * @param group The unique id of the group to find it
      * @return the group with the given id or null if it doesn't exist
      */
     public void getMembers(Context context, Group group) {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             //TODO GET_MEMBER
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_MEMBERS.toString());
         } catch (JSONException e) {
@@ -185,7 +185,7 @@ public class GroupService extends IntentService {
 
         try {
             requestJson.put(JSONParameter.USER_ID.toString(), newFounder.getId());
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_FOUNDER.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -208,7 +208,7 @@ public class GroupService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
             //TODO JSON Parameter GET_EVENTS
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_EVENT);
@@ -238,7 +238,7 @@ public class GroupService extends IntentService {
                 } else {
                     try {
                         Group group = intent.getParcelableExtra(UtilService.GROUP);
-                        resultIntent.putExtra(UtilService.GROUP, new Group(result.getInt(JSONParameter.GRUOP_ID.toString()), group.getName(), group.getFounder()));
+                        resultIntent.putExtra(UtilService.GROUP, new Group(result.getInt(JSONParameter.GROUP_ID.toString()), group.getName(), group.getFounder()));
                     } catch (JSONException e) {
                         //TODO Errormassage
                         e.printStackTrace();

@@ -369,7 +369,6 @@ public enum JSONParameter {
          */
         GET_MEMBERS,
 
-        GET_MEMBERS,
 
         /**
          * GroupSearch.getGroupsByName

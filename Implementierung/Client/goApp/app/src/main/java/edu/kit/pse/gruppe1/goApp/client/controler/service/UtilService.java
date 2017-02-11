@@ -3,10 +3,7 @@ package edu.kit.pse.gruppe1.goApp.client.controler.service;
 import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
-import edu.kit.pse.gruppe1.goApp.client.model.Event;
-import edu.kit.pse.gruppe1.goApp.client.model.Group;
-import edu.kit.pse.gruppe1.goApp.client.model.Location;
-import edu.kit.pse.gruppe1.goApp.client.model.User;
+import edu.kit.pse.gruppe1.goApp.client.model.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +46,7 @@ public final class UtilService {
                 JSONObject group = jsons.getJSONObject(i);
                 User founder = new User(group.getInt(JSONParameter.USER_ID.toString()),
                         group.getString(JSONParameter.USER_NAME.toString()));
-                groups[i] = new Group(group.getInt(JSONParameter.GRUOP_ID.toString()),
+                groups[i] = new Group(group.getInt(JSONParameter.GROUP_ID.toString()),
                         group.getString(JSONParameter.GROUP_NAME.toString()),
                         founder);
             }
@@ -69,6 +66,22 @@ public final class UtilService {
                 JSONObject user = jsons.getJSONObject(i);
                 users[i] = new User(user.getInt(JSONParameter.USER_ID.toString()),
                         user.getString(JSONParameter.USER_NAME.toString()));
+            }
+            return users;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static User[] getParticipants(JSONObject json) {
+        try {
+            JSONArray jsons = json.getJSONArray(JSONParameter.LIST_PART.toString());
+            User[] users = new User[jsons.length()];
+            for (int i = 0; i < jsons.length(); i++) {
+                JSONObject user = jsons.getJSONObject(i);
+                users[i] = new User(user.getInt(JSONParameter.USER_ID.toString()),
+                        user.getString(JSONParameter.USER_NAME.toString()));
+                users[i].setStatus(Status.fromInteger(user.getInt(JSONParameter.STATUS.toString())));
             }
             return users;
         } catch (JSONException e) {
@@ -130,9 +143,8 @@ public final class UtilService {
         }
     }
 
-    private static Event[] getEvents(JSONObject result) {
+    public static Event[] getEvents(JSONArray jsons) {
         try {
-            JSONArray jsons = result.getJSONArray(JSONParameter.LIST_EVENT.toString());
             Event[] events = new Event[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
                 JSONObject event = jsons.getJSONObject(i);
@@ -154,8 +166,8 @@ public final class UtilService {
 
     public static Event[] getNewEvents(JSONObject result) {
         try {
-            Event[] newEvents = getEvents(result.getJSONObject(JSONParameter.NEW_EVENTS.toString()));
-            return newEvents;
+            JSONArray jsons = result.getJSONArray(JSONParameter.NEW_EVENTS.toString());
+            return getEvents(jsons);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -164,8 +176,8 @@ public final class UtilService {
 
     public static Event[] getAcceptedEvents(JSONObject result) {
         try {
-            Event[] acceptedEvents = getEvents(result.getJSONObject(JSONParameter.ACC_EVENTS.toString()));
-            return acceptedEvents;
+            JSONArray jsons = result.getJSONArray(JSONParameter.NEW_EVENTS.toString());
+            return getEvents(jsons);
         } catch (JSONException e) {
             e.printStackTrace();
         }

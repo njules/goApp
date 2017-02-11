@@ -50,7 +50,7 @@ public class EventService extends IntentService {
 
         try {
             requestJson.put(JSONParameter.EVENT_NAME.toString(), name);
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             requestJson.put(JSONParameter.USER_ID.toString(), eventAdmin.getId());
             requestJson.put(JSONParameter.LATITUDE.toString(), destination.getLatitude());
             requestJson.put(JSONParameter.LONGITUDE.toString(), destination.getLongitude());
@@ -147,7 +147,7 @@ public class EventService extends IntentService {
                 if(UtilService.isError(result)){
                     resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
                 } else {
-                    resultIntent.putExtra(UtilService.USERS, UtilService.getUsers(result));
+                    resultIntent.putExtra(UtilService.USERS, UtilService.getParticipants(result));
                 }
                 break;
             case ACTION_CHANGE:
