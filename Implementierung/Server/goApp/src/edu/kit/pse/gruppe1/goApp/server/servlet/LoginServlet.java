@@ -129,7 +129,7 @@ public class LoginServlet extends HttpServlet {
         } else {
             error = ErrorCodes.DB_ERROR;
         }
-        if (error.equals(ErrorCodes.OK)) {
+        if (!error.equals(ErrorCodes.OK)) {
             result = ServletUtils.createJSONError(error);
         }
         return result;
