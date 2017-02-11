@@ -2,12 +2,20 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import static org.junit.Assert.*;
 
+import java.sql.Timestamp;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.kit.pse.gruppe1.goApp.server.model.Event;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.Participant;
 import edu.kit.pse.gruppe1.goApp.server.model.Status;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
 public class ServletUtilsTest {
@@ -23,15 +31,57 @@ public class ServletUtilsTest {
     // Do not test: testIsUserAlreadyRegistrated(), testGetGoogleIdByToken() and
     // testGetGoogleNameByToken()
 
+    private User getUser(){
+        User usr = new User();
+        usr.setUserId(2);
+        usr.setName("TestUser");
+        usr.setGoogleId("GOOGLE");
+        return usr;
+    }
+    private Group getGroup(){
+        Group grp = new Group();
+        grp.setFounder(getUser());
+        grp.setGroupId(3);
+        grp.setName("Test Group");
+        return grp;
+    }
+    
+    private Location getLocation(){
+        Location loc = new Location();
+        loc.setLatitude(34.12);
+        loc.setLongitude(05.97);
+        loc.setName("Test Location");
+        loc.setLocationId(4);
+        return loc;
+    }
+    private Event getEvent(){
+        Event evt = new Event();
+                evt.setName("New Event");
+                evt.setLocation(getLocation());
+                evt.setTimestamp(new Timestamp(1234));
+                evt.setGroup(getGroup());
+                evt.setCreator(getUser());
+                evt.setEventId(5);
+                return evt;
+    }
     @Test
     public void testCreateJSONParticipate() {
-        fail("Not yet implemented");
-        /* Participant part = new Participant(Status.STARTED);
-        
-        json.put(JSONParameter.USER_ID.toString(), part.getUser().getUserId());
-        json.put(JSONParameter.USER_NAME.toString(), part.getUser().getName());
-        json.put(JSONParameter.STATUS.toString(), part.getStatus());
-        json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());*/
+        User usr = getUser();
+        Event ev = getEvent();
+        Participant part = new Participant(Status.STARTED.getValue(), ev, usr);
+
+        JSONObject json = ServletUtils.createJSONParticipate(part);
+
+        try {
+            assertEquals(json.getInt(JSONParameter.USER_ID.toString()), usr.getUserId().intValue());
+            assertEquals(json.getString(JSONParameter.USER_NAME.toString()), usr.getName());
+            assertEquals(json.getInt(JSONParameter.STATUS.toString()), part.getStatus().intValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
