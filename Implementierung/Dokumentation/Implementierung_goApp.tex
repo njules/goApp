@@ -187,13 +187,13 @@
 	\end{itemize}	
 
 	\subsubsection{Qualitative Anforderungen}
-	%TODO: zumindest bisher nicht
+	%TODO: zumindest bisher nicht, entweder weg lassen oder bei erfüllt
 	\begin{itemize}
 			\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App
 	\end{itemize}
 	
 	\newpage
-	\section{Verzögerungen}
+	\section{Implementierungsplan}
 	Während der Implementierungsphase haben sich einige Änderungen gegenüber unserem geplanten Verlauf ergeben.
 	Zuerst hat jeder an seinem Teil der App auf dem Client bzw. Server gearbeitet. Dabei haben wir festgestellt, dass wir einige Änderungen brauchen
 	-Abstimmung Client/Server
@@ -212,17 +212,64 @@
 	Zum Testen der Servlets werden die jeweiligen Management Klassen der Datenbank, sowie HTTPRequests gemockt.
 	\paragraph{EventServlet}
 	\subparagraph{public void testCreate()}
-	Dieser Test prüft das Erstellen eines Events. 
+	Dieser Test prüft das erfolgreiche erstellen eines Events. 
 	\subparagraph{public void testGetParticipates()}
+	Dieser Test prüft das erfolgreiche Auslesen aller Teilnehmer der übergebenen Events.
 	\subparagraph{public void testChange()}
+	Dieser Test prüft das erfolgreiche Ändern des Namens des Events.
 	\paragraph{GroupSearchServlet}
 	\paragraph{LocationServlet}
 	\paragraph{LoginServlet}
+	Da jede der beiden Methoden auf den GoogleServer zum Verifizieren des GoogleTokens zugreift und man dies nicht testen kann, wird dieses Servlet erst manuell über den Client mit einem echten GoogleAccount getestet. Dort funktioniert das Registrieren, sowie auch Anmelden.
 	\paragraph{ParticipateServlet}
 	\paragraph{RequestSearchServlet}
+	\subparagraph{public void testGetRequestsByGroup()}
+	Dieser Tests prüft das erfolgreiche holen aller Gruppen, zu dem von einem gegeben User, eine Anfrage existiert.
+	\subparagraph{public void testGetRequestsByUser()}
+	Dieser Tests prüft das erfolgreiche holen aller Nutzer, zu dem von einem gegeben Gruppe, eine Anfrage existiert.
 	\paragraph{RequestServlet}
+	\subparagraph{public void testCreate()}
+	Dieser Test prüft das erfolgreiche Anlegen eines neuen Requests.
+	\subparagraph{public void testAccept()}
+	Dieser Test prüft das erfolgreiche Akzeptieren eines Requests.
+	\subparagraph{public void testReject()}
+	Dieser Test prüft das erfolgreiche Ablehnen eines Requests.
 	\paragraph{ServletUtils}
+	In den ServletUtils werden die 3 Methoden testIsUserAlreadyRegistrated(), testGetGoogleIdByToken() und testGetGoogleNameByToken() nicht getestet, da diese auf GoogleServer zugreifen und ein gültiges GoogleToken benötigen.
+	\subparagraph{public void testCreateJSONParticipate()}
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem Participate Objekt.
+	\subparagraph{public void testCreateJSONListPart()}
+	
+	\subparagraph{public void testCreateJSONEventID()}
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes mit nur der EventID aus einem Event Objekt.
+	\subparagraph{public void testCreateJSONEvent()}
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem Event Objekt.
+	\subparagraph{public void testCreateJSONLocation()}
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem Location Objekt.
+	\subparagraph{public void testCreateJSONGroup()}
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem Group Objekt.	
+	\subparagraph{public void testCreateJSONUser()}
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem User Objekt.	
+	\subparagraph{public void testCreateJSONListEvent()}
+	
+	\subparagraph{public void testCreateJSONDoubleListEvent()}
+	
+	\subparagraph{public void testCreateJSONListUsr()}
+	
+	\subparagraph{public void testCreateJSONListGrp()}
+	
+	\subparagraph{public void testCreateJSONGroupID()}
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes mit nur der GroupID aus einem Group Objekt.	
+	\subparagraph{public void testCreateJSONListLoc()}
+	
+	\subparagraph{public void testCreateJSONError() }
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem ErrorCodes Objekt.
+	
+	\subparagraph{public void testExtractJSON()}
+
 	\paragraph{UserServlet}	
+	\subparagraph{public void testChangeName()}
+	Dieser Test überprüft das erfolgreiche Ändern des Namens des Nutzers.
 	
 	\subsection{Client}
 	\subsubsection{HTTPConnection}
