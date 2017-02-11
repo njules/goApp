@@ -9,6 +9,8 @@
 \usepackage{xcolor}
 \usepackage{pdfpages}
 \setlength{\parindent}{0em} 
+%TODO: maybe\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
 \hypersetup{
     colorlinks,
     linkcolor={blue!65!black},
@@ -25,31 +27,182 @@
 
 	\section{Einleitung}
 	Anschluss auf Plichtenheft \& Entwurf
+	Allgemeine Beschreibung der App
 	
 	\newpage
 	\section{Änderungen am Entwurf}
-	Hier jeder (sofort) Eintragen, wenn er was anders macht, wie eigentlich geplant.
+	Während der Impementierungsphase ergaben sich einige notwendige Änderungen gegenüber dem Entwurf. Diese sind im folgenden aufgeführt.
 	
-	\subsection{ServletUtils}
-	-Methoden werden öfters in verschiedenen Servlet genutzt
-	-verringern von redundantem Code
+	\subsection{Server}
+	\subsubsection{Servlet}
+	\paragraph{GoServlet und LocationServlet}
+	%TODO GoServlet wird gelöscht
+	%Paticipate Servlet wird neu geschrieben
+	%Paticipate: aus accept und reject wird setStatus
+	%Go: setStarted wird in Participate.setStatus mit reingenommen
+	%Go: getStarted wird in Event.get integriert
+	%TODO LocationServlet ruft immer beide Methoden auf (setGPS und getCluster)
 	
-	\subsection{JSONParameter}
-	-unter Enums hinzugefügt für Fehler und Methoden
+	\paragraph{ServletUtils}
+	Beim Implementieren der Servlets wurden einige allgemein Methoden, wie z.B. ein JSONObjekt auszulesen oder zu erstellen in vielen Methoden genutzt.
+	Deswegen haben wir uns dazu entschieden eine statische Hilfsklasse zu nutzen, um redundanten Code zu vermeiden. Außerdem sind diese JSONObjekte eine wichtige Schnittstelle zum Client, da das Senden \& Erwarten von Informationen übereinstimmen sollte. In unserem Fall braucht man bei Änderungen nur an einer Stelle etwas ändern.
+	
+	\paragraph{JSONParameter}
+	Wir brauchen viel mehr Parameter um die JSONObjekte zu erstellen, als in der Entwurfsphase angenommen. Außerdem gibt es ein weiteres Enum für die vom Client aufrufbaren Methoden, sowie eines für Fehlercodes. Die JSONParameter sind auf dem Client, sowie Server gleich. 
+		
+	\subsubsection{Algortihm}	
+	\paragraph{Clusteralgorithmus}
+	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können. 
+	
+
+	\subsection{Client}
 	\newpage
 	\section{Kriterien}
-	\subsection{Musskriterien}
-	\subsection{Wunschkritereien}
+	Im Pflichtenheft wurden Kriterien für unsere App definiert. Im folgenden unterteilen wir diese in erfüllt bzw. nicht erfüllt.
+
+	
+	\subsection{Erfüllte Kriterien}
+		Alle Muss-Kriterien wurden erfüllt und außerdem noch einige von unseren Wunsch-Kriterien.
+		
+	\subsubsection{Kontoverwaltung}
+	\begin{itemize}
+		\item[FA10] Anmeldung eines Benutzers in der App über Google Services
+		\item[FA20] Ersterfassung und Änderung des Benutzernamens
+	\end{itemize}
+	
+	\subsubsection{Gruppenverwaltung}
+	\begin{itemize}
+		\item[FA30] Jeder Benutzer kann eine Gruppe erstellen
+		\item[FA35] Ersterfassung und spätere Änderung des Gruppennamens durch den Gruppengründer
+		\item[FA40] Gruppen können über den Gruppennamen gesucht werden
+		\item[FA45] Benutzer können Beitrittsanfragen an eine Gruppe senden
+		\item[FA50] Der Gruppengründer kann Beitrittsanfragen der Gruppe verwalten:
+		\begin{itemize}
+			\item Anfragen bestätigen, wodurch der Anfragende ein Mitglied der Gruppe wird und die Anfrage gelöscht wird
+			\item Anfragen ablehnen, wodurch die Anfrage gelöscht wird
+			\item Anfragen ignorieren, wodurch die Anfrage bestehen und sichtbar bleibt
+		\end{itemize}
+		\item[FA60] Der Gruppengründer kann Mitglieder aus der Gruppe entfernen
+		\item[FA70] Die Gruppe kann durch den Gruppengründer gelöscht werden
+		\item[FA80] Mitglieder der Gruppen, ausgenommen des Gruppengründers, können die Gruppe verlassen
+		\item[FA90] Gruppenmitglieder können sich andere Gruppenmitglieder anzeigen lassen
+	\end{itemize}
+	
+	\subsubsection{Terminverwaltung}
+	\begin{itemize}
+		\item[FA100] Jedes Mitglied einer Gruppe kann einen Termin erstellen
+		\begin{itemize}
+			\item Ersterfassung von Terminnamen, Terminzeit (in der Zukunft) und Terminort
+			\item Visuelle Darstellung des gewählten Terminortes
+		\end{itemize}
+		\item[WFA105] Der Terminersteller kann den Terminnamen, Terminzeit und Terminort nachträglich ändern
+		\item[FA110] Der Gruppenmittelpunkt wird anhand der Standorte aller Teilnehmer berechnet		
+		\item[FA120] Jeder Termin wird jedem Gruppenmitglied angezeigt
+		\item[FA130] Jedes Gruppenmitglied kann bei einem Termin zu- oder absagen
+		
+	\end{itemize}
+		
+	\subsubsection{Qualitative Anforderungen}
+	Die Qualitativen Anforderungen beziehen sich auf unser Referenzgerät
+	"Samsung Galaxy S4" (GT-I9505) mit Android 5.0.1
+	\begin{itemize}
+		\item[QA10] Die App soll auf jede Anfrage in durchschnittlich unter 5 Sekunden reagieren
+		\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch
+		\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm der App zu erreichen
+		\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App
+		\item[QA50] Unterstützt bis zu 50 Benutzer pro Gruppe
+		\item[QA60] Jeder Benutzer kann in bis zu 20 Gruppen Mitglied sein
+		\item[QA70] Der Server unterstützt das Anlegen von mindestens 30000 Benutzern
+	\end{itemize}
+	
+	\newpage
+	\subsection{Nicht erfüllte Kriterien}
+	%TODO schön schreiben
+	Wir haben es nicht geschafft alle Wunsch-Kriterien zu implementieren. Diese können allerdings in zukünftigen Updates der goApp noch erfüllt werden.
+		\subsubsection{Kontoverwaltung}
+		\begin{itemize}
+			\item[WFA15] Der Benutzer kann zwischen Sprachen wählen
+		\end{itemize}
+		
+		\subsubsection{Gruppenverwaltung}
+		\begin{itemize}
+			\item[WFA85] Der Gruppengründer kann seinen Status als Gruppengründer an ein Mitglied übergeben
+			\item[WFA95] Gruppenmitglieder können die Teilnahmequoten anderer Gruppenmitglieder einsehen
+		\end{itemize}
+
+	\subsubsection{Terminverwaltung}
+	\begin{itemize}
+		\item[WFA105] Der Terminersteller kann den Termin löschen
+	
+	\end{itemize}	
+	
+	\subsubsection{Qualitative Anforderungen}
+	
+	\newpage
+		
+	\section{ungeordnete Kriterien aus Pflichtenheft kopiert}
+	%TODO: Einsortieren, dann Punkt hier löschen		
+		\subsection{Terminablauf}
+		\begin{itemize}
+			\hypertarget{FA140}{}
+			\item[FA140] Jeder Teilnehmer wird 30 Minuten vor Beginn des Termins benachrichtigt
+			\hypertarget{WFA145}{}
+			\item[WFA145] Teilnehmer werden auch bei geschlossener App benachrichtigt
+			\hypertarget{FA150}{}
+			\item[FA150] Jeder Teilnehmer kann den Gruppenmittelpunkt ab 15 Minuten vor Beginn des Termins in einer Karte darstellen lassen
+			\hypertarget{WFA155}{}
+			\item[WFA155] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort 
+			\hypertarget{WFA160}{}
+			\item[WFA160] Teilnehmer können in der App anderen Teilnehmern mitteilen,
+			\begin{itemize}
+				\item dass sie bereits unterwegs sind
+				\item dass sie zu spät kommen
+				\item dass sie schon am Terminort angekommen sind
+			\end{itemize}
+			\hypertarget{FA170}{}
+			\item[FA170] Der Termin löscht sich nach der Dauer des Termins (standardmäßig 60 Minuten)
+			\hypertarget{WFA175}{}
+			\item[WFA175] Die Dauer des Termins kann individuell festgelegt werden
+		\end{itemize}
+		
+%TODO: bis hier
+	
 	
 	\newpage
 	\section{Verzögerungen}
-	1. geplante Diagramm
-	2. "richtige" Diagramm
+	Während der Implementierungsphase haben sich einige Änderungen gegenüber unserem geplanten Verlauf ergeben.
+	Zuerst hat jeder an seinem Teil der App auf dem Client bzw. Server gearbeitet. Dabei haben wir festgestellt, dass wir einige Änderungen brauchen
+	-Abstimmung Client/Server
+	-UnitTests
+	-Google Verification
+	1. geplantes Diagramm
+	2. "richtiges" Diagramm
 	
 	\newpage
 	\section{Unit-Tests}
-	Hier Übersicht über Unit-Tests bzw. andere Tests der Phase
+	Zum Testen uneres Codes haben wir Unit-Tests benutzt. In dieser Phase prüfen wir nur die Funktionalität. Weitere Tests zu Fehlerfällen folgen in der Testphase.
 	\subsection{Server}
-	\subsection{Client}
+	\subsubsection{Datenbank}
+	\subsubsection{Algorithmus}
+	\subsubsection{Servlet}
+	Zum Testen der Servlets werden die jeweiligen Management Klassen der Datenbank, sowie HTTPRequests gemockt.
+	\paragraph{EventServlet}
+	\subparagraph{public void testCreate()}
+	Dieser Test prüft das Erstellen eines Events. 
+	\subparagraph{public void testGetParticipates()}
+	\subparagraph{public void testChange()}
+	\paragraph{GroupSearchServlet}
+	\paragraph{LocationServlet}
+	\paragraph{LoginServlet}
+	\paragraph{ParticipateServlet}
+	\paragraph{RequestSearchServlet}
+	\paragraph{RequestServlet}
+	\paragraph{ServletUtils}
+	\paragraph{UserServlet}	
 	
+	\subsection{Client}
+	\subsubsection{HTTPConnection}
+	\subsubsection{Model}
+	\subsubsection{View}
+	\subsubsection{Controller}
 \end{document}

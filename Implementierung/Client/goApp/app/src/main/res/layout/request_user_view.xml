@@ -5,24 +5,31 @@
     </data>
     <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp">
         <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/member"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:textSize="@dimen/viewholder_textsize"
                 android:text="@{user.name}"/>
         <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/reject_member"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="3dp"
                 android:src="@drawable/ic_reject"
-                android:layout_toEndOf="@id/member"/>
+                android:background="@color/colorReject"
+                android:layout_alignParentEnd="true"/>
         <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/accept_member"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/reject_member"
+                android:layout_margin="3dp"
+                android:background="@color/colorAccept"
+                android:layout_toStartOf="@id/reject_member"
                 android:src="@drawable/ic_accept"/>
 
     </RelativeLayout>

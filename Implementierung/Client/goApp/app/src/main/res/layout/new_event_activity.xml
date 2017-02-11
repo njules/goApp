@@ -16,22 +16,42 @@
         </android.support.v7.widget.Toolbar>
         <EditText
                 android:id="@+id/new_event_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_event_name"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
         <DatePicker
+                android:id="@+id/date_picker"
+                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:datePickerMode="spinner">
+                android:datePickerMode="spinner"
+                android:calendarViewShown="false">
         </DatePicker>
         <TimePicker
-                android:layout_width="match_parent"
+                android:id="@+id/time_picker"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-        android:timePickerMode="spinner">
+                android:timePickerMode="spinner"
+                >
         </TimePicker>
+        </LinearLayout>
         <EditText
+                android:id="@+id/new_event_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-        android:hint="@string/hint_event_destination"/>
+                android:hint="@string/hint_event_destination"/>
+        <fragment
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="edu.kit.pse.gruppe1.goApp.client.view.EventActivity"/>
     </LinearLayout>
 </layout>

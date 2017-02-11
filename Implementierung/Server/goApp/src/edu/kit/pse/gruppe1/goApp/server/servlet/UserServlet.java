@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class UserServlet
@@ -37,49 +38,9 @@ public class UserServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // String strResponse = null;
-        // String jsonString = null;
-        // JSONParameter.Methods method = null;
-        // response.setContentType("text/plain");
-        // PrintWriter out = null;
-        // // try {
-        // out = response.getWriter();
-        // jsonString = request.getReader().readLine();
-        // // } catch (IOException e1) {
-        // // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
-        // // out.println(strResponse);
-        // // return;
-        // // }
-        //
-        // if (jsonString == null) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
-        // out.println(strResponse);
-        // return;
-        // }
-        // try {
-        // JSONObject jsonRequest = new JSONObject(jsonString);
-        // method = JSONParameter.Methods
-        // .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
-        // switch (method) {
-        // case CHANGE:
-        // strResponse = changeName(jsonRequest);
-        // break;
-        // case GET_USER:
-        // strResponse = getUser(jsonRequest);
-        // break;
-        // default:
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
-        // break;
-        // }
-        // out.println(strResponse);
-        // } catch (JSONException e) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
-        // out.println(strResponse);
-        // }
-
-        // TODO: delete old one, if new does work
         String strResponse = null;
         JSONObject jsonRequest = null;
         JSONParameter.Methods method = null;
@@ -88,8 +49,15 @@ public class UserServlet extends HttpServlet {
 
         out = response.getWriter();
 
+        jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            // response was set in extractJSON
+            return;
+        }
+
         try {
-            method = ServletUtils.getMethod(request, jsonRequest);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -98,13 +66,17 @@ public class UserServlet extends HttpServlet {
             }
         }
 
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
+
         switch (method) {
         case CHANGE:
-            strResponse = changeName(jsonRequest);
+            strResponse = changeName(jsonRequest).toString();
             break;
-        case GET_USER:
-            strResponse = getUser(jsonRequest);
-            break;
+        // case GET_USER:
+        // strResponse = getUser(jsonRequest);
+        // break;
         default:
             if (error.equals(ErrorCodes.OK)) {
                 error = ErrorCodes.READ_JSON;
@@ -118,9 +90,9 @@ public class UserServlet extends HttpServlet {
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         doGet(request, response);
     }
 
@@ -133,17 +105,17 @@ public class UserServlet extends HttpServlet {
      *            with the name the user wants to change it to.
      * @return Returns a JSON string containing information about the success of this operation.
      */
-    private String changeName(JSONObject json) {
+    private JSONObject changeName(JSONObject json) {
         User user = null;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
 
         try {
-            int userID = json.getInt(JSONParameter.UserID.toString());
+            int userID = json.getInt(JSONParameter.USER_ID.toString());
             user = usrMang.getUser(userID);
             if (user == null) {
                 error = ErrorCodes.DB_ERROR;
             }
-            String name = json.getString(JSONParameter.UserName.toString());
+            String name = json.getString(JSONParameter.USER_NAME.toString());
             user.setName(name);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
@@ -155,23 +127,13 @@ public class UserServlet extends HttpServlet {
             }
         }
 
-        return createJSONObject(user, error);
+        return ServletUtils.createJSONError(error);
 
-    }
-
-    // TODO: JavaDocs
-    // TODO: überflüssig durch Util?
-    private String createJSONObject(User user, JSONParameter.ErrorCodes error) {
-        JSONObject result = null;
-        if (error.equals(ErrorCodes.OK)) {
-            result = ServletUtils.createJSONUser(user);
-        } else {
-            result = ServletUtils.createJSONError(error);
-        }
-        return result.toString();
     }
 
     /**
+     * NOT USED (YET) BY Client
+     * 
      * A user can invoke this to retrieve any information about a given user such as groups he is a
      * member of and events he wants to participate or is invited to.
      * 
@@ -179,17 +141,25 @@ public class UserServlet extends HttpServlet {
      *            This JSON object contains the user about whom the information shall be released.
      * @return Returns a JSON string containing information about the success of this operation.
      */
-    private String getUser(JSONObject json) {
+    @SuppressWarnings("unused")
+    private JSONObject getUser(JSONObject json) {
         User user = null;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
+        JSONObject result = null;
 
         try {
-            int userID = json.getInt(JSONParameter.UserID.toString());
+            int userID = json.getInt(JSONParameter.USER_ID.toString());
             user = this.usrMang.getUser(userID);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
         }
-        return createJSONObject(user, error);
+        if (error.equals(ErrorCodes.OK)) {
+            result = ServletUtils.createJSONUser(user);
+        } else {
+            result = ServletUtils.createJSONError(error);
+        }
+
+        return result;
     }
 
 }

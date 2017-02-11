@@ -8,6 +8,8 @@ public enum Status {
 	 * If an event is created all users of the group are connected to the event and have the status invited
 	 */
 	INVITED(0),
+
+	REJECTED(3),
 	/**
 	 * If an user clicks on participate he get the status participate
 	 */

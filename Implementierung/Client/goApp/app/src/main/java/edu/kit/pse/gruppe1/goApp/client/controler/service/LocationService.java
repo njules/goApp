@@ -1,116 +1,142 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
-import android.app.Service;
+import android.Manifest;
+import android.app.AlarmManager;
+import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.location.*;
-import android.location.Location;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
-import edu.kit.pse.gruppe1.goApp.client.model.*;
+import edu.kit.pse.gruppe1.goApp.client.model.Event;
+import edu.kit.pse.gruppe1.goApp.client.model.Location;
+import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static android.location.Criteria.ACCURACY_HIGH;
-
 /**
- * This Service is in charge of synchronizing the Users and the Group Location.
+ * Created by Tobias on 07.02.2017.
  */
-public class LocationService implements LocationListener {
 
-    private static final String ACTION_GET = "GET";
+public class LocationService extends IntentService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String SERVLET = "LocationServlet";
-    // minimum time interval between location updates, in milliseconds
-    private static final long MIN_TIME = 3600;
-    // minimum distance between location updates, in meters
-    private static final float MIN_DISTANCE = 100;
-    private static final String ACTION_USER_LOCATION = "USER_LOCATION";
+    private static final String NAME = "LocationService";
+    public static final String RESULT_LOCATION = "resultLocation";
+    public static final String ACTION_MY_LOCATION = "myLocation";
+    public static final String RESULT_MY_LOCATION = "myLocation";
 
-    private int userId = 0;
-    private int eventId = 0;
-
-    /**
-     * sends the clients current location to the server and updates the group location of the event on the client. This method is started at the specific time and is performed periodically
-     *
-     * @param user  the user who's location is updated
-     * @param event the event which's group locations are returned
-     * @return true, if method was successful, otherwise false
-     */
-    public void syncLocation(Context context, User user, Event event) {
-        userId = user.getId();
-        eventId = event.getId();
-        LocationManager locationManager = context.getSystemService(LocationManager.class);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(ACCURACY_HIGH);
-
-        locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true), MIN_TIME, MIN_DISTANCE, this);
-    }
-    public void stopSyncLocation(){
-//TODO implement Methode
+    private GoogleApiClient mGoogleApiClient;
+    private android.location.Location mLastLocation;
+    private int refreshTime = 15000;
+    private int eventLength = 3600000;
+    private AlarmManager eventAlarmMgr;
+    private PendingIntent eventAlarmIntent;
+    private Event event;
+    private Intent intentTest;
+    public LocationService() {
+        super(NAME);
     }
 
-    private void getGroupLocation(int eventId) {
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        Log.i("onHandleIntent", Thread.currentThread().getId() + "");
+        // Create an instance of GoogleAPIClient.
+        if (intent.getAction().equals("NEW_THREAD")) {
+            Intent resultIntent = new Intent();
+            if (mLastLocation != null) {
+                if (intentTest.getAction().equals(ACTION_MY_LOCATION)) {
+                    resultIntent.setAction(RESULT_MY_LOCATION);
+                    resultIntent.putExtra(UtilService.LOCATION, mLastLocation);
+                } else {
+                    event = intent.getParcelableExtra(UtilService.EVENT);
+                    //TODO if error occured....location == null etc
+                    Location[] locations = syncLocation(event.getId());
+                    resultIntent.setAction(RESULT_LOCATION);
+                    resultIntent.putExtra(UtilService.LOCATIONS, locations);
+
+
+                    if (System.currentTimeMillis() + refreshTime < event.getTime().getTime() + eventLength) {
+                        eventAlarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                        Intent eventIntent = new Intent(this, LocationService.class);
+                        eventIntent.putExtra(UtilService.EVENT, event);
+                        eventAlarmIntent = PendingIntent.getService(this, 0, eventIntent, 0);
+                        eventAlarmMgr.setWindow(AlarmManager.RTC, System.currentTimeMillis() + refreshTime, refreshTime, eventAlarmIntent);
+                    }
+                }
+            }
+            LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
+            manager.sendBroadcast(resultIntent);
+        } else {
+            if (mGoogleApiClient == null) {
+                mGoogleApiClient = new GoogleApiClient.Builder(this)
+                        .addConnectionCallbacks(this)
+                        .addOnConnectionFailedListener(this)
+                        .addApi(LocationServices.API)
+                        .build();
+            }
+            mGoogleApiClient.connect();
+            intentTest = intent;
+        }
+
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        Log.i("onConnected", Thread.currentThread().getId() + "");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        Intent intentNewThread = new Intent(this, LocationService.class);
+        intentNewThread.setAction("NEW_THREAD");
+        this.startService(intentNewThread);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private Location[] syncLocation(int eventId) {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.EventID.toString(), eventId);
-            requestJson.put(JSONParameter.Method.toString(), ACTION_GET);
+            requestJson.put(JSONParameter.LOC_NAME.toString(), Preferences.getUser().getName());
+            requestJson.put(JSONParameter.LONGITUDE.toString(), mLastLocation.getLongitude());
+            requestJson.put(JSONParameter.LATITUDE.toString(), mLastLocation.getLatitude());
+            requestJson.put(JSONParameter.EVENT_ID.toString(), eventId);
+            requestJson.put(JSONParameter.USER_ID.toString(), Preferences.getUser().getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SYNC_LOC.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendGetRequest(requestJson.toString());
-        try {
-            //TODO else
-            if (result.getInt(JSONParameter.ErrorCode.toString()) == 0) {
-                return;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (UtilService.isError(result)) {
+            return null;
+        } else {
+            return UtilService.getLocations(result);
         }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        JSONObject requestJson = new JSONObject();
-
-        try {
-            requestJson.put(JSONParameter.EventID.toString(), eventId);
-            requestJson.put(JSONParameter.UserID.toString(), userId);
-            requestJson.put(JSONParameter.Latitude.toString(), location.getLatitude());
-            requestJson.put(JSONParameter.Longitude.toString(),location.getLongitude());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_USER_LOCATION);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        HTTPConnection connection = new HTTPConnection(SERVLET);
-        JSONObject result = connection.sendPostRequest(requestJson.toString());
-        try {
-            //TODO else
-            if (result.getInt(JSONParameter.ErrorCode.toString()) == 0) {
-                return;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        getGroupLocation(eventId);
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
     }
 }

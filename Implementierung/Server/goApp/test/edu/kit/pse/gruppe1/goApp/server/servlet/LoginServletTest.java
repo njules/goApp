@@ -10,29 +10,47 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-/**
- * @author Eva-Maria
- *
- */
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
 public class LoginServletTest {
     private LoginServlet servlet;
 
     @Mock
-    UserManagement mockUsrMang;
+    private UserManagement mockUsrMang;
+    @Mock
+    private HttpServletRequest mockHttpRequest;
+    @Mock
+    private HttpServletResponse mockHttpResponse;
+    @Mock
+    private PrintWriter mockPrintWriter;
+    @Mock
+    private BufferedReader mockBuffRead;
+
+    @Captor
+    private ArgumentCaptor<String> captor;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -42,15 +60,10 @@ public class LoginServletTest {
      */
     @Before
     public void setUp() throws Exception {
-        servlet = new LoginServlet();
-        String name1 = "test";
-        Field field1 = servlet.getClass().getDeclaredField(name1);
-        field1.setAccessible(true);
-        field1.set(servlet, "Test");
-        System.out.println(field1.get(servlet));
-        System.out.println(field1.get(servlet));
+        MockitoAnnotations.initMocks(this);
 
-        // UserManagement nUsrMang = new UserManagement();
+        servlet = new LoginServlet();
+
         String name = "usrMang";
         Field field = servlet.getClass().getDeclaredField(name);
         field.setAccessible(true);
@@ -58,85 +71,142 @@ public class LoginServletTest {
 
     }
 
+
     /**
      * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
+        servlet = null;
     }
-
 
     @Test
     public void testLogin() {
-        String name = "login";
-        User realUsr = new User(1234, "Test User");
-        JSONObject json = new JSONObject();
+        // TODO: an Änderungen anpassen
+        User realUsr = new User("1234", "Test User");
+        realUsr.setUserId(3);
         JSONObject newJson = null;
-        Method method;
 
-        // prepare Test
-        when(mockUsrMang.getUser(realUsr.getGoogleId())).thenReturn(realUsr);
+        when(mockUsrMang.getUser(realUsr.getUserId())).thenReturn(realUsr);
+
+        newJson = loginMethod(realUsr);
+        ServletTestUtils.checkUser(newJson, realUsr);
+    }
+
+    @Test
+    public void testRegister() {
+        // TODO: an Änderungen anpassen
+        JSONObject newJson = null;
+        User user = null;// newRegisterUser();
+
+        when(mockUsrMang.add(user.getName(), user.getGoogleId())).thenReturn(user);
+
+        newJson = registerMethod(user);
+        ServletTestUtils.checkUser(newJson, user);
+
+    }
+
+    @Test
+    public void testLoginToRegister() {
+        JSONObject newJson = new JSONObject();
+        String googleToken = "TOKEN"; // no real token, but there are no tokens from google to test
+        User user = new User("12334", "Test User");
+//        PowerMockito.spy(ServletUtils.class);
+//        ServletUtils spy = spy(ServletUtils.class);
+        
+        // TODO: sehen wie das mit static ist
+      //  Mockito.when(ServletUtils.isUserAlreadyRegistrated(user.getGoogleId())).thenReturn(false);
+//       doReturn(false).when(spy).isUserAlreadyRegistrated(user.getGoogleId());
+//        doReturn(user.getGoogleId()).when(spy).getGoogleIdByToken(googleToken);
+//        doReturn(user.getName()).when(spy).getGoogleNameByToken(googleToken);
+
+        when(mockUsrMang.add(user.getName(), user.getGoogleId())).thenReturn(user);
+
         try {
-            json.accumulate(JSONParameter.UserName.toString(), realUsr.getName());
-            json.accumulate(JSONParameter.UserID.toString(), realUsr.getGoogleId());
-        } catch (JSONException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            newJson.put(JSONParameter.METHOD.toString(), Methods.LOGIN.toString());
+            newJson.put(JSONParameter.GOOGLE_TOKEN.toString(), googleToken);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
         }
+
+        newJson = loginMethod(user);
+        ServletTestUtils.checkUser(newJson, user);
+    }
+
+    private JSONObject loginMethod(User user) {
+        // TODO: an Änderungen anpassen
+        JSONObject json = new JSONObject();
+        try {
+            json.accumulate(JSONParameter.USER_NAME.toString(), user.getName());
+            json.accumulate(JSONParameter.USER_ID.toString(), user.getUserId());
+            // json.accumulate(JSONParameter.GOOGLE_TOKEN.toString(), user.getGoogleId());
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+            fail();
+        }
+        return method(json, "login");
+    }
+
+    private JSONObject registerMethod(User user) {
+        // TODO: an Änderungen anpassen
+        JSONObject json = new JSONObject();
+        try {
+            json.accumulate(JSONParameter.USER_NAME.toString(), user.getName());
+            // json.accumulate(JSONParameter.GOOGLE_ID.toString(), user.getGoogleId());
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+            fail();
+        }
+        return method(json, "register");
+    }
+
+    /**
+     * calls loginMethod with Mocked User Object mock methods before use
+     * 
+     * @param realUsr
+     *            User for JSON String
+     * 
+     * @param name
+     *            could be register or login
+     * @return
+     */
+    private JSONObject method(JSONObject json, String name) {
+        Method method;
+        JSONObject newJson = null;
 
         // Call Method
         try {
             method = servlet.getClass().getDeclaredMethod(name, JSONObject.class);
             method.setAccessible(true);
             Object returnValue = method.invoke(servlet, json);
-            // assert Object returnValue ist JSONObject
+
+            // assert Object returnValue is JSONObject
             newJson = (JSONObject) returnValue;
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-        if (newJson != null) {
-            try {
-                assertEquals(realUsr.getName(),
-                        newJson.getString(JSONParameter.UserName.toString()));
-
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        } else {
             fail();
         }
-
+        return newJson;
     }
 
-    @Ignore
-    @Test
-    public void testLoginWithNonUsr() {
-        User nullUsr = new User(1, "Null User");
-        when(mockUsrMang.getUser(nullUsr.getGoogleId())).thenReturn(null);
-    }
-
-    @Test
-    public void test() {
-        String name = "getTest";
-        Method method = null;
-        JSONObject json = new JSONObject();
-
-        try {
-            method = servlet.getClass().getDeclaredMethod(name);
-            method.setAccessible(true);
-            Object returnValue = method.invoke(servlet);
-            System.out.println(returnValue);
-            assertEquals(returnValue.toString(), "Test");
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+    // private JSONObject appendUserToJson(User user, JSONObject json) {
+    // // TODO: an Änderungen anpassen
+    // try {
+    // json.accumulate(JSONParameter.USER_ID.toString(), user.getUserId());
+    // json.accumulate(JSONParameter.USER_NAME.toString(), user.getName());
+    // // json.accumulate(JSONParameter.GOOGLE_ID.toString(), user.getGoogleId());
+    // json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.toString());
+    // } catch (JSONException e) {
+    // e.printStackTrace();
+    // fail();
+    // }
+    //
+    // return json;
+    //
+    // }
 
     /**
      * Test method for
@@ -144,9 +214,39 @@ public class LoginServletTest {
      * .
      */
     @Test
-    @Ignore
-    public void testDoGetHttpServletRequestHttpServletResponse() {
-        fail("Not yet implemented");
+    public void testDoGetWithLogin() {
+        // TODO: an Änderungen anpassen
+        JSONObject newJson = null;
+        User user = new User(); // newLoginUser();
+        user.setUserId(1);
+        String jsonStr = null;
+
+
+        when(mockUsrMang.getUser(user.getUserId())).thenReturn(user);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(jsonStr);
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doGet(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+        try {
+            newJson = new JSONObject(captor.getValue());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        ServletTestUtils.checkUser(newJson, user);
     }
 
     /**
@@ -155,9 +255,78 @@ public class LoginServletTest {
      * .
      */
     @Test
-    @Ignore
-    public void testDoPostHttpServletRequestHttpServletResponse() {
-        fail("Not yet implemented");
+    public void testDoPostWithLogin() {
+        // TODO: an Änderungen anpassen
+        JSONObject newJson = null;
+        User user = null; // newLoginUser();
+        // TODO: String jsonStr = appendUserToJson(user, sendJSONLogin).toString();
+        String jsonStr = null;
+
+        when(mockUsrMang.getUser(user.getUserId())).thenReturn(user);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(jsonStr);
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+        try {
+            newJson = new JSONObject(captor.getValue());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        ServletTestUtils.checkUser(newJson, user);
+    }
+
+    /**
+     * Test method for
+     * {@link edu.kit.pse.gruppe1.goApp.server.servlet.LoginServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)}
+     * .
+     */
+    @Test
+    public void testDoGetWithRegister() {
+        // TODO: an Änderungen anpassen
+        JSONObject newJson = null;
+        User user = null; // newRegisterUser();
+        String jsonStr = null;// appendUserToJson(user, sendJSONRegister).toString();
+
+        when(mockUsrMang.add(user.getName(), user.getGoogleId())).thenReturn(user);
+        when(mockUsrMang.getUser(anyInt())).thenReturn(null);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(jsonStr);
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doGet(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+        try {
+            newJson = new JSONObject(captor.getValue());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        ServletTestUtils.checkUser(newJson, user);
     }
 
 }

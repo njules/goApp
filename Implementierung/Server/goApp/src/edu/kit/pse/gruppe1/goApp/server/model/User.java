@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -21,14 +20,14 @@ import javax.persistence.UniqueConstraint;
  * An user describes an user of the goApp.
  */
 @Entity
-@Table(name = "userT", uniqueConstraints = @UniqueConstraint(columnNames = { "GOOGLE_ID" }))
+@Table(name = "userT", uniqueConstraints = @UniqueConstraint(columnNames = { "GOOGLE_ID" }) )
 public class User {
 
     /**
      * The Id is used to identify each user and is therefore unique.
      */
     private Integer userId;
-    private Integer googleId;
+    private String googleId;
     /**
      * The name of an user is selectable by the user and can also be changed.
      */
@@ -45,12 +44,12 @@ public class User {
 
     /**
      * 
-     * @param id
+     * @param googleId
      *            The Id of the user.
      * @param name
      *            The name of the user.
      */
-    public User(int googleId, String name) {
+    public User(String googleId, String name) {
         this.googleId = googleId;
         this.name = name;
     }
@@ -67,11 +66,11 @@ public class User {
     }
 
     @Column(name = "GOOGLE_ID", nullable = false)
-    public Integer getGoogleId() {
+    public String getGoogleId() {
         return googleId;
     }
 
-    public void setGoogleId(Integer googleId) {
+    public void setGoogleId(String googleId) {
         this.googleId = googleId;
     }
 
@@ -138,8 +137,6 @@ public class User {
     public void setLocation(Location location) {
         this.location = location;
     }
-
-  
 
     @Override
     public int hashCode() {

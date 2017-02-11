@@ -7,10 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
@@ -26,6 +23,13 @@ import edu.kit.pse.gruppe1.goApp.server.model.User;
 public class EventManagement implements Management {
 
     /**
+     * Constructor
+     */
+    public EventManagement() {
+        super();
+    }
+
+    /**
      * creates new Group and adds new entry to table adds all User from Group to Event and sets
      * Status
      * 
@@ -39,6 +43,8 @@ public class EventManagement implements Management {
      *            ID of User who created the Event
      * @param groupId
      *            ID of Group to which Event is related to
+     * 
+     * @return event which was added
      */
 
     public Event add(String name, Location location, Timestamp time, int creatorId, int groupId) {
@@ -50,7 +56,11 @@ public class EventManagement implements Management {
         Event event = new Event(name, location, time, group, creator);
         Set<Participant> participants = new HashSet<>(group.getUsers().size());
         for (User user : group.getUsers()) {
-            participants.add(new Participant(Status.INVITED.getValue(), event, user));
+            if (user.getUserId().equals(creator.getUserId())) {
+                participants.add(new Participant(Status.PARTICIPATE.getValue(), event, user));
+            } else {
+                participants.add(new Participant(Status.INVITED.getValue(), event, user));
+            }
         }
         event.setParticipants(participants);
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
@@ -81,7 +91,7 @@ public class EventManagement implements Management {
     /**
      * updates entry with given id - sets new name
      * 
-     * @param eventID
+     * @param eventId
      *            ID of entry to be updated
      * @param name
      *            new Name of Entry
@@ -99,7 +109,7 @@ public class EventManagement implements Management {
     /**
      * gets Event with given eventID
      * 
-     * @param eventID
+     * @param eventId
      *            ID of event
      * @return matching  Event
      */
@@ -114,7 +124,7 @@ public class EventManagement implements Management {
     /**
      * get User who created Event
      * 
-     * @param eventID
+     * @param eventId
      *            ID of entry
      * @return ID of User
      */

@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
@@ -17,11 +18,16 @@ import java.sql.Date;
  */
 public class RequestService extends IntentService{
 
-	public static final String NAME = "RequestService";
-	public static final String ACTION_CREATE = "CREATE";
-	public static final String ACTION_ACCEPT = "ACCEPT";
-	public static final String ACTION_REJECT = "REJECT";
-	public static final String SERVLET = "RequestServlet";
+	private static final String NAME = "RequestService";
+    private static final String SERVLET = "RequestServlet";
+    //Intnt actions
+	private static final String ACTION_CREATE = "CREATE";
+	private static final String ACTION_ACCEPT = "ACCEPT";
+	private static final String ACTION_REJECT = "REJECT";
+	public static final String RESULT_REJECT = "RESULT_REJECT_REQUEST";
+	public static final String RESULT_ACCEPT = "RESULT_ACCEPT_REQUEST";
+	public static final String RESULT_CREATE = "RESULT_CREATE_REQUEST";
+
 
     public RequestService() {
         super(NAME);
@@ -37,19 +43,18 @@ public class RequestService extends IntentService{
         JSONObject requestJson = new JSONObject();
 
         try {
-
-            requestJson.put(JSONParameter.GroupID.toString(), group.getId());
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_CREATE);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CREATE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_CREATE);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 //TODO differenz between accept and reject
 	/**
@@ -61,18 +66,18 @@ public class RequestService extends IntentService{
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GroupID.toString(), request.getGroup().getId());
-            requestJson.put(JSONParameter.UserID.toString(), request.getUser().getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_ACCEPT);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), request.getGroup().getId());
+            requestJson.put(JSONParameter.USER_ID.toString(), request.getUser().getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.ACCEPT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_ACCEPT);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 
 	/**
@@ -84,18 +89,18 @@ public class RequestService extends IntentService{
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GroupID.toString(), request.getGroup().getId());
-            requestJson.put(JSONParameter.UserID.toString(), request.getUser().getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_REJECT);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), request.getGroup().getId());
+            requestJson.put(JSONParameter.USER_ID.toString(), request.getUser().getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.REJECT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_REJECT);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
 	}
 
 	@Override
@@ -105,39 +110,28 @@ public class RequestService extends IntentService{
         JSONObject result;
         switch (intent.getAction()) {
             case ACTION_CREATE:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                resultIntent.setAction(intent.getAction());
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_CREATE);
+                if(UtilService.isError(result)){
+                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
                 }
                 break;
             case ACTION_REJECT:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_REJECT);
+                if(UtilService.isError(result)){
+                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
                 }
-
                 break;
             case ACTION_ACCEPT:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_ACCEPT);
+                if(UtilService.isError(result)){
+                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
                 }
                 break;
             //TODO default case
-
         }
-        resultIntent.setAction(intent.getAction());
-
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);
 	}

@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -20,30 +22,30 @@ public class Event implements Parcelable {
      */
     private String name;
 
-    public Date getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
     /**
      * The time of an event tells when the event is starting and set by the creator of the event.
      */
-    private Date time;
+    private Timestamp time;
 
     private Group group;
     private User creator;
-    private Set<Participant> participants;
-    private Set<Location> clusterPoints;
+    private ArrayList<Participant> participants;
+    private ArrayList<Location> clusterPoints;
     private Location location;
 
     public User getCreator() {
         return creator;
     }
 
-    public Set<Participant> getParticipants() {
+    public ArrayList<Participant> getParticipants() {
         return participants;
     }
 
-    public Set<Location> getClusterPoints() {
+    public ArrayList<Location> getClusterPoints() {
         return clusterPoints;
     }
 
@@ -54,6 +56,9 @@ public class Event implements Parcelable {
     protected Event(Parcel in) {
         id = in.readInt();
         name = in.readString();
+        time = new Timestamp(in.readLong());
+        location = in.readParcelable(Location.class.getClassLoader());
+        creator = in.readParcelable(User.class.getClassLoader());
     }
 
     public static final Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
@@ -80,7 +85,7 @@ public class Event implements Parcelable {
         this.name = name;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 
@@ -90,10 +95,12 @@ public class Event implements Parcelable {
      * @param name The name of the event.
      * @param time The time of the event.
      */
-    public Event(int id, String name, Date time) {
+    public Event(int id, String name, Timestamp time, Location location,User creator) {
         this.id = id;
         this.name = name;
         this.time = time;
+        this.location = location;
+        this.creator = creator;
     }
 
     @Override
@@ -106,5 +113,12 @@ public class Event implements Parcelable {
         out.writeInt(id);
         out.writeString(name);
         out.writeLong(time.getTime());
+        out.writeParcelable(location,i);
+        out.writeParcelable(creator,i);
+    }
+
+    //TODO Usefull?
+    public void setClusterPoints(ArrayList<Location> clusterPoints) {
+        this.clusterPoints = clusterPoints;
     }
 }

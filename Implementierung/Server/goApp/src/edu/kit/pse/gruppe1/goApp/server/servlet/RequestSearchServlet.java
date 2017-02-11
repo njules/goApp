@@ -17,6 +17,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.RequestManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class RequestSearchServlet
@@ -39,49 +40,10 @@ public class RequestSearchServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        String strResponse = null;
-//        String jsonString = null;
-//        JSONParameter.Methods method = null;
-//        response.setContentType("text/plain");
-//        PrintWriter out = null;
-//        // try {
-//        out = response.getWriter();
-//        jsonString = request.getReader().readLine();
-//        // } catch (IOException e1) {
-//        // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
-//        // out.println(strResponse);
-//        // return;
-//        // }
-//
-//        if (jsonString == null) {
-//            strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
-//            out.println(strResponse);
-//            return;
-//        }
-//        try {
-//            JSONObject jsonRequest = new JSONObject(jsonString);
-//            method = JSONParameter.Methods
-//                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
-//            switch (method) {
-//            case GET_REQ_USR:
-//                strResponse = getRequestsByUser(jsonRequest);
-//                break;
-//            case GET_REQ_GRP:
-//                strResponse = getRequestsByGroup(jsonRequest);
-//                break;
-//            default:
-//                strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
-//                break;
-//            }
-//            out.println(strResponse);
-//        } catch (JSONException e) {
-//            strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
-//            out.println(strResponse);
-//        }
-        
-     // TODO: delete old one, if new does work
+
         String strResponse = null;
         JSONObject jsonRequest = null;
         JSONParameter.Methods method = null;
@@ -90,8 +52,15 @@ public class RequestSearchServlet extends HttpServlet {
 
         out = response.getWriter();
 
+        jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            // response was set in extractJSON
+            return;
+        }
+
         try {
-            method = ServletUtils.getMethod(request, jsonRequest);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -100,12 +69,16 @@ public class RequestSearchServlet extends HttpServlet {
             }
         }
 
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
+
         switch (method) {
         case GET_REQ_USR:
-            strResponse = getRequestsByUser(jsonRequest);
+            strResponse = getRequestsByUser(jsonRequest).toString();
             break;
         case GET_REQ_GRP:
-            strResponse = getRequestsByGroup(jsonRequest);
+            strResponse = getRequestsByGroup(jsonRequest).toString();
             break;
         default:
             if (error.equals(ErrorCodes.OK)) {
@@ -120,9 +93,9 @@ public class RequestSearchServlet extends HttpServlet {
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         doGet(request, response);
     }
 
@@ -135,19 +108,19 @@ public class RequestSearchServlet extends HttpServlet {
      * @return Returns a JSON string containing a list of all join requests issued by the given
      *         user.
      */
-    private String getRequestsByUser(JSONObject json) {
+    private JSONObject getRequestsByUser(JSONObject json) {
         int userID = -1;
         List<Group> grpFromUsr = null;
 
         try {
-            userID = json.getInt(JSONParameter.UserID.toString());
+            userID = json.getInt(JSONParameter.USER_ID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         grpFromUsr = reqMang.getRequestByUser(userID);
 
-        return ServletUtils.createJSONListGrp(grpFromUsr).toString();
+        return ServletUtils.createJSONListGrp(grpFromUsr);
     }
 
     /**
@@ -160,19 +133,19 @@ public class RequestSearchServlet extends HttpServlet {
      * @return Returns a JSON string containing a list of all active join requests for the given
      *         group..
      */
-    private String getRequestsByGroup(JSONObject json) {
+    private JSONObject getRequestsByGroup(JSONObject json) {
         int groupID = -1;
         List<User> usrInGrp = null;
 
         try {
-            groupID = json.getInt(JSONParameter.GroupID.toString());
+            groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         usrInGrp = reqMang.getRequestByGroup(groupID);
 
-        return ServletUtils.createJSONListUsr(usrInGrp).toString();
+        return ServletUtils.createJSONListUsr(usrInGrp);
 
     }
 

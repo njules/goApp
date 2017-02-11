@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class LoginServlet
@@ -26,63 +27,21 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserManagement usrMang;
-    //TODO: String test wieder rausnehmen
-    private String test;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
     public LoginServlet() {
         super();
         usrMang = new UserManagement();
-        test = "inKlasse";
     }
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO: hier herkömmlich
-        // String strResponse = null;
-        // String jsonString = null;
-        // JSONParameter.Methods method = null;
-        // response.setContentType("text/plain");
-        // PrintWriter out = null;
-        // // try {
-        // out = response.getWriter();
-        // jsonString = request.getReader().readLine();
-        // // } catch (IOException e1) {
-        // // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
-        // // out.println(strResponse);
-        // // return;
-        // // }
-        //
-        // if (jsonString == null) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
-        // out.println(strResponse);
-        // return;
-        // }
-        // try {
-        // JSONObject jsonRequest = new JSONObject(jsonString);
-        // method = JSONParameter.Methods
-        // .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
-        // switch (method) {
-        // case LOGIN:
-        // strResponse = login(jsonRequest);
-        // break;
-        // case REGISTER:
-        // strResponse = register(jsonRequest);
-        // break;
-        // default:
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
-        // break;
-        // }
-        // out.println(strResponse);
-        // } catch (JSONException e) {
-        // strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
-        // out.println(strResponse);
-        // }
-        // TODO: IO-Error/Servlet Error werfen?
 
         String strResponse = null;
         JSONObject jsonRequest = null;
@@ -92,8 +51,15 @@ public class LoginServlet extends HttpServlet {
 
         out = response.getWriter();
 
+        jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            // response was set in extractJSON
+            return;
+        }
+
         try {
-            method = ServletUtils.getMethod(request, jsonRequest);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -101,7 +67,10 @@ public class LoginServlet extends HttpServlet {
                 error = ErrorCodes.READ_JSON;
             }
         }
-        //TODO überall: method null abfangen
+
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
         switch (method) {
         case LOGIN:
             strResponse = login(jsonRequest).toString();
@@ -118,17 +87,13 @@ public class LoginServlet extends HttpServlet {
         }
         out.println(strResponse);
     }
-    /* TODO: Löschen, wenn JUnit funktioniert*/
-    private String getTest(){
-        return this.test;
-    }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO: was hier tun?
         doGet(request, response);
     }
 
@@ -142,22 +107,29 @@ public class LoginServlet extends HttpServlet {
      * @return Returns a JSON string containing the user that just registered.
      */
     private JSONObject register(JSONObject json) {
-        int googleId = -1;
+        String googleToken = null;
+        String googleId = null;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
+        String name = null;
         User user = null;
         JSONObject result = null;
 
         try {
-            googleId = json.getInt(JSONParameter.ID.toString());
-            String name = json.getString(JSONParameter.UserName.toString());
-            user = usrMang.add(name, googleId);
+            googleToken = json.getString(JSONParameter.GOOGLE_TOKEN.toString());
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
             return ServletUtils.createJSONError(error);
         }
+        googleId = ServletUtils.getGoogleIdByToken(googleToken);
+        name = ServletUtils.getGoogleNameByToken(googleToken);
+        user = usrMang.add(name, googleId);
+
         if (user != null) {
             result = ServletUtils.createJSONUser(user);
-        } else if (!error.equals(ErrorCodes.OK)) {
+        } else {
+            error = ErrorCodes.DB_ERROR;
+        }
+        if (error.equals(ErrorCodes.OK)) {
             result = ServletUtils.createJSONError(error);
         }
         return result;
@@ -173,23 +145,23 @@ public class LoginServlet extends HttpServlet {
      * @return Returns a JSON string containing the user that just logged in.
      */
     private JSONObject login(JSONObject json) {
-        int userID = -1;
-        JSONParameter.ErrorCodes error = ErrorCodes.OK;
+        String googleToken = null;
+        String googleId = null;
         User user = null;
 
         try {
-           // userID = json.getJSONArray(JSONParameter.UserID.toString()).getInt(0);
-            userID = json.getInt(JSONParameter.UserID.toString());
+            googleToken = json.getString(JSONParameter.GOOGLE_TOKEN.toString());
         } catch (JSONException e) {
-            error = ErrorCodes.READ_JSON;
-            return ServletUtils.createJSONError(error);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
-        user = usrMang.getUser(userID);
-        if (user != null) {
+        googleId = ServletUtils.getGoogleIdByToken(googleToken);
+
+        if (ServletUtils.isUserAlreadyRegistrated(googleId)) {
+            user = usrMang.getUserByGoogleId(googleId);
             return ServletUtils.createJSONUser(user);
+        } else {
+            return register(json);
         }
-        // if User does not exist yet (getUser == null) register new User
-        return register(json);
     }
 
 }

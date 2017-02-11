@@ -13,6 +13,13 @@ import edu.kit.pse.gruppe1.goApp.server.model.*;
  */
 public class EventUserManagement implements Management {
 
+    /**
+     * Constructor
+     */
+    public EventUserManagement() {
+        super();
+    }
+
     private Participant getParticipant(int participantId) {
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
         session.beginTransaction();
@@ -27,6 +34,14 @@ public class EventUserManagement implements Management {
             return null;
         }
         return event.getParticipant(userId);
+    }
+
+    public List<Participant> getParticipants(int eventId) {
+        Event event = new EventManagement().getEvent(eventId);
+        if (event == null) {
+            return null;
+        }
+        return new ArrayList<>(event.getParticipants());
     }
 
     /**
@@ -54,9 +69,9 @@ public class EventUserManagement implements Management {
     /**
      * updates Status of given user and eventID
      * 
-     * @param eventID
+     * @param eventId
      *            eventID to upate
-     * @param userID
+     * @param userId
      *            userID to update
      * @param newStatus
      *            new Status to set
@@ -71,7 +86,6 @@ public class EventUserManagement implements Management {
         return update(participant);
     }
 
-    
     private boolean update(Participant chParticipant) {
         if (chParticipant.getParticipantID() == null) {
             return false;
@@ -86,9 +100,9 @@ public class EventUserManagement implements Management {
     /**
      * removes entry (with userID and eventID)
      * 
-     * @param eventID
+     * @param eventId
      *            eventID to remove
-     * @param userID
+     * @param userId
      *            userID to remove
      * @return true, if update was successfull, otherwise false
      */
@@ -100,7 +114,7 @@ public class EventUserManagement implements Management {
     /**
      * get all events in which given user participates
      * 
-     * @param userID
+     * @param userId
      *            ID of user
      * @return List of matching Events
      */
@@ -120,7 +134,7 @@ public class EventUserManagement implements Management {
     /**
      * get all users which participate in given Event
      * 
-     * @param eventID
+     * @param eventId
      *            ID of event
      * @return List of matching User
      */
@@ -142,7 +156,7 @@ public class EventUserManagement implements Management {
      * 
      * @param status
      *            status to search for
-     * @param eventID
+     * @param eventId
      *            ID of event to search for
      * @return List of matching Users
      */
@@ -159,6 +173,21 @@ public class EventUserManagement implements Management {
             }
         }
         return users;
+    }
+
+    public List<Event> getEventsByStatus(Status status, int groupId, int userId) {
+        Group group = new GroupManagement().getGroup(groupId);
+        if (group == null) {
+            return null;
+        }
+        List<Event> events = new ArrayList<>();
+
+        for (Event event : group.getEvents()) {
+            if (Status.fromInteger(event.getParticipant(userId).getStatus()) == status) {
+                events.add(event);
+            }
+        }
+        return events;
     }
 
     @Override

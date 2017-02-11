@@ -7,6 +7,8 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
@@ -19,15 +21,28 @@ import org.json.JSONObject;
  */
 public class GroupService extends IntentService {
 
-    public static final String NAME = "GroupService";
-    public static final String ACTION_CREATE = "CREATE";
-    public static final String ACTION_DELETE = "DELETE";
-    public static final String ACTION_GET = "GET";
-    public static final String ACTION_DELETE_MEMBER = "DELETE_MEMBER";
-    public static final String ACTION_SET_NAME = "SET_NAME";
-    public static final String ACTION_SET_FOUNDER = "SET_FOUNDER";
-    public static final String ACTION_GET_EVENTS = "GET_EVENTS";
-    public static final String SERVLET = "GroupServlet";
+    private static final String NAME = "GroupService";
+    private static final String SERVLET = "GroupServlet";
+    //Intentaction to start the Service
+    private static final String ACTION_CREATE = "CREATE_GROUP";
+    private static final String ACTION_DELETE = "DELETE_GROUP";
+    private static final String ACTION_GET_MEMBERS = "GET_MEMBERS";
+    private static final String ACTION_DELETE_MEMBER = "DELETE_MEMBER";
+    private static final String ACTION_SET_NAME = "SET_NAME";
+    private static final String ACTION_SET_FOUNDER = "SET_FOUNDER";
+    private static final String ACTION_GET_EVENTS = "GET_EVENTS";
+    //Intentaction for delivering the result to an activity
+    public static final String RESULT_CREATE = "RESULT_CREATE_GROUP";
+    public static final String RESULT_DELETE = "RESULT_DELETE_GROUP";
+    public static final String RESULT_GET_MEMBERS = "RESULT_GET_MEMBERS";
+    public static final String RESULT_DELETE_MEMBER = "RESULT_DELETE_MEMBER";
+    public static final String RESULT_SET_NAME = "RESULT_SET_NAME";
+    public static final String RESULT_SET_FOUNDER = "RESULT_SET_FOUNDER";
+    public static final String RESULT_GET_EVENTS = "RESULT_GET_EVENTS";
+
+
+    private HTTPConnection connection;
+    private JSONObject requestJson;
 
     public GroupService() {
         super(NAME);
@@ -42,21 +57,22 @@ public class GroupService extends IntentService {
      * @return true, if method was successful, otherwise false
      */
     public void create(Context context, String name, User founder) {
-        JSONObject requestJson = new JSONObject();
+        requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GroupName.toString(), name);
-            requestJson.put(JSONParameter.UserID.toString(), founder.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_CREATE);
+            requestJson.put(JSONParameter.GROUP_NAME.toString(), name);
+            requestJson.put(JSONParameter.USER_ID.toString(), founder.getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CREATE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
+        requestIntent.putExtra(UtilService.GROUP, new Group(0, name, founder));
         requestIntent.setAction(ACTION_CREATE);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
@@ -70,17 +86,17 @@ public class GroupService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GroupID.toString(), group.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_DELETE);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DELETE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_DELETE);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
@@ -94,18 +110,18 @@ public class GroupService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GroupID.toString(), group.getId());
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_DELETE_MEMBER);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DEL_MEM.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_DELETE_MEMBER);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
@@ -119,18 +135,18 @@ public class GroupService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GroupID.toString(), group.getId());
-            requestJson.put(JSONParameter.GroupName.toString(), newName);
-            requestJson.put(JSONParameter.Method.toString(), ACTION_SET_NAME);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_NAME.toString(), newName);
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_NAME.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_SET_NAME);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
@@ -139,21 +155,22 @@ public class GroupService extends IntentService {
      * @param groupID The unique id of the group to find it
      * @return the group with the given id or null if it doesn't exist
      */
-    public void getGroup(Context context, int groupID) {
+    public void getMembers(Context context, Group group) {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GroupID.toString(), groupID);
-            requestJson.put(JSONParameter.Method.toString(), ACTION_GET);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            //TODO GET_MEMBER
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_MEMBERS.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
-        requestIntent.setAction(ACTION_GET);
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
+        requestIntent.setAction(ACTION_GET_MEMBERS);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
@@ -167,17 +184,18 @@ public class GroupService extends IntentService {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.UserID.toString(), newFounder.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_SET_FOUNDER);
+            requestJson.put(JSONParameter.USER_ID.toString(), newFounder.getId());
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_FOUNDER.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_SET_FOUNDER);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     /**
@@ -186,115 +204,101 @@ public class GroupService extends IntentService {
      * @param group The existing group to get events from
      * @return all event in the group or null
      */
-    public void getEvents(Context context, Group group) {
+    public void getEvents(Context context, Group group, User user) {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GroupID.toString(), group.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_GET_EVENTS);
+            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
+            //TODO JSON Parameter GET_EVENTS
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_EVENT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_GET_EVENTS);
 
-        startService(requestIntent);
+        context.startService(requestIntent);
     }
 
     //TODO change model classes of client after successful change
     @Override
     protected void onHandleIntent(Intent intent) {
-        HTTPConnection connection = new HTTPConnection(SERVLET);
+        connection = new HTTPConnection(SERVLET);
         Intent resultIntent = new Intent();
         JSONObject result;
         switch (intent.getAction()) {
             case ACTION_CREATE:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                resultIntent.setAction(intent.getAction());
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_CREATE);
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+                } else {
+                    try {
+                        Group group = intent.getParcelableExtra(UtilService.GROUP);
+                        resultIntent.putExtra(UtilService.GROUP, new Group(result.getInt(JSONParameter.GRUOP_ID.toString()), group.getName(), group.getFounder()));
+                    } catch (JSONException e) {
+                        //TODO Errormassage
+                        e.printStackTrace();
+                    }
                 }
                 break;
-            case ACTION_GET:
-                result = connection.sendGetRequest(intent.getStringExtra("JSON"));
-                try {
-                    User user = new User(result.getInt(JSONParameter.UserID.toString()), result.getString(JSONParameter.UserName.toString()));
-                    Group group = new Group(result.getInt(JSONParameter.GroupID.toString()), result.getString(JSONParameter.GroupName.toString()), user);
-                    resultIntent.putExtra("group", group);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            case ACTION_GET_MEMBERS:
+                result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_GET_MEMBERS);
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+                } else {
+                    resultIntent.putExtra(UtilService.USERS, UtilService.getUsers(result));
                 }
-
                 break;
             case ACTION_DELETE:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_DELETE);
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
                 }
                 break;
             case ACTION_DELETE_MEMBER:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_DELETE_MEMBER);
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
                 }
                 break;
             case ACTION_GET_EVENTS:
-                result = connection.sendGetRequest(intent.getStringExtra("JSON"));
-                resultIntent.putExtra("events", getEvents(result));
+                result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_GET_EVENTS);
+                Log.i("GetEvents", result.toString());
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+                } else {
+                    resultIntent.putExtra(UtilService.NEW_EVENTS, UtilService.getNewEvents(result));
+                    resultIntent.putExtra(UtilService.ACCEPTED_EVENTS, UtilService.getAcceptedEvents(result));
+                }
                 break;
             case ACTION_SET_FOUNDER:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_SET_FOUNDER);
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
                 }
                 break;
             case ACTION_SET_NAME:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_SET_NAME);
+                if (UtilService.isError(result)) {
+                    resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
                 }
                 break;
-                //TODO default case
+            //TODO default case
 
         }
-        resultIntent.setAction(intent.getAction());
-
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);
     }
 
-    private Event[] getEvents(JSONObject result) {
-        try {
-            JSONArray jsons = result.getJSONArray(JSONParameter.GroupName.toString());
-            Event[] events = new Event[jsons.length()];
-            for (int i = 0; i < jsons.length(); i++) {
-                events[i] = new Event(
-                        jsons.getJSONObject(i).getInt(JSONParameter.EventID.toString()),
-                        jsons.getJSONObject(i).getString(JSONParameter.EventName.toString()),
-                        new Date(jsons.getJSONObject(i).getLong(JSONParameter.EventTime.toString())));
-            }
-            return events;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
 
-    }
 }

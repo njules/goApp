@@ -64,11 +64,11 @@ public class EventUserManagementTest {
 
     @Test
     public void testUpdateStatus() {
-        Status newStatus = Status.PARTICIPATE;
+        Status newStatus = Status.STARTED;
         assertThat(new EventUserManagement().getEvents(createdUser.getUserId()).size(), is(1));
         assertThat(new EventUserManagement()
                 .getParticipant(createdEvent.getEventId(), createdUser.getUserId()).getStatus(),
-                is(Status.INVITED.getValue()));
+                is(Status.PARTICIPATE.getValue()));
         assertThat(new EventUserManagement().updateStatus(createdEvent.getEventId(),
                 createdUser.getUserId(), newStatus), is(true));
 
@@ -83,6 +83,16 @@ public class EventUserManagementTest {
         Participant participant = new EventUserManagement()
                 .getParticipant(createdEvent.getEventId(), createdUser.getUserId());
         assertThat(participant, is(notNullValue()));
+    }
+
+    @Test
+    public void testGetParticipants() {
+        List<Participant> participants = new EventUserManagement()
+                .getParticipants(createdEvent.getEventId());
+        assertThat(participants, is(notNullValue()));
+        assertThat(participants.size(), is(1));
+        assertThat(participants.get(0).getEvent().getEventId(), is(createdEvent.getEventId()));
+        assertThat(participants.get(0).getUser().getUserId(), is(createdUser.getUserId()));
     }
 
     @Test
@@ -135,7 +145,7 @@ public class EventUserManagementTest {
                 Status.STARTED), is(true));
         assertThat(new UserManagement().getUser(userTmp.getUserId()), is(notNullValue()));
 
-        List<User> users = new EventUserManagement().getUserByStatus(Status.INVITED,
+        List<User> users = new EventUserManagement().getUserByStatus(Status.PARTICIPATE,
                 createdEvent.getEventId());
         assertThat(users, is(notNullValue()));
         assertThat(users.size(), is(1));
@@ -148,6 +158,35 @@ public class EventUserManagementTest {
         assertThat(users.get(0).getUserId(), is(userTmp.getUserId()));
 
         new UserManagement().delete(userTmp.getUserId());
+    }
+
+    @Test
+    public void testGetEventsByStatus() {
+        Event eventTmp = new EventManagement().add(eventName + "eventTmp",
+                new Location(0, 0, "locationTmp"), new Timestamp(0), createdUser.getUserId(),
+                group.getGroupId());
+        assertThat(new EventUserManagement().updateStatus(eventTmp.getEventId(),
+                createdUser.getUserId(), Status.STARTED), is(true));
+        assertThat(new EventManagement().getEvent(eventTmp.getEventId()), is(notNullValue()));
+
+        List<Event> events = new EventUserManagement().getEventsByStatus(Status.INVITED,
+                group.getGroupId(), createdUser.getUserId());
+        assertThat(events, is(notNullValue()));
+        assertThat(events.size(), is(0));
+
+        events = new EventUserManagement().getEventsByStatus(Status.PARTICIPATE, group.getGroupId(),
+                createdUser.getUserId());
+        assertThat(events, is(notNullValue()));
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getEventId(), is(createdEvent.getEventId()));
+
+        events = new EventUserManagement().getEventsByStatus(Status.STARTED, group.getGroupId(),
+                createdUser.getUserId());
+        assertThat(events, is(notNullValue()));
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getEventId(), is(eventTmp.getEventId()));
+
+        new EventManagement().delete(eventTmp.getEventId());
     }
 
     @Test

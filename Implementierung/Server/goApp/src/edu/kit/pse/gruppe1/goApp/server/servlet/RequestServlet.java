@@ -19,6 +19,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Request;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
  * Servlet implementation class RequestServlet
@@ -44,52 +45,10 @@ public class RequestServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        String strResponse = null;
-//        String jsonString = null;
-//        JSONParameter.Methods method = null;
-//        response.setContentType("text/plain");
-//        PrintWriter out = null;
-//        // try {
-//        out = response.getWriter();
-//        jsonString = request.getReader().readLine();
-//        // } catch (IOException e1) {
-//        // strResponse = ServletUtils.createJSONError(ErrorCodes.IO_ERROR);
-//        // out.println(strResponse);
-//        // return;
-//        // }
-//
-//        if (jsonString == null) {
-//            strResponse = ServletUtils.createJSONError(ErrorCodes.EMPTY_JSON);
-//            out.println(strResponse);
-//            return;
-//        }
-//        try {
-//            JSONObject jsonRequest = new JSONObject(jsonString);
-//            method = JSONParameter.Methods
-//                    .fromString(jsonRequest.getString(JSONParameter.Method.toString()));
-//            switch (method) {
-//            case CREATE:
-//                strResponse = create(jsonRequest);
-//                break;
-//            case ACCEPT:
-//                strResponse = accept(jsonRequest);
-//                break;
-//            case REJECT:
-//                strResponse = reject(jsonRequest);
-//                break;
-//            default:
-//                strResponse = ServletUtils.createJSONError(ErrorCodes.METH_ERROR);
-//                break;
-//            }
-//            out.println(strResponse);
-//        } catch (JSONException e) {
-//            strResponse = ServletUtils.createJSONError(ErrorCodes.READ_JSON);
-//            out.println(strResponse);
-//        }
-        
-        //TODO: delete old one, if new does work
+
         String strResponse = null;
         JSONObject jsonRequest = null;
         JSONParameter.Methods method = null;
@@ -98,8 +57,15 @@ public class RequestServlet extends HttpServlet {
 
         out = response.getWriter();
 
+        jsonRequest = ServletUtils.extractJSON(request, response);
+        if (jsonRequest == null) {
+            // response was set in extractJSON
+            return;
+        }
+
         try {
-            method = ServletUtils.getMethod(request, jsonRequest);
+            method = JSONParameter.Methods
+                    .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
                 error = ErrorCodes.EMPTY_JSON;
@@ -108,15 +74,19 @@ public class RequestServlet extends HttpServlet {
             }
         }
 
+        if (method == null || !error.equals(ErrorCodes.OK)) {
+            method = Methods.NONE;
+        }
+
         switch (method) {
         case CREATE:
-            strResponse = create(jsonRequest);
+            strResponse = create(jsonRequest).toString();
             break;
         case ACCEPT:
-            strResponse = accept(jsonRequest);
+            strResponse = accept(jsonRequest).toString();
             break;
         case REJECT:
-            strResponse = reject(jsonRequest);
+            strResponse = reject(jsonRequest).toString();
             break;
         default:
             if (error.equals(ErrorCodes.OK)) {
@@ -131,9 +101,9 @@ public class RequestServlet extends HttpServlet {
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         doGet(request, response);
     }
 
@@ -147,11 +117,9 @@ public class RequestServlet extends HttpServlet {
      *            group the request is posted to.
      * @return Returns a JSON string containing information about the success of this operation.
      */
-    private String create(JSONObject json) {
-        // TODO: constrains in Datei festlegen und diese hier auslesen
-        // TODO: weniger returns
-        int userlimit = 20;
-        int grouplimit = 50;
+    private JSONObject create(JSONObject json) {
+        int userlimit = ServletUtils.USERLIMIT;
+        int grouplimit = ServletUtils.GROUPLIMIT;
         int userID = -1;
         int newGroupID = -1;
         List<Group> groups = null;
@@ -162,10 +130,10 @@ public class RequestServlet extends HttpServlet {
         int userSum = 0;
 
         try {
-            userID = json.getInt(JSONParameter.UserID.toString());
-            newGroupID = json.getInt(JSONParameter.GroupID.toString());
+            userID = json.getInt(JSONParameter.USER_ID.toString());
+            newGroupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         // Check Users Memberships and Group size
@@ -174,34 +142,34 @@ public class RequestServlet extends HttpServlet {
             users = grUsrMang.getUsers(newGroupID);
             reqGroups = reqMang.getRequestByUser(userID);
             reqUsers = reqMang.getRequestByGroup(newGroupID);
-            
-            if (groups != null && users != null) {
-                return ServletUtils.createJSONError(ErrorCodes.DB_ERROR).toString();
+
+            if (groups == null || users == null) {
+                return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
             }
             groupSum += groups.size();
             userSum += users.size();
-            
-            //it is possible, that there are no open requests
-            if(reqGroups != null){
+
+            // it is possible, that there are no open requests
+            if (reqGroups != null) {
                 groupSum += reqGroups.size();
             }
-            if(reqUsers != null){
+            if (reqUsers != null) {
                 userSum += reqUsers.size();
             }
-            
-            //check all sizes
+
+            // check all sizes
             if (groupSum >= userlimit) {
-                return ServletUtils.createJSONError(ErrorCodes.USR_LIMIT).toString();
-            }else if (userSum >= grouplimit) {
-                return ServletUtils.createJSONError(ErrorCodes.GRP_LIMIT).toString();
+                return ServletUtils.createJSONError(ErrorCodes.USR_LIMIT);
+            } else if (userSum >= grouplimit) {
+                return ServletUtils.createJSONError(ErrorCodes.GRP_LIMIT);
             }
-        } 
+        }
 
         // Add new Request
         if (reqMang.add(newGroupID, userID)) {
-            return ServletUtils.createJSONError(ErrorCodes.OK).toString();
+            return ServletUtils.createJSONError(ErrorCodes.OK);
         } else {
-            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR).toString();
+            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
         }
     }
 
@@ -214,7 +182,7 @@ public class RequestServlet extends HttpServlet {
      *            The JSON object contains the request that is to be accepted.
      * @return Returns a JSON string containing information about the success of this operation.
      */
-    private String accept(JSONObject json) {
+    private JSONObject accept(JSONObject json) {
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
         int userID = -1;
         int groupID = -1;
@@ -222,20 +190,21 @@ public class RequestServlet extends HttpServlet {
 
         // read User and Group ID from JSON
         try {
-            userID = json.getInt(JSONParameter.UserID.toString());
-            groupID = json.getInt(JSONParameter.GroupID.toString());
+            userID = json.getInt(JSONParameter.USER_ID.toString());
+            groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
-        req = reqMang.getRequest(userID, groupID);
+        req = reqMang.getRequest(groupID, userID);
         if (req != null) {
-            grUsrMang.add(groupID, userID);
-            reqMang.delete(groupID, userID);
+            if (!grUsrMang.add(groupID, userID) && !reqMang.delete(groupID, userID)) {
+                error = ErrorCodes.DB_ERROR;
+            }
         } else {
             error = ErrorCodes.DB_ERROR;
         }
-        return ServletUtils.createJSONError(error).toString();
+        return ServletUtils.createJSONError(error);
     }
 
     /**
@@ -246,7 +215,7 @@ public class RequestServlet extends HttpServlet {
      *            The JSON object contains the request that is to be rejected.
      * @return Returns a JSON string containing information about the success of this operation.
      */
-    private String reject(JSONObject json) {
+    private JSONObject reject(JSONObject json) {
         int userID = -1;
         int groupID = -1;
         JSONParameter.ErrorCodes error = ErrorCodes.OK;
@@ -254,20 +223,20 @@ public class RequestServlet extends HttpServlet {
 
         // read User and Group ID from JSON
         try {
-            userID = json.getInt(JSONParameter.UserID.toString());
-            groupID = json.getInt(JSONParameter.GroupID.toString());
+            userID = json.getInt(JSONParameter.USER_ID.toString());
+            groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
-            return ServletUtils.createJSONError(ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         // delete request, if exists
-        req = reqMang.getRequest(userID, groupID);
+        req = reqMang.getRequest(groupID, userID);
         if (req != null) {
             reqMang.delete(groupID, userID);
         } else {
             error = ErrorCodes.DB_ERROR;
         }
-        return ServletUtils.createJSONError(error).toString();
+        return ServletUtils.createJSONError(error);
 
     }
 }

@@ -10,45 +10,18 @@ import edu.kit.pse.gruppe1.goApp.client.model.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static edu.kit.pse.gruppe1.goApp.client.controler.service.RequestService.ACTION_ACCEPT;
-
 /**
  * This Service provides methods to handle a users reaction towards an event
  */
 public class ParticipateService extends IntentService {
     private static final String NAME = "ParticipateService";
-    private static final String ACTION_ACCEPT = "ACCEPT";
-    private static final String ACTION_REJECT = "REJECT";
-    private static final String ACTION_GO = "GO";
     private static final String SERVLET = "ParticipateServlet";
+
+    private static final String ACTION_STATUS = "status";
+    public static final String RESULT_STATUS = "resultStatus";
 
     public ParticipateService() {
         super(NAME);
-    }
-
-    /**
-     * The user is added to the event as a participant this includes starting a Timer for the Notification Broadcast. This method is used if the user wants to participate and enters this decision in the GroupActivity
-     *
-     * @param event the event which the user want to participate in. User and event have to be in the same group
-     * @param user  the user who wants to participate and is in the same group as the event
-     * @return true, if method was successful, otherwise false
-     */
-    public void accept(Context context, Event event, User user) {
-        JSONObject requestJson = new JSONObject();
-
-        try {
-            requestJson.put(JSONParameter.EventID.toString(), event.getId());
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_ACCEPT);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
-        requestIntent.setAction(ACTION_ACCEPT);
-
-        startService(requestIntent);
     }
 
     /**
@@ -58,81 +31,40 @@ public class ParticipateService extends IntentService {
      * @param user  the user who doesn't want to participate
      * @return true, if method was successful, otherwise false
      */
-    public void reject(Context context, Event event, User user) {
+    public void setStatus(Context context, Event event, User user, Status status) {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.EventID.toString(), event.getId());
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_REJECT);
+            requestJson.put(JSONParameter.EVENT_ID.toString(), event.getId());
+            requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
+            //TODO jsonparameter setstatus & status
+            requestJson.put(JSONParameter.STATUS.toString(), status.getValue());
+            requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_STATUS.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
-        requestIntent.setAction(ACTION_REJECT);
+        requestIntent.putExtra(UtilService.JSON, requestJson.toString());
+        requestIntent.putExtra(UtilService.STATUS, status);
+        requestIntent.setAction(ACTION_STATUS);
 
-        startService(requestIntent);
-
+        context.startService(requestIntent);
     }
-    public void setGo(Context context, Event event, User user) {
-        JSONObject requestJson = new JSONObject();
 
-        try {
-            requestJson.put(JSONParameter.EventID.toString(), event.getId());
-            requestJson.put(JSONParameter.UserID.toString(), user.getId());
-            requestJson.put(JSONParameter.Method.toString(), ACTION_GO);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Intent requestIntent = new Intent(context, this.getClass());
-        requestIntent.putExtra("Json", requestJson.toString());
-        requestIntent.setAction(ACTION_GO);
-
-        startService(requestIntent);
-
-    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         HTTPConnection connection = new HTTPConnection(SERVLET);
         Intent resultIntent = new Intent();
-        JSONObject result;
-        switch (intent.getAction()) {
-            case ACTION_REJECT:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                break;
-            case ACTION_ACCEPT:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case ACTION_GO:
-                result = connection.sendPostRequest(intent.getStringExtra("JSON"));
-                try {
-                    //TODO what happens if error != 0
-                    resultIntent.putExtra("ERROR", result.getInt(JSONParameter.ErrorCode.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
-            //TODO default case
-
+        JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+        resultIntent.setAction(RESULT_STATUS);
+        if(UtilService.isError(result)){
+            resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+        }else {
+            //TODO Nur Status?
+            resultIntent.putExtra(UtilService.STATUS, intent.getIntExtra(UtilService.STATUS, 0));
         }
-        resultIntent.setAction(intent.getAction());
 
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);

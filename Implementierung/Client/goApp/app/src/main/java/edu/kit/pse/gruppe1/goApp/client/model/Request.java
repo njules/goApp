@@ -18,8 +18,24 @@ public class Request implements Parcelable {
     public Request(User user, Group group) {
         this.user = user;
         this.group = group;
-        throw new UnsupportedOperationException();
     }
+
+    protected Request(Parcel in) {
+        user = in.readParcelable(User.class.getClassLoader());
+        group = in.readParcelable(Group.class.getClassLoader());
+    }
+
+    public static final Creator<Request> CREATOR = new Creator<Request>() {
+        @Override
+        public Request createFromParcel(Parcel in) {
+            return new Request(in);
+        }
+
+        @Override
+        public Request[] newArray(int size) {
+            return new Request[size];
+        }
+    };
 
     public Group getGroup() {
         return group;

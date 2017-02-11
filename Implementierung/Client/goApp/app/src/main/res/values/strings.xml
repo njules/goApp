@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">goApp</string>
     <string name="requests">Deine Beitrittsanfragen:</string>
-    <string name="changeName">Dein Neuer Benutzername:</string>
+    <string name="changeName">Neuer Name:</string>
     <string name="change">JA!</string>
     <string name="cancel">Abbruch</string>
     <string name="search">Suche:</string>
@@ -22,4 +22,16 @@
     <string name="hint_event_destination">Ort des Termins</string>
     <string name="title_activity_maps">Map</string>
     <string name="event_location">Ziel</string>
+    <string name="wrongTime">Dein Termin liegt in der Vergangenheit</string>
+    <string name="noLocation">Du musst einen Treffpunkt auswählen</string>
+
+    <string name="clientId">425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com</string>
+    <string name="login_text">Bitte melde dich mit deinem Google Konto an</string>
+    <string name="json">JSON</string>
+    <string name="notification_massage">Bald geht ein Termin los:</string>
+    <string name="NoGroup">Sorry, keine Gruppe mit diesem Namen gefunden.</string>
+    <string name="deleteRequest">Möchtest du diese Anfrage löschen?</string>
+    <string name="deletedRequest">Anfrage gelöscht</string>
+    <string name="groupCreated">Gruppe wurde erfolgreich erstellt!</string>
+    <string name="nameMissing">Gib deinen Termin einen Namen</string>
 </resources>

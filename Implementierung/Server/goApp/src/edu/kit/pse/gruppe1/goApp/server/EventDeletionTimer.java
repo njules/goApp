@@ -8,7 +8,6 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 public class EventDeletionTimer extends TimerTask {
     private long minutesTillDeletion;
     private Timer timer;
-    private String textToDisplay;
 
     public EventDeletionTimer(double excecutionsPerHour, long minutesTillDeletion) {
         this.minutesTillDeletion = minutesTillDeletion;

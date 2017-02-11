@@ -2,6 +2,7 @@ package edu.kit.pse.gruppe1.goApp.client.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.*;
 
@@ -44,6 +45,9 @@ public class Group implements Parcelable{
 	protected Group(Parcel in) {
 		id = in.readInt();
 		name = in.readString();
+        Log.i("Parcel",""+id);
+        founder = in.readParcelable(User.class.getClassLoader());
+        Log.i("Founder","Name: "+founder.getName());
 	}
 
 	public static final Creator<Group> CREATOR = new Creator<Group>() {
@@ -79,6 +83,7 @@ public class Group implements Parcelable{
 	public void writeToParcel(Parcel out, int i) {
 		out.writeInt(id);
 		out.writeString(name);
+        out.writeParcelable(founder, i);
 	}
 
 	public User getFounder() {

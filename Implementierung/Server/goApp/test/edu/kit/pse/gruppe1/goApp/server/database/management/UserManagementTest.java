@@ -50,6 +50,17 @@ public class UserManagementTest {
         assertThat(user.getUserId(), is(createdUser.getUserId()));
         assertThat(user.getName(), is(createdUser.getName()));
     }
+    
+    @Test
+    public void testGetUserByGoogleId() {
+        User user = new UserManagement().getUserByGoogleId(createdUser.getGoogleId()+1);
+        assertThat(user, is(nullValue()));
+        user = new UserManagement().getUserByGoogleId(createdUser.getGoogleId());
+        assertThat(user, is(notNullValue()));
+        assertThat(user.getGoogleId(), is(createdUser.getGoogleId()));
+        assertThat(user.getUserId(), is(createdUser.getUserId()));
+        assertThat(user.getName(), is(createdUser.getName()));
+    }
 
     @Test
     public void testUpdateLocation() {

@@ -12,14 +12,18 @@ import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupViewBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Tobias on 20.01.2017.
  */
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
-    private Group[] dataset;
+    private List<Group> dataset;
     private final ItemClickListener itemClickListener;
 
-    public static class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private GroupViewBinding binding;
         private final ItemClickListener itemClickListener;
 
@@ -30,6 +34,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             itemClickListener = icl;
             itemView.setOnClickListener(this);
         }
+
         public GroupViewBinding getBinding() {
             return binding;
         }
@@ -41,9 +46,10 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     }
 
     public GroupAdapter(Group[] groupDataset, ItemClickListener icl) {
-        dataset = groupDataset;
+        dataset = new ArrayList<>(Arrays.asList(groupDataset));
         itemClickListener = icl;
     }
+
     @Override
     public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         GroupViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.group_view, parent, false);
@@ -58,17 +64,22 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     @Override
     public void onBindViewHolder(GroupViewHolder holder, int position) {
-        final Group group = dataset[position];
+        final Group group = dataset.get(position);
         holder.getBinding().setGroup(group);
         holder.getBinding().executePendingBindings();
     }
 
-    public Group getItem(int position){
-        return dataset[position];
+    public Group getItem(int position) {
+        return dataset.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return dataset.length;
+        return dataset.size();
+    }
+
+    public void deleteItem(int position) {
+        dataset.remove(position);
+        notifyItemRemoved(position);
     }
 }
