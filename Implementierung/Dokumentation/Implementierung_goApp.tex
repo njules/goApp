@@ -35,13 +35,31 @@
 	
 	\subsection{Server}
 	\subsubsection{Servlet}
-	\paragraph{GoServlet und LocationServlet}
+	\paragraph{GoServlet}
+	Das GoServlet wird nicht mehr gebraucht und wird gelöscht. Die Funktionalität die, diese Klasse haben sollte, befindet sich im Participate Servlet.
 	%TODO GoServlet wird gelöscht
-	%Paticipate Servlet wird neu geschrieben
-	%Paticipate: aus accept und reject wird setStatus
 	%Go: setStarted wird in Participate.setStatus mit reingenommen
 	%Go: getStarted wird in Event.get integriert
+	
+	
+	\paragraph{EventServlet}
+	Die Methode getEvent wurde durch getParticipates ersetzt. Im momentanen Zustand braucht unsere App keine eigene Methode getEvents über die eventId, da die Events über die Gruppe gelesen werden. 
+	Darüber bekommt man nur die Teilnehmer nicht, weswegen dafür eine eigene Methode benötigt wird.
+	
+	\paragraph{GroupServlet}
+	Aus getGroups wurde getMembers, da die Gruppe schon beim Erstellen auf den Client geholt wird. 	%TODO. warum
+	
+	\paragraph{LocationServlet}
+	Die beiden Methoden setGPS, sowie setCluster werden zusammen über snycLocation aufgerufen. %TODO: warum 
 	%TODO LocationServlet ruft immer beide Methoden auf (setGPS und getCluster)
+	
+	\paragraph{Participate Servlet}
+	Die beiden Methoden accept und reject wurden durch die Methode setStatus ersetzt. Diese setzt den Status im Event-User Management, wodurch die Redundanz von zwei Methoden vermieden wird. Falls der Status Reject ist, wird der Teilnehmer gelöscht. 
+		%Paticipate Servlet wird neu geschrieben
+		%Paticipate: aus accept und reject wird setStatus
+	
+	\paragraph{UserServlet}
+	Die Nutzer wird an den Client beim Einloggen bzw. Registrieren übermittelt und bis zum nächsten Einloggen gespeichert. Deswegen ist die Methode getUser überflüssig geworden.
 	
 	\paragraph{ServletUtils}
 	Beim Implementieren der Servlets wurden einige allgemein Methoden, wie z.B. ein JSONObjekt auszulesen oder zu erstellen in vielen Methoden genutzt.
@@ -50,9 +68,11 @@
 	\paragraph{JSONParameter}
 	Wir brauchen viel mehr Parameter um die JSONObjekte zu erstellen, als in der Entwurfsphase angenommen. Außerdem gibt es ein weiteres Enum für die vom Client aufrufbaren Methoden, sowie eines für Fehlercodes. Die JSONParameter sind auf dem Client, sowie Server gleich. 
 		
-	\subsubsection{Algortihm}	
+	\subsubsection{Algorithmus}	
 	\paragraph{Clusteralgorithmus}
 	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können. 
+	
+	\subsection{Model}
 	
 
 	\subsection{Client}
@@ -102,7 +122,7 @@
 		
 	\end{itemize}
 	
-	\subsection{Terminablauf}
+	\subsubsection{Terminablauf}
 	\begin{itemize}
 		\item[FA140] Jeder Teilnehmer wird 30 Minuten vor Beginn des Termins benachrichtigt
 		\item[WFA145] Teilnehmer werden auch bei geschlossener App benachrichtigt
@@ -118,7 +138,7 @@
 		
 	\subsubsection{Qualitative Anforderungen}
 	Die Qualitativen Anforderungen beziehen sich auf unser Referenzgerät
-	"Samsung Galaxy S4" (GT-I9505) mit Android 5.0.1
+	\glqq Samsung Galaxy S4\grqq  (GT-I9505) mit Android 5.0.1
 	\begin{itemize}
 		\item[QA10] Die App soll auf jede Anfrage in durchschnittlich unter 5 Sekunden reagieren
 		\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch
