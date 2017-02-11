@@ -101,6 +101,20 @@
 		\item[FA130] Jedes Gruppenmitglied kann bei einem Termin zu- oder absagen
 		
 	\end{itemize}
+	
+	\subsection{Terminablauf}
+	\begin{itemize}
+		\item[FA140] Jeder Teilnehmer wird 30 Minuten vor Beginn des Termins benachrichtigt
+		\item[WFA145] Teilnehmer werden auch bei geschlossener App benachrichtigt
+		\item[FA150] Jeder Teilnehmer kann den Gruppenmittelpunkt ab 15 Minuten vor Beginn des Termins in einer Karte darstellen lassen
+		\item[WFA155] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort 
+	\item[WFA160] Teilnehmer können in der App anderen Teilnehmern mitteilen,
+	\begin{itemize}
+				\item dass sie bereits unterwegs sind
+	\end{itemize}
+		\item[FA170] Der Termin löscht sich nach der Dauer des Termins (standardmäßig 60 Minuten)
+	\end{itemize}
+		
 		
 	\subsubsection{Qualitative Anforderungen}
 	Die Qualitativen Anforderungen beziehen sich auf unser Referenzgerät
@@ -108,8 +122,8 @@
 	\begin{itemize}
 		\item[QA10] Die App soll auf jede Anfrage in durchschnittlich unter 5 Sekunden reagieren
 		\item[QA20] Die App fährt in durchschnittlich unter 10 Sekunden hoch
+		%TODO: QA30 ??
 		\item[QA30] Jede Funktion der App ist mit höchstens 5 Eingaben vom Startbildschirm der App zu erreichen
-		\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App
 		\item[QA50] Unterstützt bis zu 50 Benutzer pro Gruppe
 		\item[QA60] Jeder Benutzer kann in bis zu 20 Gruppen Mitglied sein
 		\item[QA70] Der Server unterstützt das Anlegen von mindestens 30000 Benutzern
@@ -132,41 +146,22 @@
 
 	\subsubsection{Terminverwaltung}
 	\begin{itemize}
-		\item[WFA105] Der Terminersteller kann den Termin löschen
-	
-	\end{itemize}	
-	
-	\subsubsection{Qualitative Anforderungen}
-	
-	\newpage
-		
-	\section{ungeordnete Kriterien aus Pflichtenheft kopiert}
-	%TODO: Einsortieren, dann Punkt hier löschen		
-		\subsection{Terminablauf}
+		\item[WFA105] Der Terminersteller kann den Termin löschen	
+	\end{itemize}
+
+	\subsubsection{Terminablauf}
+	\begin{itemize}
+	\item[WFA160] Teilnehmer können in der App anderen Teilnehmern mitteilen,
 		\begin{itemize}
-			\hypertarget{FA140}{}
-			\item[FA140] Jeder Teilnehmer wird 30 Minuten vor Beginn des Termins benachrichtigt
-			\hypertarget{WFA145}{}
-			\item[WFA145] Teilnehmer werden auch bei geschlossener App benachrichtigt
-			\hypertarget{FA150}{}
-			\item[FA150] Jeder Teilnehmer kann den Gruppenmittelpunkt ab 15 Minuten vor Beginn des Termins in einer Karte darstellen lassen
-			\hypertarget{WFA155}{}
-			\item[WFA155] Vom Gruppenmittelpunkt entfernte Teilgruppen  erhalten einen eigenen Standort 
-			\hypertarget{WFA160}{}
-			\item[WFA160] Teilnehmer können in der App anderen Teilnehmern mitteilen,
-			\begin{itemize}
-				\item dass sie bereits unterwegs sind
-				\item dass sie zu spät kommen
-				\item dass sie schon am Terminort angekommen sind
-			\end{itemize}
-			\hypertarget{FA170}{}
-			\item[FA170] Der Termin löscht sich nach der Dauer des Termins (standardmäßig 60 Minuten)
-			\hypertarget{WFA175}{}
-			\item[WFA175] Die Dauer des Termins kann individuell festgelegt werden
+			\item dass sie zu spät kommen
+			\item dass sie schon am Terminort angekommen sind
 		\end{itemize}
-		
-%TODO: bis hier
-	
+			\item[WFA175] Die Dauer des Termins kann individuell festgelegt werden
+	\end{itemize}	
+
+	\subsubsection{Qualitative Anforderungen}
+	%TODO: zumindest bisher nicht
+			\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App
 	
 	\newpage
 	\section{Verzögerungen}
