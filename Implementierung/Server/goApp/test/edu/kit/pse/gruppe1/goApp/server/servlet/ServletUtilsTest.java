@@ -20,6 +20,8 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
 public class ServletUtilsTest {
 
+    private static final double DELTA = 1e-15;
+
     @Before
     public void setUp() throws Exception {
     }
@@ -31,22 +33,23 @@ public class ServletUtilsTest {
     // Do not test: testIsUserAlreadyRegistrated(), testGetGoogleIdByToken() and
     // testGetGoogleNameByToken()
 
-    private User getUser(){
+    private User getUser() {
         User usr = new User();
         usr.setUserId(2);
         usr.setName("TestUser");
         usr.setGoogleId("GOOGLE");
         return usr;
     }
-    private Group getGroup(){
+
+    private Group getGroup() {
         Group grp = new Group();
         grp.setFounder(getUser());
         grp.setGroupId(3);
         grp.setName("Test Group");
         return grp;
     }
-    
-    private Location getLocation(){
+
+    private Location getLocation() {
         Location loc = new Location();
         loc.setLatitude(34.12);
         loc.setLongitude(05.97);
@@ -54,16 +57,18 @@ public class ServletUtilsTest {
         loc.setLocationId(4);
         return loc;
     }
-    private Event getEvent(){
+
+    private Event getEvent() {
         Event evt = new Event();
-                evt.setName("New Event");
-                evt.setLocation(getLocation());
-                evt.setTimestamp(new Timestamp(1234));
-                evt.setGroup(getGroup());
-                evt.setCreator(getUser());
-                evt.setEventId(5);
-                return evt;
+        evt.setName("New Event");
+        evt.setLocation(getLocation());
+        evt.setTimestamp(new Timestamp(1234));
+        evt.setGroup(getGroup());
+        evt.setCreator(getUser());
+        evt.setEventId(5);
+        return evt;
     }
+
     @Test
     public void testCreateJSONParticipate() {
         User usr = getUser();
@@ -91,27 +96,109 @@ public class ServletUtilsTest {
 
     @Test
     public void testCreateJSONEventID() {
-        fail("Not yet implemented");
+        Event evt = getEvent();
+
+        JSONObject json = ServletUtils.createJSONEventID(evt);
+
+        try {
+            assertEquals(json.getInt(JSONParameter.EVENT_ID.toString()),
+                    evt.getEventId().intValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
     }
 
     @Test
     public void testCreateJSONEvent() {
-        fail("Not yet implemented");
+        Event event = getEvent();
+
+        JSONObject json = ServletUtils.createJSONEvent(event);
+
+        try {
+            assertEquals(json.getInt(JSONParameter.EVENT_ID.toString()),
+                    event.getEventId().intValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.OK.getErrorCode());
+            assertEquals(json.getString(JSONParameter.EVENT_NAME.toString()), event.getName());
+            assertEquals(json.getLong(JSONParameter.EVENT_TIME.toString()),
+                    event.getTimestamp().getTime());
+
+            assertEquals(json.getString(JSONParameter.LOC_NAME.toString()),
+                    event.getLocation().getName());
+            assertEquals(json.getDouble(JSONParameter.LONGITUDE.toString()),
+                    event.getLocation().getLongitude().doubleValue(), DELTA);
+            assertEquals(json.getDouble(JSONParameter.LATITUDE.toString()),
+                    event.getLocation().getLatitude(), DELTA);
+
+            assertEquals(json.getInt(JSONParameter.GROUP_ID.toString()),
+                    event.getGroup().getGroupId().intValue());
+            assertEquals(json.getInt(JSONParameter.USER_ID.toString()),
+                    event.getCreator().getUserId().intValue());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
     }
 
     @Test
     public void testCreateJSONLocation() {
-        fail("Not yet implemented");
+        Location loc = getLocation();
+
+        JSONObject json = ServletUtils.createJSONLocation(loc);
+
+        try {
+            assertEquals(json.getString(JSONParameter.LOC_NAME.toString()), loc.getName());
+            assertEquals(json.getDouble(JSONParameter.LONGITUDE.toString()),
+                    loc.getLongitude().doubleValue(), DELTA);
+            assertEquals(json.getDouble(JSONParameter.LATITUDE.toString()), loc.getLatitude(),
+                    DELTA);
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
     public void testCreateJSONGroup() {
-        fail("Not yet implemented");
+        Group group = getGroup();
+        JSONObject json = null;
+        json = ServletUtils.createJSONGroup(group);
+        try {
+            assertEquals(json.getInt(JSONParameter.USER_ID.toString()),
+                    group.getFounder().getUserId().intValue());
+            assertEquals(json.getString(JSONParameter.USER_NAME.toString()),
+                    group.getFounder().getName());
+            assertEquals(json.getString(JSONParameter.GROUP_NAME.toString()), group.getName());
+            assertEquals(json.getInt(JSONParameter.GROUP_ID.toString()),
+                    group.getGroupId().intValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testCreateJSONUser() {
-        fail("Not yet implemented");
+        User user = getUser();
+        JSONObject json = null;
+        json = ServletUtils.createJSONUser(user);
+
+        try {
+            assertEquals(json.getInt(JSONParameter.USER_ID.toString()),
+                    user.getUserId().intValue());
+            assertEquals(json.getString(JSONParameter.USER_NAME.toString()), user.getName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -136,7 +223,17 @@ public class ServletUtilsTest {
 
     @Test
     public void testCreateJSONGroupID() {
-        fail("Not yet implemented");
+        Group group = getGroup();
+        JSONObject json = null;
+        json = ServletUtils.createJSONGroupID(group);
+        try {
+            assertEquals(json.getInt(JSONParameter.GROUP_ID.toString()),
+                    group.getGroupId().intValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -146,7 +243,15 @@ public class ServletUtilsTest {
 
     @Test
     public void testCreateJSONError() {
-        fail("Not yet implemented");
+        ErrorCodes error = ErrorCodes.GRP_LIMIT;
+        JSONObject json = null;
+        json = ServletUtils.createJSONError(error);
+        try {
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    error.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
