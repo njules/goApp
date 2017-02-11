@@ -184,7 +184,7 @@ public class EventServletTest {
 
                 for (Participant p : part) {
                     if (p.getUser().getUserId() == userID) {
-                        assertEquals((int) p.getStatus(),
+                        assertEquals(p.getStatus().intValue(),
                                 internJson.getInt(JSONParameter.STATUS.toString()));
                     }
                 }
