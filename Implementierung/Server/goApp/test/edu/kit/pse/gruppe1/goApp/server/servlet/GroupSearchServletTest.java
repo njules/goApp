@@ -73,9 +73,9 @@ public class GroupSearchServletTest {
     public void testNameSearch() {
         // set up input
         final List<Group> fakeGroups = new ArrayList<Group>();
-        fakeGroups.add(new Group("Trumps America", new User("1", null)));
-        fakeGroups.add(new Group("Trumps 'Murica", new User("3", null)));
-        String name = "Trumps ";
+        fakeGroups.add(new Group("Party Ago", new User("1", null)));
+        fakeGroups.add(new Group("Party Hello", new User("3", null)));
+        String name = "Party ";
         // prepare input JSON parameter
         try {
             JSONObject json = new JSONObject();
@@ -130,8 +130,8 @@ public class GroupSearchServletTest {
     public void testMemberSearch() {
         // set up input
         final List<Group> fakeGroups = new ArrayList<Group>();
-        fakeGroups.add(new Group("Make America Great Again", new User("3", null)));
-        fakeGroups.add(new Group("Feel The Bern", new User("3", null)));
+        fakeGroups.add(new Group("Mensa", new User("3", null)));
+        fakeGroups.add(new Group("Joggen", new User("3", null)));
         final int member = 3;
         // prepare input JSON parameter
         try {

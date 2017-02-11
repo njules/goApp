@@ -93,6 +93,11 @@ public class ParticipateServlet extends HttpServlet {
             int event = json.getInt(JSONParameter.EVENT_ID.toString());
             int user = json.getInt(JSONParameter.USER_ID.toString());
             Status status = Status.fromInteger(json.getInt(JSONParameter.STATUS.toString()));
+            if (status.equals(Status.REJECTED)) {
+                if (!eventUser.delete(event, user)) {
+                    return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
+                }
+            }
             if (!eventUser.updateStatus(event, user, status)) {
                 return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
             }
