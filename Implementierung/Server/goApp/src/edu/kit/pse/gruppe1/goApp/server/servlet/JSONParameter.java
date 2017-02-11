@@ -284,8 +284,13 @@ public enum JSONParameter {
         /**
          * A list could not be created
          */
-        EMPTY_LIST(12, "No entry matching arguments was found.");
-
+        EMPTY_LIST(12, "No entry matching arguments was found."),
+        
+        /**
+         * User Interaction was not possible (e.g. wanted to create an request to an group which user is already member of
+         */
+        INTERACT_ERROR(13,"User made a not permitted interaction.");
+        
         private final String fieldDescription;
         private final int errCode;
 
