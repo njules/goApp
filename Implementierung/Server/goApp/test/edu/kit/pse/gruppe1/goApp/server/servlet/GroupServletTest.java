@@ -347,13 +347,16 @@ public class GroupServletTest {
         assertTrue(going.isEmpty());
     }
     
-    //TODO
     @Test
     public void testMemberRequesting() {
         // set up input
         final List<User> fakeUsers = new ArrayList<User>();
-        fakeUsers.add(new User(null, "4ever"));
-        fakeUsers.add(new User("1", "alone"));
+        User user1 = new User(null, "4ever");
+        user1.setUserId(1);
+        fakeUsers.add(user1);
+        User user2 = new User(null, "alone");
+        user2.setUserId(3);
+        fakeUsers.add(user2);
         final int group = 65;
         // prepare input JSON parameter
         try {
@@ -388,10 +391,12 @@ public class GroupServletTest {
         try {
             JSONObject json = new JSONObject(argCap.getValue());
             assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
-            JSONArray array = json.getJSONArray(JSONParameter.LIST_USER.toString());//TODO no user id is returned 
-            for (int i = 0; i < array.length(); i++) {System.out.println(array);
+            JSONArray array = json.getJSONArray(JSONParameter.LIST_USER.toString());
+            for (int i = 0; i < array.length(); i++) {
                 JSONObject jsonUsr = array.getJSONObject(i);
-                result.add(new User(jsonUsr.getString(JSONParameter.USER_ID.toString()), jsonUsr.getString(JSONParameter.USER_NAME.toString())));
+                User user = new User(null, jsonUsr.getString(JSONParameter.USER_NAME.toString()));
+                user.setUserId(jsonUsr.getInt(JSONParameter.USER_ID.toString()));
+                result.add(user);
             }
         } catch (JSONException e) {
             e.printStackTrace();
