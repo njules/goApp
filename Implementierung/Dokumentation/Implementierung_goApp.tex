@@ -209,7 +209,7 @@
 	\subsubsection{Datenbank}
 	\subsubsection{Algorithmus}
 	\subsubsection{Servlet}
-	Zum Testen der Servlets werden die jeweiligen Management Klassen der Datenbank, sowie HTTPRequests gemockt.
+	Zum Testen der Servlets werden die jeweiligen Management Klassen der Datenbank, sowie HTTP requests gemockt.
 	\paragraph{EventServlet}
 	\subparagraph{public void testCreate()}
 	Dieser Test prüft das erfolgreiche erstellen eines Events. 
@@ -218,10 +218,33 @@
 	\subparagraph{public void testChange()}
 	Dieser Test prüft das erfolgreiche Ändern des Namens des Events.
 	\paragraph{GroupSearchServlet}
+	\subparagraph{public void testMemberSearch()}
+	Überprüft das erfolgreiche Einfordern einer Liste aller Gruppen, in denen ein gegebener Benutzer mitglied ist.
+	\subparagraph{public void testNameSearch()}
+	Überprüft das erfolgreiche Abrufen einer Liste aller Gruppen, in deren Name die gegebene Suchanfrage enthalten ist.
 	\paragraph{LocationServlet}
+	\subparagraph{public void testSyncPos()}
+	Testet ob die gegebene Position des Benutzers in der Datenbank aktualisiert wird und der geclusterte Gruppenstandort des Events korrekt zurückgegeben wird.
 	\paragraph{LoginServlet}
 	Da jede der beiden Methoden auf den GoogleServer zum Verifizieren des GoogleTokens zugreift und man dies nicht testen kann, wird dieses Servlet erst manuell über den Client mit einem echten GoogleAccount getestet. Dort funktioniert das Registrieren, sowie auch Anmelden.
 	\paragraph{ParticipateServlet}
+	\subparagraph{public void testSetStatus()}
+	Testet das korrekte setzen des Status' auf "teilnehmen".
+	\paragraph{GroupServlet}
+	\subparagraph{public void testGroupCreating()}
+	In diesem Test wird eine Gruppe erstellt.
+	\subparagraph{public void testGroupDeleting()}
+	Dieser Test versucht eine Gruppe zu entfernen.
+	\subparagraph{public void testNameChanges()}
+	Hier wird eine Anfrage vom Client zum Ändern des Namens einer Gruppe simuliert.
+	\subparagraph{public void testMemberKicking()}
+	Es wird das Entfernen von Mitgliedern aus einer Gruppe getestet.
+	\subparagraph{public void testEventRequesting()}
+	Diese Methode testet das Abfragen aller zu einer Gruppe und einem Benutzer zugehörigen Events. Hierbei werden die Events, die bereits vom Nutzer bestätigt wurden separat von denen, auf die der Nutzer noch antworten muss, zurückgegeben.
+	\subparagraph{public void testMemberRequesting()}
+	Es wird das Abrufen einer Liste mit allen Mitgliedern einer Gruppe getestet.
+	\subparagraph{public void testFounderChanging()}
+	In diesem Test wird der founder einer Gruppe aktualisert.
 	\paragraph{RequestSearchServlet}
 	\subparagraph{public void testGetRequestsByGroup()}
 	Dieser Tests prüft das erfolgreiche holen aller Gruppen, zu dem von einem gegeben User, eine Anfrage existiert.
