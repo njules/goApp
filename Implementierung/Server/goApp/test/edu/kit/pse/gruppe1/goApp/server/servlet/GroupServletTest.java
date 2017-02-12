@@ -264,7 +264,6 @@ public class GroupServletTest {
         }
     }
     
-    //TODO fuck this test
     @Test
     public void testEventRequesting() {
         // set up input
@@ -297,7 +296,7 @@ public class GroupServletTest {
             when(httpResponse.getWriter()).thenReturn(response);
             when(request.readLine()).thenReturn(jsonRequest);
             when(eventUserManager.getEventsByStatus(Status.INVITED, group , user)).thenReturn(fakePending);
-            when(eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, user)).thenReturn(fakeFriends);
+            when(eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, user)).thenReturn(new ArrayList<Event>(fakeFriends));
             when(eventUserManager.getEventsByStatus(Status.STARTED, group, user)).thenReturn(fakeMeeting);
        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
@@ -305,7 +304,7 @@ public class GroupServletTest {
         }
         // call method
         try {
-            servlet.doPost(httpRequest, httpResponse);
+            servlet.doPost(httpRequest, httpResponse);System.out.println(fakeFriends.size());
         } catch (ServletException | IOException e) {
             e.printStackTrace();
             fail("Failed to post HTTP request!\n");
@@ -314,7 +313,7 @@ public class GroupServletTest {
         verify(response).println(argCap.capture());
         List<Event> pending = new ArrayList<Event>();
         List<Event> going = new ArrayList<Event>();
-        try {
+        try {//System.out.println(fakePending);System.out.println(fakeFriends);System.out.println(fakeMeeting);
             JSONObject json = new JSONObject(argCap.getValue());
             assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
             JSONArray array = json.getJSONArray(JSONParameter.NEW_EVENTS.toString());
@@ -332,19 +331,37 @@ public class GroupServletTest {
             fail("Failed to read JSON response!\n");
         }
         for (Event test : fakePending) {
-            assertTrue(pending.contains(test));
-            pending.remove(test);
+            boolean contains = false;
+            for (Event result : pending) {
+                if (result.getName().equals(test.getName())) {
+                    contains = true;
+                    break;
+                }
+            }
+            assertTrue(contains);
         }
-        assertTrue(pending.isEmpty());
+        assertEquals(pending.size(), fakePending.size());
         for (Event test : fakeFriends) {
-            assertTrue(going.contains(test));
-            going.remove(test);
+            boolean contains = false;
+            for (Event result : going) {
+                if (result.getName().equals(test.getName())) {
+                    contains = true;
+                    break;
+                }
+            }
+            assertTrue(contains);
         }
         for (Event test : fakeMeeting) {
-            assertTrue(going.contains(test));
-            going.remove(test);
+            boolean contains = false;
+            for (Event result : going) {
+                if (result.getName().equals(test.getName())) {
+                    contains = true;
+                    break;
+                }
+            }
+            assertTrue(contains);
         }
-        assertTrue(going.isEmpty());
+        assertEquals(going.size(), fakeFriends.size() + fakeMeeting.size());
     }
     
     @Test
