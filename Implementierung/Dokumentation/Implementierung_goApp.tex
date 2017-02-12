@@ -25,7 +25,7 @@
 	\tableofcontents
 	\newpage
 
-	\section{Einleitung}
+	\section{Einleitung}%TODO
 	Anschluss auf Plichtenheft \& Entwurf
 	Allgemeine Beschreibung der App
 	
@@ -36,7 +36,7 @@
 	\subsection{Server}
 	\subsubsection{Servlet}
 	\paragraph{GoServlet}
-	Das GoServlet wird nicht mehr gebraucht und wird gelöscht. Die Funktionalität die, diese Klasse haben sollte, befindet sich im Participate Servlet.
+	Das GoServlet wird nicht mehr gebraucht und deswegen gelöscht. Die Funktionalität die diese Klasse haben sollte, befindet sich im nun Participate Servlet.
 	%TODO GoServlet wird gelöscht
 	%Go: setStarted wird in Participate.setStatus mit reingenommen
 	%Go: getStarted wird in Event.get integriert
@@ -59,11 +59,11 @@
 		%Paticipate: aus accept und reject wird setStatus
 	
 	\paragraph{UserServlet}
-	Die Nutzer wird an den Client beim Einloggen bzw. Registrieren übermittelt und bis zum nächsten Einloggen gespeichert. Deswegen ist die Methode getUser überflüssig geworden.
+	Die Nutzer werden an den Client beim Einloggen bzw. Registrieren übermittelt und bis zum nächsten Einloggen gespeichert. Deswegen ist die Methode getUser überflüssig geworden.
 	
 	\paragraph{ServletUtils}
-	Beim Implementieren der Servlets wurden einige allgemein Methoden, wie z.B. ein JSONObjekt auszulesen oder zu erstellen in vielen Methoden genutzt.
-	Deswegen haben wir uns dazu entschieden eine statische Hilfsklasse zu nutzen, um redundanten Code zu vermeiden. Außerdem sind diese JSONObjekte eine wichtige Schnittstelle zum Client, da das Senden \& Erwarten von Informationen übereinstimmen sollte. In unserem Fall braucht man bei Änderungen nur an einer Stelle etwas ändern.
+	Beim Implementieren der Servlets gibt es einige Schritte, die von jedem Servlet durchgeführt werden müssen. Dazu gehören zum Beispiel Methoden, um JSONObjekte aus der HTTP Anfrage auszulesen, oder das Verfassen der Antwort des Servers.
+	Deswegen haben wir uns dazu entschieden eine statische Hilfsklasse zu nutzen, um diesen redundanten Code zu vermeiden. Außerdem definieren JSONObjekte eine wichtige Schnittstelle zum Client, da das Senden \& Empfangen von Informationen durch diese geregelt wird. In unserem Fall bleiben Änderungen der Schnittstelle somit lokal.
 	
 	\paragraph{JSONParameter}
 	Wir brauchen viel mehr Parameter um die JSONObjekte zu erstellen, als in der Entwurfsphase angenommen. Außerdem gibt es ein weiteres Enum für die vom Client aufrufbaren Methoden, sowie eines für Fehlercodes. Die JSONParameter sind auf dem Client, sowie Server gleich. 
