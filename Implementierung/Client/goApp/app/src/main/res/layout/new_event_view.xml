@@ -31,7 +31,7 @@
                       android:lines="3"
                       android:clickable="false"
                       android:background="@color/colorButton"
-                      android:text="@{event.name + '\n' + '\n' + event.time.toString()}"/>
+                      android:text="@{event.name + '\n' + event.creator.name +'\n' + event.time.toString()}"/>
 
         </android.support.design.widget.CoordinatorLayout>
 

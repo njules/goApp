@@ -20,6 +20,8 @@ public class User extends BaseObservable implements Parcelable {
      */
     private String name;
 
+    private Status status;
+
     private Location location;
 
     /**
@@ -79,5 +81,13 @@ public class User extends BaseObservable implements Parcelable {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

@@ -113,16 +113,19 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                 }
 
                 String timeString = datepicker.getDayOfMonth() + "-" + (datepicker.getMonth() + 1) + "-" + datepicker.getYear() + " " + timepicker.getCurrentHour() + ":" + timepicker.getCurrentMinute();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm");
+                Log.i("TIme",timepicker.getCurrentHour().toString());
                 try {
                     timestamp = new Timestamp(sdf.parse(timeString).getTime());
                     Log.i("ourTime", timestamp.toString());
                     Log.i("sysTime", new Timestamp(System.currentTimeMillis()).toString());
                     if (timestamp.after(new Timestamp(System.currentTimeMillis()))) {
                         eventService.create(this, en.getText().toString(), location, Preferences.getUser(), timestamp, Preferences.getGroup());
-                    } else {
+                    } else if(timestamp.before(new Timestamp(System.currentTimeMillis()))){
                         Toast.makeText(this, getString(R.string.wrongTime), Toast.LENGTH_SHORT).show();
                         return true;
+                    } else {
+                        Log.i("Timer","Time Error");
                     }
 
                 } catch (ParseException e) {
@@ -176,28 +179,36 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
             }
             switch (intent.getAction()) {
                 case EventService.RESULT_CREATE:
-                        Toast.makeText(NewEventActivity.this, "Neues Event erstellt", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewEventActivity.this, "Neues Event erstellt", Toast.LENGTH_SHORT).show();
 
-                        notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        Intent notifyIntent = new Intent(context, NotificationService.class);
-                        notifyIntent.putExtra(UtilService.GROUP.toString(), Preferences.getGroup());
-                        notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
-                        //900000 is 15 mins in millis
-                        notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime() - beforEvent, notifyAlarmIntent);
-
-                        Log.i("MainThread", Thread.currentThread().getId()+"");
-
-                        eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        Intent eventIntent = new Intent(context, LocationServiceNeu.class);
-                        eventIntent.setAction("TEST");
-                        eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
-                        eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
-                        eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime() - beforEvent, eventAlarmIntent);
-
+                    if (new Timestamp(timestamp.getTime() - beforEvent).before(new Timestamp(System.currentTimeMillis()))) {
+                        Intent locationIntent = new Intent(context,LocationServiceNeu.class);
+                        locationIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
+                        locationIntent.putExtra(UtilService.EVENT,intent.getParcelableExtra(UtilService.EVENT));
+                        context.startService(locationIntent);
                         GroupActivity.start(NewEventActivity.this);
+                        break;
+                    }
+                    notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    Intent notifyIntent = new Intent(context, NotificationService.class);
+                    notifyIntent.putExtra(UtilService.GROUP.toString(), Preferences.getGroup());
+                    notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
+                    //900000 is 15 mins in millis
+                    notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime() - beforEvent, notifyAlarmIntent);
+
+                    Log.i("MainThread", Thread.currentThread().getId() + "");
+
+                    eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    Intent eventIntent = new Intent(context, LocationServiceNeu.class);
+                    eventIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
+                    eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
+                    eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
+                    eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime() - beforEvent, eventAlarmIntent);
+
+                    GroupActivity.start(NewEventActivity.this);
                     break;
                 case LocationServiceNeu.RESULT_MY_LOCATION:
-                    android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
+                    android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;
             }

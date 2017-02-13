@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -28,7 +29,7 @@ import edu.kit.pse.gruppe1.goApp.client.model.Request;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 
-public class AdminFragment extends Fragment implements ItemClickListener, View.OnClickListener,Communicator {
+public class AdminFragment extends Fragment implements ItemClickListener, View.OnClickListener {
 
     private GroupInfoFragmentAdminBinding binding;
     private Group group;
@@ -49,7 +50,6 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     private RequestSearchService requestSearchService;
 
     private ResultReceiver receiver;
-    private String newName;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,17 +111,22 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     public void onItemClicked(int position, View view) {
         switch (view.getId()) {
             case R.id.accept_member:
-                requestService.accept(getActivity(), new Request(requestAdapter.getItem(position), group));
                 newMember = requestAdapter.getItem(position);
                 requestPosition = position;
+                requestService.accept(getActivity(), new Request(newMember, group));
                 break;
             case R.id.reject_member:
-                requestService.reject(getActivity(), new Request(requestAdapter.getItem(position), group));
                 requestPosition = position;
+                requestService.reject(getActivity(), new Request(requestAdapter.getItem(position), group));
+
                 break;
             case R.id.delete_member:
                 memberPosition = position;
-                groupService.deleteMember(getActivity(), group, memberAdapter.getItem(position));
+                if(memberAdapter.getItem(position).getId()!=Preferences.getUser().getId()){
+                    groupService.deleteMember(getActivity(), group, memberAdapter.getItem(position));
+                } else{
+                    Toast.makeText(getActivity(),"Du kannst dich nicht selbst löschen",Toast.LENGTH_SHORT).show();
+                }
         }
     }
 
@@ -146,18 +151,12 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
         //TODO else error massage
     }
 
-    @Override
-    public void respond(String response) {
-        groupService.setName(getActivity(),group,response);
-        newName = response;
-    }
-
     private class ResultReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getActivity(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdminFragment.this.getActivity(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
@@ -172,26 +171,29 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
                 case GroupService.RESULT_DELETE_MEMBER:
+                    Toast.makeText(AdminFragment.this.getActivity(), "Du hast " + memberAdapter.getItem(memberPosition).getName() + " entfernt", Toast.LENGTH_SHORT).show();
                     memberAdapter.deleteItem(memberPosition);
-                    Toast.makeText(getContext(), "Du hast " + memberAdapter.getItem(memberPosition).getName() + " entfernt", Toast.LENGTH_SHORT).show();
                     break;
                 case GroupService.RESULT_DELETE:
-                    Toast.makeText(getActivity(), "Gruppe wird gelöscht", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminFragment.this.getActivity(), "Gruppe wird gelöscht", Toast.LENGTH_SHORT).show();
                     StartActivity.start(getActivity());
                     break;
                 case RequestService.RESULT_ACCEPT:
-                    Toast.makeText(getActivity(), "Du hast " + newMember.getName() + " hinzugefügt", Toast.LENGTH_SHORT).show();
+                    //TODO newmember null
+                    Toast.makeText(AdminFragment.this.getActivity(), "Du hast " + newMember.getName() + " hinzugefügt", Toast.LENGTH_SHORT).show();
                     memberAdapter.insertItem(newMember);
                     requestAdapter.delete(requestPosition);
                     break;
                 case RequestService.RESULT_REJECT:
-                    Toast.makeText(getActivity(), "Du hast " + requestAdapter.getItem(requestPosition).getName() + " abgelehnt", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminFragment.this.getActivity(), "Du hast " + requestAdapter.getItem(requestPosition).getName() + " abgelehnt", Toast.LENGTH_SHORT).show();
                     requestAdapter.delete(requestPosition);
                     break;
                 case GroupService.RESULT_SET_NAME:
-                    Toast.makeText(getContext(),"Neuer Name: " + newName,Toast.LENGTH_SHORT).show();
-                    Preferences.getGroup().setName(newName);
-                    group = Preferences.getGroup();
+                    String name = intent.getStringExtra(UtilService.NAME);
+                    Toast.makeText(AdminFragment.this.getActivity(),"Neuer Name: " + name,Toast.LENGTH_SHORT).show();
+                    group.setName(name);
+                    Preferences.setGroup(group);
+                    binding.setGroup(group);
                     break;
 
                 //TODO default

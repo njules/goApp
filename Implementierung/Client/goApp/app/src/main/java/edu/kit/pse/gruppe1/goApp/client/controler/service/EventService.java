@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
@@ -50,7 +51,7 @@ public class EventService extends IntentService {
 
         try {
             requestJson.put(JSONParameter.EVENT_NAME.toString(), name);
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             requestJson.put(JSONParameter.USER_ID.toString(), eventAdmin.getId());
             requestJson.put(JSONParameter.LATITUDE.toString(), destination.getLatitude());
             requestJson.put(JSONParameter.LONGITUDE.toString(), destination.getLongitude());
@@ -133,6 +134,7 @@ public class EventService extends IntentService {
                     try {
                         int id = result.getInt(JSONParameter.EVENT_ID.toString());
                         Event event = intent.getParcelableExtra(UtilService.EVENT);
+                        Log.i("location",""+id);
                         Event newEvent = new Event(id, event.getName(), event.getTime(), event.getLocation(), event.getCreator());
                         resultIntent.putExtra(UtilService.EVENT, newEvent);
                     } catch (JSONException e) {
@@ -147,7 +149,7 @@ public class EventService extends IntentService {
                 if(UtilService.isError(result)){
                     resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
                 } else {
-                    resultIntent.putExtra(UtilService.USERS, UtilService.getUsers(result));
+                    resultIntent.putExtra(UtilService.USERS, UtilService.getParticipants(result));
                 }
                 break;
             case ACTION_CHANGE:

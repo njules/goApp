@@ -16,6 +16,7 @@ import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Location;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 import edu.kit.pse.gruppe1.goApp.client.view.GroupActivity;
+import edu.kit.pse.gruppe1.goApp.client.view.LoginActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,8 +51,9 @@ public class NotificationService extends IntentService{
 				new NotificationCompat.Builder(this)
 						.setSmallIcon(R.mipmap.ic_launcher)
 						.setContentTitle(getString(R.string.notification_massage))
+						.setAutoCancel(true)
 						.setContentText(group.getName());
-		Intent resultIntent = new Intent(this, GroupActivity.class);
+		Intent resultIntent = new Intent(this, LoginActivity.class);
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
 		mBuilder.setContentIntent(resultPendingIntent);
 		NotificationManager mNotificationManager =

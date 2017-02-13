@@ -46,7 +46,7 @@ public class ParticipateService extends IntentService {
 
         Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
-        requestIntent.putExtra(UtilService.STATUS, status);
+        requestIntent.putExtra(UtilService.STATUS, status.getValue());
         requestIntent.setAction(ACTION_STATUS);
 
         context.startService(requestIntent);
@@ -62,7 +62,6 @@ public class ParticipateService extends IntentService {
         if(UtilService.isError(result)){
             resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
         }else {
-            //TODO Nur Status?
             resultIntent.putExtra(UtilService.STATUS, intent.getIntExtra(UtilService.STATUS, 0));
         }
 

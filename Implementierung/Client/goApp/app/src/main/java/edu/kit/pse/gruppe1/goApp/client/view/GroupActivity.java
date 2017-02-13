@@ -26,6 +26,7 @@ import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class GroupActivity extends AppCompatActivity implements View.OnClickListener {
     private GroupActivityBinding binding;
@@ -115,7 +116,8 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         private PendingIntent notifyAlarmIntent;
         private AlarmManager eventAlarmMgr;
         private PendingIntent eventAlarmIntent;
-        private int beforEvent = 900000;;
+        private int beforEvent = 900000;
+        ;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -129,13 +131,11 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                     break;
                 case ParticipateService.RESULT_STATUS:
                     int resultStatus = intent.getIntExtra(UtilService.STATUS, 0);
-                    if(resultStatus == Status.PARTICIPATE.getValue()){
+                    if (resultStatus == Status.PARTICIPATE.getValue()) {
                         accept(context);
-                    }
-                     else if(resultStatus == Status.REJECTED.getValue()){
+                    } else if (resultStatus == Status.REJECTED.getValue()) {
                         newEventAdapter.deleteItem(deletePosition);
-                    }
-                    else if(resultStatus == Status.STARTED.getValue()){
+                    } else if (resultStatus == Status.STARTED.getValue()) {
                         EventActivity.start(GroupActivity.this, eventMove);
                     }
                     break;
@@ -144,26 +144,35 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
             }
         }
 
-        private void accept(Context context){
+        private void accept(Context context) {
             newEventAdapter.deleteItem(deletePosition);
             acceptedEventAdapter.insertItem(eventMove);
 
-            notifyAlarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            Intent notifyIntent = new Intent(context, NotificationService.class);
-            notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
-            notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
-            notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, eventMove.getTime().getTime()-beforEvent, notifyAlarmIntent);
+            if (new Timestamp(eventMove.getTime().getTime() - beforEvent).before(new Timestamp(System.currentTimeMillis()))) {
+                Intent locationIntent = new Intent(context,LocationServiceNeu.class);
+                locationIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
+                locationIntent.putExtra(UtilService.EVENT,eventMove);
+                context.startService(locationIntent);
+                return;
+            } else {
 
-            eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            Intent eventIntent = new  Intent(context, LocationServiceNeu.class);
-            eventIntent.putExtra(UtilService.EVENT, eventMove);
-            eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
-            eventAlarmMgr.setExact(AlarmManager.RTC, eventMove.getTime().getTime()-beforEvent, eventAlarmIntent);
+                notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                Intent notifyIntent = new Intent(context, NotificationService.class);
+                notifyIntent.putExtra(UtilService.GROUP, Preferences.getGroup());
+                notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
+                notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, eventMove.getTime().getTime() - beforEvent, notifyAlarmIntent);
+
+                eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                Intent eventIntent = new Intent(context, LocationServiceNeu.class);
+                eventIntent.putExtra(UtilService.EVENT, eventMove);
+                eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
+                eventAlarmMgr.setExact(AlarmManager.RTC, eventMove.getTime().getTime() - beforEvent, eventAlarmIntent);
+            }
         }
 
 
-        private void loadEvents(Intent intent){
-            if (intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS ) != null) {
+        private void loadEvents(Intent intent) {
+            if (intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS) != null) {
                 acceptedEventAdapter = new AcceptedEventAdapter((Event[]) intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS), new ItemClickListener() {
                     @Override
                     public void onItemClicked(int position, View view) {
@@ -181,7 +190,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 });
                 acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
             }
-            if(intent.getParcelableArrayExtra(UtilService.NEW_EVENTS) != null){
+            if (intent.getParcelableArrayExtra(UtilService.NEW_EVENTS) != null) {
                 newEventAdapter = new NewEventAdapter((Event[]) intent.getParcelableArrayExtra(UtilService.NEW_EVENTS), new ItemClickListener() {
                     @Override
                     public void onItemClicked(int position, View view) {

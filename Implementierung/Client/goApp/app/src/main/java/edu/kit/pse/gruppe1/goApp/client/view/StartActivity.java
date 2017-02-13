@@ -74,7 +74,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         //reigster Reveicer to revceive the services answers
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(GroupSearchService.RESULT_GET_BY_MEMBER));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestSearchService.RESULT_GET_BY_USER));
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestService.RESULT_REJECT));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestService.RESULT_DELETE));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(UserService.RESULT_CHANGE));
 
         //Group Recycler View
@@ -131,7 +131,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
             builder.setMessage(R.string.deleteRequest)
                     .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            requestService.reject(StartActivity.this, new Request(user, group));
+                            requestService.delete(StartActivity.this, new Request(user, group));
                         }
                     })
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -177,7 +177,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     });
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
-                case RequestService.RESULT_REJECT:
+                case RequestService.RESULT_DELETE:
                     Toast.makeText(StartActivity.this, getString(R.string.deletedRequest), Toast.LENGTH_SHORT).show();
                     requestAdapter.deleteItem(deletePosition);
                     break;

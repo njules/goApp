@@ -37,6 +37,7 @@
                           android:layout_marginTop="?attr/actionBarSize"
                           android:textColor="#000000"
                           android:background="@color/colorPrimary"
+                          android:paddingStart="16dp"
                           android:text="@string/new_events"/>
                 <android.support.v7.widget.RecyclerView
                         android:id="@+id/new_event_recycler_view"
@@ -55,6 +56,7 @@
                           android:elevation="2dp"
                           android:textSize="26sp"
                           android:textColor="#000000"
+                          android:paddingStart="16dp"
                           android:background="@color/colorPrimary"
                           android:text="@string/your_events"/>
                 <android.support.v7.widget.RecyclerView
@@ -70,6 +72,7 @@
                 android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
                 app:fabSize="normal"
+                android:background="@color/colorAccept"
                 android:src="@drawable/ic_fab_add"/>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

@@ -27,6 +27,8 @@ public class RequestService extends IntentService{
 	public static final String RESULT_REJECT = "RESULT_REJECT_REQUEST";
 	public static final String RESULT_ACCEPT = "RESULT_ACCEPT_REQUEST";
 	public static final String RESULT_CREATE = "RESULT_CREATE_REQUEST";
+    public static final String RESULT_DELETE = "RESULT_DELETE";
+    private static final String ACTION_DELETE = "ACTION_DELETE";
 
 
     public RequestService() {
@@ -43,7 +45,7 @@ public class RequestService extends IntentService{
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), group.getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), group.getId());
             requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CREATE.toString());
         } catch (JSONException e) {
@@ -66,7 +68,7 @@ public class RequestService extends IntentService{
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), request.getGroup().getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), request.getGroup().getId());
             requestJson.put(JSONParameter.USER_ID.toString(), request.getUser().getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.ACCEPT);
         } catch (JSONException e) {
@@ -80,16 +82,28 @@ public class RequestService extends IntentService{
         context.startService(requestIntent);
 	}
 
+    public void delete(Context context, Request request){
+        Intent requestIntent = deleteRequest(context, request);
+        requestIntent.setAction(ACTION_DELETE);
+        context.startService(requestIntent);
+    }
+
+    public void reject(Context context, Request request){
+        Intent requestIntent = deleteRequest(context, request);
+        requestIntent.setAction(ACTION_REJECT);
+        context.startService(requestIntent);
+    }
+
 	/**
 	 * deletes the request if the founder decided that the user will not be in the group
 	 * @param request the request the founder has made a decision about
 	 * @return true, if method was successful, otherwise false
 	 */
-	public void reject(Context context, Request request) {
+	private Intent deleteRequest(Context context, Request request) {
         JSONObject requestJson = new JSONObject();
 
         try {
-            requestJson.put(JSONParameter.GRUOP_ID.toString(), request.getGroup().getId());
+            requestJson.put(JSONParameter.GROUP_ID.toString(), request.getGroup().getId());
             requestJson.put(JSONParameter.USER_ID.toString(), request.getUser().getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.REJECT);
         } catch (JSONException e) {
@@ -98,9 +112,7 @@ public class RequestService extends IntentService{
 
         Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
-        requestIntent.setAction(ACTION_REJECT);
-
-        context.startService(requestIntent);
+        return requestIntent;
 	}
 
 	@Override
@@ -119,6 +131,13 @@ public class RequestService extends IntentService{
             case ACTION_REJECT:
                 result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
                 resultIntent.setAction(RESULT_REJECT);
+                if(UtilService.isError(result)){
+                    resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+                }
+                break;
+            case ACTION_DELETE:
+                result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+                resultIntent.setAction(RESULT_DELETE);
                 if(UtilService.isError(result)){
                     resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
                 }
