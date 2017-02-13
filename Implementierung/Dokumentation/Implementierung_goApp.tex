@@ -70,7 +70,7 @@
 		
 	\subsubsection{Algorithmus}	
 	\paragraph{Clusteralgorithmus}
-	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können.
+	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können. Außerdem kann nun über den Konstruktor ein beliebiger Clusterer und Mittelpunktalgorithmus übergeben werden.
 	
 	\subsection{Model}
 	\paragraph{Event}
@@ -208,6 +208,7 @@
 	\subsection{Server}
 	\subsubsection{Datenbank}
 	\subsubsection{Algorithmus}
+	Zum Einen wird hier überprüft ob der selbstgeschriebene Mittelpunktalgorithmus das korrekte Ergebnis ausgibt und auch Nullparameter richtig verarbeitet, zum Anderen wird die Klasse ClusterFacade durch Benutzung von Mockito auf die richtige Arbeitsweise überprüft, dabei wird die Richtigkeit der importierten Clusteralgorithmen vorrausgesetzt. 
 	\subsubsection{Servlet}
 	Zum Testen der Servlets werden die jeweiligen Management Klassen der Datenbank, sowie HTTPRequests gemockt.
 	\paragraph{EventServlet}
