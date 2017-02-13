@@ -113,16 +113,19 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                 }
 
                 String timeString = datepicker.getDayOfMonth() + "-" + (datepicker.getMonth() + 1) + "-" + datepicker.getYear() + " " + timepicker.getCurrentHour() + ":" + timepicker.getCurrentMinute();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm");
+                Log.i("TIme",timepicker.getCurrentHour().toString());
                 try {
                     timestamp = new Timestamp(sdf.parse(timeString).getTime());
                     Log.i("ourTime", timestamp.toString());
                     Log.i("sysTime", new Timestamp(System.currentTimeMillis()).toString());
                     if (timestamp.after(new Timestamp(System.currentTimeMillis()))) {
                         eventService.create(this, en.getText().toString(), location, Preferences.getUser(), timestamp, Preferences.getGroup());
-                    } else {
+                    } else if(timestamp.before(new Timestamp(System.currentTimeMillis()))){
                         Toast.makeText(this, getString(R.string.wrongTime), Toast.LENGTH_SHORT).show();
                         return true;
+                    } else {
+                        Log.i("Timer","Time Error");
                     }
 
                 } catch (ParseException e) {

@@ -40,8 +40,7 @@
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/my_groups_recycler_view"
                 android:scrollbars="vertical"
-                android:background="@color/colorButton"
-                android:foreground="@color/colorButton"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
     </LinearLayout>
@@ -67,7 +66,7 @@
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/my_requests_recycler_view"
                 android:scrollbars="horizontal"
-                android:background="@color/colorButton"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
@@ -133,6 +134,7 @@ public class EventService extends IntentService {
                     try {
                         int id = result.getInt(JSONParameter.EVENT_ID.toString());
                         Event event = intent.getParcelableExtra(UtilService.EVENT);
+                        Log.i("location",""+id);
                         Event newEvent = new Event(id, event.getName(), event.getTime(), event.getLocation(), event.getCreator());
                         resultIntent.putExtra(UtilService.EVENT, newEvent);
                     } catch (JSONException e) {
