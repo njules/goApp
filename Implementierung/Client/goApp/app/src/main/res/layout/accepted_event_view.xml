@@ -17,7 +17,7 @@
                   android:gravity="center|top"
                   android:textAlignment="center"
                   android:textSize="@dimen/viewholder_textsize"
-                  android:lines="3"
+                  android:lines="4"
                   android:background="@color/colorButton"
                   android:text="@{event.name + '\n' +event.creator.name + '\n' + event.time.toString()}"/>
 

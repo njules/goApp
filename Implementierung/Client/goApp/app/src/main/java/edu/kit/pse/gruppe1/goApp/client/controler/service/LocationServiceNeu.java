@@ -32,6 +32,7 @@ public class LocationServiceNeu extends IntentService implements GoogleApiClient
     private static final String SERVLET = "LocationServlet";
     private static final String NAME = "LocationServiceNeu";
     public static final String RESULT_LOCATION = "resultLocation";
+    public static final String ACTION_LOCATION = "Location";
     public static final String ACTION_MY_LOCATION = "myLocation";
     public static final String RESULT_MY_LOCATION = "myLocation";
 

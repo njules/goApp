@@ -179,6 +179,10 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     Toast.makeText(NewEventActivity.this, "Neues Event erstellt", Toast.LENGTH_SHORT).show();
 
                     if (new Timestamp(timestamp.getTime() - beforEvent).before(new Timestamp(System.currentTimeMillis()))) {
+                        Intent locationIntent = new Intent(context,LocationServiceNeu.class);
+                        locationIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
+                        locationIntent.putExtra(UtilService.EVENT,intent.getParcelableExtra(UtilService.EVENT));
+                        context.startService(locationIntent);
                         GroupActivity.start(NewEventActivity.this);
                         break;
                     }
@@ -193,7 +197,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
 
                     eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent eventIntent = new Intent(context, LocationServiceNeu.class);
-                    eventIntent.setAction("TEST");
+                    eventIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
                     eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
                     eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
                     eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime() - beforEvent, eventAlarmIntent);

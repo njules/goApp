@@ -149,6 +149,10 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
             acceptedEventAdapter.insertItem(eventMove);
 
             if (new Timestamp(eventMove.getTime().getTime() - beforEvent).before(new Timestamp(System.currentTimeMillis()))) {
+                Intent locationIntent = new Intent(context,LocationServiceNeu.class);
+                locationIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
+                locationIntent.putExtra(UtilService.EVENT,eventMove);
+                context.startService(locationIntent);
                 return;
             } else {
 
