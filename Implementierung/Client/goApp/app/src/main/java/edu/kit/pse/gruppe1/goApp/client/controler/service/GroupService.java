@@ -145,7 +145,7 @@ public class GroupService extends IntentService {
         Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_SET_NAME);
-
+        requestIntent.putExtra(UtilService.NAME, newName);
         context.startService(requestIntent);
     }
 
@@ -291,6 +291,8 @@ public class GroupService extends IntentService {
                 resultIntent.setAction(RESULT_SET_NAME);
                 if (UtilService.isError(result)) {
                     resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+                } else{
+                    resultIntent.putExtra(UtilService.NAME, intent.getStringExtra(UtilService.NAME));
                 }
                 break;
             //TODO default case

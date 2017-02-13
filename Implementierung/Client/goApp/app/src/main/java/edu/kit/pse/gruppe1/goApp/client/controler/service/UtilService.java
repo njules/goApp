@@ -36,6 +36,7 @@ public final class UtilService {
     private static final String SERVER_FAILED = "Our server has some problems";
     private static final String CONNECTION_FAILED = "Please check your internet connection";
     private static final String OK = "ok";
+    public static final String NAME = "name";
 
     public static Group[] getGroups(JSONObject json) {
         //TODO if(json == null)
@@ -123,7 +124,6 @@ public final class UtilService {
     }
 
     public static String getError(JSONObject json) {
-        //TODO Erro massages
         int error = -1;
         try {
             error = json.getInt(JSONParameter.ERROR_CODE.toString());
@@ -138,6 +138,8 @@ public final class UtilService {
             return CONNECTION_FAILED;
         } else if (error == JSONParameter.ErrorCodes.OK.getErrorCode()) {
             return OK;
+        }else if(error == JSONParameter.ErrorCodes.EMPTY_LIST.getErrorCode()){
+            return null;
         } else {
             return SERVER_FAILED;
         }

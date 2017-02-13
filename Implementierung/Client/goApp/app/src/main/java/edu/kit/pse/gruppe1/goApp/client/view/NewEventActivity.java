@@ -176,28 +176,32 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
             }
             switch (intent.getAction()) {
                 case EventService.RESULT_CREATE:
-                        Toast.makeText(NewEventActivity.this, "Neues Event erstellt", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewEventActivity.this, "Neues Event erstellt", Toast.LENGTH_SHORT).show();
 
-                        notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        Intent notifyIntent = new Intent(context, NotificationService.class);
-                        notifyIntent.putExtra(UtilService.GROUP.toString(), Preferences.getGroup());
-                        notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
-                        //900000 is 15 mins in millis
-                        notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime() - beforEvent, notifyAlarmIntent);
-
-                        Log.i("MainThread", Thread.currentThread().getId()+"");
-
-                        eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        Intent eventIntent = new Intent(context, LocationServiceNeu.class);
-                        eventIntent.setAction("TEST");
-                        eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
-                        eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
-                        eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime() - beforEvent, eventAlarmIntent);
-
+                    if (new Timestamp(timestamp.getTime() - beforEvent).before(new Timestamp(System.currentTimeMillis()))) {
                         GroupActivity.start(NewEventActivity.this);
+                        break;
+                    }
+                    notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    Intent notifyIntent = new Intent(context, NotificationService.class);
+                    notifyIntent.putExtra(UtilService.GROUP.toString(), Preferences.getGroup());
+                    notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
+                    //900000 is 15 mins in millis
+                    notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime() - beforEvent, notifyAlarmIntent);
+
+                    Log.i("MainThread", Thread.currentThread().getId() + "");
+
+                    eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    Intent eventIntent = new Intent(context, LocationServiceNeu.class);
+                    eventIntent.setAction("TEST");
+                    eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
+                    eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
+                    eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime() - beforEvent, eventAlarmIntent);
+
+                    GroupActivity.start(NewEventActivity.this);
                     break;
                 case LocationServiceNeu.RESULT_MY_LOCATION:
-                    android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
+                    android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;
             }

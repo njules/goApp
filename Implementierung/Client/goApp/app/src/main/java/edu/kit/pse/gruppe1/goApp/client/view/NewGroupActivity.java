@@ -109,16 +109,16 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
                 case GroupSearchService.RESULT_GET_BY_NAME:
                     if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.NoGroup), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.NoGroup), Toast.LENGTH_SHORT).show();
                         break;
                     }
-                    groupAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra("groups"), new ItemClickListener() {
+                    groupAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
                             Group group = groupAdapter.getItem(position);
@@ -128,7 +128,7 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
                     groupRecyclerView.setAdapter(groupAdapter);
                     break;
                 case RequestService.RESULT_CREATE:
-                    Toast.makeText(getApplicationContext(), getString(R.string.request_send), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.request_send), Toast.LENGTH_SHORT).show();
                     break;
                 case GroupService.RESULT_CREATE:
                     Toast.makeText(NewGroupActivity.this, getString(R.string.groupCreated), Toast.LENGTH_SHORT).show();

@@ -49,7 +49,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     public User getItem(int position) {
         return dataset.get(position);
     }
-    public void delete(int position){
+
+    public void delete(int position) {
         dataset.remove(position);
         notifyItemRemoved(position);
     }
@@ -75,7 +76,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         @Override
         public void onClick(View view) {
-            itemClickListener.onItemClicked(getAdapterPosition(),view);
+            itemClickListener.onItemClicked(getAdapterPosition(), view);
         }
         //private final Listener;
     }

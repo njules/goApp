@@ -69,7 +69,8 @@ public class GroupInfoActivity extends AppCompatActivity implements Communicator
 
     @Override
     public void respond(String response) {
-        //TODO change name
+        GroupService groupService = new GroupService();
+        groupService.setName(this, group, response);
     }
 
 }

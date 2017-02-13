@@ -41,7 +41,6 @@ public class LoginService extends IntentService {
         requestIntent.putExtra(UtilService.JSON, createLogin(token).toString());
         requestIntent.setAction(ACTION_LOGIN);
         context.startService(requestIntent);
-
     }
 
     private JSONObject createRegister(String token) {
@@ -78,6 +77,7 @@ public class LoginService extends IntentService {
         requestIntent.putExtra(UtilService.JSON, createRegister(token).toString());
         requestIntent.setAction(ACTION_LOGIN);
         context.startService(requestIntent);
+        Log.i("Login","TryStart LoginService");
     }
 
     @Override

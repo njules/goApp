@@ -34,4 +34,5 @@
     <string name="deletedRequest">Anfrage gelöscht</string>
     <string name="groupCreated">Gruppe wurde erfolgreich erstellt!</string>
     <string name="nameMissing">Gib deinen Termin einen Namen</string>
+    <string name="your_groups">Deine Gruppen</string>
 </resources>
