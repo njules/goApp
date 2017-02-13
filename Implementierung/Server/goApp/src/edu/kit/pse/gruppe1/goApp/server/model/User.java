@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -21,7 +20,7 @@ import javax.persistence.UniqueConstraint;
  * An user describes an user of the goApp.
  */
 @Entity
-@Table(name = "userT", uniqueConstraints = @UniqueConstraint(columnNames = { "GOOGLE_ID" }))
+@Table(name = "userT", uniqueConstraints = @UniqueConstraint(columnNames = { "GOOGLE_ID" }) )
 public class User {
 
     /**
@@ -45,7 +44,7 @@ public class User {
 
     /**
      * 
-     * @param id
+     * @param googleId
      *            The Id of the user.
      * @param name
      *            The name of the user.

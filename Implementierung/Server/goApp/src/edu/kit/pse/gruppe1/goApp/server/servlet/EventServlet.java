@@ -45,6 +45,7 @@ public class EventServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -89,7 +90,7 @@ public class EventServlet extends HttpServlet {
             break;
         default:
             if (error.equals(ErrorCodes.OK)) {
-                error = ErrorCodes.READ_JSON;
+                error = ErrorCodes.METH_ERROR;
             }
             strResponse = ServletUtils.createJSONError(error).toString();
             break;
@@ -101,6 +102,7 @@ public class EventServlet extends HttpServlet {
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
@@ -228,40 +230,42 @@ public class EventServlet extends HttpServlet {
         } catch (JSONException e) {
             // do nothing, because it can happen
         }
-        // TODO: Use in later Version
-        // try {
-        // int creatorID = json.getInt(JSONParameter.USER_ID.toString());
-        // UserManagement usMang = new UserManagement();
-        // User creator = usMang.getUser(creatorID);
-        // if (creator != null) {
-        // event.setCreator(creator);
-        // valuesChanged = true;
-        // } else {
-        // error = ErrorCodes.DB_ERROR;
-        // }
-        // } catch (JSONException e) {
-        // // do nothing, because it can happen
-        // }
-        // try {
-        // int groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
-        // GroupManagement grMang = new GroupManagement();
-        // Group group = grMang.getGroup(groupID);
-        // if (group != null) {
-        // event.setGroup(group);
-        // valuesChanged = true;
-        // } else {
-        // error = ErrorCodes.DB_ERROR;
-        // }
-        // } catch (JSONException e) {
-        // // do nothing, because it can happen
-        // }
+        
 
         if (valuesChanged) {
-            if(!eventMang.update(event)){
+            if (!eventMang.update(event)) {
                 error = ErrorCodes.DB_ERROR;
             }
         }
         return ServletUtils.createJSONError(error);
     }
+    
+    // Code for use in future Version in change
+    // try {
+    // int creatorID = json.getInt(JSONParameter.USER_ID.toString());
+    // UserManagement usMang = new UserManagement();
+    // User creator = usMang.getUser(creatorID);
+    // if (creator != null) {
+    // event.setCreator(creator);
+    // valuesChanged = true;
+    // } else {
+    // error = ErrorCodes.DB_ERROR;
+    // }
+    // } catch (JSONException e) {
+    // // do nothing, because it can happen
+    // }
+    // try {
+    // int groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
+    // GroupManagement grMang = new GroupManagement();
+    // Group group = grMang.getGroup(groupID);
+    // if (group != null) {
+    // event.setGroup(group);
+    // valuesChanged = true;
+    // } else {
+    // error = ErrorCodes.DB_ERROR;
+    // }
+    // } catch (JSONException e) {
+    // // do nothing, because it can happen
+    // }
 
 }

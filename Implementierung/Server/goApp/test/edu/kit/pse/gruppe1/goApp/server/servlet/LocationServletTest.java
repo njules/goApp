@@ -73,8 +73,6 @@ public class LocationServletTest {
         servlet = null;
         jsonRequest = null;
     }
-    
-    //TODO test edge cases such as invalid user/event/location/method
 
     @Test
     public void testSyncPos() {

@@ -11,11 +11,18 @@ import edu.kit.pse.gruppe1.goApp.server.model.*;
 public class GroupUserManagement {
 
     /**
+     * Constructor
+     */
+    public GroupUserManagement() {
+        super();
+    }
+
+    /**
      * creates new entry
      * 
-     * @param gruopID
+     * @param groupId
      *            groupID to combine with user
-     * @param userID
+     * @param userId
      *            userID to combine with group
      * @return ID of new entry
      */
@@ -34,7 +41,7 @@ public class GroupUserManagement {
     /**
      * get all User to given Group
      * 
-     * @param groupID
+     * @param groupId
      *            ID of group
      * @return List of matching User
      */
@@ -51,7 +58,7 @@ public class GroupUserManagement {
     /**
      * get all groups to given User
      * 
-     * @param userID
+     * @param userId
      *            ID of User
      * @return List of matching Groups
      */
@@ -68,9 +75,9 @@ public class GroupUserManagement {
     /**
      * deletes entry in table with given GroupID and userID
      * 
-     * @param groupID
+     * @param groupId
      *            groupID to delete (in combination)
-     * @param userID
+     * @param userId
      *            userID to delete (in combination)
      * @return true, if successful, otherwise false
      */

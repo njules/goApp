@@ -40,6 +40,7 @@ public class RequestSearchServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -56,7 +57,7 @@ public class RequestSearchServlet extends HttpServlet {
             // response was set in extractJSON
             return;
         }
-        
+
         try {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
@@ -81,7 +82,7 @@ public class RequestSearchServlet extends HttpServlet {
             break;
         default:
             if (error.equals(ErrorCodes.OK)) {
-                error = ErrorCodes.READ_JSON;
+                error = ErrorCodes.METH_ERROR;
             }
             strResponse = ServletUtils.createJSONError(error).toString();
             break;
@@ -92,6 +93,7 @@ public class RequestSearchServlet extends HttpServlet {
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);

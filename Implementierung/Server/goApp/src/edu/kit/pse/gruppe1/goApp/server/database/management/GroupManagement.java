@@ -18,6 +18,13 @@ import edu.kit.pse.gruppe1.goApp.server.model.User;
 public class GroupManagement implements Management {
 
     /**
+     * Constructor
+     */
+    public GroupManagement() {
+        super();
+    }
+
+    /**
      * creates new Group and adds new entry to table
      * 
      * @param name
@@ -60,7 +67,7 @@ public class GroupManagement implements Management {
     /**
      * updates name of entry
      * 
-     * @param groupID
+     * @param groupId
      *            ID of entry to change
      * @param newName
      *            Name to set
@@ -78,10 +85,11 @@ public class GroupManagement implements Management {
     /**
      * updates founder of given entry
      * 
-     * @param groupID
+     * @param groupId
      *            ID of entry to change
      * @param newFounder
      *            Founder to set
+     * @return true if success, otherwise false
      */
     public boolean updateFounder(int groupId, User newFounder) {
         Group group = getGroup(groupId);
@@ -95,7 +103,7 @@ public class GroupManagement implements Management {
     /**
      * returns Group with given GruopID
      * 
-     * @param groupID
+     * @param groupId
      *            ID of Group to get
      * @return a Group
      */
@@ -128,7 +136,7 @@ public class GroupManagement implements Management {
     /**
      * return all Events which are connected with given Group
      * 
-     * @param groupID
+     * @param groupId
      *            GroupID to search Events for
      * @return List of Events
      */

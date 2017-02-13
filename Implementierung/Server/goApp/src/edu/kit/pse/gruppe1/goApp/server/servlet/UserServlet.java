@@ -38,6 +38,7 @@ public class UserServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String strResponse = null;
@@ -73,13 +74,12 @@ public class UserServlet extends HttpServlet {
         case CHANGE:
             strResponse = changeName(jsonRequest).toString();
             break;
-        // TODO
         // case GET_USER:
         // strResponse = getUser(jsonRequest);
         // break;
         default:
             if (error.equals(ErrorCodes.OK)) {
-                error = ErrorCodes.READ_JSON;
+                error = ErrorCodes.METH_ERROR;
             }
             strResponse = ServletUtils.createJSONError(error).toString();
             break;
@@ -90,6 +90,7 @@ public class UserServlet extends HttpServlet {
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
