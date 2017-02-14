@@ -129,7 +129,6 @@ public class EventServlet extends HttpServlet {
         String locName = null;
         int creatorID = -1;
         int groupID = -1;
-        JSONParameter.ErrorCodes err = ErrorCodes.OK;
 
         // get all parameter from json
         try {
@@ -141,16 +140,16 @@ public class EventServlet extends HttpServlet {
             creatorID = json.getInt(JSONParameter.USER_ID.toString());
             groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
-            err = ErrorCodes.READ_JSON;
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
         location = new Location(longitude, latitude, locName);
         event = this.eventMang.add(name, location, time, creatorID, groupID);
 
         if (event == null) {
-            err = ErrorCodes.DB_ERROR;
+            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
         }
 
-        return ServletUtils.createJSONError(err);
+        return ServletUtils.createJSONEventID(event);
     }
 
    /**
