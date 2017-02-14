@@ -163,7 +163,7 @@ public class GroupServlet extends HttpServlet {
             int group = json.getInt(JSONParameter.GROUP_ID.toString());
             String newName = json.getString(JSONParameter.GROUP_NAME.toString());
             if (!groupManager.updateName(group, newName)) {
-                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR).toString();
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
             }
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.OK).toString();
         } catch (JSONException e) {
