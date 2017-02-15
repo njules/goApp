@@ -150,10 +150,22 @@ public class RequestServlet extends HttpServlet {
                 }
             }
 
-            if (groups == null || users == null) {
+            // Check if User is already has an open request
+            for (Group g : reqGroups) {
+                if (g.getGroupId() == newGroupID) {
+                    return ServletUtils.createJSONError(ErrorCodes.INTERACT_ERROR);
+                }
+            }
+
+            // it is possible, that there are no groups
+            if (groups != null) {
+                groupSum += groups.size();
+            }
+
+            // but there should be at least the founder in users
+            if (users == null) {
                 return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
             }
-            groupSum += groups.size();
             userSum += users.size();
 
             // it is possible, that there are no open requests
@@ -205,7 +217,7 @@ public class RequestServlet extends HttpServlet {
 
         req = reqMang.getRequest(groupID, userID);
         if (req != null) {
-            if (!grUsrMang.add(groupID, userID) && !reqMang.delete(groupID, userID)) {
+            if (!(grUsrMang.add(groupID, userID) && reqMang.delete(groupID, userID))) {
                 error = ErrorCodes.DB_ERROR;
             }
         } else {

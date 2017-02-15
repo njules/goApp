@@ -74,9 +74,6 @@ public class UserServlet extends HttpServlet {
         case CHANGE:
             strResponse = changeName(jsonRequest).toString();
             break;
-        // case GET_USER:
-        // strResponse = getUser(jsonRequest);
-        // break;
         default:
             if (error.equals(ErrorCodes.OK)) {
                 error = ErrorCodes.METH_ERROR;
@@ -130,36 +127,4 @@ public class UserServlet extends HttpServlet {
         return ServletUtils.createJSONError(error);
 
     }
-
-    /**
-     * NOT USED (YET) BY Client
-     * 
-     * A user can invoke this to retrieve any information about a given user such as groups he is a
-     * member of and events he wants to participate or is invited to.
-     * 
-     * @param json
-     *            This JSON object contains the user about whom the information shall be released.
-     * @return Returns a JSON string containing information about the success of this operation.
-     */
-    @SuppressWarnings("unused")
-    private JSONObject getUser(JSONObject json) {
-        User user = null;
-        JSONParameter.ErrorCodes error = ErrorCodes.OK;
-        JSONObject result = null;
-
-        try {
-            int userID = json.getInt(JSONParameter.USER_ID.toString());
-            user = this.usrMang.getUser(userID);
-        } catch (JSONException e) {
-            error = ErrorCodes.READ_JSON;
-        }
-        if (error.equals(ErrorCodes.OK)) {
-            result = ServletUtils.createJSONUser(user);
-        } else {
-            result = ServletUtils.createJSONError(error);
-        }
-
-        return result;
-    }
-
 }
