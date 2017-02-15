@@ -1,6 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +14,7 @@ import org.json.JSONObject;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -92,7 +95,11 @@ public class GroupSearchServlet extends HttpServlet {
     private JSONObject getGroupsByName(JSONObject json) {
         try {
             String name = json.getString(JSONParameter.GROUP_NAME.toString());
-            return ServletUtils.createJSONListGrp(groupM.getGroupsByName(name));
+            List<Group> groups = groupM.getGroupsByName(name);
+            if (groups == null) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
+            }
+            return ServletUtils.createJSONListGrp(groups);
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);
@@ -110,7 +117,11 @@ public class GroupSearchServlet extends HttpServlet {
     private JSONObject getGroupsByMember(JSONObject json) {
         try {
             int id = json.getInt(JSONParameter.USER_ID.toString());
-            return ServletUtils.createJSONListGrp(groupUM.getGroups(id));
+            List<Group> groups = groupUM.getGroups(id);
+            if (groups == null) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
+            }
+            return ServletUtils.createJSONListGrp(groups);
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);
