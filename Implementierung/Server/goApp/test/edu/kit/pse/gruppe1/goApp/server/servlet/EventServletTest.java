@@ -86,7 +86,6 @@ public class EventServletTest {
         servlet = null;
     }
 
-    
     @Test
     public void testCreate() {
         Event event = createEvent();
@@ -120,7 +119,7 @@ public class EventServletTest {
         }
 
         verify(mockPrintWriter).println(captor.capture());
-        
+
         try {
             newJson = new JSONObject(captor.getValue());
             assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
@@ -134,6 +133,7 @@ public class EventServletTest {
 
     @Test
     public void testGetParticipates() {
+        // TODO: Rückgabetyp der Methode wurde verändert -> Test anpassen
         JSONObject json = new JSONObject();
         JSONObject internJson = null;
         JSONArray arrJson = null;
@@ -141,7 +141,7 @@ public class EventServletTest {
         List<Participant> part = createPartList();
         int eventID = createEvent().getEventId();
         int userID = -1;
-        
+
         try {
             json.put(JSONParameter.METHOD.toString(), Methods.GET_EVENT);
             json.put(JSONParameter.EVENT_ID.toString(), eventID);
@@ -150,7 +150,7 @@ public class EventServletTest {
             fail();
         }
         when(mockEventUsrMang.getParticipants(eventID)).thenReturn(part);
-        
+
         try {
             when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
             when(mockBuffRead.readLine()).thenReturn(json.toString());
@@ -222,7 +222,7 @@ public class EventServletTest {
             e.printStackTrace();
             fail();
         }
-        
+
         try {
             servlet.doPost(mockHttpRequest, mockHttpResponse);
         } catch (ServletException | IOException e) {
@@ -231,7 +231,6 @@ public class EventServletTest {
         }
 
         verify(mockPrintWriter).println(captor.capture());
-
 
         try {
             newJson = new JSONObject(captor.getValue());
@@ -242,7 +241,7 @@ public class EventServletTest {
             fail();
         }
     }
-    
+
     private Event createEvent() {
         String name = "Test Event";
         Location loc = new Location(49.014352, 8.404579, "Test Location");
@@ -256,7 +255,7 @@ public class EventServletTest {
         event.setEventId(3);
         return event;
     }
-    
+
     private List<Participant> createPartList() {
         List<Participant> part = new ArrayList<Participant>();
         Event e1 = createEvent();
@@ -268,7 +267,7 @@ public class EventServletTest {
         part.add(new Participant(Status.PARTICIPATE.getValue(), e1, u2));
         return part;
     }
-    
+
     private JSONObject createJSONEvent(Event event) {
         JSONObject json = new JSONObject();
 
@@ -289,8 +288,5 @@ public class EventServletTest {
         return json;
 
     }
-
-   
-
 
 }

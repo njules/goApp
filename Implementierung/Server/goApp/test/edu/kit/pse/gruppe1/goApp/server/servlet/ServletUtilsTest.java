@@ -3,6 +3,7 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,7 +92,7 @@ public class ServletUtilsTest {
 
     @Test
     public void testCreateJSONListPart() {
-        fail("Not yet implemented");
+        fail("Not yet implemented - Julian dein Job");
     }
 
     @Test
@@ -144,6 +145,11 @@ public class ServletUtilsTest {
             fail();
         }
 
+    }
+
+    @Test
+    public void testCreateJSONDoubleListPartUsers() {
+        fail("Not yet implemented - Julian dein Job");
     }
 
     @Test
@@ -203,22 +209,22 @@ public class ServletUtilsTest {
 
     @Test
     public void testCreateJSONListEvent() {
-        fail("Not yet implemented");
+        fail("Not yet implemented - Julian dein Job");
     }
 
     @Test
     public void testCreateJSONDoubleListEvent() {
-        fail("Not yet implemented");
+        fail("Not yet implemented - Julian dein Job");
     }
 
     @Test
     public void testCreateJSONListUsr() {
-        fail("Not yet implemented");
+        fail("Not yet implemented - Julian dein Job");
     }
 
     @Test
     public void testCreateJSONListGrp() {
-        fail("Not yet implemented");
+        fail("Not yet implemented - Julian dein Job");
     }
 
     @Test
@@ -238,7 +244,7 @@ public class ServletUtilsTest {
 
     @Test
     public void testCreateJSONListLoc() {
-        fail("Not yet implemented");
+        fail("Not yet implemented - Julian dein Job");
     }
 
     @Test
@@ -247,8 +253,7 @@ public class ServletUtilsTest {
         JSONObject json = null;
         json = ServletUtils.createJSONError(error);
         try {
-            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
-                    error.getErrorCode());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), error.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -256,7 +261,7 @@ public class ServletUtilsTest {
 
     @Test
     public void testExtractJSON() {
-        fail("Not yet implemented");
+        fail("Not yet implemented - Julian dein Job");
     }
 
 }
