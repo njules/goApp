@@ -62,10 +62,10 @@ public class GroupSearchServlet extends HttpServlet {
 
         switch (method) {
         case GET_GRP_NAME:
-            response.getWriter().println(getGroupsByName(jsonRequest));
+            response.getWriter().println(getGroupsByName(jsonRequest).toString());
             break;
         case GET_GRP_MEM:
-            response.getWriter().println(getGroupsByMember(jsonRequest));
+            response.getWriter().println(getGroupsByMember(jsonRequest).toString());
             break;
         default:
             response.getWriter()
@@ -89,13 +89,13 @@ public class GroupSearchServlet extends HttpServlet {
      *            The JSON object contains the string that is searched for in the groups names.
      * @return Returns a JSON string containing a list of all the groups associated with this name.
      */
-    private String getGroupsByName(JSONObject json) {
+    private JSONObject getGroupsByName(JSONObject json) {
         try {
             String name = json.getString(JSONParameter.GROUP_NAME.toString());
-            return ServletUtils.createJSONListGrp(groupM.getGroupsByName(name)).toString();
+            return ServletUtils.createJSONListGrp(groupM.getGroupsByName(name));
         } catch (JSONException e) {
             e.printStackTrace();
-            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);
         }
     }
 
@@ -107,13 +107,13 @@ public class GroupSearchServlet extends HttpServlet {
      * @return Returns a JSON string containing a list of all the groups in which the given user is
      *         a member.
      */
-    private String getGroupsByMember(JSONObject json) {
+    private JSONObject getGroupsByMember(JSONObject json) {
         try {
             int id = json.getInt(JSONParameter.USER_ID.toString());
-            return ServletUtils.createJSONListGrp(groupUM.getGroups(id)).toString();
+            return ServletUtils.createJSONListGrp(groupUM.getGroups(id));
         } catch (JSONException e) {
             e.printStackTrace();
-            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);
         }
     }
 
