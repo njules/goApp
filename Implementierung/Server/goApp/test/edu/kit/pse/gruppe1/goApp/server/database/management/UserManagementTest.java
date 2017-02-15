@@ -16,7 +16,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.User;
 public class UserManagementTest {
     private User createdUser;
     private String userName = "user name";
-    private int googleId = 1234;
+    private String googleId = "1234";
 
     @Before
     public void setUp() throws Exception {
@@ -50,10 +50,10 @@ public class UserManagementTest {
         assertThat(user.getUserId(), is(createdUser.getUserId()));
         assertThat(user.getName(), is(createdUser.getName()));
     }
-    
+
     @Test
     public void testGetUserByGoogleId() {
-        User user = new UserManagement().getUserByGoogleId(createdUser.getGoogleId()+1);
+        User user = new UserManagement().getUserByGoogleId(createdUser.getGoogleId() + 1);
         assertThat(user, is(nullValue()));
         user = new UserManagement().getUserByGoogleId(createdUser.getGoogleId());
         assertThat(user, is(notNullValue()));
@@ -80,7 +80,7 @@ public class UserManagementTest {
 
     @Test
     public void testUpdate() {
-        int newGoogleId = googleId + 1;
+        String newGoogleId = googleId + "1";
         createdUser.setGoogleId(newGoogleId);
         assertThat(new UserManagement().update(createdUser), is(true));
         assertThat(new UserManagement().getUser(createdUser.getUserId()).getGoogleId(),

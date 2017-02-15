@@ -5,7 +5,9 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
-import edu.kit.pse.gruppe1.goApp.server.model.*;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 /**
  * Manages User Table
@@ -106,6 +108,13 @@ public class UserManagement implements Management {
         return user;
     }
 
+    /**
+     * the user with the given googleId
+     * 
+     * @param googleId
+     *            the googleId of the user
+     * @return the user if such an user exist and else null
+     */
     public User getUserByGoogleId(String googleId) {
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
         session.beginTransaction();

@@ -8,10 +8,10 @@ public interface Management {
     /**
      * Delete an entry with ID in DB
      * 
-     * @param ID
+     * @param iD
      *            ID from Entry to delete
      * @return true, if deletion was successfull, otherwise false
      */
-    boolean delete(int ID);
+    boolean delete(int iD);
 
 }

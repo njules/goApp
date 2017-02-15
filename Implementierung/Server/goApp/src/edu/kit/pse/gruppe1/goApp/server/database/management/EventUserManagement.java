@@ -28,6 +28,16 @@ public class EventUserManagement implements Management {
         return participant;
     }
 
+    /**
+     * returns the participant with the given ids
+     * 
+     * @param eventId
+     *            the id of the event
+     * @param userId
+     *            the id of the user
+     * @return the participant with the given ids if such a participant exists in the db and else
+     *         null
+     */
     public Participant getParticipant(int eventId, int userId) {
         Event event = new EventManagement().getEvent(eventId);
         if (event == null) {
@@ -36,6 +46,14 @@ public class EventUserManagement implements Management {
         return event.getParticipant(userId);
     }
 
+    /**
+     * returns the participants of the event with the given eventId
+     * 
+     * @param eventId
+     *            the eventId of the Event
+     * @return a list with all participants of the event if there is an event with the eventId in
+     *         the db and else null
+     */
     public List<Participant> getParticipants(int eventId) {
         Event event = new EventManagement().getEvent(eventId);
         if (event == null) {
@@ -51,6 +69,9 @@ public class EventUserManagement implements Management {
      *            eventID to combine with user
      * @param userId
      *            userID to combine with Event
+     * @param status
+     *            the status of the new Participant
+     * @return true if the eventId and userId are valid and else false
      */
     public boolean addUser(int eventId, int userId, Status status) {
         Event event = new EventManagement().getEvent(eventId);
@@ -175,6 +196,17 @@ public class EventUserManagement implements Management {
         return users;
     }
 
+    /**
+     * returns all events of a group on which the user has the given status
+     * 
+     * @param status
+     *            the status of the user on the returned events
+     * @param groupId
+     *            the id of the group
+     * @param userId
+     *            the id of the user
+     * @return a list with all events
+     */
     public List<Event> getEventsByStatus(Status status, int groupId, int userId) {
         Group group = new GroupManagement().getGroup(groupId);
         if (group == null) {
@@ -183,7 +215,8 @@ public class EventUserManagement implements Management {
         List<Event> events = new ArrayList<>();
 
         for (Event event : group.getEvents()) {
-            if (Status.fromInteger(event.getParticipant(userId).getStatus()) == status) {
+            if (event.getParticipant(userId) != null
+                    && Status.fromInteger(event.getParticipant(userId).getStatus()) == status) {
                 events.add(event);
             }
         }

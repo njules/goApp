@@ -73,13 +73,40 @@
 	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können. Außerdem kann nun über den Konstruktor ein beliebiger Clusterer und Mittelpunktalgorithmus übergeben werden.
 	
 	\subsection{Model}
-	\paragraph{Event}
+	\paragraph{User}
+	Zusätzlich zu der id des Users in der Datenbank, die Google-id als String.
+	\paragraph{Group}
+	Konstruktor hat nun zusätzlich den Gründer (User) als Parameter.
+		\paragraph{Event}
+	Konstruktor hat nun zusätzlich den Ort (Location), den Ersteller (User) und die Gruppe (Group) in welcher der Termin erstellt wird als Parameter.
 	Die Zeit eines Events wird nicht als Time sondern als Timestamp gespeichert, dann ist das Datum mit dabei.
 
 	\paragraph{Participant \& Status}
 	Der Status in Participant ist zu einem Enum geworden.
-	Der Status kann Inivted, Participate, Started oder Rejected sein.
+	Der Status kann Inivted, Participate, Started oder Rejected sein.	
+	\subsection{Database Management}
+	\paragraph{EventDeletionTimer}
+	Läuft im Hintergrund und löscht Events nachdem deren Startzeitpunkt eine Stunde in der Vergangenheit liegt.
+	\paragraph{GroupManagement}	
+	Die Methoden getGroupsByMember,addMember und deleteMember wurden durch Methoden getGroups,add und delete in GroupUserManagement ersetzt.
+	\paragraph{UserManagement}	
+	Die Methode getUserByGoogleId kam hinzu um beim Starten der App den User der App zu laden.
+	\paragraph{EventManagement}	
+	\begin{itemize}
+\item 	Die Methode updateStatus wurde durch die Methode updateStatus in EventUserManagement ersetzt.
+\item 	Die Methoden getUserLocations und setClusterPoints wurden hinzugefügt um dem Algorithmuspaket den Zugriff auf die Daten zu erleichtern.
+\item	Die Methode deleteOldEvents wurde hinzugefügt damit der EventDeletionTimer alte Events löschen kann.	
+	\end{itemize}
+
+	\paragraph{EventUserManagement}		
 	
+	\begin{itemize}
+\item 		Die Methode getEventsByStatus wurde hinzugefügt damit die App die Events in getrennten Listen erhält.
+\item Die Methoden getParticipant and getParticipants wurden hinzugefügt.\dfrac{•}{•}
+	\end{itemize}
+
+		\paragraph{RequestManagement}		
+	Die Methode getRequest wurde hinzugefügt. Diese gibt die Request aus der Datenbank mit der übergebenen userId und groupId zurück.
 	\subsection{Client}
 	\subsubsection{View}
 	\subsubsection{Controller}

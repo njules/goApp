@@ -17,13 +17,16 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "requestT", uniqueConstraints = @UniqueConstraint(columnNames = { "USER_ID",
-        "GROUP_ID" }) )
+        "GROUP_ID" }))
 public class Request {
 
     private Integer requestId;
     private User user;
     private Group group;
 
+    /**
+     * standard constructor
+     */
     public Request() {
     }
 
@@ -39,6 +42,10 @@ public class Request {
         this.group = group;
     }
 
+    /**
+     * 
+     * @return the id of the request
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REQUEST_ID", unique = true, nullable = false)
@@ -46,26 +53,49 @@ public class Request {
         return requestId;
     }
 
+    /**
+     * 
+     * @param requestId
+     *            the id of the request
+     */
     public void setRequestId(Integer requestId) {
         this.requestId = requestId;
     }
 
+    /**
+     * 
+     * @return the group the user send the request
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_ID", nullable = false)
     public Group getGroup() {
         return group;
     }
 
+    /**
+     * 
+     * @param group
+     *            the group of the request
+     */
     public void setGroup(Group group) {
         this.group = group;
     }
 
+    /**
+     * 
+     * @return the user of the request
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     public User getUser() {
         return user;
     }
 
+    /**
+     * 
+     * @param user
+     *            the user of the request
+     */
     public void setUser(User user) {
         this.user = user;
     }
