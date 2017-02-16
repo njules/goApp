@@ -2,7 +2,6 @@ package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Tobias on 27.01.2017.
+ * This adapter provides a binding from an data set of events to views that are displayed within a RecyclerView.
  */
 
 public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdapter.AcceptedEventViewHolder> {
     private List<Event> dataset;
     private final ItemClickListener itemClickListener;
 
+    /**
+     * Creates the AcceptedEventAdapter.
+     *
+     * @param eventDataset contains the Events to display.
+     * @param icl          defines how to react to user interaction.
+     */
     public AcceptedEventAdapter(Event[] eventDataset, ItemClickListener icl) {
         dataset = new ArrayList<>(Arrays.asList(eventDataset));
         itemClickListener = icl;
@@ -45,24 +50,39 @@ public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdap
         return dataset.size();
     }
 
+    /**
+     * Gets a single item of the data set.
+     *
+     * @param position the position of the Event to get.
+     * @return the Event displayed at the given position.
+     */
     public Event getItem(int position) {
         return dataset.get(position);
     }
 
+    /**
+     * Inserts a single item into the data set.
+     *
+     * @param event the Event to insert.
+     */
     public void insertItem(Event event) {
         dataset.add(0, event);
         notifyItemInserted(0);
     }
 
+    /**
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
+     */
     public static class AcceptedEventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        public AcceptedEventViewBinding getBinding() {
-            return binding;
-        }
-
         private AcceptedEventViewBinding binding;
         private final ItemClickListener itemClickListener;
 
+        /**
+         * Creates the AcceptedEventViewHolder.
+         *
+         * @param b   the binding of the AcceptedEventViewHolder.
+         * @param icl defines how to react to user interaction.
+         */
         public AcceptedEventViewHolder(AcceptedEventViewBinding b, ItemClickListener icl) {
             super(b.getRoot());
             binding = b;
@@ -72,11 +92,19 @@ public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdap
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * Returns the AcceptedEventViewBinding.
+         *
+         * @return the binding to return.
+         */
+        public AcceptedEventViewBinding getBinding() {
+            return binding;
+        }
+
         @Override
         public void onClick(View view) {
             itemClickListener.onItemClicked(getAdapterPosition(), view);
         }
-        //private final Listener;
     }
 
 }

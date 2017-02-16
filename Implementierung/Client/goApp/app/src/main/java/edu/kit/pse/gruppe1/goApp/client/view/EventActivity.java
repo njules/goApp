@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,7 +24,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationServiceNeu;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.EventInfoActivityBinding;
@@ -33,28 +31,40 @@ import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Location;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
+/**
+ * The EventActivity displays all information about an Event including a dynamic Map.
+ * It also starts the EventService to let the user interact with the server.
+ */
 public class EventActivity extends AppCompatActivity implements OnMapReadyCallback {
     private EventInfoActivityBinding binding;
     private RecyclerView participantRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private UserAdapter userAdapter;
-    private Event event;
-    private ResultReceiver receiver;
-    private EventService eventService;
-
     private GoogleMap googleMap;
     private MarkerOptions marker;
 
+    private Event event;
+
+    private ResultReceiver receiver;
+    private EventService eventService;
+
+
+    /**
+     * This method creates an intent to start this exact Activity.
+     * The method needs to be static because the Activity does not exist when the method is called.
+     *
+     * @param activity the activity currently running.
+     * @param event    the event the user wants information about.
+     */
     public static void start(Activity activity, Event event) {
         Intent intent = new Intent(activity, EventActivity.class);
         intent.putExtra("Event", event);
         activity.startActivity(intent);
     }
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         event = getIntent().getParcelableExtra("Event");
@@ -70,16 +80,18 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onStart() {
         super.onStart();
-        eventService = new EventService();
+
         receiver = new ResultReceiver();
+        eventService = new EventService();
+
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_GET));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationServiceNeu.RESULT_MY_LOCATION));
 
-        binding.setEvent(event);
         participantRecyclerView = (RecyclerView) findViewById(R.id.participants_recycler_view);
         participantRecyclerView.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this);
         participantRecyclerView.setLayoutManager(linearLayoutManager);
+
         eventService.getEvent(this, event.getId());
     }
 
@@ -101,16 +113,21 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         this.startService(intent);
     }
 
+    /**
+     * The ResultReceiver evaluates return messages from earlier started Services.
+     */
     private class ResultReceiver extends BroadcastReceiver {
         private LatLng positionEvent;
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            // If the intent shows any kind of error the user will be notified.
             if (intent.getStringExtra(UtilService.ERROR) != null) {
                 Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
+                // loads the participants of the event in the userAdapter.
                 case EventService.RESULT_GET:
                     if (intent.getParcelableArrayExtra(UtilService.USERS) != null) {
                         User[] participants = (User[]) intent.getParcelableArrayExtra(UtilService.USERS);
@@ -129,12 +146,14 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                         participantRecyclerView.setAdapter(userAdapter);
                     }
                     break;
+                // Moves the Map to the Users Location.
                 case LocationServiceNeu.RESULT_MY_LOCATION:
                     positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
                     googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
                     android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;
+                // Refreshes the markers on the map, representing the Group Locations.
                 case LocationServiceNeu.RESULT_LOCATION:
                     googleMap.clear();
                     positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
@@ -144,6 +163,9 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                         LatLng position = new LatLng(locations[i].getLatitude(), locations[i].getLongitude());
                         googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position));
                     }
+                    break;
+                default:
+                    break;
             }
         }
     }

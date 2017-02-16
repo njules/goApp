@@ -45,13 +45,15 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     public int getItemCount() {
         return dataset.size();
     }
-    public void deleteItem(int position){
+
+    public void deleteItem(int position) {
         dataset.remove(position);
         notifyItemRemoved(position);
     }
-    public void insertItem(User user){
+
+    public void insertItem(User user) {
         dataset.add(user);
-        notifyItemInserted(dataset.size()-1);
+        notifyItemInserted(dataset.size() - 1);
     }
 
     public User getItem(int position) {
