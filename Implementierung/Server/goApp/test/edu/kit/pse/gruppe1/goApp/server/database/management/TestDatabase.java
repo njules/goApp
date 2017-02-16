@@ -55,7 +55,7 @@ public class TestDatabase {
         groups = new ArrayList<>(numberOfGroups);
         events = new ArrayList<>(numberOfEvents);
         for (int i = 0; i < numberOfUsers; i++) {
-            User user = new UserManagement().add(userName + i, i);
+            User user = new UserManagement().add(userName + i, "i");
             if (user == null) {
                 return false;
             }

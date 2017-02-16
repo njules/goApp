@@ -5,10 +5,21 @@ import java.util.TimerTask;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 
+/**
+ * Run in background and delets old events.
+ */
 public class EventDeletionTimer extends TimerTask {
     private long minutesTillDeletion;
     private Timer timer;
 
+    /**
+     * Starts the timer which calls the run method
+     * 
+     * @param excecutionsPerHour
+     *            The number of times the timer calls the run-method in an hour.
+     * @param minutesTillDeletion
+     *            Defines how long an event is in the database after it started.
+     */
     public EventDeletionTimer(double excecutionsPerHour, long minutesTillDeletion) {
         this.minutesTillDeletion = minutesTillDeletion;
         timer = new Timer();

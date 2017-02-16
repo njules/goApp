@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ EventServletTest.class, GroupSearchServletTest.class, GroupServletTest.class,
-        LocationServletTest.class, LoginServletTest.class, ParticipateServletTest.class,
+        LocationServletTest.class, ParticipateServletTest.class,
         RequestServletTest.class, ServletUtilsTest.class, UserServletTest.class,
         RequestSearchServletTest.class })
 public class AllServletTests {

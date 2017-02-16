@@ -176,7 +176,6 @@ public class GroupServletTest {
         }
     }
 
-    //TODO DB_ERROR is returned by servlet
     @Test
     public void testNameChanges() {
         // set up input
@@ -185,7 +184,7 @@ public class GroupServletTest {
         // prepare input JSON parameter
         try {
             JSONObject json = new JSONObject();
-            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DELETE);
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_NAME);
             json.put(JSONParameter.GROUP_NAME.toString(), name);
             json.put(JSONParameter.GROUP_ID.toString(), group);
             jsonRequest = json.toString();
@@ -265,7 +264,6 @@ public class GroupServletTest {
         }
     }
     
-    //TODO fuck this test
     @Test
     public void testEventRequesting() {
         // set up input
@@ -298,7 +296,7 @@ public class GroupServletTest {
             when(httpResponse.getWriter()).thenReturn(response);
             when(request.readLine()).thenReturn(jsonRequest);
             when(eventUserManager.getEventsByStatus(Status.INVITED, group , user)).thenReturn(fakePending);
-            when(eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, user)).thenReturn(fakeFriends);
+            when(eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, user)).thenReturn(new ArrayList<Event>(fakeFriends));
             when(eventUserManager.getEventsByStatus(Status.STARTED, group, user)).thenReturn(fakeMeeting);
        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
@@ -306,7 +304,7 @@ public class GroupServletTest {
         }
         // call method
         try {
-            servlet.doPost(httpRequest, httpResponse);
+            servlet.doPost(httpRequest, httpResponse);System.out.println(fakeFriends.size());
         } catch (ServletException | IOException e) {
             e.printStackTrace();
             fail("Failed to post HTTP request!\n");
@@ -315,7 +313,7 @@ public class GroupServletTest {
         verify(response).println(argCap.capture());
         List<Event> pending = new ArrayList<Event>();
         List<Event> going = new ArrayList<Event>();
-        try {
+        try {//System.out.println(fakePending);System.out.println(fakeFriends);System.out.println(fakeMeeting);
             JSONObject json = new JSONObject(argCap.getValue());
             assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
             JSONArray array = json.getJSONArray(JSONParameter.NEW_EVENTS.toString());
@@ -333,33 +331,54 @@ public class GroupServletTest {
             fail("Failed to read JSON response!\n");
         }
         for (Event test : fakePending) {
-            assertTrue(pending.contains(test));
-            pending.remove(test);
+            boolean contains = false;
+            for (Event result : pending) {
+                if (result.getName().equals(test.getName())) {
+                    contains = true;
+                    break;
+                }
+            }
+            assertTrue(contains);
         }
-        assertTrue(pending.isEmpty());
+        assertEquals(pending.size(), fakePending.size());
         for (Event test : fakeFriends) {
-            assertTrue(going.contains(test));
-            going.remove(test);
+            boolean contains = false;
+            for (Event result : going) {
+                if (result.getName().equals(test.getName())) {
+                    contains = true;
+                    break;
+                }
+            }
+            assertTrue(contains);
         }
         for (Event test : fakeMeeting) {
-            assertTrue(going.contains(test));
-            going.remove(test);
+            boolean contains = false;
+            for (Event result : going) {
+                if (result.getName().equals(test.getName())) {
+                    contains = true;
+                    break;
+                }
+            }
+            assertTrue(contains);
         }
-        assertTrue(going.isEmpty());
+        assertEquals(going.size(), fakeFriends.size() + fakeMeeting.size());
     }
     
-    //TODO
     @Test
     public void testMemberRequesting() {
         // set up input
         final List<User> fakeUsers = new ArrayList<User>();
-        fakeUsers.add(new User("0", "4ever"));
-        fakeUsers.add(new User("1", "alone"));
+        User user1 = new User(null, "4ever");
+        user1.setUserId(1);
+        fakeUsers.add(user1);
+        User user2 = new User(null, "alone");
+        user2.setUserId(3);
+        fakeUsers.add(user2);
         final int group = 65;
         // prepare input JSON parameter
         try {
             JSONObject json = new JSONObject();
-            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SYNC_LOC);
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_MEMBERS);
             json.put(JSONParameter.GROUP_ID.toString(), group);
             jsonRequest = json.toString();
         } catch (JSONException e) {
@@ -392,7 +411,9 @@ public class GroupServletTest {
             JSONArray array = json.getJSONArray(JSONParameter.LIST_USER.toString());
             for (int i = 0; i < array.length(); i++) {
                 JSONObject jsonUsr = array.getJSONObject(i);
-                result.add(new User(jsonUsr.getString(JSONParameter.USER_ID.toString()), jsonUsr.getString(JSONParameter.USER_NAME.toString())));
+                User user = new User(null, jsonUsr.getString(JSONParameter.USER_NAME.toString()));
+                user.setUserId(jsonUsr.getInt(JSONParameter.USER_ID.toString()));
+                result.add(user);
             }
         } catch (JSONException e) {
             e.printStackTrace();

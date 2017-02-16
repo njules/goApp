@@ -60,7 +60,7 @@ public class ParticipateServlet extends HttpServlet {
 
         switch (method) {
         case SET_STATUS:
-            response.getWriter().println(setStatus(jsonRequest));
+            response.getWriter().println(setStatus(jsonRequest).toString());
         default:
             response.getWriter()
                     .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
@@ -88,23 +88,29 @@ public class ParticipateServlet extends HttpServlet {
      *            wants it to be set to and the event for which this action shall take place.
      * @return Returns a JSON string containing information about the success of this operation.
      */
-    private String setStatus(JSONObject json) {
+    private JSONObject setStatus(JSONObject json) {
+        int event = -1;
+        int user = -1;
+        Status status = null;
         try {
-            int event = json.getInt(JSONParameter.EVENT_ID.toString());
-            int user = json.getInt(JSONParameter.USER_ID.toString());
-            Status status = Status.fromInteger(json.getInt(JSONParameter.STATUS.toString()));
-            if (status.equals(Status.REJECTED)) {
-                if (!eventUser.delete(event, user)) {
-                    return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
-                }
-            }
-            if (!eventUser.updateStatus(event, user, status)) {
-                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR).toString();
-            }
-            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.OK).toString();
+            event = json.getInt(JSONParameter.EVENT_ID.toString());
+            user = json.getInt(JSONParameter.USER_ID.toString());
+            status = Status.fromInteger(json.getInt(JSONParameter.STATUS.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
-            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON).toString();
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);
         }
+        if (status == null) {
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
+        }
+        if (status.equals(Status.REJECTED)) {
+            if (!eventUser.delete(event, user)) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
+            }
+        } if (!eventUser.updateStatus(event, user, status)) {
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
+        }
+        return ServletUtils.createJSONError(JSONParameter.ErrorCodes.OK);
+
     }
 }

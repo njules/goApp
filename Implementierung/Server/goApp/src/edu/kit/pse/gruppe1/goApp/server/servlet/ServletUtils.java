@@ -23,6 +23,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
 import edu.kit.pse.gruppe1.goApp.server.model.Participant;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
@@ -44,7 +45,7 @@ public final class ServletUtils {
     protected static final int GROUPLIMIT = 50;
 
     /**
-     * Client ID to user for Google Verifing
+     * Client ID to user for Google Verifying
      */
     private static final String CLIENT_ID = "425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com";
 
@@ -155,6 +156,62 @@ public final class ServletUtils {
         return json;
     }
 
+    protected static JSONObject createJSONPartFromUser(User user, Status status) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put(JSONParameter.USER_ID.toString(), user.getUserId());
+            json.put(JSONParameter.USER_NAME.toString(), user.getName());
+            json.put(JSONParameter.STATUS.toString(), status);
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+    /**
+     * creates a JSONObject with two lists, each containing Participants
+     * 
+     * @param started
+     *            list of users with status started
+     * @param partic
+     *            list of users with status participated
+     * @return JSONObject
+     */
+    protected static JSONObject createJSONDoubleListPartUsers(List<User> started,
+            List<User> partic) {
+        JSONObject json = new JSONObject();
+        if ((started == null || started.isEmpty()) && (partic == null || partic.isEmpty())) {
+            try {
+                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
+                return json;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        try {
+            if (started != null) {
+                for (User user : started) {
+                    json.append(JSONParameter.LIST_START_PART.toString(),
+                            createJSONPartFromUser(user, Status.STARTED));
+                }
+            }
+            if (partic != null) {
+                for (User user : partic) {
+                    json.append(JSONParameter.LIST_PART.toString(),
+                            createJSONPartFromUser(user, Status.PARTICIPATE));
+                }
+            }
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
     /**
      * create JSONObject for a LIst of Participants
      * 
@@ -164,7 +221,7 @@ public final class ServletUtils {
      */
     protected static JSONObject createJSONListPart(List<Participant> part) {
         JSONObject json = new JSONObject();
-        if (part.isEmpty()) {
+        if (part == null || part.isEmpty()) {
             try {
                 json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
                 return json;
@@ -309,7 +366,7 @@ public final class ServletUtils {
      */
     protected static JSONObject createJSONListEvent(List<Event> event) {
         JSONObject json = new JSONObject();
-        if (event.isEmpty()) {
+        if (event == null || event.isEmpty()) {
             try {
                 json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
                 return json;
@@ -333,21 +390,36 @@ public final class ServletUtils {
     /**
      * creates two separate lists of events, both of which are relevant to the user.
      * 
-     * @param list1
+     * @param accEvt
      *            containing all events the user actively participates in (JSONParameter.ACC_EVENTS)
-     * @param list2
+     * @param newEvt
      *            containing all new events the user has yet to decide if he wants to participate or
      *            decline (JSONParameter.NEW_EVENTS)
      * @return JSONObject containing both lists and ErrorCodes.OK
      */
-    protected static JSONObject createJSONDoubleListEvent(List<Event> list1, List<Event> list2) {
+    protected static JSONObject createJSONDoubleListEvent(List<Event> accEvt, List<Event> newEvt) {
         JSONObject json = new JSONObject();
-        try {
-            for (Event event : list1) {
-                json.append(JSONParameter.ACC_EVENTS.toString(), createJSONEvent(event));
+
+        if ((accEvt == null || accEvt.isEmpty()) && (newEvt == null || newEvt.isEmpty())) {
+            try {
+                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
+                return json;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
             }
-            for (Event event : list2) {
-                json.append(JSONParameter.NEW_EVENTS.toString(), createJSONEvent(event));
+        }
+
+        try {
+            if (accEvt != null) {
+                for (Event event : accEvt) {
+                    json.append(JSONParameter.ACC_EVENTS.toString(), createJSONEvent(event));
+                }
+            }
+            if (newEvt != null) {
+                for (Event event : newEvt) {
+                    json.append(JSONParameter.NEW_EVENTS.toString(), createJSONEvent(event));
+                }
             }
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
@@ -366,7 +438,7 @@ public final class ServletUtils {
      */
     protected static JSONObject createJSONListUsr(List<User> user) {
         JSONObject json = new JSONObject();
-        if (user.isEmpty()) {
+        if (user == null || user.isEmpty()) {
             try {
                 json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
                 return json;
@@ -396,7 +468,7 @@ public final class ServletUtils {
      */
     protected static JSONObject createJSONListGrp(List<Group> group) {
         JSONObject json = new JSONObject();
-        if (group.isEmpty()) {
+        if (group == null || group.isEmpty()) {
             try {
                 json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
                 return json;
@@ -446,7 +518,7 @@ public final class ServletUtils {
      */
     protected static JSONObject createJSONListLoc(List<Location> locat) {
         JSONObject json = new JSONObject();
-        if (locat.isEmpty()) {
+        if (locat == null || locat.isEmpty()) {
             try {
                 json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
                 return json;
