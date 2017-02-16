@@ -103,7 +103,7 @@
 	
 	\begin{itemize}
 \item 		Die Methode getEventsByStatus wurde hinzugefügt damit die App die Events in getrennten Listen erhält.
-\item Die Methoden getParticipant and getParticipants wurden hinzugefügt.\dfrac{•}{•}
+\item Die Methoden getParticipant and getParticipants wurden hinzugefügt.
 	\end{itemize}
 
 		\paragraph{RequestManagement}		
@@ -283,6 +283,110 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	Zum Testen uneres Codes haben wir Unit-Tests benutzt. In dieser Phase prüfen wir nur die Funktionalität. Weitere Tests zu Fehlerfällen folgen in der Testphase.
 	\subsection{Server}
 	\subsubsection{Datenbank}
+	Um die Management Klassen, welche über Hibernate mit der Datenbank kommunizieren, zu testen haben wir auf dem PC eine MySQL-Datenbank erstellt. Jeder Testfall erstellt erst alle Daten die er zum Testen benötigt, macht dann Datenbankabfragen und löscht die Daten wieder. Dadurch ist der Ausgangszustand für jeden Testfall immer klar definiert.
+	\paragraph{DatabaseInitializer - DatabaseInitializerTest}	
+	Testet ob das initialisieren der Datenbank klappt.
+	\paragraph{EventDeletionTimer - EventDeletionTimerTest}	
+	Die	EventDeletionTimerTest Klasse stellt sicher, dass das periodische löschen von veralteten Events funktioniert.
+	\paragraph{EventManagement - EventManagementTest}	
+	\subparagraph{public void testUpdate()}
+	Der Test überprüft, dass die update Methode die Änderungen an einem Event in die Datenbank überträgt.	
+	\subparagraph{public void testUpdateName()}
+	Der Test überprüft, dass die updateName Methode nach der Änderung des Namens eines Events den neuen Namen in die Datenbank abspeichert.
+	\subparagraph{public void testAdd()}
+	Der Test stellt sicher, dass das hinzufügen eines Events funktioniert.
+	\subparagraph{public void testDelete() }
+	Der Test stellt sicher, dass das löschen eines Events funktioniert.
+	\subparagraph{public void testGetCreator() }
+	Der Test stellt sicher, dass beim Aufruf der getCreator Methode der richtige Ersteller zurück gegeben wird.
+	\subparagraph{ public void testGetEvent() }
+	Der Test stellt sicher, dass beim Aufruf von getEvent das richtige Event zurück gegeben wird.
+	\subparagraph{public void testGetUserLocations() }
+	Der Test stellt sicher, dass beim Aufruf der getGetUserLocations Methode alle Positionen der Eventteilnehmer zurück gegeben werden.
+	\subparagraph{public void testSetClusterPoints()  }
+	Der Test stellt sicher, dass beim Aufruf der setClusterPoints Methode die neuen Positionen korrekt in der Datenbank abgespeichert werden.
+		
+	\paragraph{EventUserManagement - EventUserManagementTest}
+	\subparagraph{public void testAddUser()     }
+		Der Test stellt sicher, dass das hinzufügen eines Users zu einem Event funktioniert.
+	\subparagraph{    public void testUpdateStatus()  }
+	Der Test überprüft, dass die update Methode die Änderungen in die Datenbank überträgt.	
+	\subparagraph{ public void testGetParticipant()    }
+		Der Test stellt sicher, dass beim Aufruf von getParticipant der richtige Participant zurück gegeben wird.
+	\subparagraph{   public void testGetParticipants() }
+		Der Test stellt sicher, dass beim Aufruf von getParticipants der richtigen Participants zurück gegeben werden.
+	\subparagraph{    public void testDeleteParamsEventIdUserId()  }
+	Der Test stellt sicher, dass das löschen eines Participants anhand der id des Users und des Events funktioniert.
+	\subparagraph{   public void testDeleteParamsParticipantId()     }
+	Der Test stellt sicher, dass das löschen eines Participants anhand der id des Participants funktioniert.
+	\subparagraph{    public void testGetUsers()     }
+	Der Test stellt sicher, dass beim Aufruf von getUsers die richtigen User zu einem Event zurück gegeben werden.
+	\subparagraph{    public void testGetUserByStatus()     }
+	Der Test stellt sicher, dass beim Aufruf von getUserByStatus alle User mit dem Status bei dem Event zurück gegeben werden.
+	\subparagraph{    public void testGetEventsByStatus()     }
+	Der Test stellt sicher, dass beim Aufruf von getEventsByStatus alle Events mit dem Status von einem User zurück gegeben werden.
+	\subparagraph{    public void testGetEvents() }
+	Der Test stellt sicher, dass beim Aufruf von getEvents die richtigen Events zu einem User zurück gegeben werden.
+
+	\paragraph{GroupManagement - GroupManagementTest}
+	    \subparagraph{ public void testAdd()  }
+	Der Test stellt sicher, dass das hinzufügen einer Gruppe in der Datenbank funktioniert.
+    \subparagraph{    public void testGetGroup()     }
+	Der Test stellt sicher, dass beim Aufruf von getGroup die richtige Gruppe zurück gegeben wird.
+    \subparagraph{public void testDelete()   }
+	Der Test stellt sicher, dass das löschen einer Gruppe funktioniert.
+    \subparagraph{    public void testGetEvents()   }
+	Der Test stellt sicher, dass beim Aufruf von getEvents alle Events der Gruppe zurück gegeben werden.
+    \subparagraph{    public void testUpdate()    }
+   	Der Test überprüft, dass die update Methode die Änderungen in die Datenbank überträgt.	
+    \subparagraph{    public void testGetGroupsByName()     }
+	Der Test stellt sicher, dass die Methode getGroupsByName alle Gruppen aus der Datenbank deren Namen den übergebenen Namen enthält zurück gibt.
+    \subparagraph{    public void testUpdateFounder()     }
+   	Der Test überprüft, dass die updateFounder Methode den neuen Gründer in die Datenbank überträgt.	
+    \subparagraph{    public void testUpdateName()     }
+       	Der Test überprüft, dass die updateName Methode den neuen Namen in die Datenbank überträgt.	
+       	
+ 	\paragraph{GroupUserManagement - GroupUserManagementTest}
+	\subparagraph{    public void testAdd()     }
+	Der Test stellt sicher, dass das hinzufügen eines Users zu einer Gruppe funktioniert.
+    \subparagraph{    public void testDelete1()     }
+	Der Test stellt sicher, dass man nicht den Gründer der Gruppe aus der Gruppe enfernen kann.
+    \subparagraph{    public void testDelete2()     }
+   	Der Test stellt sicher, dass das löschen eines Users aus einer Gruppe funktioniert.
+    \subparagraph{    public void testGetGroups()     }
+   	Der Test stellt sicher, dass die getGroups Methode alle Gruppen eines Users zurück gibt.
+    \subparagraph{    public void testGetUsers()   }
+   	Der Test stellt sicher, dass die getUsers Methode alle User einer Gruppe zurück gibt.
+   	
+ 	\paragraph{RequestManagement - RequestManagementTest}
+ 	 \subparagraph{    public void testAdd()     }
+	Der Test stellt sicher, dass das hinzufügen einer Request in der Datenbank funktioniert.
+    \subparagraph{    public void testDeleteParamsRequestId()     }
+	Der Test stellt sicher, dass das löschen einer Request anhand der und der Request funktioniert.
+    \subparagraph{    public void testDeleteParamsGroupIdUserId()     }
+    	Der Test stellt sicher, dass das löschen einer Request anhand der id des Users und der Gruppe funktioniert.
+    \subparagraph{    public void testGetRequestByGroup()     }
+   	Der Test stellt sicher, dass die getRequestByGroup Methode alle User, die eine Anfrage an die Gruppe gestellt haben, zurück gibt.
+    \subparagraph{    public void testGetRequestByUser()    }
+   	Der Test stellt sicher, dass die getRequestByUser Methode alle Gruppen, an die der User eine Anfrage gestellt hat, zurück gibt.
+   	
+	\paragraph{UserManagement - UserManagementTest}
+    \subparagraph{    public void testAdd()   }
+	Der Test stellt sicher, dass das hinzufügen eines Users in der Datenbank funktioniert.
+    \subparagraph{    public void testDelete()   }
+	Der Test stellt sicher, dass das löschen eines Users funktioniert.
+    \subparagraph{    public void testGetUser()  }
+   	Der Test stellt sicher, dass die getUser Methode den User mit der entsprechenden id zurück gibt.
+    \subparagraph{ public void testGetUserByGoogleId()     }
+   	Der Test stellt sicher, dass die getUser Methode den User mit der entsprechenden googleId zurück gibt.
+    \subparagraph{    public void testUpdateLocation()     }
+   	Der Test überprüft, dass die updateLocation Methode die neue Position in der Datenbank abspeichert.	
+    \subparagraph{    public void testUpdate()     }
+   	Der Test überprüft, dass die update Methode die Änderungen in die Datenbank überträgt.	
+    \subparagraph{    public void testUpdateName()     }	
+   	Der Test überprüft, dass die updateName Methode den neuen Namen in der Datenbank abspeichert.	
+   	
+   	
 	\subsubsection{Algorithmus}
 	Zum Einen wird hier überprüft ob der selbstgeschriebene Mittelpunktalgorithmus das korrekte Ergebnis ausgibt und auch Nullparameter richtig verarbeitet, zum Anderen wird die Klasse ClusterFacade durch Benutzung von Mockito auf die richtige Arbeitsweise überprüft, dabei wird die Richtigkeit der importierten Clusteralgorithmen vorrausgesetzt. 
 	\subsubsection{Servlet}

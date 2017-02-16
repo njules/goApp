@@ -35,7 +35,6 @@ public class GroupUserManagement {
         if (!group.addUser(user)) {
             return false;
         }
-        new RequestManagement().delete(groupId, userId);
         return new GroupManagement().update(group);
     }
 
