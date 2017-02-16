@@ -36,7 +36,7 @@
 	\subsection{Server}
 	\subsubsection{Servlet}
 	\paragraph{GoServlet}
-	Das GoServlet wird nicht mehr gebraucht und wird gelöscht. Die Funktionalität die, diese Klasse haben sollte, befindet sich im Participate Servlet.
+	Das GoServlet wird nicht mehr gebraucht und wird gelöscht. Die Funktionalität die dier Klasse wurde in das ParticipateServlet integriert.
 	%TODO GoServlet wird gelöscht
 	%Go: setStarted wird in Participate.setStatus mit reingenommen
 	%Go: getStarted wird in Event.get integriert
@@ -53,7 +53,7 @@
 	Die beiden Methoden setGPS, sowie setCluster werden zusammen über snycLocation aufgerufen. %TODO: warum 
 	%TODO LocationServlet ruft immer beide Methoden auf (setGPS und getCluster)
 	
-	\paragraph{Participate Servlet}
+	\paragraph{ParticipateServlet}
 	Die beiden Methoden accept und reject wurden durch die Methode setStatus ersetzt. Diese setzt den Status im Event-User Management, wodurch die Redundanz von zwei Methoden vermieden wird. Falls der Status Reject ist, wird der Teilnehmer gelöscht. 
 		%Paticipate Servlet wird neu geschrieben
 		%Paticipate: aus accept und reject wird setStatus
@@ -72,7 +72,7 @@
 	\paragraph{Clusteralgorithmus}
 	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können. Außerdem kann nun über den Konstruktor ein beliebiger Clusterer und Mittelpunktalgorithmus übergeben werden.
 	
-	\subsection{Model}
+	\subsubsection{Model}
 	\paragraph{Event}
 	Die Zeit eines Events wird nicht als Time sondern als Timestamp gespeichert, dann ist das Datum mit dabei.
 
@@ -82,7 +82,56 @@
 	
 	\subsection{Client}
 	\subsubsection{View}
+	Die GUI die der User zu Gesicht bekommt weist bis auf die Farbgebung kaum Unterschiede zum GUI Design aus der Entwurfsphase auf und an der Navigation zwischen den einzelnen Activities hat sich nichts geändert.
+Im folgenden findet sich für jede Activity Änderungen welche Services von ihr gestartet werden können. 
+	
+	\paragraph{StartActivity}$~~$\\
+
+	Zusäzliche Service Aufrufe:
+	\begin{itemize}
+	\item RequestService
+	\end{itemize}
+	Wegfallende Service Aufrufe:
+	\begin{itemize}
+	\item GroupService
+	\end{itemize}
+
+	\paragraph{GroupActivity}$~~$\\
+
+	Zusäzliche Service Aufrufe:
+	\begin{itemize}
+	\item GroupService
+	\end{itemize}
+	Wegfallende Service Aufrufe:
+	\begin{itemize}
+	\item EventService
+	\item GoService
+	\end{itemize}
+
+	\paragraph{EventActivity}$~~$\\
+
+	Zusäzliche Service Aufrufe:
+	\begin{itemize}
+	\item EventService
+	\end{itemize}
+ 
+
 	\subsubsection{Controller}
+	Im Entwurf haben wir unsere Services wie folgt beschrieben: 
+\\
+Sie alle erben von der Klasse IntentService, weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent). Weil diese Methode bei all unseren Services nur je nach Intent entscheidet, welche private Methode aufgerufen wird und das Ergebnis weiterleitet, haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt.
+\\
+\\
+Zwar existieren die Methoden die wir daraufhin beschrieben haben nach wie vor(bis auf Änderungen die ebenfalls in diesem Kapitel erläutet werden).
+Allerdings sind die meisten der Methoden nicht mehr private sondern public. Bei den Services wo dies der Fall ist werden besagte Methoden von den Activities direkt aufgerufen und erstellen den Intent mit dem erst im nächsten Schritt OnHandleIntent(Intent intent) des Services und damit ein neuer Thread gestartet wird. 
+Die Funktionalität und der Rückgabewert der Services nach außen bleibt genau gleich aber für die Activities ändert sich die Schnittstelle wie entsprechende Services aufgerufen werden.
+So ist es jetzt schon bei Betrachtung des Codes einer Activity durch den expliziten Aufruf einer standartisierten Methode zum erstellen eines speziellen Intents klar, welche Daten der Client an dieser Stelle mit dem Server austauschen soll.    
+\\
+\\
+Da die Servlets wie oben beschrieben verändert wurden mussten selbstvertändlich auch die Services angepasst werden, da die Services des Clienten das Gegenstück zu den Servlets bilden wenn es um die Kommunikation zwischen Server und Clienten geht.
+Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderung des Gegentücks hervorruft wird hier nicht auf weitere Änderungen der Services eingegangen da diese aus Kapitel 2.1.1 hervorgehen.
+
+
 	\newpage
 	\section{Kriterien}
 	Im Pflichtenheft wurden Kriterien für unsere App definiert. Im folgenden unterteilen wir diese in erfüllt bzw. nicht erfüllt.
@@ -204,7 +253,7 @@
 	
 	\newpage
 	\section{Unit-Tests}
-	Zum Testen uneres Codes haben wir Unit-Tests benutzt. In dieser Phase prüfen wir nur die Funktionalität. Weitere Tests zu Fehlerfällen folgen in der Testphase.
+	Zum Testen uneres Codes haben wir großteils Unit-Tests benutzt. In dieser Phase prüfen wir nur die Funktionalität. Weitere Tests zu Fehlerfällen folgen in der Testphase.
 	\subsection{Server}
 	\subsubsection{Datenbank}
 	\subsubsection{Algorithmus}
@@ -276,5 +325,12 @@
 	\subsubsection{HTTPConnection}
 	\subsubsection{Model}
 	\subsubsection{View}
+	Für die View haben wir keine Testfälle implementiert da diese sich genauso gut "von Hand" testen lässt. Durch einfaches benutzen der goApp können wir garantieren das die View sich so verhält wie wir als Implementierer es erwarten.
+Auch in der nächsten Phase werden wir die View nicht mit klassischen Unit-Tests abdecken, sondern durch Monkey-Tests die Robustheit unserer Applikation bei Eingaben jeglicher Art zu überprüfen.
+Ebenfalls wird die goApp an die ersten User verteilt um uns Feedback über die hoffentlich intuitive Bedienbarkeit der GUI einzuholen.
+
 	\subsubsection{Controller}
+	Es ist nicht möglich Intent Services mit Unit-Tests zu testen.  Da unser Controller wie im Entwurf beschrieben nur Intent Services implementiert existieren hier also keine Unit-Tests.
+Dies ist nicht weiter schlimm weil die Services zum großen Teil "nur" das Gegenstück zu den Servlets bilden und kaum weitere Logik die getestet werden müsste ausführen.
+
 \end{document}
