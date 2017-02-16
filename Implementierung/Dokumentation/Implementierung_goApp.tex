@@ -1,3 +1,4 @@
+
 \documentclass{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -25,7 +26,7 @@
 	\tableofcontents
 	\newpage
 
-	\section{Einleitung}
+	\section{Einleitung}%TODO
 	Anschluss auf Plichtenheft \& Entwurf
 	Allgemeine Beschreibung der App
 	
@@ -53,17 +54,17 @@
 	Die beiden Methoden setGPS, sowie setCluster werden zusammen über snycLocation aufgerufen. %TODO: warum 
 	%TODO LocationServlet ruft immer beide Methoden auf (setGPS und getCluster)
 	
-	\paragraph{ParticipateServlet}
+	\paragraph{Participate Servlet}
 	Die beiden Methoden accept und reject wurden durch die Methode setStatus ersetzt. Diese setzt den Status im Event-User Management, wodurch die Redundanz von zwei Methoden vermieden wird. Falls der Status Reject ist, wird der Teilnehmer gelöscht. 
 		%Paticipate Servlet wird neu geschrieben
 		%Paticipate: aus accept und reject wird setStatus
 	
 	\paragraph{UserServlet}
-	Die Nutzer wird an den Client beim Einloggen bzw. Registrieren übermittelt und bis zum nächsten Einloggen gespeichert. Deswegen ist die Methode getUser überflüssig geworden.
+	Die Nutzer werden an den Client beim Einloggen bzw. Registrieren übermittelt und bis zum nächsten Einloggen gespeichert. Deswegen ist die Methode getUser überflüssig geworden.
 	
 	\paragraph{ServletUtils}
-	Beim Implementieren der Servlets wurden einige allgemein Methoden, wie z.B. ein JSONObjekt auszulesen oder zu erstellen in vielen Methoden genutzt.
-	Deswegen haben wir uns dazu entschieden eine statische Hilfsklasse zu nutzen, um redundanten Code zu vermeiden. Außerdem sind diese JSONObjekte eine wichtige Schnittstelle zum Client, da das Senden \& Erwarten von Informationen übereinstimmen sollte. In unserem Fall braucht man bei Änderungen nur an einer Stelle etwas ändern.
+	Beim Implementieren der Servlets gibt es einige Schritte, die von jedem Servlet durchgeführt werden müssen. Dazu gehören zum Beispiel Methoden, um JSONObjekte aus der HTTP Anfrage auszulesen, oder das Verfassen der Antwort des Servers.
+	Deswegen haben wir uns dazu entschieden eine statische Hilfsklasse zu nutzen, um diesen redundanten Code zu vermeiden. Außerdem definieren JSONObjekte eine wichtige Schnittstelle zum Client, da das Senden \& Empfangen von Informationen durch diese geregelt wird. In unserem Fall bleiben Änderungen der Schnittstelle somit lokal.
 	
 	\paragraph{JSONParameter}
 	Wir brauchen viel mehr Parameter um die JSONObjekte zu erstellen, als in der Entwurfsphase angenommen. Außerdem gibt es ein weiteres Enum für die vom Client aufrufbaren Methoden, sowie eines für Fehlercodes. Die JSONParameter sind auf dem Client, sowie Server gleich. 
@@ -72,21 +73,48 @@
 	\paragraph{Clusteralgorithmus}
 	Die Clusterfassade bietet nun neben der Methode getClusteredPoints auch die Methode getClusters und getCenter um direkt auf den Clusterer bzw. den Mittelpunktalgorithmus zugreifen zu können. Außerdem kann nun über den Konstruktor ein beliebiger Clusterer und Mittelpunktalgorithmus übergeben werden.
 	
-	\subsubsection{Model}
-	\paragraph{Event}
+	\subsection{Model}
+	\paragraph{User}
+	Zusätzlich zu der id des Users in der Datenbank, die Google-id als String.
+	\paragraph{Group}
+	Konstruktor hat nun zusätzlich den Gründer (User) als Parameter.
+		\paragraph{Event}
+	Konstruktor hat nun zusätzlich den Ort (Location), den Ersteller (User) und die Gruppe (Group) in welcher der Termin erstellt wird als Parameter.
 	Die Zeit eines Events wird nicht als Time sondern als Timestamp gespeichert, dann ist das Datum mit dabei.
 
 	\paragraph{Participant \& Status}
 	Der Status in Participant ist zu einem Enum geworden.
-	Der Status kann Inivted, Participate, Started oder Rejected sein.
+	Der Status kann Inivted, Participate, Started oder Rejected sein.	
+	\subsection{Database Management}
+	\paragraph{EventDeletionTimer}
+	Läuft im Hintergrund und löscht Events nachdem deren Startzeitpunkt eine Stunde in der Vergangenheit liegt.
+	\paragraph{GroupManagement}	
+	Die Methoden getGroupsByMember,addMember und deleteMember wurden durch Methoden getGroups,add und delete in GroupUserManagement ersetzt.
+	\paragraph{UserManagement}	
+	Die Methode getUserByGoogleId kam hinzu um beim Starten der App den User der App zu laden.
+	\paragraph{EventManagement}	
+	\begin{itemize}
+\item 	Die Methode updateStatus wurde durch die Methode updateStatus in EventUserManagement ersetzt.
+\item 	Die Methoden getUserLocations und setClusterPoints wurden hinzugefügt um dem Algorithmuspaket den Zugriff auf die Daten zu erleichtern.
+\item	Die Methode deleteOldEvents wurde hinzugefügt damit der EventDeletionTimer alte Events löschen kann.	
+	\end{itemize}
+
+	\paragraph{EventUserManagement}		
 	
-	\subsection{Client}
+	\begin{itemize}
+\item 		Die Methode getEventsByStatus wurde hinzugefügt damit die App die Events in getrennten Listen erhält.
+\item Die Methoden getParticipant and getParticipants wurden hinzugefügt.\dfrac{•}{•}
+	\end{itemize}
+
+		\paragraph{RequestManagement}		
+	Die Methode getRequest wurde hinzugefügt. Diese gibt die Request aus der Datenbank mit der übergebenen userId und groupId zurück.
+
+\subsection{Client}
 	\subsubsection{View}
 	Die GUI die der User zu Gesicht bekommt weist bis auf die Farbgebung kaum Unterschiede zum GUI Design aus der Entwurfsphase auf und an der Navigation zwischen den einzelnen Activities hat sich nichts geändert.
 Im folgenden findet sich für jede Activity Änderungen welche Services von ihr gestartet werden können. 
 	
 	\paragraph{StartActivity}$~~$\\
-
 	Zusäzliche Service Aufrufe:
 	\begin{itemize}
 	\item RequestService
@@ -130,7 +158,6 @@ So ist es jetzt schon bei Betrachtung des Codes einer Activity durch den explizi
 \\
 Da die Servlets wie oben beschrieben verändert wurden mussten selbstvertändlich auch die Services angepasst werden, da die Services des Clienten das Gegenstück zu den Servlets bilden wenn es um die Kommunikation zwischen Server und Clienten geht.
 Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderung des Gegentücks hervorruft wird hier nicht auf weitere Änderungen der Services eingegangen da diese aus Kapitel 2.1.1 hervorgehen.
-
 
 	\newpage
 	\section{Kriterien}
@@ -253,13 +280,13 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	
 	\newpage
 	\section{Unit-Tests}
-	Zum Testen uneres Codes haben wir großteils Unit-Tests benutzt. In dieser Phase prüfen wir nur die Funktionalität. Weitere Tests zu Fehlerfällen folgen in der Testphase.
+	Zum Testen uneres Codes haben wir Unit-Tests benutzt. In dieser Phase prüfen wir nur die Funktionalität. Weitere Tests zu Fehlerfällen folgen in der Testphase.
 	\subsection{Server}
 	\subsubsection{Datenbank}
 	\subsubsection{Algorithmus}
 	Zum Einen wird hier überprüft ob der selbstgeschriebene Mittelpunktalgorithmus das korrekte Ergebnis ausgibt und auch Nullparameter richtig verarbeitet, zum Anderen wird die Klasse ClusterFacade durch Benutzung von Mockito auf die richtige Arbeitsweise überprüft, dabei wird die Richtigkeit der importierten Clusteralgorithmen vorrausgesetzt. 
 	\subsubsection{Servlet}
-	Zum Testen der Servlets werden die jeweiligen Management Klassen der Datenbank, sowie HTTPRequests gemockt.
+	Zum Testen der Servlets werden die jeweiligen Management Klassen der Datenbank, sowie HTTP requests gemockt.
 	\paragraph{EventServlet}
 	\subparagraph{public void testCreate()}
 	Dieser Test prüft das erfolgreiche erstellen eines Events. 
@@ -268,10 +295,33 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	\subparagraph{public void testChange()}
 	Dieser Test prüft das erfolgreiche Ändern des Namens des Events.
 	\paragraph{GroupSearchServlet}
+	\subparagraph{public void testMemberSearch()}
+	Überprüft das erfolgreiche Einfordern einer Liste aller Gruppen, in denen ein gegebener Benutzer mitglied ist.
+	\subparagraph{public void testNameSearch()}
+	Überprüft das erfolgreiche Abrufen einer Liste aller Gruppen, in deren Name die gegebene Suchanfrage enthalten ist.
 	\paragraph{LocationServlet}
+	\subparagraph{public void testSyncPos()}
+	Testet ob die gegebene Position des Benutzers in der Datenbank aktualisiert wird und der geclusterte Gruppenstandort des Events korrekt zurückgegeben wird.
 	\paragraph{LoginServlet}
 	Da jede der beiden Methoden auf den GoogleServer zum Verifizieren des GoogleTokens zugreift und man dies nicht testen kann, wird dieses Servlet erst manuell über den Client mit einem echten GoogleAccount getestet. Dort funktioniert das Registrieren, sowie auch Anmelden.
 	\paragraph{ParticipateServlet}
+	\subparagraph{public void testSetStatus()}
+	Testet das korrekte setzen des Status' auf "teilnehmen".
+	\paragraph{GroupServlet}
+	\subparagraph{public void testGroupCreating()}
+	In diesem Test wird eine Gruppe erstellt.
+	\subparagraph{public void testGroupDeleting()}
+	Dieser Test versucht eine Gruppe zu entfernen.
+	\subparagraph{public void testNameChanges()}
+	Hier wird eine Anfrage vom Client zum Ändern des Namens einer Gruppe simuliert.
+	\subparagraph{public void testMemberKicking()}
+	Es wird das Entfernen von Mitgliedern aus einer Gruppe getestet.
+	\subparagraph{public void testEventRequesting()}
+	Diese Methode testet das Abfragen aller zu einer Gruppe und einem Benutzer zugehörigen Events. Hierbei werden die Events, die bereits vom Nutzer bestätigt wurden separat von denen, auf die der Nutzer noch antworten muss, zurückgegeben.
+	\subparagraph{public void testMemberRequesting()}
+	Es wird das Abrufen einer Liste mit allen Mitgliedern einer Gruppe getestet.
+	\subparagraph{public void testFounderChanging()}
+	In diesem Test wird der founder einer Gruppe aktualisert.
 	\paragraph{RequestSearchServlet}
 	\subparagraph{public void testGetRequestsByGroup()}
 	Dieser Tests prüft das erfolgreiche holen aller Gruppen, zu dem von einem gegeben User, eine Anfrage existiert.
@@ -323,7 +373,6 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	
 	\subsection{Client}
 	\subsubsection{HTTPConnection}
-	\subsubsection{Model}
 	\subsubsection{View}
 	Für die View haben wir keine Testfälle implementiert da diese sich genauso gut "von Hand" testen lässt. Durch einfaches benutzen der goApp können wir garantieren das die View sich so verhält wie wir als Implementierer es erwarten.
 Auch in der nächsten Phase werden wir die View nicht mit klassischen Unit-Tests abdecken, sondern durch Monkey-Tests die Robustheit unserer Applikation bei Eingaben jeglicher Art zu überprüfen.
@@ -332,5 +381,4 @@ Ebenfalls wird die goApp an die ersten User verteilt um uns Feedback über die h
 	\subsubsection{Controller}
 	Es ist nicht möglich Intent Services mit Unit-Tests zu testen.  Da unser Controller wie im Entwurf beschrieben nur Intent Services implementiert existieren hier also keine Unit-Tests.
 Dies ist nicht weiter schlimm weil die Services zum großen Teil "nur" das Gegenstück zu den Servlets bilden und kaum weitere Logik die getestet werden müsste ausführen.
-
 \end{document}
