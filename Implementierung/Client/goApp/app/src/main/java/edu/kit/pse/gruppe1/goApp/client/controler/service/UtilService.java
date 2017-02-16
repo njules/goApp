@@ -37,6 +37,7 @@ public final class UtilService {
     private static final String CONNECTION_FAILED = "Please check your internet connection";
     private static final String OK = "ok";
     public static final String NAME = "name";
+    public static final String STARTED_USERS = "Started_Users";
 
     public static Group[] getGroups(JSONObject json) {
         //TODO if(json == null)
@@ -74,15 +75,15 @@ public final class UtilService {
         }
         return null;
     }
-    public static User[] getParticipants(JSONObject json) {
+    public static User[] getParticipants(JSONObject json,String parameter) {
         try {
-            JSONArray jsons = json.getJSONArray(JSONParameter.LIST_PART.toString());
+            JSONArray jsons = json.getJSONArray(parameter);
             User[] users = new User[jsons.length()];
             for (int i = 0; i < jsons.length(); i++) {
                 JSONObject user = jsons.getJSONObject(i);
                 users[i] = new User(user.getInt(JSONParameter.USER_ID.toString()),
                         user.getString(JSONParameter.USER_NAME.toString()));
-                users[i].setStatus(Status.fromInteger(user.getInt(JSONParameter.STATUS.toString())));
+                users[i].setStatus(Status.valueOf(user.getString(JSONParameter.STATUS.toString())));
             }
             return users;
         } catch (JSONException e) {

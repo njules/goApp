@@ -145,11 +145,14 @@ public class EventService extends IntentService {
             case ACTION_GET:
                 result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
                 resultIntent.setAction(RESULT_GET);
+                Log.i("Participants",result.toString());
                 //TODO Status of participants
                 if(UtilService.isError(result)){
                     resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
                 } else {
-                    resultIntent.putExtra(UtilService.USERS, UtilService.getParticipants(result));
+                    resultIntent.putExtra(UtilService.USERS, UtilService.getParticipants(result,JSONParameter.LIST_PART.toString()));
+                    resultIntent.putExtra(UtilService.STARTED_USERS, UtilService.getParticipants(result,"StartedParticipants"));
+                    //TODO JSONPARAMETER
                 }
                 break;
             case ACTION_CHANGE:

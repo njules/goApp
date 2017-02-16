@@ -1,5 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.model;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -9,7 +11,7 @@ import java.util.*;
 /**
  * A group is a composition of several users of the goApp, in which the users can create events.
  */
-public class Group implements Parcelable{
+public class Group extends BaseObservable implements Parcelable{
 
 	Collection<Event> events;
 	Collection<Request> requests;
@@ -62,12 +64,14 @@ public class Group implements Parcelable{
 		}
 	};
 
+	@Bindable
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+		notifyChange();
 	}
 
 	public int getId() {

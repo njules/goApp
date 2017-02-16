@@ -7,10 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
@@ -24,7 +27,7 @@ public class NewGroupFragment extends DialogFragment {
     private GroupService groupService;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         groupService = new GroupService();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -35,7 +38,11 @@ public class NewGroupFragment extends DialogFragment {
                 .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         EditText et = (EditText) text.findViewById(R.id.new_group_name);
-                        groupService.create(getActivity(), et.getText().toString(), Preferences.getUser());
+                        if(et.getText().toString().trim().isEmpty()){
+                            Log.i("Input","Empty String");
+                        } else {
+                            groupService.create(getActivity(), et.getText().toString(), Preferences.getUser());
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

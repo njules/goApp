@@ -174,14 +174,15 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
                 case EventService.RESULT_CREATE:
+                    Event event = intent.getParcelableExtra(UtilService.EVENT);
                     Toast.makeText(NewEventActivity.this, "Neues Event erstellt", Toast.LENGTH_SHORT).show();
 
-                    if (new Timestamp(timestamp.getTime() - beforEvent).before(new Timestamp(System.currentTimeMillis()))) {
+                    if (new Timestamp(event.getTime().getTime() - beforEvent).before(new Timestamp(System.currentTimeMillis()))) {
                         Intent locationIntent = new Intent(context,LocationServiceNeu.class);
                         locationIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
                         locationIntent.putExtra(UtilService.EVENT,intent.getParcelableExtra(UtilService.EVENT));
@@ -194,16 +195,16 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     notifyIntent.putExtra(UtilService.GROUP.toString(), Preferences.getGroup());
                     notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
                     //900000 is 15 mins in millis
-                    notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, timestamp.getTime() - beforEvent, notifyAlarmIntent);
+                    notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, event.getTime().getTime() - beforEvent, notifyAlarmIntent);
 
                     Log.i("MainThread", Thread.currentThread().getId() + "");
 
                     eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent eventIntent = new Intent(context, LocationServiceNeu.class);
                     eventIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
-                    eventIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
+                    eventIntent.putExtra(UtilService.EVENT, event);
                     eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
-                    eventAlarmMgr.setExact(AlarmManager.RTC, timestamp.getTime() - beforEvent, eventAlarmIntent);
+                    eventAlarmMgr.setExact(AlarmManager.RTC, event.getTime().getTime() - beforEvent, eventAlarmIntent);
 
                     GroupActivity.start(NewEventActivity.this);
                     break;

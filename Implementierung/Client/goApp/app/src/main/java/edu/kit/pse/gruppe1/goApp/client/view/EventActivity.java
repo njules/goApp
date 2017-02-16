@@ -34,6 +34,7 @@ import edu.kit.pse.gruppe1.goApp.client.model.Location;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class EventActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -57,7 +58,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         event = getIntent().getParcelableExtra("Event");
-        binding = DataBindingUtil.setContentView(this,R.layout.event_info_activity);
+        binding = DataBindingUtil.setContentView(this, R.layout.event_info_activity);
         binding.setEvent(event);
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.event_info_toolbar);
         setSupportActionBar(groupToolbar);
@@ -67,7 +68,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         eventService = new EventService();
         receiver = new ResultReceiver();
@@ -106,20 +107,32 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
                 case EventService.RESULT_GET:
-                    if (intent.getParcelableArrayExtra(UtilService.USERS ) != null) {
-                        userAdapter = new UserAdapter((User[]) intent.getParcelableArrayExtra(UtilService.USERS));
+                    if (intent.getParcelableArrayExtra(UtilService.USERS) != null) {
+                        User[] participants = (User[]) intent.getParcelableArrayExtra(UtilService.USERS);
+                        User[] startedParticipants = (User[]) intent.getParcelableArrayExtra(UtilService.STARTED_USERS);
+                        User[] allParticipants;
+
+                        if (startedParticipants == null) {
+                            allParticipants = participants;
+                        } else if (participants == null) {
+                            allParticipants = startedParticipants;
+                        } else {
+                            allParticipants = Arrays.copyOf(startedParticipants, startedParticipants.length + participants.length);
+                            System.arraycopy(participants, 0, allParticipants, startedParticipants.length, participants.length);
+                        }
+                        userAdapter = new UserAdapter(allParticipants);
                         participantRecyclerView.setAdapter(userAdapter);
                     }
                     break;
                 case LocationServiceNeu.RESULT_MY_LOCATION:
                     positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
                     googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
-                    android.location.Location location = (android.location.Location)intent.getParcelableExtra(UtilService.LOCATION);
+                    android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;
                 case LocationServiceNeu.RESULT_LOCATION:

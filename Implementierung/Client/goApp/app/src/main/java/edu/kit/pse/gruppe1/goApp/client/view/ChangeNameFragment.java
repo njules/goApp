@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 
 /**
@@ -21,7 +23,7 @@ public class ChangeNameFragment extends DialogFragment {
     private String response;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState){
+    public Dialog onCreateDialog(final Bundle savedInstanceState){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View text = inflater.inflate(R.layout.change_name_dialog,null);
@@ -33,7 +35,12 @@ public class ChangeNameFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         EditText et = (EditText) text.findViewById(R.id.changeName);
                         String response = et.getText().toString();
-                        communicator.respond(response);
+                        if(response.trim().isEmpty()){
+                            Toast.makeText(getActivity(),"Bitte geb einen Namen ein",Toast.LENGTH_SHORT);
+                            onCreateDialog(savedInstanceState);
+                        }else {
+                            communicator.respond(response);
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

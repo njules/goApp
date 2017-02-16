@@ -118,7 +118,6 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
             case R.id.reject_member:
                 requestPosition = position;
                 requestService.reject(getActivity(), new Request(requestAdapter.getItem(position), group));
-
                 break;
             case R.id.delete_member:
                 memberPosition = position;
@@ -156,7 +155,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(AdminFragment.this.getActivity(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
@@ -171,26 +170,20 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
                 case GroupService.RESULT_DELETE_MEMBER:
-                    Toast.makeText(AdminFragment.this.getActivity(), "Du hast " + memberAdapter.getItem(memberPosition).getName() + " entfernt", Toast.LENGTH_SHORT).show();
                     memberAdapter.deleteItem(memberPosition);
                     break;
                 case GroupService.RESULT_DELETE:
-                    Toast.makeText(AdminFragment.this.getActivity(), "Gruppe wird gelöscht", Toast.LENGTH_SHORT).show();
                     StartActivity.start(getActivity());
                     break;
                 case RequestService.RESULT_ACCEPT:
-                    //TODO newmember null
-                    Toast.makeText(AdminFragment.this.getActivity(), "Du hast " + newMember.getName() + " hinzugefügt", Toast.LENGTH_SHORT).show();
-                    memberAdapter.insertItem(newMember);
+                    memberAdapter.insertItem(requestAdapter.getItem(requestPosition));
                     requestAdapter.delete(requestPosition);
                     break;
                 case RequestService.RESULT_REJECT:
-                    Toast.makeText(AdminFragment.this.getActivity(), "Du hast " + requestAdapter.getItem(requestPosition).getName() + " abgelehnt", Toast.LENGTH_SHORT).show();
                     requestAdapter.delete(requestPosition);
                     break;
                 case GroupService.RESULT_SET_NAME:
                     String name = intent.getStringExtra(UtilService.NAME);
-                    Toast.makeText(AdminFragment.this.getActivity(),"Neuer Name: " + name,Toast.LENGTH_SHORT).show();
                     group.setName(name);
                     Preferences.setGroup(group);
                     binding.setGroup(group);

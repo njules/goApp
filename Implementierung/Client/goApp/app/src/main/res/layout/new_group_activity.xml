@@ -23,7 +23,6 @@
                 android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColorHighlight="@color/colorButton"
                 android:inputType="textPersonName"
                 android:hint="@string/groupName"/>
         </android.support.v7.widget.Toolbar>
@@ -44,8 +43,6 @@
             android:layout_gravity="bottom|end"
             android:clickable="true"
             app:fabSize="normal"
-            android:foreground="@color/colorAccept"
-            android:background="@color/colorAccept"
             android:src="@drawable/ic_fab_add" />
 
     </android.support.design.widget.CoordinatorLayout>

@@ -122,7 +122,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
@@ -146,7 +146,28 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
 
         private void accept(Context context) {
             newEventAdapter.deleteItem(deletePosition);
-            acceptedEventAdapter.insertItem(eventMove);
+            if(acceptedEventAdapter==null){
+                Log.i("GroupActivity", eventMove.getName());
+                Event[] accEvents = {eventMove};
+                acceptedEventAdapter = new AcceptedEventAdapter(accEvents,new ItemClickListener() {
+                    @Override
+                    public void onItemClicked(int position, View view) {
+                        Event event = acceptedEventAdapter.getItem(position);
+                        eventMove = event;
+                        switch (view.getId()) {
+                            case R.id.start_event:
+                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.STARTED);
+                                break;
+                            default:
+                                EventActivity.start(GroupActivity.this, event);
+                        }
+                    }
+                });
+                acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
+            } else {
+                Log.i("GroupActivity", eventMove.getName());
+                acceptedEventAdapter.insertItem(eventMove);
+            }
 
             if (new Timestamp(eventMove.getTime().getTime() - beforEvent).before(new Timestamp(System.currentTimeMillis()))) {
                 Intent locationIntent = new Intent(context,LocationServiceNeu.class);
@@ -184,7 +205,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                                 break;
                             default:
                                 EventActivity.start(GroupActivity.this, event);
-                                Log.i("GroupActivity", "info");
                         }
                     }
                 });
@@ -200,15 +220,12 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                         switch (view.getId()) {
                             case R.id.accept_event:
                                 participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.PARTICIPATE);
-                                Log.i("GroupActivity", "accept");
                                 break;
                             case R.id.reject_event:
                                 participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.REJECTED);
-                                Log.i("GroupActivity", "reject");
                                 break;
                             default:
                                 EventActivity.start(GroupActivity.this, event);
-                                Log.i("GroupActivity", "info");
                         }
                     }
                 });

@@ -146,7 +146,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
@@ -185,7 +185,6 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     user.setName(newUserName);
                     Preferences.setUser(user);
                     String output = getString(R.string.changeName) + " " + user.getName();
-                    Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
                     break;
             }
         }
