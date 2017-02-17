@@ -24,7 +24,7 @@ public class GroupManagementTest {
 
     @Before
     public void setUp() throws Exception {
-        user = new UserManagement().add("user", 3);
+        user = new UserManagement().add("user", "3");
         assertThat(user, is(notNullValue()));
         createdGroup = new GroupManagement().add(groupName, user.getUserId());
         assertThat(createdGroup, is(notNullValue()));

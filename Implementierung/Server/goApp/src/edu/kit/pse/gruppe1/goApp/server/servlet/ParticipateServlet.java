@@ -100,7 +100,9 @@ public class ParticipateServlet extends HttpServlet {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);
         }
-
+        if (status == null) {
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
+        }
         if (status.equals(Status.REJECTED)) {
             if (!eventUser.delete(event, user)) {
                 return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);

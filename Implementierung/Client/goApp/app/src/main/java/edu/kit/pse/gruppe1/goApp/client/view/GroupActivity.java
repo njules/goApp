@@ -25,8 +25,12 @@ import edu.kit.pse.gruppe1.goApp.client.controler.service.*;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
+/**
+ * The GroupActivity shows every upcoming Event of the Group to the User.
+ * It also starts the GroupService and the ParticipateService to let the user interact with the server.
+ */
 public class GroupActivity extends AppCompatActivity implements View.OnClickListener {
     private GroupActivityBinding binding;
     private Group group;
@@ -43,11 +47,18 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     private GroupService groupService;
     private ResultReceiver receiver;
 
+    /**
+     * This method creates an intent to start this exact Activity.
+     * The method needs to be static because the Activity does not exist when the method is called.
+     *
+     * @param activity the activity currently running.
+     */
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, GroupActivity.class);
         activity.startActivity(intent);
     }
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         group = Preferences.getGroup();
@@ -80,15 +91,14 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
 
         newEventRecylcerView = (RecyclerView) findViewById(R.id.new_event_recycler_view);
         newEventRecylcerView.setHasFixedSize(true);
-        acceptedEventRecyclerView = (RecyclerView) findViewById(R.id.accepted_event_recycler_view);
-        acceptedEventRecyclerView.setHasFixedSize(true);
-
         newEventLayoutManager = new LinearLayoutManager(this);
         newEventLayoutManager.setOrientation(newEventLayoutManager.HORIZONTAL);
+        newEventRecylcerView.setLayoutManager(newEventLayoutManager);
+
+        acceptedEventRecyclerView = (RecyclerView) findViewById(R.id.accepted_event_recycler_view);
+        acceptedEventRecyclerView.setHasFixedSize(true);
         acceptedEventLayoutManager = new LinearLayoutManager(this);
         acceptedEventLayoutManager.setOrientation(acceptedEventLayoutManager.HORIZONTAL);
-
-        newEventRecylcerView.setLayoutManager(newEventLayoutManager);
         acceptedEventRecyclerView.setLayoutManager(acceptedEventLayoutManager);
 
         groupService.getEvents(this, group, Preferences.getUser());
@@ -110,17 +120,21 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         NewEventActivity.start(this);
     }
 
+    /**
+     * The ResultReceiver evaluates return messages from earlier started Services.
+     */
     private class ResultReceiver extends BroadcastReceiver {
         private AlarmManager notifyAlarmMgr;
         private PendingIntent notifyAlarmIntent;
         private AlarmManager eventAlarmMgr;
         private PendingIntent eventAlarmIntent;
-        private int beforEvent = 900000;;
+        private int beforeEvent = 900000;
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            // If the intent shows any kind of error the user will be notified.
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
@@ -129,41 +143,80 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                     break;
                 case ParticipateService.RESULT_STATUS:
                     int resultStatus = intent.getIntExtra(UtilService.STATUS, 0);
-                    if(resultStatus == Status.PARTICIPATE.getValue()){
+                    if (resultStatus == Status.PARTICIPATE.getValue()) {
                         accept(context);
-                    }
-                     else if(resultStatus == Status.REJECTED.getValue()){
+                    } else if (resultStatus == Status.REJECTED.getValue()) {
                         newEventAdapter.deleteItem(deletePosition);
-                    }
-                    else if(resultStatus == Status.STARTED.getValue()){
+                    } else if (resultStatus == Status.STARTED.getValue()) {
                         EventActivity.start(GroupActivity.this, eventMove);
                     }
                     break;
-
-                //TODO default
+                default:
+                    break;
             }
         }
 
-        private void accept(Context context){
+        /**
+         * This method deletes an Event from the newEventAdapter and adds it to the acceptedEventAdapter instead.
+         * The method also takes care of setting up a notification shortly before the Event is starting and starts the LocationService at the right time.
+         *
+         * @param context is needed to start Services out of this method.
+         */
+        private void accept(Context context) {
             newEventAdapter.deleteItem(deletePosition);
-            acceptedEventAdapter.insertItem(eventMove);
+            if (acceptedEventAdapter == null) {
+                Log.i("GroupActivity", eventMove.getName());
+                Event[] accEvents = {eventMove};
+                acceptedEventAdapter = new AcceptedEventAdapter(accEvents, new ItemClickListener() {
+                    @Override
+                    public void onItemClicked(int position, View view) {
+                        Event event = acceptedEventAdapter.getItem(position);
+                        eventMove = event;
+                        switch (view.getId()) {
+                            case R.id.start_event:
+                                participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.STARTED);
+                                break;
+                            default:
+                                EventActivity.start(GroupActivity.this, event);
+                        }
+                    }
+                });
+                acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
+            } else {
+                Log.i("GroupActivity", eventMove.getName());
+                acceptedEventAdapter.insertItem(eventMove);
+            }
 
-            notifyAlarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            Intent notifyIntent = new Intent(context, NotificationService.class);
-            notifyIntent.putExtra("GRUPPE", Preferences.getGroup());
-            notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
-            notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, eventMove.getTime().getTime()-beforEvent, notifyAlarmIntent);
+            if (new Timestamp(eventMove.getTime().getTime() - beforeEvent).before(new Timestamp(System.currentTimeMillis()))) {
+                Intent locationIntent = new Intent(context, LocationService.class);
+                locationIntent.setAction(LocationService.ACTION_LOCATION);
+                locationIntent.putExtra(UtilService.EVENT, eventMove);
+                context.startService(locationIntent);
+                return;
+            } else {
 
-            eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            Intent eventIntent = new  Intent(context, LocationServiceNeu.class);
-            eventIntent.putExtra(UtilService.EVENT, eventMove);
-            eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
-            eventAlarmMgr.setExact(AlarmManager.RTC, eventMove.getTime().getTime()-beforEvent, eventAlarmIntent);
+                notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                Intent notifyIntent = new Intent(context, NotificationService.class);
+                notifyIntent.putExtra(UtilService.GROUP, Preferences.getGroup());
+                notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
+                notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, eventMove.getTime().getTime() - beforeEvent, notifyAlarmIntent);
+
+                eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                Intent eventIntent = new Intent(context, LocationService.class);
+                eventIntent.putExtra(UtilService.EVENT, eventMove);
+                eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
+                eventAlarmMgr.setExact(AlarmManager.RTC, eventMove.getTime().getTime() - beforeEvent, eventAlarmIntent);
+            }
         }
 
 
-        private void loadEvents(Intent intent){
-            if (intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS ) != null) {
+        /**
+         * This method loads the events in the right Adapters.
+         *
+         * @param intent the intent broadcast by the GroupService.
+         */
+        private void loadEvents(Intent intent) {
+            if (intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS) != null) {
                 acceptedEventAdapter = new AcceptedEventAdapter((Event[]) intent.getParcelableArrayExtra(UtilService.ACCEPTED_EVENTS), new ItemClickListener() {
                     @Override
                     public void onItemClicked(int position, View view) {
@@ -175,13 +228,12 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                                 break;
                             default:
                                 EventActivity.start(GroupActivity.this, event);
-                                Log.i("GroupActivity", "info");
                         }
                     }
                 });
                 acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
             }
-            if(intent.getParcelableArrayExtra(UtilService.NEW_EVENTS) != null){
+            if (intent.getParcelableArrayExtra(UtilService.NEW_EVENTS) != null) {
                 newEventAdapter = new NewEventAdapter((Event[]) intent.getParcelableArrayExtra(UtilService.NEW_EVENTS), new ItemClickListener() {
                     @Override
                     public void onItemClicked(int position, View view) {
@@ -191,15 +243,12 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                         switch (view.getId()) {
                             case R.id.accept_event:
                                 participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.PARTICIPATE);
-                                Log.i("GroupActivity", "accept");
                                 break;
                             case R.id.reject_event:
                                 participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.REJECTED);
-                                Log.i("GroupActivity", "reject");
                                 break;
                             default:
                                 EventActivity.start(GroupActivity.this, event);
-                                Log.i("GroupActivity", "info");
                         }
                     }
                 });

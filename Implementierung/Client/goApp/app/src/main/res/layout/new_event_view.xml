@@ -16,11 +16,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_time"
-                    android:elevation="1dp"/>
 
             <TextView android:id="@+id/event_info_user"
                       android:layout_width="match_parent"
@@ -28,10 +23,10 @@
                       android:textAlignment="center"
                       android:layout_gravity="center"
                       android:textSize="@dimen/viewholder_textsize"
-                      android:lines="3"
+                      android:lines="4"
                       android:clickable="false"
                       android:background="@color/colorButton"
-                      android:text="@{event.name + '\n' + '\n' + event.time.toString()}"/>
+                      android:text="@{event.name + '\n' + event.creator.name +'\n' + event.time.toString()}"/>
 
         </android.support.design.widget.CoordinatorLayout>
 

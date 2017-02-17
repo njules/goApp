@@ -34,4 +34,9 @@
     <string name="deletedRequest">Anfrage gelöscht</string>
     <string name="groupCreated">Gruppe wurde erfolgreich erstellt!</string>
     <string name="nameMissing">Gib deinen Termin einen Namen</string>
+    <string name="your_groups">Deine Gruppen</string>
+    <string name="DeleteError">Du kannst dich nicht selbst löschen</string>
+    <string name="retryName">Bitte gib einen Namen ein</string>
+    <string name="starting_google_sign_in">starting google sign in</string>
+    <string name="login_success">Login erfolgreich</string>
 </resources>

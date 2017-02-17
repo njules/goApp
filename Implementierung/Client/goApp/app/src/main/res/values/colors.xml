@@ -5,9 +5,10 @@
     <color name="colorAccent">#bd241f</color>-->
     <color name="colorSecondary">#217709</color>
     <color name="colorPrimary">#217709</color>
-    <color name="colorButton">#d6d7d7</color>
+    <color name="colorButton">#d6d8d6</color>
     <color name="colorPrimaryDark">#124205</color>
     <color name="colorAccept">#217709</color>
-    <color name="colorAccent">#217709</color>
+    <color name="colorAccent">#23780b</color>
     <color name="colorReject">#a90518</color>
+    <color name="colorItem">#ffffff</color>
 </resources>

@@ -2,6 +2,8 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -111,7 +113,6 @@ public class LocationServlet extends HttpServlet {
         }
         user = eventUser.getUser(userId);
         if (user != null) {
-            //TODO: wird nur lokal gesetzt
             user.setLocation(new Location(lon, lat, null));
             return true;
         }
@@ -141,7 +142,10 @@ public class LocationServlet extends HttpServlet {
         if(evt == null){
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
-        return ServletUtils.createJSONListLoc(
-                new ArrayList<Location>(evt.getClusterPoints()));
+        Set<Location> cluster = evt.getClusterPoints();
+        if(cluster == null){
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
+        }
+        return ServletUtils.createJSONListLoc(new ArrayList<Location>(cluster));
     }
 }

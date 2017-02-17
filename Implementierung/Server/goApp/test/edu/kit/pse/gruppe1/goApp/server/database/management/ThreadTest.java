@@ -13,7 +13,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.User;
 public class ThreadTest {
     private User createdUser;
     private String userName = "user name";
-    private int googleId = 1234;
+    private String googleId = "1234";
 
     @Before
     public void setUp() throws Exception {

@@ -1,6 +1,5 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
@@ -8,7 +7,6 @@ import android.app.FragmentTransaction;
 import android.content.*;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,7 +26,10 @@ import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 import edu.kit.pse.gruppe1.goApp.client.model.Request;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
-
+/**
+ * The StartActivity offers an overview above all Groups and Requests of a User.
+ * In addition the User can change his name here.
+ */
 public class StartActivity extends AppCompatActivity implements Communicator {
     private RecyclerView groupRecyclerView;
     private GroupAdapter groupAdapter;
@@ -47,9 +48,9 @@ public class StartActivity extends AppCompatActivity implements Communicator {
     private RequestSearchService requestSearchService;
     private RequestService requestService;
     private UserService userService;
-
     private ResultReceiver receiver;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.start_activity);
@@ -74,7 +75,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         //reigster Reveicer to revceive the services answers
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(GroupSearchService.RESULT_GET_BY_MEMBER));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestSearchService.RESULT_GET_BY_USER));
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestService.RESULT_REJECT));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(RequestService.RESULT_DELETE));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(UserService.RESULT_CHANGE));
 
         //Group Recycler View
@@ -123,38 +124,26 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         activity.startActivity(intent);
     }
 
+    /**
+     * The ResultReceiver evaluates return messages from earlier started Services.
+     */
     private class ResultReceiver extends BroadcastReceiver {
-
-        private void showDialog(final Group group) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
-
-            builder.setMessage(R.string.deleteRequest)
-                    .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            requestService.reject(StartActivity.this, new Request(user, group));
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-            // Create the AlertDialog object and return it
-            builder.show();
-        }
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            // If the intent shows any kind of error the user will be notified.
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
+                //The groups of the User are loaded into the groupAdapter.
                 case GroupSearchService.RESULT_GET_BY_MEMBER:
-                    Log.i("GroupSearch",intent.toString());
-                    if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null){break;}
-                    groupAdapter = new GroupAdapter((Group[])intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
-                    //groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
+                    if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null) {
+                        break;
+                    }
+                    groupAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
+                        //groupAdapter = new GroupAdapter(fillGroupDataset(), new ItemClickListener() {
 
                         @Override
                         public void onItemClicked(int position, View view) {
@@ -165,8 +154,11 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     });
                     groupRecyclerView.setAdapter(groupAdapter);
                     break;
+                //The groups where the User requested to join are loaded into the requestAdapter.
                 case RequestSearchService.RESULT_GET_BY_USER:
-                    if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null){break;}
+                    if (intent.getParcelableArrayExtra(UtilService.GROUPS) == null) {
+                        break;
+                    }
                     requestAdapter = new GroupAdapter((Group[]) intent.getParcelableArrayExtra(UtilService.GROUPS), new ItemClickListener() {
                         @Override
                         public void onItemClicked(int position, View view) {
@@ -177,18 +169,43 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                     });
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
-                case RequestService.RESULT_REJECT:
+                //Deletes a request from the request adapter.
+                case RequestService.RESULT_DELETE:
                     Toast.makeText(StartActivity.this, getString(R.string.deletedRequest), Toast.LENGTH_SHORT).show();
                     requestAdapter.deleteItem(deletePosition);
                     break;
+                //Changes the displayed username.
                 case UserService.RESULT_CHANGE:
                     user.setName(newUserName);
                     Preferences.setUser(user);
                     String output = getString(R.string.changeName) + " " + user.getName();
-                    Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
+                    break;
+                default:
                     break;
             }
         }
-    }
 
+        /**
+         * This is called when a User clicks on a Request and gives him the opportunity to delete it.
+         *
+         * @param group the group affiliated with the request.
+         */
+        private void showDialog(final Group group) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+
+            builder.setMessage(R.string.deleteRequest)
+                    .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            requestService.delete(StartActivity.this, new Request(user, group));
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.show();
+        }
+    }
 }

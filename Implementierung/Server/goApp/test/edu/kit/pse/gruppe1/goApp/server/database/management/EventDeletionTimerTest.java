@@ -22,7 +22,7 @@ public class EventDeletionTimerTest {
     public void test() {
         String name = "testn";
         Location location = new Location(0, 0, name);
-        User user = new UserManagement().add(name, 264212);
+        User user = new UserManagement().add(name, "264212");
         assertThat(user, is(notNullValue()));
         Group group = new GroupManagement().add(name, user.getUserId());
         assertThat(group, is(notNullValue()));

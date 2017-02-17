@@ -128,6 +128,11 @@ public enum JSONParameter {
     LIST_PART("ListParticipate"),
 
     /**
+     * List of started Participates
+     */
+    LIST_START_PART("StartedParticipants"),
+
+    /**
      * Status of USer in Event
      */
     STATUS("Status"),

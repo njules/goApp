@@ -18,6 +18,7 @@
                 android:id="@+id/new_event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textPersonName"
                 android:hint="@string/hint_event_name"/>
 
         <LinearLayout
@@ -45,6 +46,8 @@
                 android:id="@+id/new_event_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:inputType="textPersonName"
                 android:hint="@string/hint_event_destination"/>
         <fragment
                 xmlns:tools="http://schemas.android.com/tools"

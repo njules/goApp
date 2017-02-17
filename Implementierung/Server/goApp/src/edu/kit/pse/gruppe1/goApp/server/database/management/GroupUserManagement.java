@@ -2,8 +2,8 @@ package edu.kit.pse.gruppe1.goApp.server.database.management;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.kit.pse.gruppe1.goApp.server.model.*;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 /**
  * Manages GroupUser Table
@@ -91,7 +91,4 @@ public class GroupUserManagement {
         }
         return new GroupManagement().update(group);
     }
-    /*
-     * @Override public boolean delete(int ID) { // TODO Auto-generated method stub return false; }
-     */
 }

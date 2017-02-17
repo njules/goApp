@@ -239,14 +239,20 @@ public class GroupServlet extends HttpServlet {
         List<Event> eventsStart = eventUserManager.getEventsByStatus(Status.STARTED, group, member);
         if (eventsPart != null) {
             event.addAll(eventsPart);
+        } else {
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
-
         if (eventsStart != null) {
             event.addAll(eventsStart);
+        } else {
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
 
-        return ServletUtils.createJSONDoubleListEvent(event,
-                eventUserManager.getEventsByStatus(Status.INVITED, group, member));
+        List<Event> events2 = eventUserManager.getEventsByStatus(Status.INVITED, group, member);
+        if (events2 == null) {
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
+        }
+        return ServletUtils.createJSONDoubleListEvent(event, events2);
 
     }
 
@@ -261,7 +267,8 @@ public class GroupServlet extends HttpServlet {
     private JSONObject getMembers(JSONObject json) {
         try {
             int groupID = json.getInt(JSONParameter.GROUP_ID.toString());
-            return ServletUtils.createJSONListUsr(groupUserManager.getUsers(groupID));
+            List<User> users = groupUserManager.getUsers(groupID);
+            return ServletUtils.createJSONListUsr(users);
         } catch (JSONException e) {
             e.printStackTrace();
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);

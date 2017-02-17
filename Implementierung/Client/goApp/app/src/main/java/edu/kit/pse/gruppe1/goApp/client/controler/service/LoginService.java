@@ -20,45 +20,40 @@ import org.json.JSONObject;
 public class LoginService extends IntentService {
 
 
-    private static final String name = "LoginService";
-    public static final String RESULT_LOGIN = "RESULT_LOGIN";
-    private static final String ACTION_LOGIN = "ACTION_LOGIN";
+    private static final String NAME = "LoginService";
     private static final String SERVLET = "LoginServlet";
 
-    public LoginService() {
+    private static final String ACTION_LOGIN = "ACTION_LOGIN";
+    /**
+     * Action of the broadcasts intent with the results of login(Context context, String token)
+     */
+    public static final String RESULT_LOGIN = "RESULT_LOGIN";
 
-        super(name);
+    public LoginService() {
+        super(NAME);
     }
 
     /**
-     * checks if the user is already registers and gets the users data from the server database
+     * checks if the user is already registered and gets the users data from the server database.
+     * If the user is not already registered he/she is added to the database.
+     * It saves the user who's logged in Preferences or broadcasts an error code as defined in Jsonparameter.ErrorCodes
      *
-     * @param token the id of the user which has to be found in the server database
-     * @return the user who is now logged in
+     * @param context the android context to start the service
+     * @param token the google IdToken of the user which has to be found in the server database
      */
     public void login(Context context, String token) {
         Intent requestIntent = new Intent(context, LoginService.class);
         requestIntent.putExtra(UtilService.JSON, createLogin(token).toString());
         requestIntent.setAction(ACTION_LOGIN);
-        context.startService(requestIntent);
-
+        context.startService(requestIntent);    //starts the IntentService to communicate with the server on a new thread
     }
 
-    private JSONObject createRegister(String token) {
-        JSONObject requestJSON = new JSONObject();
-        if (token != null) {
-            try {
-                requestJSON.put(JSONParameter.GOOGLE_TOKEN.toString(), token);
-                requestJSON.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.REGISTER.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Log.i("Login", "idToken is null");
-        }
-        return requestJSON;
-
-    }private JSONObject createLogin(String token) {
+    /**
+     * creates the Json for a server request to login
+     * @param token the google id token
+     * @return the jsonobject which is send to the server
+     */
+    private JSONObject createLogin(String token) {
         JSONObject requestJSON = new JSONObject();
         if (token != null) {
             try {
@@ -73,19 +68,11 @@ public class LoginService extends IntentService {
         return requestJSON;
     }
 
-    public void register(Context context, String token) {
-        Intent requestIntent = new Intent(context, LoginService.class);
-        requestIntent.putExtra(UtilService.JSON, createRegister(token).toString());
-        requestIntent.setAction(ACTION_LOGIN);
-        context.startService(requestIntent);
-    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i("Login", "LoginService started");
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
-        Log.i("Login", result.toString());
         Intent resultIntent = new Intent();
         resultIntent.setAction(RESULT_LOGIN);
         if (UtilService.isError(result)) {
@@ -97,11 +84,9 @@ public class LoginService extends IntentService {
                 Preferences.setUser(new User(id, name));
             } catch (JSONException e) {
                 e.printStackTrace();
-                //TODO ERROR MASSAGE
             }
         }
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
         manager.sendBroadcast(resultIntent);
-
     }
 }

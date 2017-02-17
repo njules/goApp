@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.Toast;
-import com.google.android.gms.maps.SupportMapFragment;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.RequestSearchService;
@@ -28,7 +27,12 @@ import edu.kit.pse.gruppe1.goApp.client.model.Request;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 
-public class AdminFragment extends Fragment implements ItemClickListener, View.OnClickListener,Communicator {
+/**
+ * This fragment is loaded into the GroupInfoActivity when the User is the founder of the Group.
+ * It shows the founder all relevant information about the Group.
+ * It also starts the GroupService, the RequestService and the RequestSearchService to let the user interact with the server.
+ */
+public class AdminFragment extends Fragment implements ItemClickListener, View.OnClickListener {
 
     private GroupInfoFragmentAdminBinding binding;
     private Group group;
@@ -47,10 +51,9 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     private RequestService requestService;
     private GroupService groupService;
     private RequestSearchService requestSearchService;
-
     private ResultReceiver receiver;
-    private String newName;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         group = Preferences.getGroup();
@@ -60,13 +63,13 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-// Inflats the layout for this fragment
+        // Inflats the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.group_info_fragment_admin, container, false);
         binding.setGroup(group);
         return binding.getRoot();
     }
 
-
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -84,17 +87,17 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(GroupService.RESULT_DELETE_MEMBER));
 
         memberRecyclerView = (RecyclerView) getView().findViewById(R.id.member_recycler_view);
-        requestRecyclerView = (RecyclerView) getView().findViewById(R.id.request_recycler_view);
         memberRecyclerView.setHasFixedSize(true);
-        requestRecyclerView.setHasFixedSize(true);
         memberLinearLayoutManager = new LinearLayoutManager(getActivity());
-        requestLinearLayoutManager = new LinearLayoutManager(getActivity());
         memberRecyclerView.setLayoutManager(memberLinearLayoutManager);
+
+        requestRecyclerView = (RecyclerView) getView().findViewById(R.id.request_recycler_view);
+        requestRecyclerView.setHasFixedSize(true);
+        requestLinearLayoutManager = new LinearLayoutManager(getActivity());
         requestRecyclerView.setLayoutManager(requestLinearLayoutManager);
 
         requestSearchService.getRequestsByGroup(getActivity(), group);
         groupService.getMembers(getActivity(), group);
-
 
         delete = (AppCompatButton) getView().findViewById(R.id.delete_group_button);
         delete.setOnClickListener(this);
@@ -111,29 +114,34 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     public void onItemClicked(int position, View view) {
         switch (view.getId()) {
             case R.id.accept_member:
-                requestService.accept(getActivity(), new Request(requestAdapter.getItem(position), group));
                 newMember = requestAdapter.getItem(position);
                 requestPosition = position;
+                requestService.accept(getActivity(), new Request(newMember, group));
                 break;
             case R.id.reject_member:
-                requestService.reject(getActivity(), new Request(requestAdapter.getItem(position), group));
                 requestPosition = position;
+                requestService.reject(getActivity(), new Request(requestAdapter.getItem(position), group));
                 break;
             case R.id.delete_member:
                 memberPosition = position;
-                groupService.deleteMember(getActivity(), group, memberAdapter.getItem(position));
+                if (memberAdapter.getItem(position).getId() != Preferences.getUser().getId()) {
+                    groupService.deleteMember(getActivity(), group, memberAdapter.getItem(position));
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.DeleteError), Toast.LENGTH_SHORT).show();
+                }
         }
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_change_name){
+        if (item.getItemId() == R.id.action_change_name) {
             FragmentManager fragmentManager = getActivity().getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             ChangeNameFragment fragment = new ChangeNameFragment();
             fragmentTransaction.add(fragment, "ChangeNameFragment");
             fragmentTransaction.commit();
             return true;
-        }else{
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -143,58 +151,63 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
         if (view.getId() == R.id.delete_group_button) {
             groupService.delete(getActivity(), group);
         }
-        //TODO else error massage
     }
 
-    @Override
-    public void respond(String response) {
-        groupService.setName(getActivity(),group,response);
-        newName = response;
-    }
-
+    /**
+     * The ResultReceiver evaluates return messages from earlier started Services.
+     */
     private class ResultReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            // If the intent shows any kind of error the user will be notified.
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getActivity(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_SHORT).show();
                 return;
             }
             switch (intent.getAction()) {
+                // Loads the Group members in the memberAdapter.
                 case GroupService.RESULT_GET_MEMBERS:
-                    if (intent.getParcelableArrayExtra(UtilService.USERS) == null){break;}
+                    if (intent.getParcelableArrayExtra(UtilService.USERS) == null) {
+                        break;
+                    }
                     memberAdapter = new MemberAdapter((User[]) intent.getParcelableArrayExtra(UtilService.USERS), AdminFragment.this);
                     memberRecyclerView.setAdapter(memberAdapter);
                     break;
+                // Loads all Requests connected with the Group in the requestAdapter.
                 case RequestSearchService.RESULT_GET_BY_GROUP:
-                    if (intent.getParcelableArrayExtra(UtilService.USERS) == null){break;}
+                    if (intent.getParcelableArrayExtra(UtilService.USERS) == null) {
+                        break;
+                    }
                     requestAdapter = new RequestAdapter((User[]) intent.getParcelableArrayExtra(UtilService.USERS), AdminFragment.this);
                     requestRecyclerView.setAdapter(requestAdapter);
                     break;
+                // Deletes a member from the memberAdapter.
                 case GroupService.RESULT_DELETE_MEMBER:
                     memberAdapter.deleteItem(memberPosition);
-                    Toast.makeText(getContext(), "Du hast " + memberAdapter.getItem(memberPosition).getName() + " entfernt", Toast.LENGTH_SHORT).show();
                     break;
+                // Starts the StartActivity since the Group does not longer exist.
                 case GroupService.RESULT_DELETE:
-                    Toast.makeText(getActivity(), "Gruppe wird gelöscht", Toast.LENGTH_SHORT).show();
                     StartActivity.start(getActivity());
                     break;
+                // Inserts a new member into the memberAdapter and deletes the related request from the requestAdapter.
                 case RequestService.RESULT_ACCEPT:
-                    Toast.makeText(getActivity(), "Du hast " + newMember.getName() + " hinzugefügt", Toast.LENGTH_SHORT).show();
-                    memberAdapter.insertItem(newMember);
+                    memberAdapter.insertItem(requestAdapter.getItem(requestPosition));
                     requestAdapter.delete(requestPosition);
                     break;
+                // Deletes a request from the requestAdapter.
                 case RequestService.RESULT_REJECT:
-                    Toast.makeText(getActivity(), "Du hast " + requestAdapter.getItem(requestPosition).getName() + " abgelehnt", Toast.LENGTH_SHORT).show();
                     requestAdapter.delete(requestPosition);
                     break;
+                // Changes the name of the displayed Group.
                 case GroupService.RESULT_SET_NAME:
-                    Toast.makeText(getContext(),"Neuer Name: " + newName,Toast.LENGTH_SHORT).show();
-                    Preferences.getGroup().setName(newName);
-                    group = Preferences.getGroup();
+                    String name = intent.getStringExtra(UtilService.NAME);
+                    group.setName(name);
+                    Preferences.setGroup(group);
+                    binding.setGroup(group);
                     break;
-
-                //TODO default
+                default:
+                    break;
             }
         }
     }

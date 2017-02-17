@@ -27,7 +27,15 @@ public class RequestManagement implements Management {
         return request;
     }
 
-    // TODO: JavaDocs
+    /**
+     * Returns the request.
+     * 
+     * @param groupId
+     *            the id of the group.
+     * @param userId
+     *            the id of the user.
+     * @return The request with the given ids if such an request is in the db and else null.
+     */
     public Request getRequest(int groupId, int userId) {
         Group group = new GroupManagement().getGroup(groupId);
         if (group == null) {
@@ -62,7 +70,7 @@ public class RequestManagement implements Management {
     /**
      * get all User to given Gruop
      * 
-     * @param gruopId
+     * @param groupId
      *            ID of group
      * @return List of matching Users
      */
@@ -101,7 +109,9 @@ public class RequestManagement implements Management {
      * delete entry with given groupID and userID
      * 
      * @param groupId
+     *            the id of the group
      * @param userId
+     *            the id of the user
      * @return true, if deletion was successful, otherwise false
      */
     public boolean delete(int groupId, int userId) {
