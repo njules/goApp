@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.EventService;
-import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationServiceNeu;
+import edu.kit.pse.gruppe1.goApp.client.controler.service.LocationService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.EventInfoActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
@@ -85,7 +85,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         eventService = new EventService();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_GET));
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationServiceNeu.RESULT_MY_LOCATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationService.RESULT_MY_LOCATION));
 
         participantRecyclerView = (RecyclerView) findViewById(R.id.participants_recycler_view);
         participantRecyclerView.setHasFixedSize(true);
@@ -108,8 +108,8 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         }
         googleMap.setMyLocationEnabled(true);
 
-        Intent intent = new Intent(this, LocationServiceNeu.class);
-        intent.setAction(LocationServiceNeu.ACTION_MY_LOCATION);
+        Intent intent = new Intent(this, LocationService.class);
+        intent.setAction(LocationService.ACTION_MY_LOCATION);
         this.startService(intent);
     }
 
@@ -147,14 +147,14 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                     }
                     break;
                 // Moves the Map to the Users Location.
-                case LocationServiceNeu.RESULT_MY_LOCATION:
+                case LocationService.RESULT_MY_LOCATION:
                     positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
                     googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
                     android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;
                 // Refreshes the markers on the map, representing the Group Locations.
-                case LocationServiceNeu.RESULT_LOCATION:
+                case LocationService.RESULT_LOCATION:
                     googleMap.clear();
                     positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
                     googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));

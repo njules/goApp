@@ -54,7 +54,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
     private EditText el;
     private Timestamp timestamp;
     private EventService eventService;
-    private LocationServiceNeu locationService;
+    private LocationService locationService;
     private ResultReceiver receiver;
 
     private GoogleMap googleMap;
@@ -102,11 +102,11 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         map.getMapAsync(this);
 
         eventService = new EventService();
-        locationService = new LocationServiceNeu();
+        locationService = new LocationService();
         receiver = new ResultReceiver();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_CREATE));
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationServiceNeu.RESULT_MY_LOCATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationService.RESULT_MY_LOCATION));
     }
 
     @Override
@@ -160,8 +160,8 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
         }
         googleMap.setMyLocationEnabled(true);
 
-        Intent intent = new Intent(this, LocationServiceNeu.class);
-        intent.setAction(LocationServiceNeu.ACTION_MY_LOCATION);
+        Intent intent = new Intent(this, LocationService.class);
+        intent.setAction(LocationService.ACTION_MY_LOCATION);
         this.startService(intent);
     }
 
@@ -200,8 +200,8 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     Toast.makeText(NewEventActivity.this, "Neues Event erstellt", Toast.LENGTH_SHORT).show();
 
                     if (new Timestamp(event.getTime().getTime() - beforeEvent).before(new Timestamp(System.currentTimeMillis()))) {
-                        Intent locationIntent = new Intent(context, LocationServiceNeu.class);
-                        locationIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
+                        Intent locationIntent = new Intent(context, LocationService.class);
+                        locationIntent.setAction(LocationService.ACTION_LOCATION);
                         locationIntent.putExtra(UtilService.EVENT, intent.getParcelableExtra(UtilService.EVENT));
                         context.startService(locationIntent);
                         GroupActivity.start(NewEventActivity.this);
@@ -217,8 +217,8 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     Log.i("MainThread", Thread.currentThread().getId() + "");
 
                     eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    Intent eventIntent = new Intent(context, LocationServiceNeu.class);
-                    eventIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
+                    Intent eventIntent = new Intent(context, LocationService.class);
+                    eventIntent.setAction(LocationService.ACTION_LOCATION);
                     eventIntent.putExtra(UtilService.EVENT, event);
                     eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
                     eventAlarmMgr.setExact(AlarmManager.RTC, event.getTime().getTime() - beforeEvent, eventAlarmIntent);
@@ -226,7 +226,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     GroupActivity.start(NewEventActivity.this);
                     break;
                 // Moves the Map to the Users Location.
-                case LocationServiceNeu.RESULT_MY_LOCATION:
+                case LocationService.RESULT_MY_LOCATION:
                     android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;

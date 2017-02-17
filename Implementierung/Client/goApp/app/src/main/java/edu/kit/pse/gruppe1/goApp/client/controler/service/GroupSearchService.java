@@ -30,8 +30,13 @@ public class GroupSearchService extends IntentService {
     //Intent action to start the service
     private static final String ACTION_GET_BY_NAME = "GET_BY_NAME";
     private static final String ACTION_GET_BY_MEMBER = "GET_BY_MEMBER";
-    //Intent action to broadcast results
+    /**
+     * Action of the broadcasts intent with the results of getGroupsByMember(Context context, User user)
+     */
     public static final String RESULT_GET_BY_MEMBER = "RESULT_BY_MEMBER";
+    /**
+     * Action of the broadcasts intent with the results of ggetGroupsByName(Context context, String name)
+     */
     public static final String RESULT_GET_BY_NAME = "RESULT_BY_NAME";
 
 
@@ -41,19 +46,16 @@ public class GroupSearchService extends IntentService {
 
 
     /**
-     * finds all groups which the user is a member of. This is used to present the groups in the StartActivity
+     * finds all groups which the user is a member of. This is used to present the groups in the StartActivity.
+     * The found groups are broadcast as a list or an errorcode as defined in Jsonparameter.ErrorCodes
      *
      * @param user the user which groups are returned
      */
     public void getGroupsByMember(Context context, User user) {
-        //TODO what if Parameter == null
-        if (user == null) {
-        }
         JSONObject requestJson = new JSONObject();
 
         try {
-            //TODO Server liest noch string
-            requestJson.put(JSONParameter.USER_ID.toString(),user.getId());
+            requestJson.put(JSONParameter.USER_ID.toString(), user.getId());
             requestJson.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_GRP_MEM.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -61,14 +63,14 @@ public class GroupSearchService extends IntentService {
         Intent requestIntent = new Intent(context, GroupSearchService.class);
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_MEMBER);
-        context.startService(requestIntent);
+        context.startService(requestIntent);    //starts the IntentService to communicate with the server on a new thread
     }
 
     /**
      * finds all groups which name include the given string to show the results of a search request by the user using the search function of the NewGroupActivity
+     * The found groups are broadcast as a list or an errorcode as defined in Jsonparameter.ErrorCodes
      *
      * @param name the string which the user typed in the NewGroupActivity to find a new group he wants to be member of with that name
-     * @return all groups the name is included in the group name or null
      */
     public void getGroupsByName(Context context, String name) {
 
@@ -84,20 +86,16 @@ public class GroupSearchService extends IntentService {
         Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_GET_BY_NAME);
-        context.startService(requestIntent);
+        context.startService(requestIntent);    //starts the IntentService to communicate with the server on a new thread
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        //Communication with server
-        Log.i("GroupSearch",intent.getStringExtra(UtilService.JSON));
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
-        Log.i("SearchGroup",result.toString());
-        //result for the activtiy
         Intent resultIntent = new Intent();
-        if(UtilService.isError(result)){
-            resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+        if (UtilService.isError(result)) {
+            resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result)); //hands errors of the server to the activity in a userfriendly language
         } else {
             resultIntent.putExtra(UtilService.GROUPS, UtilService.getGroups(result));
         }
@@ -108,7 +106,8 @@ public class GroupSearchService extends IntentService {
             case ACTION_GET_BY_NAME:
                 resultIntent.setAction(RESULT_GET_BY_NAME);
                 break;
-            //TODO default:
+            default:
+                break;
         }
 
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());

@@ -188,8 +188,8 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
             }
 
             if (new Timestamp(eventMove.getTime().getTime() - beforeEvent).before(new Timestamp(System.currentTimeMillis()))) {
-                Intent locationIntent = new Intent(context, LocationServiceNeu.class);
-                locationIntent.setAction(LocationServiceNeu.ACTION_LOCATION);
+                Intent locationIntent = new Intent(context, LocationService.class);
+                locationIntent.setAction(LocationService.ACTION_LOCATION);
                 locationIntent.putExtra(UtilService.EVENT, eventMove);
                 context.startService(locationIntent);
                 return;
@@ -202,7 +202,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, eventMove.getTime().getTime() - beforeEvent, notifyAlarmIntent);
 
                 eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                Intent eventIntent = new Intent(context, LocationServiceNeu.class);
+                Intent eventIntent = new Intent(context, LocationService.class);
                 eventIntent.putExtra(UtilService.EVENT, eventMove);
                 eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
                 eventAlarmMgr.setExact(AlarmManager.RTC, eventMove.getTime().getTime() - beforeEvent, eventAlarmIntent);

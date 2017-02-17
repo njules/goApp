@@ -208,5 +208,4 @@ public class StartActivity extends AppCompatActivity implements Communicator {
             builder.show();
         }
     }
-
 }
