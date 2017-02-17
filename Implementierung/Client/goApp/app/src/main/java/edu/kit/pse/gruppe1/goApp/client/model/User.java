@@ -10,7 +10,6 @@ import android.os.Parcelable;
  */
 public class User extends BaseObservable implements Parcelable {
 
-    //TODO more attributes?
     /**
      * The Id is used to identify each user and is therefore unique.
      */
@@ -33,6 +32,9 @@ public class User extends BaseObservable implements Parcelable {
         this.name = name;
     }
 
+    /**
+     * @param in the Parcel that creates the User.
+     */
     protected User(Parcel in) {
         id = in.readInt();
         name = in.readString();
@@ -50,10 +52,16 @@ public class User extends BaseObservable implements Parcelable {
         }
     };
 
+    /**
+     * @return the Id of the User.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @return the name of the User.
+     */
     @Bindable
     public String getName() {
         return name;
@@ -62,6 +70,34 @@ public class User extends BaseObservable implements Parcelable {
     public void setName(String name) {
         this.name = name;
         notifyChange();
+    }
+
+    /**
+     * @return the Location of the User.
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     * @param location the new location of the User.
+     */
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    /**
+     * @return the Status of the User.
+     */
+    public Status getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the new Status of the User.
+     */
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
@@ -73,21 +109,5 @@ public class User extends BaseObservable implements Parcelable {
     public void writeToParcel(Parcel out, int i) {
         out.writeInt(id);
         out.writeString(name);
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 }

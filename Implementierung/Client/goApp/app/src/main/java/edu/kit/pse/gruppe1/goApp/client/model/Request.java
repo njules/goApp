@@ -20,6 +20,9 @@ public class Request implements Parcelable {
         this.group = group;
     }
 
+    /**
+     * @param in the Parcel that creates the Request.
+     */
     protected Request(Parcel in) {
         user = in.readParcelable(User.class.getClassLoader());
         group = in.readParcelable(Group.class.getClassLoader());
@@ -37,10 +40,16 @@ public class Request implements Parcelable {
         }
     };
 
+    /**
+     * @return the Group of the Request.
+     */
     public Group getGroup() {
         return group;
     }
 
+    /**
+     * @return the User of the Request.
+     */
     public User getUser() {
         return user;
     }

@@ -1,7 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 /**
- * Created by Tobias on 26.01.2017.
+ * An Activity needs to implement this interface so that DialogFragments can pass information to it.
  */
 
 public interface Communicator {

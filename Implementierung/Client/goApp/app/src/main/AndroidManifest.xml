@@ -58,7 +58,7 @@
         <service android:name=".controler.service.RequestSearchService"/>
         <service android:name=".controler.service.ParticipateService"/>
         <service android:name=".controler.service.NotificationService"/>
-        <service android:name=".controler.service.LocationServiceNeu"/>
+        <service android:name=".controler.service.LocationService"/>
         <service android:name=".controler.service.LoginService"/>
 
         <!--

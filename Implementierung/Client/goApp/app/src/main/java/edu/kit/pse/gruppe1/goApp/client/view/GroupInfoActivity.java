@@ -1,8 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -10,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.GroupService;
@@ -18,15 +15,25 @@ import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoActivityBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
+/**
+ * The GroupInfoActivity shows either the AdminFragment or the UserFragment to the User, right after it has been started.
+ */
 public class GroupInfoActivity extends AppCompatActivity implements Communicator {
     private Group group;
     private GroupInfoActivityBinding binding;
 
+    /**
+     * This method creates an intent to start this exact Activity.
+     * The method needs to be static because the Activity does not exist when the method is called.
+     *
+     * @param activity the activity currently running.
+     */
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, GroupInfoActivity.class);
         activity.startActivity(intent);
     }
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.group_info_activity);
