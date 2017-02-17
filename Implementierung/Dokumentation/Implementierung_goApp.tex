@@ -481,6 +481,12 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	
 	\subsection{Client}
 	\subsubsection{HTTPConnection}
+	\subparagraph{public void testSendGetRequest()}	
+	Der Test überprüft, dass die get-Anfragen an den Server funktionieren.
+	\subparagraph{public void testSendPostRequest()}
+	Der Test überprüft, dass die post-Anfragen an den Server funktionieren.
+	\subparagraph{public void testConnectionFailed()}
+	Der Test überprüft, dass wenn ein Service nicht erreichbar ist ConnectionFailed zurück gegeben wird.
 	\subsubsection{View}
 	Für die View haben wir keine Testfälle implementiert da diese sich besser "von Hand" testen lässt. Durch einfaches benutzen der goApp können wir überprüfen, dass die View sich so verhält wie wir als Implementierer es erwarten.
 Auch in der nächsten Phase werden wir die View nicht mit klassischen Unit-Tests abdecken, sondern durch Monkey-Tests die Robustheit unserer Applikation bei Eingaben jeglicher Art sicher stellen.

@@ -2,6 +2,7 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.kit.pse.gruppe1.goApp.server.algorithm.ClusterFacade;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
@@ -100,24 +102,19 @@ public class LocationServlet extends HttpServlet {
      */
     private boolean setGPS(JSONObject json) {
         int userId = -1;
-        int lat = -1;
-        int lon = -1;
+        double lat = -1;
+        double lon = -1;
         User user = null;
         try {
             userId = json.getInt(JSONParameter.USER_ID.toString());
-            lat = json.getInt(JSONParameter.LATITUDE.toString());
-            lon = json.getInt(JSONParameter.LONGITUDE.toString());
+            lat = json.getDouble(JSONParameter.LATITUDE.toString());
+            lon = json.getDouble(JSONParameter.LONGITUDE.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
-        user = eventUser.getUser(userId);
-        if (user != null) {
-            user.setLocation(new Location(lon, lat, null));
-            return true;
-        }
-        return false;
 
+        return eventUser.updateLocation(userId, new Location(lon, lat, null));
     }
 
     /**
@@ -139,13 +136,12 @@ public class LocationServlet extends HttpServlet {
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON);
         }
         evt = event.getEvent(eventID);
-        if(evt == null){
+        if (evt == null) {
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
-        Set<Location> cluster = evt.getClusterPoints();
-        if(cluster == null){
-            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
-        }
-        return ServletUtils.createJSONListLoc(new ArrayList<Location>(cluster));
+        ClusterFacade f = new ClusterFacade();
+        List<Location> cluster = f.getClusteredLocations(evt);
+        
+        return ServletUtils.createJSONListLoc(cluster);
     }
 }
