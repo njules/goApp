@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * This adapter provides a binding from an data set of events to views that are displayed within a RecyclerView.
+ * This adapter is used for events where the user already participates.
  */
 
 public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdapter.AcceptedEventViewHolder> {
@@ -95,7 +96,7 @@ public class AcceptedEventAdapter extends RecyclerView.Adapter<AcceptedEventAdap
         /**
          * Returns the AcceptedEventViewBinding.
          *
-         * @return the binding to return.
+         * @return the binding of the AcceptedEventViewHolder.
          */
         public AcceptedEventViewBinding getBinding() {
             return binding;

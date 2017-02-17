@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LoginService.RESULT_LOGIN));
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.clientId)).build();
-        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this)
+        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this)
                 .addConnectionCallbacks(this).addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions).build();
 
         setContentView(R.layout.login_activty);
@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
                 if (googleSignInResult.isSuccess()) {
-                   loginService.login(LoginActivity.this,googleSignInResult.getSignInAccount().getIdToken());
+                    loginService.login(LoginActivity.this, googleSignInResult.getSignInAccount().getIdToken());
                 }
             }
         });
@@ -132,8 +132,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
             //starts the StartActivity after a successful login
             if (intent.getAction() == LoginService.RESULT_LOGIN) {
-                    Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
-                    StartActivity.start(LoginActivity.this);
+                Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                StartActivity.start(LoginActivity.this);
             }
         }
     }

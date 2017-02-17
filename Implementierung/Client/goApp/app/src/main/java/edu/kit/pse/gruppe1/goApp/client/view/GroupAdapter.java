@@ -63,6 +63,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     /**
      * Deletes a single Group from the data set.
+     *
      * @param position the position of the Group.
      */
     public void deleteItem(int position) {
@@ -80,7 +81,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         /**
          * Creates the GroupViewHolder.
          *
-         * @param b   the binding of the AcceptedEventViewHolder.
+         * @param b   the binding of the GroupViewHolder.
          * @param icl defines how to react to user interaction.
          */
         public GroupViewHolder(GroupViewBinding b, ItemClickListener icl) {
@@ -94,7 +95,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         /**
          * Returns the GroupViewBinding.
          *
-         * @return the binding to return.
+         * @return the binding of the GroupViewHolder.
          */
         public GroupViewBinding getBinding() {
             return binding;

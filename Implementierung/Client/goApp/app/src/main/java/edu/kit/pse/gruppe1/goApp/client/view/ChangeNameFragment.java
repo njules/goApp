@@ -13,7 +13,7 @@ import android.widget.Toast;
 import edu.kit.pse.gruppe1.goApp.client.R;
 
 /**
- * This class is used whenever a User- or  Group name should be changed.
+ * This fragment opens whenever a User- or  Group name should be changed.
  */
 public class ChangeNameFragment extends DialogFragment {
     private Communicator communicator;
@@ -33,7 +33,6 @@ public class ChangeNameFragment extends DialogFragment {
                         String response = et.getText().toString();
                         if (response.trim().isEmpty()) {
                             Toast.makeText(getActivity(), getString(R.string.retryName), Toast.LENGTH_SHORT).show();
-                            onCreateDialog(savedInstanceState);
                         } else {
                             communicator.respond(response);
                         }
