@@ -23,42 +23,45 @@ import org.json.JSONObject;
 import java.sql.Date;
 
 /**
- * This Service is used to notify an User that an event has started even when the Application is closed via Notificationbar
+ * This Service is used to notify an User that an Event is going to start even when the Application is closed.
  */
-public class NotificationService extends IntentService{
+public class NotificationService extends IntentService {
 
-	private static final String NAME = "NotificationService";
-	private static final String ACTION_GET = "GET";
-	private static final String SERVLET = "EventServlet";
-	private static final int ERROR_ID = -1;
-	public NotificationService() {
-		super(NAME);
-	}
+    private static final String NAME = "NotificationService";
+    private static final String ACTION_GET = "GET";
+    private static final String SERVLET = "EventServlet";
+    private static final int ERROR_ID = -1;
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		Log.i("NOTIFICATION SERVICE", "Start");
-		Group group = intent.getParcelableExtra(UtilService.GROUP);
+    public NotificationService() {
+        super(NAME);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        Log.i("NOTIFICATION SERVICE", "Start");
+        Group group = intent.getParcelableExtra(UtilService.GROUP);
         notifyUser(group);
-	}
+    }
 
-	/**
-	 * send a notification to the user that the event is going to start
-	 */
-	private void notifyUser(Group group) {
-		Preferences.setGroup(group);
-		NotificationCompat.Builder mBuilder =
-				new NotificationCompat.Builder(this)
-						.setSmallIcon(R.mipmap.ic_launcher)
-						.setContentTitle(getString(R.string.notification_massage))
-						.setAutoCancel(true)
-						.setContentText(group.getName());
-		Intent resultIntent = new Intent(this, LoginActivity.class);
-		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
-		mBuilder.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager =
-				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.notify(0, mBuilder.build());
-	}
+    /**
+     * Sends a notification to the user that the Event is going to start
+     *
+     * @param group The group in which the Event is going to take place.
+     */
+    private void notifyUser(Group group) {
+        Preferences.setGroup(group);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle(getString(R.string.notification_massage))
+                        .setAutoCancel(true)
+                        .setContentText(group.getName());
+        Intent resultIntent = new Intent(this, LoginActivity.class);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, mBuilder.build());
+    }
 
 }

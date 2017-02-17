@@ -25,7 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by Tobias on 10.02.2017.
+ * This Service is in charge of getting the Users last Location from the GoogleApiClient and also for synchronizing the Users and the Group Location.
  */
 
 public class LocationService extends IntentService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -67,7 +67,6 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
     @Override
     public void onStart(Intent intent, int startId) {
         mGoogleApiClient.connect();
-        Log.i("MyLocation", "connect()");
         super.onStart(intent, startId);
     }
 
@@ -91,11 +90,12 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
                 resultIntent.setAction(RESULT_LOCATION);
                 resultIntent.putExtra(UtilService.LOCATIONS, locations);
 
-
+                //The Service restarts itself when the Event is still on.
                 if (System.currentTimeMillis() + refreshTime < event.getTime().getTime() + eventLength) {
                     eventAlarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
                     Intent eventIntent = new Intent(this, LocationService.class);
                     eventIntent.putExtra(UtilService.EVENT, event);
+                    eventIntent.setAction(ACTION_LOCATION);
                     eventAlarmIntent = PendingIntent.getService(this, 0, eventIntent, 0);
                     eventAlarmMgr.setWindow(AlarmManager.RTC, System.currentTimeMillis() + refreshTime, refreshTime, eventAlarmIntent);
                 }
@@ -124,6 +124,12 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
         connected = true;
     }
 
+    /**
+     * This method creates a connection to the Server and sends the Id from the User in addition with his last Location and the Id of the Event.
+     * As an answer a List of all calculated Locations is expected.
+     * @param eventId the Id of the Event.
+     * @return the List of all calculated Locations from the Server.
+     */
     private Location[] syncLocation(int eventId) {
         JSONObject requestJson = new JSONObject();
 
