@@ -489,4 +489,23 @@ Ebenfalls wird die goApp an die ersten User verteilt um uns Feedback über die h
 	\subsubsection{Controller}
 	Es ist nicht möglich Intent Services mit Unit-Tests zu testen.  Da unser Controller wie im Entwurf beschrieben nur Intent Services implementiert existieren hier also keine Unit-Tests.
 Allerdings ist der Großteil der Logik in die Klasse UtilService ausgelagert. 
+
+	\paragraph{UtilService}
+	\subparagraph{public void getGroups()}
+	Dieser Test überprüft das erfolgreiche erstellen eines Group Arrays aus einem JSON Objekt.
+	\subparagraph{public void getUsers()}
+	Dieser Test überprüft das erfolgreiche erstellen eines User Arrays aus einem JSON Objekt.
+	\subparagraph{public void getParticipants()}
+	Dieser Test überprüft das erfolgreiche erstellen eines User Arrays, aus einem JSON Objekt wobei hier jeder User einen Status hat.
+	\subparagraph{public void getLocations()}
+	Dieser Test überprüft das erfolgreiche erstellen eines Location Arrays aus einem JSON Objekt.
+	\subparagraph{public void isErrorTrue()}
+	Dieser Test überprüft das erkennen von Fehlern.
+	\subparagraph{public void isErrorFalse()}
+	Dieser Test überprüft das erkennen einer Fehlerfreien Kommunikation mit dem Server. 
+	\subparagraph{public void getError()}
+	Dieser Test überprüft ob ein Error Code als der richtige erkannt wird.
+	\subparagraph{public void getEvents()}
+	Dieser Test überprüft das erfolgreiche erstellen eines Event Arrays aus einem JSON Objekt.
+	
 \end{document}
