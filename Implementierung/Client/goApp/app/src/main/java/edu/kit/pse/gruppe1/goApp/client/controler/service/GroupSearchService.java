@@ -49,6 +49,7 @@ public class GroupSearchService extends IntentService {
      * finds all groups which the user is a member of. This is used to present the groups in the StartActivity.
      * The found groups are broadcast as a list or an errorcode as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param user the user which groups are returned
      */
     public void getGroupsByMember(Context context, User user) {
@@ -70,6 +71,7 @@ public class GroupSearchService extends IntentService {
      * finds all groups which name include the given string to show the results of a search request by the user using the search function of the NewGroupActivity
      * The found groups are broadcast as a list or an errorcode as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param name the string which the user typed in the NewGroupActivity to find a new group he wants to be member of with that name
      */
     public void getGroupsByName(Context context, String name) {

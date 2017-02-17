@@ -66,8 +66,9 @@ public class GroupService extends IntentService {
 
 
     /**
-     * creates a new Group and broadcast an errorCode as defined in Jsonparameter.ErrorCodes
+     * creates a new Group and broadcast an error code as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param name    The name of the new group
      * @param founder The user who creates the group
      */
@@ -90,8 +91,9 @@ public class GroupService extends IntentService {
     }
 
     /**
-     * deletes a group and broadcasts an errorCode as defined in Jsonparameter.ErrorCodes
+     * deletes a group and broadcasts an error code as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param group The group to be deleted
      */
     public void delete(Context context, Group group) {
@@ -112,8 +114,9 @@ public class GroupService extends IntentService {
     }
 
     /**
-     * removes a member from the group and broadcasts an errorCode as defined in Jsonparameter.ErrorCodes
+     * removes a member from the group and broadcasts an error code as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param group The group in which the user currently is but will be deleted from
      * @param user  The user who will be removed from the group
      */
@@ -138,6 +141,7 @@ public class GroupService extends IntentService {
     /**
      * changes the name of the group and broadcasts an error code as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param group   The group which's founder changed the name
      * @param newName The new name of the group
      */
@@ -162,6 +166,7 @@ public class GroupService extends IntentService {
     /**
      * gets the groups members from the server database and broadcasts them as an array or an error code as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param group The group which members to find
      */
     public void getMembers(Context context, Group group) {
@@ -184,6 +189,7 @@ public class GroupService extends IntentService {
     /**
      * changes the founder of the group and broadcasts an error code as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param group      The group which founder changes
      * @param newFounder The user who gets the rights of the founder
      */
@@ -208,6 +214,7 @@ public class GroupService extends IntentService {
     /**
      * gets all events in the group and broadcasts them acording the the current userrs status in different arrays or an error code as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param group The existing group to get events from
      * @param user  The user which status to consider
      */
@@ -268,7 +275,6 @@ public class GroupService extends IntentService {
             case ACTION_GET_EVENTS:
                 result = connection.sendGetRequest(intent.getStringExtra(UtilService.JSON));
                 resultIntent.setAction(RESULT_GET_EVENTS);
-                Log.i("GetEvents", result.toString());
                 if (UtilService.isError(result)) {
                     resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
                 } else {

@@ -13,26 +13,31 @@ import org.json.JSONObject;
 /**
  * This Service provides methods to handle a single User.
  */
-public class UserService extends IntentService{
+public class UserService extends IntentService {
 
-	private static final String NAME = "UserService";
+    private static final String NAME = "UserService";
     private static final String SERVLET = "UserServlet";
     //Intent actions
-	private static final String ACTION_CHANGE = "CHANGE";
-	public static final String RESULT_CHANGE = "RESULT_CHANGE";
+    private static final String ACTION_CHANGE = "CHANGE";
+    /**
+     * Action of the broadcasts intent with the results of changeName(Context context, User user, String name)
+     */
+    public static final String RESULT_CHANGE = "RESULT_CHANGE";
 
 
-	public UserService() {
-		super(NAME);
-	}
+    public UserService() {
+        super(NAME);
+    }
 
-	/**
-	 * changes the old name into the new name of a user
-	 * @param user The user who changes his name
-	 * @param name The new name
-	 * @return true, if method was successful, otherwise false
-	 */
-	public void changeName(Context context, User user, String name) {
+    /**
+     * changes the old name into the new name of a user
+     * Broadcasts if an error occurred as defined in Jsonparameter.ErrorCodes
+     *
+     * @param context the android context to start the service
+     * @param user The user who changes his name
+     * @param name The new name
+     */
+    public void changeName(Context context, User user, String name) {
         JSONObject requestJson = new JSONObject();
 
         try {
@@ -47,19 +52,21 @@ public class UserService extends IntentService{
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.setAction(ACTION_CHANGE);
 
-        context.startService(requestIntent);
-	}
+        context.startService(requestIntent);    //starts the IntentService to communicate with the server on a new thread
+    }
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-        HTTPConnection connection = new HTTPConnection(SERVLET);
-        Intent resultIntent = new Intent();
-        JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
-        resultIntent.setAction(RESULT_CHANGE);
-        if(UtilService.isError(result)){
-            resultIntent.putExtra(UtilService.ERROR,UtilService.getError(result));
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        if (intent.getAction() == ACTION_CHANGE) {
+            HTTPConnection connection = new HTTPConnection(SERVLET);
+            Intent resultIntent = new Intent();
+            JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));
+            resultIntent.setAction(RESULT_CHANGE);
+            if (UtilService.isError(result)) {
+                resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
+            }
+            LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
+            manager.sendBroadcast(resultIntent);
         }
-        LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
-        manager.sendBroadcast(resultIntent);
-	}
+    }
 }

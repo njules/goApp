@@ -44,6 +44,7 @@ public class EventService extends IntentService {
     /**
      * creates an event and broadcasts the new event locally or an errorcode as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param name        name of the group chosen freely by a member of the group
      * @param destination the location which the user choose on a map to let his event take place there (coordinates) and gave it a name (string)
      * @param eventAdmin  the user who creates the event and is a group member
@@ -75,8 +76,9 @@ public class EventService extends IntentService {
 
     /**
      * gets the events participantes from the server database and broadcasts lists of users acording to their status (started or participate)
-     * or an errorcode as defined in Jsonparameter.ErrorCodes
+     * or an error code as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param eventID the id to identify which events participants to get
      */
     public void getEvent(Context context, int eventID) {
@@ -97,8 +99,10 @@ public class EventService extends IntentService {
     }
 
     /**
-     * Changes attributes of an event. Only time, destination and name can be changed. Broadcasts if Error occurred
+     * Changes attributes of an event. Only time, destination and name can be changed.
+     * Broadcasts if an error occurred as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param event the new instance of the event with the wanted attributes changed which will replace the old event
      */
     public void change(Context context, Event event) {
