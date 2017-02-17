@@ -135,4 +135,17 @@ public class ClusterFacade {
     public DoublePoint getCenter(Cluster<DoublePoint> cluster) {
         return algorithm.calculateCentralPoint(cluster);
     }
+    
+    public List<Location> getClusteredLocations(Event event) {
+        List<DoublePoint> pointList = getClusteredCentralPoints(event);
+        List<Location> locations = new ArrayList<Location>();
+        
+        for(DoublePoint point : pointList) {
+            
+            locations.add(new Location(point.getPoint()[0], point.getPoint()[1],null));
+            
+        }
+        
+        return locations;
+    }
 }
