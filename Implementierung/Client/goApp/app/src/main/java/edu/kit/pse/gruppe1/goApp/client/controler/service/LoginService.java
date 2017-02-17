@@ -35,8 +35,10 @@ public class LoginService extends IntentService {
 
     /**
      * checks if the user is already registered and gets the users data from the server database.
-     * If the user is not already registered he/she is added to the database. It saves the user who's logged in Preferences
+     * If the user is not already registered he/she is added to the database.
+     * It saves the user who's logged in Preferences or broadcasts an error code as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param token the google IdToken of the user which has to be found in the server database
      */
     public void login(Context context, String token) {

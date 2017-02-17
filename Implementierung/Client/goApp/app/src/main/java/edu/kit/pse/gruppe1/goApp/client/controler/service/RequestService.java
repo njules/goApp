@@ -4,14 +4,12 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Date;
 
 /**
  * This Service provides methods to handle a Request.
@@ -20,7 +18,7 @@ public class RequestService extends IntentService {
 
     private static final String NAME = "RequestService";
     private static final String SERVLET = "RequestServlet";
-    //Intnt actions
+    //Intent actions
     private static final String ACTION_CREATE = "CREATE";
     private static final String ACTION_ACCEPT = "ACCEPT";
     private static final String ACTION_REJECT = "REJECT";
@@ -48,8 +46,10 @@ public class RequestService extends IntentService {
     }
 
     /**
-     * creates a new Request
+     * creates a new Request.
+     * Broadcasts if an error occurred as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param user  the user who sends the request
      * @param group the group the user wants to be a member of
      */
@@ -75,6 +75,7 @@ public class RequestService extends IntentService {
      * Adds the user to the group and deletes the Request if the founder of the group wants the user to be in the group
      * Broadcasts if an error occurred as defined in Jsonparameter.ErrorCodes
      *
+     * @param context the android context to start the service
      * @param request the request the founder has made a decision about
      */
     public void accept(Context context, Request request) {
