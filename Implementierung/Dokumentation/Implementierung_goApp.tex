@@ -275,7 +275,12 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	-Abstimmung Client/Server
 	-UnitTests
 	-Google Verification
-	1. geplantes Diagramm
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=.5\textwidth]{ImplementationPlanDiagram.jpg}
+		\caption{Das Implementierungsplandiagramm, vor der Implementierung.}
+	\end{figure}
 	2. "richtiges" Diagramm
 	
 	\newpage
@@ -478,11 +483,11 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	\subsection{Client}
 	\subsubsection{HTTPConnection}
 	\subsubsection{View}
-	Für die View haben wir keine Testfälle implementiert da diese sich genauso gut "von Hand" testen lässt. Durch einfaches benutzen der goApp können wir garantieren das die View sich so verhält wie wir als Implementierer es erwarten.
-Auch in der nächsten Phase werden wir die View nicht mit klassischen Unit-Tests abdecken, sondern durch Monkey-Tests die Robustheit unserer Applikation bei Eingaben jeglicher Art zu überprüfen.
+	Für die View haben wir keine Testfälle implementiert da diese sich besser "von Hand" testen lässt. Durch einfaches benutzen der goApp können wir überprüfen, dass die View sich so verhält wie wir als Implementierer es erwarten.
+Auch in der nächsten Phase werden wir die View nicht mit klassischen Unit-Tests abdecken, sondern durch Monkey-Tests die Robustheit unserer Applikation bei Eingaben jeglicher Art sicher stellen.
 Ebenfalls wird die goApp an die ersten User verteilt um uns Feedback über die hoffentlich intuitive Bedienbarkeit der GUI einzuholen.
 
 	\subsubsection{Controller}
 	Es ist nicht möglich Intent Services mit Unit-Tests zu testen.  Da unser Controller wie im Entwurf beschrieben nur Intent Services implementiert existieren hier also keine Unit-Tests.
-Dies ist nicht weiter schlimm weil die Services zum großen Teil "nur" das Gegenstück zu den Servlets bilden und kaum weitere Logik die getestet werden müsste ausführen.
+Allerdings ist der Großteil der Logik in die Klasse UtilService ausgelagert. 
 \end{document}
