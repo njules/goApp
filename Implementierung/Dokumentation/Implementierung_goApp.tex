@@ -262,26 +262,24 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 			\item[WFA175] Die Dauer des Termins kann individuell festgelegt werden
 	\end{itemize}	
 
-	\subsubsection{Qualitative Anforderungen}
-	%TODO: zumindest bisher nicht, entweder weg lassen oder bei erfüllt
-	\begin{itemize}
-			\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App
-	\end{itemize}
 	
 	\newpage
 	\section{Implementierungsplan}
 	Während der Implementierungsphase haben sich einige Änderungen gegenüber unserem geplanten Verlauf ergeben.
-	Zuerst hat jeder an seinem Teil der App auf dem Client bzw. Server gearbeitet. Dabei haben wir festgestellt, dass wir einige Änderungen brauchen
-	-Abstimmung Client/Server
-	-UnitTests
-	-Google Verification
+	Hauptgrund hierfür war vorallem eine Unterschätzung des gesamt Aufwandes. Insbesondere die Arbeit auf dem Clienten wurde unterschätzt da sich aufgrund der direkten Interaktion mit Benutztern viele Randfälle ergeben.
 	
+
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width=.5\textwidth]{ImplementationPlanDiagram.jpg}
+		\includegraphics[width=0.8\textwidth]{ImplementationPlanDiagram.jpg}
 		\caption{Das Implementierungsplandiagramm, vor der Implementierung.}
 	\end{figure}
-	2. "richtiges" Diagramm
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\textwidth]{ImplementationDiagram.jpg}
+		\caption{Das Implementierungsdiagramm.}
+	\end{figure}
 	
 	\newpage
 	\section{Unit-Tests}
