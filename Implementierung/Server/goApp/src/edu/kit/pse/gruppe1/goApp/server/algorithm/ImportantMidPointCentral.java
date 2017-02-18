@@ -54,7 +54,7 @@ public class ImportantMidPointCentral extends CentralPointAlgo {
         longitude /= ((double) 3 / 2) * list.size();
         latitude /= ((double) 3 / 2) * list.size();
 
-        DoublePoint result = new DoublePoint(new double[] { longitude, latitude });
+        DoublePoint result = new DoublePoint(new double[] {longitude, latitude });
 
         return result;
 

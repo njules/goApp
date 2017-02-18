@@ -12,6 +12,13 @@ import org.apache.commons.math4.ml.clustering.DoublePoint;
 public class SimpleCentral extends CentralPointAlgo {
 
     /**
+     * Constructor
+     */
+    public SimpleCentral() {
+
+    }
+
+    /**
      *
      * This is the method which returns the artihmetic central of a cluster
      * 
@@ -37,7 +44,7 @@ public class SimpleCentral extends CentralPointAlgo {
         longitude /= list.size();
         latitude /= list.size();
 
-        DoublePoint result = new DoublePoint(new double[] { longitude, latitude });
+        DoublePoint result = new DoublePoint(new double[] {longitude, latitude });
 
         return result;
 

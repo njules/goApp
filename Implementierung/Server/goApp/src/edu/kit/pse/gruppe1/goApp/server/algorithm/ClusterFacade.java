@@ -135,7 +135,7 @@ public class ClusterFacade {
             if (!(userLocation == null)) {
 
                 userPoint = new DoublePoint(
-                        new double[] { userLocation.getLongitude(), userLocation.getLatitude() }); // Build
+                        new double[] {userLocation.getLongitude(), userLocation.getLatitude() }); // Build
                                                                                                    // a
                                                                                                    // DoublePoint
                                                                                                    // from
