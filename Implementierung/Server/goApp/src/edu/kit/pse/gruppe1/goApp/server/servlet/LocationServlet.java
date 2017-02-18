@@ -111,8 +111,7 @@ public class LocationServlet extends HttpServlet {
             return false;
         }
 
-        return eventUser.updateLocation(userId, new Location(lon, lat, null,
-                new Timestamp(System.currentTimeMillis() + (45L * 60L * 1000L))));
+        return eventUser.updateLocation(userId, new Location(lon, lat, null));
         // 45 Minutes after current time
     }
 

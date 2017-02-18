@@ -86,6 +86,8 @@ public class UserManagement implements Management {
      * @return true, if update was successfull, otherwise false
      */
     public boolean updateLocation(int userId, Location newLocation) {
+        newLocation
+                .setDeletionTime(new Timestamp(System.currentTimeMillis() + (45L * 60L * 1000L)));
         User user = getUser(userId);
         if (user == null) {
             return false;
