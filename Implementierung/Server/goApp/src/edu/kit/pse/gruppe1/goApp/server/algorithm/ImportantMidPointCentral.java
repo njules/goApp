@@ -13,17 +13,20 @@ public class ImportantMidPointCentral extends CentralPointAlgo {
 
     private DoublePoint eventLocation;
 
-    /*
-     * Constructor which also got the events location;
+    /**
+     * Constructor which also gets the events location;
      */
     public ImportantMidPointCentral(DoublePoint eventLocation) {
         this.eventLocation = eventLocation;
     }
 
-    /*
-     * calculates the Midpoint of a cluster an a eventsLocation. The clusters midpoint is weighted
-     * twice.
-     */
+    /**
+	*
+	*This is the method which returns the artihmetic central of a cluster and the midpoint of the event
+	*@param DoublePoint Cluster
+	*@return The arithmetic midpoint
+	*/
+     
     @Override
     public DoublePoint calculateCentralPoint(Cluster<DoublePoint> cluster) {
 
