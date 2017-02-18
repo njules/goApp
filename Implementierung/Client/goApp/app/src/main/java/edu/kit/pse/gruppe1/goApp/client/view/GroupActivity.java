@@ -34,7 +34,6 @@ import java.sql.Timestamp;
 public class GroupActivity extends AppCompatActivity implements View.OnClickListener {
     private GroupActivityBinding binding;
     private Group group;
-    private Event eventMove;
     private int deletePosition;
     private RecyclerView newEventRecylcerView;
     private RecyclerView acceptedEventRecyclerView;
@@ -144,11 +143,11 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 case ParticipateService.RESULT_STATUS:
                     int resultStatus = intent.getIntExtra(UtilService.STATUS, 0);
                     if (resultStatus == Status.PARTICIPATE.getValue()) {
-                        accept(context);
+                        accept(context,(Event)intent.getParcelableExtra(UtilService.EVENT));
                     } else if (resultStatus == Status.REJECTED.getValue()) {
                         newEventAdapter.deleteItem(deletePosition);
                     } else if (resultStatus == Status.STARTED.getValue()) {
-                        EventActivity.start(GroupActivity.this, eventMove);
+                        EventActivity.start(GroupActivity.this, (Event) intent.getParcelableExtra(UtilService.EVENT));
                     }
                     break;
                 default:
@@ -162,16 +161,15 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
          *
          * @param context is needed to start Services out of this method.
          */
-        private void accept(Context context) {
+        private void accept(Context context,Event intentEvent) {
             newEventAdapter.deleteItem(deletePosition);
             if (acceptedEventAdapter == null) {
-                Log.i("GroupActivity", eventMove.getName());
-                Event[] accEvents = {eventMove};
+                Log.i("GroupActivity", intentEvent.getName());
+                Event[] accEvents = {intentEvent};
                 acceptedEventAdapter = new AcceptedEventAdapter(accEvents, new ItemClickListener() {
                     @Override
                     public void onItemClicked(int position, View view) {
                         Event event = acceptedEventAdapter.getItem(position);
-                        eventMove = event;
                         switch (view.getId()) {
                             case R.id.start_event:
                                 participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.STARTED);
@@ -183,14 +181,14 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 });
                 acceptedEventRecyclerView.setAdapter(acceptedEventAdapter);
             } else {
-                Log.i("GroupActivity", eventMove.getName());
-                acceptedEventAdapter.insertItem(eventMove);
+                Log.i("GroupActivity", intentEvent.getName());
+                acceptedEventAdapter.insertItem(intentEvent);
             }
 
-            if (new Timestamp(eventMove.getTime().getTime() - beforeEvent).before(new Timestamp(System.currentTimeMillis()))) {
+            if (new Timestamp(intentEvent.getTime().getTime() - beforeEvent).before(new Timestamp(System.currentTimeMillis()))) {
                 Intent locationIntent = new Intent(context, LocationService.class);
                 locationIntent.setAction(LocationService.ACTION_LOCATION);
-                locationIntent.putExtra(UtilService.EVENT, eventMove);
+                locationIntent.putExtra(UtilService.EVENT, intentEvent);
                 context.startService(locationIntent);
                 return;
             } else {
@@ -199,13 +197,13 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 Intent notifyIntent = new Intent(context, NotificationService.class);
                 notifyIntent.putExtra(UtilService.GROUP, Preferences.getGroup());
                 notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
-                notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, eventMove.getTime().getTime() - beforeEvent, notifyAlarmIntent);
+                notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, intentEvent.getTime().getTime() - beforeEvent, notifyAlarmIntent);
 
                 eventAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 Intent eventIntent = new Intent(context, LocationService.class);
-                eventIntent.putExtra(UtilService.EVENT, eventMove);
+                eventIntent.putExtra(UtilService.EVENT, intentEvent);
                 eventAlarmIntent = PendingIntent.getService(context, 0, eventIntent, 0);
-                eventAlarmMgr.setExact(AlarmManager.RTC, eventMove.getTime().getTime() - beforeEvent, eventAlarmIntent);
+                eventAlarmMgr.setExact(AlarmManager.RTC, intentEvent.getTime().getTime() - beforeEvent, eventAlarmIntent);
             }
         }
 
@@ -221,7 +219,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onItemClicked(int position, View view) {
                         Event event = acceptedEventAdapter.getItem(position);
-                        eventMove = event;
                         switch (view.getId()) {
                             case R.id.start_event:
                                 participateService.setStatus(GroupActivity.this, event, Preferences.getUser(), Status.STARTED);
@@ -238,7 +235,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onItemClicked(int position, View view) {
                         Event event = newEventAdapter.getItem(position);
-                        eventMove = event;
                         deletePosition = position;
                         switch (view.getId()) {
                             case R.id.accept_event:

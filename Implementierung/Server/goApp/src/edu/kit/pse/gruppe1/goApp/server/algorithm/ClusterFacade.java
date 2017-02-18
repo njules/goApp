@@ -142,7 +142,7 @@ public class ClusterFacade {
         
         for(DoublePoint point : pointList) {
             
-            locations.add(new Location(point.getPoint()[0], point.getPoint()[1],null));
+            locations.add(new Location(point.getPoint()[0], point.getPoint()[1],""));
             
         }
         

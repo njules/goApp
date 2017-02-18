@@ -92,7 +92,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
         requestRecyclerView.setHasFixedSize(true);
         requestLayoutManager = new LinearLayoutManager(this);
         requestRecyclerView.setLayoutManager(requestLayoutManager);
-        requestSearchService.getRequestsByUser(this, user); //TODO doesnt work
+        requestSearchService.getRequestsByUser(this, user);
     }
 
     @Override

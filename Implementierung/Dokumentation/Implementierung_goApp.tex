@@ -1,4 +1,3 @@
-
 \documentclass{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -30,6 +29,7 @@
 	Anschluss auf Plichtenheft \& Entwurf
 	Allgemeine Beschreibung der App
 	
+	Der folgende Bericht beschreibt den Ablauf der Implementierungsphase der goApp, sowie Änderungen im Vergleich zum Pflichtenheft und dem Entwurf. Die im Entwurf festgelegten Klassen wurden zum Großteil so umgesetzt wie im Entwurfsdokument beschrieben, wobei einzelne Änderungen im nächsten Abschnitt beschrieben werden. Dabei ist Anzumerken, dass das Programmgerüst anhand der entworfenen UML-Diagramme erzeugt wurde. Die im Pflichtenheft festgelegten Kriterien wurden bis auf einige Wunschkriterien umgesetzt, worauf im Abschnitt "Kriterien" näher eingegangen wird.
 	\newpage
 	\section{Änderungen am Entwurf}
 	Während der Impementierungsphase ergaben sich einige notwendige Änderungen gegenüber dem Entwurf. Diese sind im folgenden aufgeführt.
@@ -159,6 +159,8 @@ So ist es jetzt schon bei Betrachtung des Codes einer Activity durch den explizi
 Da die Servlets wie oben beschrieben verändert wurden mussten selbstvertändlich auch die Services angepasst werden, da die Services des Clienten das Gegenstück zu den Servlets bilden wenn es um die Kommunikation zwischen Server und Clienten geht.
 Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderung des Gegentücks hervorruft wird hier nicht auf weitere Änderungen der Services eingegangen da diese aus Kapitel 2.1.1 hervorgehen.
 
+\paragraph{UtilService} Die Klasse UtilService vereinigt Methoden die von verschiedene Services immer wieder aufgerufen werden müssen um JSON Parameter auszulesen. Um redunanten Code zu vermeiden haben wir deshalb auch auf dem Clienten diese statische Hilfsklasse eingeführt.  	
+
 	\newpage
 	\section{Kriterien}
 	Im Pflichtenheft wurden Kriterien für unsere App definiert. Im folgenden unterteilen wir diese in erfüllt bzw. nicht erfüllt.
@@ -262,26 +264,24 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 			\item[WFA175] Die Dauer des Termins kann individuell festgelegt werden
 	\end{itemize}	
 
-	\subsubsection{Qualitative Anforderungen}
-	%TODO: zumindest bisher nicht, entweder weg lassen oder bei erfüllt
-	\begin{itemize}
-			\item[QA40] Bei 99\% aller Anwendungen werden Fehler abgefangen und führen nicht zum Absturz der App
-	\end{itemize}
 	
 	\newpage
 	\section{Implementierungsplan}
 	Während der Implementierungsphase haben sich einige Änderungen gegenüber unserem geplanten Verlauf ergeben.
-	Zuerst hat jeder an seinem Teil der App auf dem Client bzw. Server gearbeitet. Dabei haben wir festgestellt, dass wir einige Änderungen brauchen
-	-Abstimmung Client/Server
-	-UnitTests
-	-Google Verification
+	Hauptgrund hierfür war vorallem eine Unterschätzung des gesamt Aufwandes. Insbesondere die Arbeit auf dem Clienten wurde unterschätzt da sich aufgrund der direkten Interaktion mit Benutztern viele Randfälle ergeben.
 	
+
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width=.5\textwidth]{ImplementationPlanDiagram.jpg}
+		\includegraphics[width=0.8\textwidth]{ImplementationPlanDiagram.jpg}
 		\caption{Das Implementierungsplandiagramm, vor der Implementierung.}
 	\end{figure}
-	2. "richtiges" Diagramm
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\textwidth]{ImplementationDiagram.jpg}
+		\caption{Das Implementierungsdiagramm.}
+	\end{figure}
 	
 	\newpage
 	\section{Unit-Tests}
@@ -482,6 +482,12 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	
 	\subsection{Client}
 	\subsubsection{HTTPConnection}
+	\subparagraph{public void testSendGetRequest()}	
+	Der Test überprüft, dass die get-Anfragen an den Server funktionieren.
+	\subparagraph{public void testSendPostRequest()}
+	Der Test überprüft, dass die post-Anfragen an den Server funktionieren.
+	\subparagraph{public void testConnectionFailed()}
+	Der Test überprüft, dass wenn ein Service nicht erreichbar ist ConnectionFailed zurück gegeben wird.
 	\subsubsection{View}
 	Für die View haben wir keine Testfälle implementiert da diese sich besser "von Hand" testen lässt. Durch einfaches benutzen der goApp können wir überprüfen, dass die View sich so verhält wie wir als Implementierer es erwarten.
 Auch in der nächsten Phase werden wir die View nicht mit klassischen Unit-Tests abdecken, sondern durch Monkey-Tests die Robustheit unserer Applikation bei Eingaben jeglicher Art sicher stellen.
@@ -490,4 +496,23 @@ Ebenfalls wird die goApp an die ersten User verteilt um uns Feedback über die h
 	\subsubsection{Controller}
 	Es ist nicht möglich Intent Services mit Unit-Tests zu testen.  Da unser Controller wie im Entwurf beschrieben nur Intent Services implementiert existieren hier also keine Unit-Tests.
 Allerdings ist der Großteil der Logik in die Klasse UtilService ausgelagert. 
+
+	\paragraph{UtilService}
+	\subparagraph{public void getGroups()}
+	Dieser Test überprüft das erfolgreiche erstellen eines Group Arrays aus einem JSON Objekt.
+	\subparagraph{public void getUsers()}
+	Dieser Test überprüft das erfolgreiche erstellen eines User Arrays aus einem JSON Objekt.
+	\subparagraph{public void getParticipants()}
+	Dieser Test überprüft das erfolgreiche erstellen eines User Arrays, aus einem JSON Objekt wobei hier jeder User einen Status hat.
+	\subparagraph{public void getLocations()}
+	Dieser Test überprüft das erfolgreiche erstellen eines Location Arrays aus einem JSON Objekt.
+	\subparagraph{public void isErrorTrue()}
+	Dieser Test überprüft das erkennen von Fehlern.
+	\subparagraph{public void isErrorFalse()}
+	Dieser Test überprüft das erkennen einer Fehlerfreien Kommunikation mit dem Server. 
+	\subparagraph{public void getError()}
+	Dieser Test überprüft ob ein Error Code als der richtige erkannt wird.
+	\subparagraph{public void getEvents()}
+	Dieser Test überprüft das erfolgreiche erstellen eines Event Arrays aus einem JSON Objekt.
+	
 \end{document}
