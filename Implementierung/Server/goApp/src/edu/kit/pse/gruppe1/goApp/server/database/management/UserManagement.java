@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -149,5 +150,23 @@ public class UserManagement implements Management {
         session.delete(user);
         session.getTransaction().commit();
         return true;
+    }
+
+    /**
+     * deletes old user locations
+     */
+    public void deleteOldLocations() {
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        List<Location> locations = session.createCriteria(Location.class)
+                .add(Restrictions.isNotNull("deletionTime"))
+                .add(Restrictions.lt("deletionTime", time)).list();
+
+        for (Location location : locations) {
+            session.delete(location);
+        }
+        session.getTransaction().commit();
     }
 }

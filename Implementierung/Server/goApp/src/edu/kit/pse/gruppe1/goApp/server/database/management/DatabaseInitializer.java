@@ -6,6 +6,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import edu.kit.pse.gruppe1.goApp.server.EventDeletionTimer;
+import edu.kit.pse.gruppe1.goApp.server.LocationDeletionTimer;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
@@ -42,7 +43,8 @@ public class DatabaseInitializer {
             factory = configuration.buildSessionFactory(serviceRegistry);
 
             // start thread that delete old events
-            eventDeletionTimer = new EventDeletionTimer(2, 60);
+            // eventDeletionTimer = new EventDeletionTimer(2, 60);
+            new LocationDeletionTimer(30);
         }
         return factory;
     }

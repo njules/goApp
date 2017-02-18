@@ -42,7 +42,6 @@
 	%Go: setStarted wird in Participate.setStatus mit reingenommen
 	%Go: getStarted wird in Event.get integriert
 	
-	
 	\paragraph{EventServlet}
 	Die Methode getEvent wurde durch getParticipates ersetzt. Im momentanen Zustand braucht unsere App keine eigene Methode getEvents über die eventId, da die Events über die Gruppe gelesen werden. 
 	Darüber bekommt man nur die Teilnehmer nicht, weswegen dafür eine eigene Methode benötigt wird.
@@ -88,6 +87,8 @@
 	\subsection{Database Management}
 	\paragraph{EventDeletionTimer}
 	Läuft im Hintergrund und löscht Events nachdem deren Startzeitpunkt eine Stunde in der Vergangenheit liegt.
+	\paragraph{LocationDeletionTimer}
+	Läuft im Hintergrund und löscht veraltete Locations von Usern.
 	\paragraph{GroupManagement}	
 	Die Methoden getGroupsByMember,addMember und deleteMember wurden durch Methoden getGroups,add und delete in GroupUserManagement ersetzt.
 	\paragraph{UserManagement}	
@@ -150,14 +151,16 @@ Im folgenden findet sich für jede Activity Änderungen welche Services von ihr 
 Sie alle erben von der Klasse IntentService, weshalb wir zusätzlich zum Konstruktor nur eine public Methode für jeden Service implementieren und zwar die Methode onHandleIntent(Intent intent). Weil diese Methode bei all unseren Services nur je nach Intent entscheidet, welche private Methode aufgerufen wird und das Ergebnis weiterleitet, haben wir uns dazu entschieden im folgenden nicht für jeden Service auf die besagte Methode einzugehen sondern jeweils die Methoden zu beschreiben welche durch onHandleIntent(Intent intent) aufgerufen werden, da dies unserer Meinung nach eine bessere Definition der Services Klassen liefert und damit für bessere Verständlichkeit sorgt.
 \\
 \\
-Zwar existieren die Methoden die wir daraufhin beschrieben haben nach wie vor(bis auf Änderungen die ebenfalls in diesem Kapitel erläutet werden).
+Zwar existieren die Methoden die wir daraufhin beschrieben haben nach wie vor(bis auf Änderungen die ebenfalls in diesem Kapitel erläutert werden).
 Allerdings sind die meisten der Methoden nicht mehr private sondern public. Bei den Services wo dies der Fall ist werden besagte Methoden von den Activities direkt aufgerufen und erstellen den Intent mit dem erst im nächsten Schritt OnHandleIntent(Intent intent) des Services und damit ein neuer Thread gestartet wird. 
-Die Funktionalität und der Rückgabewert der Services nach außen bleibt genau gleich aber für die Activities ändert sich die Schnittstelle wie entsprechende Services aufgerufen werden.
-So ist es jetzt schon bei Betrachtung des Codes einer Activity durch den expliziten Aufruf einer standartisierten Methode zum erstellen eines speziellen Intents klar, welche Daten der Client an dieser Stelle mit dem Server austauschen soll.    
+Die Funktionalität und der Rückgabewert der Services nach außen bleibt genau gleich, aber für die Activities ändert sich die Schnittstelle wie entsprechende Services aufgerufen werden.
+So ist es jetzt schon bei Betrachtung des Codes einer Activity durch den expliziten Aufruf einer standardisierten Methode zum erstellen eines speziellen Intents klar, welche Daten der Client an dieser Stelle mit dem Server austauschen soll.    
 \\
 \\
-Da die Servlets wie oben beschrieben verändert wurden mussten selbstvertändlich auch die Services angepasst werden, da die Services des Clienten das Gegenstück zu den Servlets bilden wenn es um die Kommunikation zwischen Server und Clienten geht.
-Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderung des Gegentücks hervorruft wird hier nicht auf weitere Änderungen der Services eingegangen da diese aus Kapitel 2.1.1 hervorgehen.
+Da die Servlets wie oben beschrieben verändert wurden mussten selbstverständlich auch die Services angepasst werden, da die Services des Clienten das Gegenstück zu den Servlets bilden wenn es um die Kommunikation zwischen Server und Clienten geht.
+Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderung des Gegenstücks hervorruft wird hier nicht auf weitere Änderungen der Services eingegangen da diese aus Kapitel 2.1.1 hervorgehen.
+
+\paragraph{UtilService} Die Klasse UtilService vereinigt Methoden die von verschiedene Services immer wieder aufgerufen werden müssen um JSON Parameter auszulesen. Um redunanten Code zu vermeiden haben wir deshalb auch auf dem Clienten diese statische Hilfsklasse eingeführt.  	
 
 	\newpage
 	\section{Kriterien}
@@ -266,7 +269,7 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	\newpage
 	\section{Implementierungsplan}
 	Während der Implementierungsphase haben sich einige Änderungen gegenüber unserem geplanten Verlauf ergeben.
-	Hauptgrund hierfür war vorallem eine Unterschätzung des gesamt Aufwandes. Insbesondere die Arbeit auf dem Clienten wurde unterschätzt da sich aufgrund der direkten Interaktion mit Benutztern viele Randfälle ergeben.
+	Hauptgrund hierfür war vorallem eine Unterschätzung des gesamt Aufwandes. Insbesondere die Arbeit auf dem Clienten wurde unterschätzt, da sich aufgrund der direkten Interaktion mit Benutzern viele Randfälle ergeben.
 	
 
 	\begin{figure}[h]
@@ -283,14 +286,16 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	
 	\newpage
 	\section{Unit-Tests}
-	Zum Testen uneres Codes haben wir Unit-Tests benutzt. In dieser Phase prüfen wir nur die Funktionalität. Weitere Tests zu Fehlerfällen folgen in der Testphase.
+	Zum Testen unseres Codes haben wir Unit-Tests benutzt. In dieser Phase prüfen wir nur die Funktionalität. Weitere Tests zu Fehlerfällen folgen in der Testphase.
 	\subsection{Server}
 	\subsubsection{Datenbank}
-	Um die Management Klassen, welche über Hibernate mit der Datenbank kommunizieren, zu testen haben wir auf dem PC eine MySQL-Datenbank erstellt. Jeder Testfall erstellt erst alle Daten die er zum Testen benötigt, macht dann Datenbankabfragen und löscht die Daten wieder. Dadurch ist der Ausgangszustand für jeden Testfall immer klar definiert.
+	Um die Management Klassen, welche über Hibernate mit der Datenbank kommunizieren, zu testen haben wir auf dem PC eine MySQL-Datenbank erstellt. Jeder Testfall erstellt erst alle Daten, die er zum Testen benötigt, macht dann Datenbankabfragen und löscht die Daten wieder. Dadurch ist der Ausgangszustand für jeden Testfall immer klar definiert.
 	\paragraph{DatabaseInitializer - DatabaseInitializerTest}	
 	Testet ob das initialisieren der Datenbank klappt.
 	\paragraph{EventDeletionTimer - EventDeletionTimerTest}	
 	Die	EventDeletionTimerTest Klasse stellt sicher, dass das periodische löschen von veralteten Events funktioniert.
+		\paragraph{LocationDeletionTimer - LocationDeletionTimerTest}	
+	Die	LocationDeletionTimerTest Klasse stellt sicher, dass das periodische löschen von veralteten Locations funktioniert.
 	\paragraph{EventManagement - EventManagementTest}	
 	\subparagraph{public void testUpdate()}
 	Der Test überprüft, dass die update Methode die Änderungen an einem Event in die Datenbank überträgt.	
@@ -391,7 +396,7 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
    	
    	
 	\subsubsection{Algorithmus}
-	Zum Einen wird hier überprüft ob der selbstgeschriebene Mittelpunktalgorithmus das korrekte Ergebnis ausgibt und auch Nullparameter richtig verarbeitet, zum Anderen wird die Klasse ClusterFacade durch Benutzung von Mockito auf die richtige Arbeitsweise überprüft, dabei wird die Richtigkeit der importierten Clusteralgorithmen vorrausgesetzt. 
+	Zum Einen wird hier überprüft ob der selbstgeschriebene Mittelpunktalgorithmus das korrekte Ergebnis ausgibt und auch Nullparameter richtig verarbeitet, zum Anderen wird die Klasse ClusterFacade durch Benutzung von Mockito auf die richtige Arbeitsweise überprüft, dabei wird die Richtigkeit der importierten Clusteralgorithmen vorausgesetzt. 
 	\subsubsection{Servlet}
 	Zum Testen der Servlets werden die jeweiligen Management Klassen der Datenbank, sowie HTTP requests gemockt.
 	\paragraph{EventServlet}

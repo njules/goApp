@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import edu.kit.pse.gruppe1.goApp.server.model.*;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.Request;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 /**
  * Manages Request Table

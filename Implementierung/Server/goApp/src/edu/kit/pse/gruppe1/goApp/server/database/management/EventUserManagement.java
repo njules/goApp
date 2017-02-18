@@ -6,7 +6,11 @@ import java.util.Set;
 
 import org.hibernate.Session;
 
-import edu.kit.pse.gruppe1.goApp.server.model.*;
+import edu.kit.pse.gruppe1.goApp.server.model.Event;
+import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.model.Participant;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 /**
  * Manages Event-User Table

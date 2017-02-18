@@ -8,7 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ DatabaseInitializerTest.class, EventDeletionTimerTest.class,
         EventManagementTest.class, EventUserManagementTest.class, GroupManagementTest.class,
         GroupUserManagementTest.class, ThreadTest.class, UserManagementTest.class,
-        RequestManagementTest.class })
+        RequestManagementTest.class, LocationDeletionTimerTest.class })
 public class AllDatabaseManagementTests {
 
 }

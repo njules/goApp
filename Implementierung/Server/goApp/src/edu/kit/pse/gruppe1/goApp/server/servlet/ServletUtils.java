@@ -1,9 +1,5 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
@@ -15,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
@@ -156,6 +155,15 @@ public final class ServletUtils {
         return json;
     }
 
+    /**
+     * create JSONObject for a User
+     * 
+     * @param user
+     *            User to serialize
+     * @param status
+     *            status of the user on the requested event
+     * @return Serialized object
+     */
     protected static JSONObject createJSONPartFromUser(User user, Status status) {
         JSONObject json = new JSONObject();
         try {

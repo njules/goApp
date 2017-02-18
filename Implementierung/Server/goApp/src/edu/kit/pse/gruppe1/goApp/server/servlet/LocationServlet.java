@@ -1,9 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +18,6 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
-import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -104,7 +102,6 @@ public class LocationServlet extends HttpServlet {
         int userId = -1;
         double lat = -1;
         double lon = -1;
-        User user = null;
         try {
             userId = json.getInt(JSONParameter.USER_ID.toString());
             lat = json.getDouble(JSONParameter.LATITUDE.toString());
@@ -114,7 +111,9 @@ public class LocationServlet extends HttpServlet {
             return false;
         }
 
-        return eventUser.updateLocation(userId, new Location(lon, lat, null));
+        return eventUser.updateLocation(userId, new Location(lon, lat, null,
+                new Timestamp(System.currentTimeMillis() + (45L * 60L * 1000L))));
+        // 45 Minutes after current time
     }
 
     /**
@@ -141,7 +140,7 @@ public class LocationServlet extends HttpServlet {
         }
         ClusterFacade f = new ClusterFacade();
         List<Location> cluster = f.getClusteredLocations(evt);
-        
+
         return ServletUtils.createJSONListLoc(cluster);
     }
 }

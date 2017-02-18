@@ -130,6 +130,9 @@ public class GroupManagement implements Management {
                 .add(Restrictions.ilike("name", searchName, MatchMode.ANYWHERE))
                 .addOrder(Property.forName("name").asc()).list();
         session.getTransaction().commit();
+        if (groups.size() > 50) {
+            groups = groups.subList(0, 50);
+        }
         return groups;
     }
 
