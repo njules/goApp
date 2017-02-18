@@ -16,8 +16,8 @@ public abstract class CentralPointAlgo {
   /**
    * This is the abstract method for calculating a clusters' central point.
    * 
-   * @param cluster
-   *          This is the cluster which central point should be calculated.
+   * @param cluster: This is the cluster which central point should be calculated.
+   * @return midpoint of cluster
    */
   public abstract DoublePoint calculateCentralPoint(Cluster<DoublePoint> cluster);
 
