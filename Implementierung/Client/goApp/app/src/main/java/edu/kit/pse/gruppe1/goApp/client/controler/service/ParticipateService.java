@@ -49,6 +49,7 @@ public class ParticipateService extends IntentService {
         Intent requestIntent = new Intent(context, this.getClass());
         requestIntent.putExtra(UtilService.JSON, requestJson.toString());
         requestIntent.putExtra(UtilService.STATUS, status.getValue());
+        requestIntent.putExtra(UtilService.EVENT,event);
         requestIntent.setAction(ACTION_STATUS);
 
         context.startService(requestIntent);    //starts the IntentService to communicate with the server on a new thread
@@ -66,6 +67,7 @@ public class ParticipateService extends IntentService {
                 resultIntent.putExtra(UtilService.ERROR, UtilService.getError(result));
             } else {
                 resultIntent.putExtra(UtilService.STATUS, intent.getIntExtra(UtilService.STATUS, 0));
+                resultIntent.putExtra(UtilService.EVENT,intent.getParcelableExtra(UtilService.EVENT));
             }
             LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this.getApplicationContext());
             manager.sendBroadcast(resultIntent);
