@@ -26,29 +26,24 @@
 	\tableofcontents
 	\newpage
 
-	\section{Einleitung}%TODO
-	Anschluss auf Plichtenheft \& Entwurf
-	Allgemeine Beschreibung der App
+	\section{Einleitung}
 	
 	Der folgende Bericht beschreibt den Ablauf der Implementierungsphase der goApp, sowie Änderungen im Vergleich zum Pflichtenheft und dem Entwurf. Die im Entwurf festgelegten Klassen wurden zum Großteil so umgesetzt wie im Entwurfsdokument beschrieben, wobei einzelne Änderungen im nächsten Abschnitt beschrieben werden. Dabei ist Anzumerken, dass das Programmgerüst anhand der entworfenen UML-Diagramme erzeugt wurde. Die im Pflichtenheft festgelegten Kriterien wurden bis auf einige Wunschkriterien umgesetzt, worauf im Abschnitt "Kriterien" näher eingegangen wird.
 	\newpage
 	\section{Änderungen am Entwurf}
-	Während der Impementierungsphase ergaben sich einige notwendige Änderungen gegenüber dem Entwurf. Diese sind im folgenden aufgeführt.
+	Während der Implementierungsphase ergaben sich einige notwendige Änderungen gegenüber dem Entwurf. Diese sind im folgenden aufgeführt.
 	
 	\subsection{Server}
 	\subsubsection{Servlet}
 	\paragraph{GoServlet}
-	Das GoServlet wird nicht mehr gebraucht und wird gelöscht. Die Funktionalität die dier Klasse wurde in das ParticipateServlet integriert.
-	%TODO GoServlet wird gelöscht
-	%Go: setStarted wird in Participate.setStatus mit reingenommen
-	%Go: getStarted wird in Event.get integriert
+	Das GoServlet wird nicht mehr gebraucht und wird gelöscht. Die Funktionalität dieser Klasse wurde in das ParticipateServlet, bzw. EventServlet integriert.
 	
 	\paragraph{EventServlet}
-	Die Methode getEvent wurde durch getParticipates ersetzt. Im momentanen Zustand braucht unsere App keine eigene Methode getEvents über die eventId, da die Events über die Gruppe gelesen werden. 
-	Darüber bekommt man nur die Teilnehmer nicht, weswegen dafür eine eigene Methode benötigt wird.
+	Die Methode getEvent wurde durch getParticipant ersetzt. Im momentanen Zustand braucht unsere App keine eigene Methode getEvents über die eventId, da die Events über die Gruppe gelesen werden. 
+	Es fehlen nur die Informationen über die dazugehörigen Teilnehmer, weswegen dafür eine eigene Methode benötigt wird.
 	
 	\paragraph{GroupServlet}
-	Aus getGroups wurde getMembers, da die Gruppe schon beim Erstellen auf den Client geholt wird. 	%TODO. warum
+	Aus getGroups wurde getMembers, da die Gruppe schon beim Erstellen auf den Client geholt wird und somit nur die Mitglieder der Gruppe gebraucht werden.
 	
 	\paragraph{LocationServlet}
 	Die beiden Methoden setGPS, sowie setCluster werden zusammen über snycLocation aufgerufen. %TODO: warum 
@@ -75,7 +70,7 @@
 	
 	\subsection{Model}
 	\paragraph{User}
-	Zusätzlich zu der id des Users in der Datenbank, die Google-id als String.
+	Zusätzlich zu der id des Users in der Datenbank, die Google-Id als String.
 	\paragraph{Group}
 	Konstruktor hat nun zusätzlich den Gründer (User) als Parameter.
 		\paragraph{Event}
@@ -84,7 +79,7 @@
 
 	\paragraph{Participant \& Status}
 	Der Status in Participant ist zu einem Enum geworden.
-	Der Status kann Inivted, Participate, Started oder Rejected sein.	
+	Der Status kann Invited, Participate, Started oder Rejected sein.	
 	\subsection{Database Management}
 	\paragraph{EventDeletionTimer}
 	Läuft im Hintergrund und löscht Events nachdem deren Startzeitpunkt eine Stunde in der Vergangenheit liegt.
@@ -117,7 +112,7 @@
 Im folgenden findet sich für jede Activity Änderungen welche Services von ihr gestartet werden können. 
 	
 	\paragraph{StartActivity}$~~$\\
-	Zusäzliche Service Aufrufe:
+	Zusätzliche Service Aufrufe:
 	\begin{itemize}
 	\item RequestService
 	\end{itemize}
@@ -128,7 +123,7 @@ Im folgenden findet sich für jede Activity Änderungen welche Services von ihr 
 
 	\paragraph{GroupActivity}$~~$\\
 
-	Zusäzliche Service Aufrufe:
+	Zusätzliche Service Aufrufe:
 	\begin{itemize}
 	\item GroupService
 	\end{itemize}
@@ -140,7 +135,7 @@ Im folgenden findet sich für jede Activity Änderungen welche Services von ihr 
 
 	\paragraph{EventActivity}$~~$\\
 
-	Zusäzliche Service Aufrufe:
+	Zusätzliche Service Aufrufe:
 	\begin{itemize}
 	\item EventService
 	\end{itemize}
@@ -153,7 +148,7 @@ Sie alle erben von der Klasse IntentService, weshalb wir zusätzlich zum Konstru
 \\
 \\
 Zwar existieren die Methoden die wir daraufhin beschrieben haben nach wie vor(bis auf Änderungen die ebenfalls in diesem Kapitel erläutert werden).
-Allerdings sind die meisten der Methoden nicht mehr private sondern public. Bei den Services wo dies der Fall ist werden besagte Methoden von den Activities direkt aufgerufen und erstellen den Intent mit dem erst im nächsten Schritt OnHandleIntent(Intent intent) des Services und damit ein neuer Thread gestartet wird. 
+Allerdings sind die meisten der Methoden nicht mehr private sondern public. Bei den Services, wo dies der Fall ist werden besagte Methoden von den Activities direkt aufgerufen und erstellen den Intent, mit welchem erst im nächsten Schritt OnHandleIntent(Intent intent) des Services und damit ein neuer Thread gestartet wird. 
 Die Funktionalität und der Rückgabewert der Services nach außen bleibt genau gleich, aber für die Activities ändert sich die Schnittstelle wie entsprechende Services aufgerufen werden.
 So ist es jetzt schon bei Betrachtung des Codes einer Activity durch den expliziten Aufruf einer standardisierten Methode zum erstellen eines speziellen Intents klar, welche Daten der Client an dieser Stelle mit dem Server austauschen soll.    
 \\
@@ -161,7 +156,7 @@ So ist es jetzt schon bei Betrachtung des Codes einer Activity durch den explizi
 Da die Servlets wie oben beschrieben verändert wurden mussten selbstverständlich auch die Services angepasst werden, da die Services des Clienten das Gegenstück zu den Servlets bilden wenn es um die Kommunikation zwischen Server und Clienten geht.
 Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderung des Gegenstücks hervorruft wird hier nicht auf weitere Änderungen der Services eingegangen da diese aus Kapitel 2.1.1 hervorgehen.
 
-\paragraph{UtilService} Die Klasse UtilService vereinigt Methoden die von verschiedene Services immer wieder aufgerufen werden müssen um JSON Parameter auszulesen. Um redunanten Code zu vermeiden haben wir deshalb auch auf dem Clienten diese statische Hilfsklasse eingeführt.  	
+\paragraph{UtilService} Die Klasse UtilService vereinigt Methoden die von verschiedene Services immer wieder aufgerufen werden müssen um JSON Parameter auszulesen. Um redundanten Code zu vermeiden haben wir deshalb auch auf dem Clienten diese statische Hilfsklasse eingeführt.  	
 
 	\newpage
 	\section{Kriterien}
@@ -238,7 +233,6 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	
 	\newpage
 	\subsection{Nicht erfüllte Kriterien}
-	%TODO schön schreiben
 	Wir haben es nicht geschafft alle Wunsch-Kriterien zu implementieren. Diese können allerdings in zukünftigen Updates der goApp noch erfüllt werden.
 		\subsubsection{Kontoverwaltung}
 		\begin{itemize}
@@ -271,7 +265,7 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	\section{Implementierungsplan}
 	Während der Implementierungsphase haben sich einige Änderungen gegenüber unserem geplanten Verlauf ergeben.
 	
-	Unsere Woche Puffer am Ende haben wir durch eine Unterschätzung de Gesamtaufwandes  gebraucht. Insbesondere die Arbeit auf dem Client wurde unterschätzt, da sich aufgrund der direkten Interaktion mit Benutzern viele Randfälle ergeben.
+	Unsere Woche Puffer am Ende haben wir durch eine Unterschätzung des Gesamtaufwandes doch gebraucht. Insbesondere die Arbeit auf dem Client wurde unterschätzt, da sich aufgrund der direkten Interaktion mit Benutzern viele Randfälle ergeben.
 	
 	Zusätzlich ergab sich eine große Änderung fast direkt zu Beginn, da wir gemerkt haben, da das HTTPConntectionPackage weniger Arbeit braucht als gedacht und wir somit die Aufgaben Database(Model) und Management ganz Jonas zugeordnet haben und Eva dafür an der Servlets gearbeitet hat. 
 	
@@ -454,7 +448,7 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	\subparagraph{public void testCreateJSONParticipate()}
 	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem Participate Objekt.
 	\subparagraph{public void testCreateJSONListPart()}
-	
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes
 	\subparagraph{public void testCreateJSONEventID()}
 	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes mit nur der EventID aus einem Event Objekt.
 	\subparagraph{public void testCreateJSONEvent()}
@@ -466,21 +460,19 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	\subparagraph{public void testCreateJSONUser()}
 	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem User Objekt.	
 	\subparagraph{public void testCreateJSONListEvent()}
-	
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem User Objekt.
 	\subparagraph{public void testCreateJSONDoubleListEvent()}
-	
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus 2 Listen mit Event Objekten
 	\subparagraph{public void testCreateJSONListUsr()}
-	
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einer Liste von User Objekten.
 	\subparagraph{public void testCreateJSONListGrp()}
-	
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einer Liste von Group Objekten.
 	\subparagraph{public void testCreateJSONGroupID()}
 	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes mit nur der GroupID aus einem Group Objekt.	
 	\subparagraph{public void testCreateJSONListLoc()}
-	
+	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einer Liste von Location Objekten.
 	\subparagraph{public void testCreateJSONError() }
 	Dieser Test prüft das erfolgreiche Erstellen eines JSONObjektes aus einem ErrorCodes Objekt.
-	
-	\subparagraph{public void testExtractJSON()}
 
 	\paragraph{UserServlet}	
 	\subparagraph{public void testChangeName()}
@@ -496,7 +488,7 @@ Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderun
 	Der Test überprüft, dass wenn ein Service nicht erreichbar ist ConnectionFailed zurück gegeben wird.
 	\subsubsection{View}
 	Für die View haben wir keine Testfälle implementiert da diese sich besser "von Hand" testen lässt. Durch einfaches benutzen der goApp können wir überprüfen, dass die View sich so verhält wie wir als Implementierer es erwarten.
-Auch in der nächsten Phase werden wir die View nicht mit klassischen Unit-Tests abdecken, sondern durch Monkey-Tests die Robustheit unserer Applikation bei Eingaben jeglicher Art sicher stellen.
+Auch in der nächsten Phase werden wir die View nicht mit klassischen Unit-Tests abdecken, sondern durch Monkey-Tests die Robustheit unserer Applikation bei Eingaben jeglicher Art sicherstellen.
 Ebenfalls wird die goApp an die ersten User verteilt um uns Feedback über die hoffentlich intuitive Bedienbarkeit der GUI einzuholen.
 
 	\subsubsection{Controller}
