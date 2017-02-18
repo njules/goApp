@@ -130,15 +130,15 @@ public class EventServletTest {
         }
 
     }
+    
 
     @Test
     public void testGetParticipates() {
-        // TODO: Rückgabetyp der Methode wurde verändert -> Test anpassen
         JSONObject json = new JSONObject();
         JSONObject internJson = null;
         JSONArray arrJson = null;
         JSONObject newJson = null;
-        List<Participant> part = createPartList();
+        List<User> part = createUserList();
         int eventID = createEvent().getEventId();
         int userID = -1;
 
@@ -149,7 +149,7 @@ public class EventServletTest {
             e.printStackTrace();
             fail();
         }
-        when(mockEventUsrMang.getParticipants(eventID)).thenReturn(part);
+        when(mockEventUsrMang.getUserByStatus(Status.STARTED, eventID)).thenReturn(part);
 
         try {
             when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
@@ -171,7 +171,7 @@ public class EventServletTest {
 
         try {
             newJson = new JSONObject(captor.getValue());
-            arrJson = newJson.getJSONArray(JSONParameter.LIST_PART.toString());
+            arrJson = newJson.getJSONArray(JSONParameter.LIST_START_PART.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             fail();
@@ -182,9 +182,9 @@ public class EventServletTest {
                 internJson = arrJson.getJSONObject(i);
                 userID = internJson.getInt(JSONParameter.USER_ID.toString());
 
-                for (Participant p : part) {
-                    if (p.getUser().getUserId() == userID) {
-                        assertEquals(p.getStatus().intValue(),
+                for (User u : part) {
+                    if (u.getUserId() == userID) {
+                        assertEquals(Status.STARTED.getValue().intValue(),
                                 internJson.getInt(JSONParameter.STATUS.toString()));
                     }
                 }
@@ -256,15 +256,14 @@ public class EventServletTest {
         return event;
     }
 
-    private List<Participant> createPartList() {
-        List<Participant> part = new ArrayList<Participant>();
-        Event e1 = createEvent();
+    private List<User> createUserList() {
+        List<User> part = new ArrayList<User>();
         User u1 = new User();
         User u2 = new User();
         u1.setUserId(1);
         u2.setUserId(2);
-        part.add(new Participant(Status.INVITED.getValue(), e1, u1));
-        part.add(new Participant(Status.PARTICIPATE.getValue(), e1, u2));
+        part.add(u1);
+        part.add(u2);
         return part;
     }
 
