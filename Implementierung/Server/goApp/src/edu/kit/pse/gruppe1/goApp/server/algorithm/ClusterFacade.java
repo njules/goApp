@@ -1,13 +1,16 @@
 package edu.kit.pse.gruppe1.goApp.server.algorithm;
 
-import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
-import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
-import edu.kit.pse.gruppe1.goApp.server.model.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.math4.ml.clustering.*;
+import org.apache.commons.math4.ml.clustering.Cluster;
+import org.apache.commons.math4.ml.clustering.Clusterer;
+import org.apache.commons.math4.ml.clustering.DBSCANClusterer;
+import org.apache.commons.math4.ml.clustering.DoublePoint;
+
+import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
+import edu.kit.pse.gruppe1.goApp.server.model.Event;
+import edu.kit.pse.gruppe1.goApp.server.model.Location;
 
 /**
  * This class is facade for the algortihm, requests the events locations from the database and calls
@@ -31,6 +34,9 @@ public class ClusterFacade {
 
     /**
      * Constructor with DBSCAN, CentralPointAlgo selectable.
+     * 
+     * @param algorithm
+     *            the algorithm that should be used
      */
     public ClusterFacade(CentralPointAlgo algorithm) {
         this.algorithm = algorithm;
@@ -40,6 +46,9 @@ public class ClusterFacade {
 
     /**
      * Constructor with SimpleCentralAlgo, Clusterer selectable.
+     * 
+     * @param clusterer
+     *            the clusterer
      */
     public ClusterFacade(Clusterer<DoublePoint> clusterer) {
         this.algorithm = new SimpleCentral();
@@ -49,6 +58,11 @@ public class ClusterFacade {
 
     /**
      * Clusterer and midpoint-algorithm selectable.
+     * 
+     * @param algorithm
+     *            the algorithm that should be used
+     * @param clusterer
+     *            the clusterer
      */
     public ClusterFacade(Clusterer<DoublePoint> clusterer, CentralPointAlgo algorithm) {
         this.algorithm = algorithm;
@@ -56,10 +70,20 @@ public class ClusterFacade {
         this.management = new EventManagement();
     }
 
+    /**
+     * 
+     * @param algorithm
+     *            the algorithm that should be used
+     */
     public void setAlgorithm(CentralPointAlgo algorithm) {
         this.algorithm = algorithm;
     }
 
+    /**
+     * 
+     * @param clusterer
+     *            the clusterer
+     */
     public void setClusterer(Clusterer<DoublePoint> clusterer) {
         this.clusterer = clusterer;
     }
@@ -127,11 +151,13 @@ public class ClusterFacade {
     }
 
     /**
-    *
-    *Method to directly call the Clusterer
-    *@param list of points which should be clustered
-    *@return list of clusters
-    */
+     *
+     * Method to directly call the Clusterer
+     * 
+     * @param points
+     *            of points which should be clustered
+     * @return list of clusters
+     */
     public List<? extends Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
 
         return clusterer.cluster(points);
@@ -139,31 +165,35 @@ public class ClusterFacade {
     }
 
     /**
-    *Method to directly call the midpoint algorithm
-    *@param cluster which should be calculated
-    *@return midpoint
-    */
+     * Method to directly call the midpoint algorithm
+     * 
+     * @param cluster
+     *            which should be calculated
+     * @return midpoint
+     */
     public DoublePoint getCenter(Cluster<DoublePoint> cluster) {
         return algorithm.calculateCentralPoint(cluster);
     }
-    
-    
+
     /**
-    *Method which calls the getClusteredCentralPoints method and converts the DoublePoints into Locations
-    *@param event Event whose locations should be calculated
-    *@return List of clustered midpoints
-    *
-    */
+     * Method which calls the getClusteredCentralPoints method and converts the DoublePoints into
+     * Locations
+     * 
+     * @param event
+     *            Event whose locations should be calculated
+     * @return List of clustered midpoints
+     *
+     */
     public List<Location> getClusteredLocations(Event event) {
         List<DoublePoint> pointList = getClusteredCentralPoints(event);
         List<Location> locations = new ArrayList<Location>();
-        
-        for(DoublePoint point : pointList) {
-            
-            locations.add(new Location(point.getPoint()[0], point.getPoint()[1],""));
-            
+
+        for (DoublePoint point : pointList) {
+
+            locations.add(new Location(point.getPoint()[0], point.getPoint()[1], ""));
+
         }
-        
+
         return locations;
     }
 }
