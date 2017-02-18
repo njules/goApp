@@ -159,6 +159,8 @@ So ist es jetzt schon bei Betrachtung des Codes einer Activity durch den explizi
 Da die Servlets wie oben beschrieben verändert wurden mussten selbstvertändlich auch die Services angepasst werden, da die Services des Clienten das Gegenstück zu den Servlets bilden wenn es um die Kommunikation zwischen Server und Clienten geht.
 Da eine Veränderung des einen Teils zwangsläufig eine äquivalente Veränderung des Gegentücks hervorruft wird hier nicht auf weitere Änderungen der Services eingegangen da diese aus Kapitel 2.1.1 hervorgehen.
 
+\paragraph{UtilService} Die Klasse UtilService vereinigt Methoden die von verschiedene Services immer wieder aufgerufen werden müssen um JSON Parameter auszulesen. Um redunanten Code zu vermeiden haben wir deshalb auch auf dem Clienten diese statische Hilfsklasse eingeführt.  	
+
 	\newpage
 	\section{Kriterien}
 	Im Pflichtenheft wurden Kriterien für unsere App definiert. Im folgenden unterteilen wir diese in erfüllt bzw. nicht erfüllt.
