@@ -20,7 +20,7 @@ public class ClusterFacade {
     private Clusterer<DoublePoint> clusterer;
     private EventManagement management;
 
-    /*
+    /**
      * default constructor with simpleCentral-Algorithm and DBSCAN
      */
     public ClusterFacade() {
@@ -29,7 +29,7 @@ public class ClusterFacade {
         this.management = new EventManagement();
     }
 
-    /*
+    /**
      * Constructor with DBSCAN, CentralPointAlgo selectable.
      */
     public ClusterFacade(CentralPointAlgo algorithm) {
@@ -38,7 +38,7 @@ public class ClusterFacade {
         this.management = new EventManagement();
     }
 
-    /*
+    /**
      * Constructor with SimpleCentralAlgo, Clusterer selectable.
      */
     public ClusterFacade(Clusterer<DoublePoint> clusterer) {
@@ -47,7 +47,7 @@ public class ClusterFacade {
         this.management = new EventManagement();
     }
 
-    /*
+    /**
      * Clusterer and midpoint-algorithm selectable.
      */
     public ClusterFacade(Clusterer<DoublePoint> clusterer, CentralPointAlgo algorithm) {
@@ -96,7 +96,7 @@ public class ClusterFacade {
 
     }
 
-    /*
+    /**
      * This class fetches the locations from the event, and builds a list of DoublePoint.class
      * objects
      */
@@ -126,16 +126,34 @@ public class ClusterFacade {
 
     }
 
+    /**
+    *
+    *Method to directly call the Clusterer
+    *@param list of points which should be clustered
+    *@return list of clusters
+    */
     public List<? extends Cluster<DoublePoint>> getClusters(List<DoublePoint> points) {
 
         return clusterer.cluster(points);
 
     }
 
+    /**
+    *Method to directly call the midpoint algorithm
+    *@param cluster which should be calculated
+    *@return midpoint
+    */
     public DoublePoint getCenter(Cluster<DoublePoint> cluster) {
         return algorithm.calculateCentralPoint(cluster);
     }
     
+    
+    /**
+    *Method which calls the getClusteredCentralPoints method and converts the DoublePoints into Locations
+    *@param event Event whose locations should be calculated
+    *@return List of clustered midpoints
+    *
+    */
     public List<Location> getClusteredLocations(Event event) {
         List<DoublePoint> pointList = getClusteredCentralPoints(event);
         List<Location> locations = new ArrayList<Location>();
