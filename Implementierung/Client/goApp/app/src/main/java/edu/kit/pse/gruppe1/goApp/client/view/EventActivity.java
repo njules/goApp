@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -155,6 +156,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                     break;
                 // Refreshes the markers on the map, representing the Group Locations.
                 case LocationService.RESULT_LOCATION:
+                    Log.i("Location", "Location received");
                     googleMap.clear();
                     positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
                     googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));

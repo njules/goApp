@@ -128,7 +128,8 @@ public final class UtilService {
                 JSONObject location = jsons.getJSONObject(i);
                 locations[i] = new Location(location.getDouble(JSONParameter.LATITUDE.toString()),
                         location.getDouble(JSONParameter.LONGITUDE.toString()),
-                        location.getString(JSONParameter.LOC_NAME.toString()));
+                        "Central Point");
+                //location.getString(JSONParameter.LOC_NAME.toString())
             }
             return locations;
         } catch (JSONException e) {

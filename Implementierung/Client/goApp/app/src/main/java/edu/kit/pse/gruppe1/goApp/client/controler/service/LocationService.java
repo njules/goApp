@@ -89,6 +89,7 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
                 Location[] locations = syncLocation(event.getId());
                 resultIntent.setAction(RESULT_LOCATION);
                 resultIntent.putExtra(UtilService.LOCATIONS, locations);
+                Log.i("Location", resultIntent.toString()+event.getId() );
 
                 //The Service restarts itself when the Event is still on.
                 if (System.currentTimeMillis() + refreshTime < event.getTime().getTime() + eventLength) {
@@ -146,6 +147,7 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
 
         HTTPConnection connection = new HTTPConnection(SERVLET);
         JSONObject result = connection.sendGetRequest(requestJson.toString());
+        Log.i("Location",result.toString());
         if (UtilService.isError(result)) {
             return null;
         } else {
