@@ -129,7 +129,7 @@ public final class UtilService {
                 locations[i] = new Location(location.getDouble(JSONParameter.LATITUDE.toString()),
                         location.getDouble(JSONParameter.LONGITUDE.toString()),
                         "Central Point");
-                //TODO location.getString(JSONParameter.LOC_NAME.toString())
+                //location.getString(JSONParameter.LOC_NAME.toString())
             }
             return locations;
         } catch (JSONException e) {
