@@ -27,7 +27,7 @@ public class EventManagementTest {
     @Before
     public void setUp() {
         location = new Location(0, 0, "location");
-        user = new UserManagement().add("user", 1);
+        user = new UserManagement().add("user", "1");
         assertThat(user, is(notNullValue()));
         group = new GroupManagement().add("group", user.getUserId());
         assertThat(group, is(notNullValue()));

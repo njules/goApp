@@ -42,7 +42,7 @@ public class DatabaseInitializer {
             factory = configuration.buildSessionFactory(serviceRegistry);
 
             // start thread that delete old events
-            eventDeletionTimer = new EventDeletionTimer(2, 1);
+            eventDeletionTimer = new EventDeletionTimer(2, 60);
         }
         return factory;
     }

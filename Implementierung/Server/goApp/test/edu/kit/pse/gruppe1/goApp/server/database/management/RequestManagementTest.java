@@ -22,7 +22,7 @@ public class RequestManagementTest {
     private Group createdGroup;
     private String groupName = "group name";
     private String userName = "user name";
-    private int googleId = 1234;
+    private String googleId = "1234";
 
     @Before
     public void setUp() throws Exception {

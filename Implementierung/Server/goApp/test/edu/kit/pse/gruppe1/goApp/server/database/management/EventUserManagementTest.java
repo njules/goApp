@@ -27,7 +27,7 @@ public class EventUserManagementTest {
     private User createdUser;
     private Group group;
     private Timestamp timestamp;
-    private int googleId;
+    private String googleId = "1";
 
     @Before
     public void setUp() {

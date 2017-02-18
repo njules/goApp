@@ -31,17 +31,32 @@ public class Location {
      */
     private String name;
 
-
+    /**
+     * standart constructor
+     */
     public Location() {
     }
 
+    /**
+     * constructor
+     * 
+     * @param longitude
+     *            the longitude
+     * @param latitude
+     *            the latitude
+     * @param name
+     *            the name of the location
+     */
     public Location(double longitude, double latitude, String name) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.name = name;
     }
 
-    
+    /**
+     * 
+     * @return the id of the location
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "LOCATION_ID", unique = true, nullable = false)
@@ -49,34 +64,64 @@ public class Location {
         return locationId;
     }
 
+    /**
+     * 
+     * @param locationId
+     *            the new id of the location
+     */
     public void setLocationId(Integer locationId) {
         this.locationId = locationId;
     }
 
-
+    /**
+     * 
+     * @return the longitude of the location
+     */
     @Column(name = "longitude")
     public Double getLongitude() {
         return longitude;
     }
 
+    /**
+     * 
+     * @param longitude
+     *            the new longitude of the location
+     */
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
+    /**
+     * 
+     * @return the latitude of the location
+     */
     @Column(name = "latitude")
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * @param latitude
+     *            the new latitude of the location
+     */
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
+    /**
+     *
+     * @return the name of the location
+     */
     @Column(name = "name")
     public String getName() {
         return name;
     }
 
+    /**
+     * 
+     * @param name
+     *            the new name of the location
+     */
     public void setName(String name) {
         this.name = name;
     }

@@ -136,6 +136,13 @@ public class EventManagement implements Management {
         return event.getCreator();
     }
 
+    /**
+     * returns all locations of users which participate at the event
+     * 
+     * @param eventId
+     *            the id of the event
+     * @return all locations
+     */
     public List<Location> getUserLocations(int eventId) {
         Event event = getEvent(eventId);
         if (event == null) {
@@ -150,6 +157,15 @@ public class EventManagement implements Management {
         return locations;
     }
 
+    /**
+     * sets the cluster points the algorithm has calculated
+     * 
+     * @param eventId
+     *            the id of the event
+     * @param points
+     *            the clusterpoints
+     * @return true if the event exists and else false
+     */
     public boolean setClusterPoints(int eventId, Collection<Location> points) {
         Event event = getEvent(eventId);
         if (event == null) {
@@ -172,13 +188,19 @@ public class EventManagement implements Management {
         return true;
     }
 
+    /**
+     * deletes old events
+     * 
+     * @param minutesTillDeletion
+     *            defines how long an event is in the database after it started
+     */
     public void deleteOldEvents(long minutesTillDeletion) {
         long now = System.currentTimeMillis();
         long deletionTime = now - (minutesTillDeletion * 60L * 1000L);
         Timestamp time = new Timestamp(deletionTime);
-        @SuppressWarnings("unchecked")
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
         session.beginTransaction();
+        @SuppressWarnings("unchecked")
         List<Event> events = session.createCriteria(Event.class)
                 .add(Restrictions.lt("timestamp", time)).list();
 

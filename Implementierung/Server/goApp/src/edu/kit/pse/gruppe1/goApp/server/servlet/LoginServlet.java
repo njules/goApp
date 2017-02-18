@@ -109,7 +109,6 @@ public class LoginServlet extends HttpServlet {
     private JSONObject register(JSONObject json) {
         String googleToken = null;
         String googleId = null;
-        JSONParameter.ErrorCodes error = ErrorCodes.OK;
         String name = null;
         User user = null;
         JSONObject result = null;
@@ -117,8 +116,7 @@ public class LoginServlet extends HttpServlet {
         try {
             googleToken = json.getString(JSONParameter.GOOGLE_TOKEN.toString());
         } catch (JSONException e) {
-            error = ErrorCodes.READ_JSON;
-            return ServletUtils.createJSONError(error);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
         googleId = ServletUtils.getGoogleIdByToken(googleToken);
         name = ServletUtils.getGoogleNameByToken(googleToken);
@@ -127,10 +125,7 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             result = ServletUtils.createJSONUser(user);
         } else {
-            error = ErrorCodes.DB_ERROR;
-        }
-        if (!error.equals(ErrorCodes.OK)) {
-            result = ServletUtils.createJSONError(error);
+            result = ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
         }
         return result;
     }
@@ -158,7 +153,11 @@ public class LoginServlet extends HttpServlet {
 
         if (ServletUtils.isUserAlreadyRegistrated(googleId)) {
             user = usrMang.getUserByGoogleId(googleId);
-            return ServletUtils.createJSONUser(user);
+            if (user == null) {
+                return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
+            } else {
+                return ServletUtils.createJSONUser(user);
+            }
         } else {
             return register(json);
         }

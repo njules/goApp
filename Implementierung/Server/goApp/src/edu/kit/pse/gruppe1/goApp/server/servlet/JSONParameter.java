@@ -127,6 +127,11 @@ public enum JSONParameter {
     LIST_PART("ListParticipate"),
 
     /**
+     * List of started Participates
+     */
+    LIST_START_PART("StartedParticipants"),
+
+    /**
      * Status of USer in Event
      */
     STATUS("Status"),
@@ -175,45 +180,6 @@ public enum JSONParameter {
             }
         }
         return null;
-    }
-
-    /**
-     * enum with status codes
-     * 
-     * @see #edu.kit.pse.gruppe1.goApp.server.model.Status
-     *
-     */
-    @Deprecated
-    public enum Status {
-        /**
-         * do not use anymore
-         */
-        REJECT(1),
-
-        /**
-         * do not use anymore
-         */
-        ACCEPT(2),
-
-        /**
-         * do not use anymore
-         */
-        GO(3);
-
-        private final int status;
-
-        private Status(int status) {
-            this.status = status;
-        }
-
-        /**
-         * do not use anymore
-         * 
-         * @return int
-         */
-        public int getStatus() {
-            return status;
-        }
     }
 
     /**
@@ -285,12 +251,13 @@ public enum JSONParameter {
          * A list could not be created
          */
         EMPTY_LIST(12, "No entry matching arguments was found."),
-        
+
         /**
-         * User Interaction was not possible (e.g. wanted to create an request to an group which user is already member of
+         * User Interaction was not possible (e.g. wanted to create an request to an group which
+         * user is already member of
          */
-        INTERACT_ERROR(13,"User made a not permitted interaction.");
-        
+        INTERACT_ERROR(13, "User made a not permitted interaction.");
+
         private final String fieldDescription;
         private final int errCode;
 

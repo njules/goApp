@@ -119,7 +119,6 @@ public class RequestSearchServlet extends HttpServlet {
         }
 
         grpFromUsr = reqMang.getRequestByUser(userID);
-
         return ServletUtils.createJSONListGrp(grpFromUsr);
     }
 
@@ -144,7 +143,6 @@ public class RequestSearchServlet extends HttpServlet {
         }
 
         usrInGrp = reqMang.getRequestByGroup(groupID);
-
         return ServletUtils.createJSONListUsr(usrInGrp);
 
     }

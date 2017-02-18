@@ -4,7 +4,8 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
-import edu.kit.pse.gruppe1.goApp.server.model.Participant;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
+import edu.kit.pse.gruppe1.goApp.server.model.User;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
@@ -83,7 +84,7 @@ public class EventServlet extends HttpServlet {
             strResponse = create(jsonRequest).toString();
             break;
         case GET_EVENT:
-            strResponse = getParticipates(jsonRequest).toString();
+            strResponse = getParticipants(jsonRequest).toString();
             break;
         case CHANGE:
             strResponse = change(jsonRequest).toString();
@@ -129,7 +130,6 @@ public class EventServlet extends HttpServlet {
         String locName = null;
         int creatorID = -1;
         int groupID = -1;
-        JSONParameter.ErrorCodes err = ErrorCodes.OK;
 
         // get all parameter from json
         try {
@@ -141,33 +141,36 @@ public class EventServlet extends HttpServlet {
             creatorID = json.getInt(JSONParameter.USER_ID.toString());
             groupID = json.getInt(JSONParameter.GROUP_ID.toString());
         } catch (JSONException e) {
-            err = ErrorCodes.READ_JSON;
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
         location = new Location(longitude, latitude, locName);
         event = this.eventMang.add(name, location, time, creatorID, groupID);
 
         if (event == null) {
-            err = ErrorCodes.DB_ERROR;
+            return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
         }
 
-        return ServletUtils.createJSONError(err);
+        return ServletUtils.createJSONEventID(event);
     }
 
-   /**
-    * gets all participates to given event
-    * @param json jsonString with eventID
-    * @return List of Participates
-    */
-   private JSONObject getParticipates(JSONObject json) {
-        List<Participant> part = null;
+    /**
+     * gets all participates to given event
+     * 
+     * @param json
+     *            jsonString with eventID
+     * @return List of Participates
+     */
+    private JSONObject getParticipants(JSONObject json) {
+        List<User> startedPart = null;
+        List<User> notStartPart = null;
         try {
-            int eventID = json.getInt(JSONParameter.EVENT_ID.toString());
-            part = this.eventUsrMang.getParticipants(eventID);
+            int eventId = json.getInt(JSONParameter.EVENT_ID.toString());
+            startedPart = eventUsrMang.getUserByStatus(Status.STARTED, eventId);
+            notStartPart = eventUsrMang.getUserByStatus(Status.PARTICIPATE, eventId);
         } catch (JSONException e) {
             return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
-
-        return ServletUtils.createJSONListPart(part);
+        return ServletUtils.createJSONDoubleListPartUsers(startedPart, notStartPart);
     }
 
     /**
@@ -182,15 +185,13 @@ public class EventServlet extends HttpServlet {
     private JSONObject change(JSONObject json) {
         Event event = null;
         boolean valuesChanged = false;
-        JSONParameter.ErrorCodes error = ErrorCodes.OK;
         int eventID = -1;
 
         try {
             eventID = json.getInt(JSONParameter.EVENT_ID.toString());
             event = this.eventMang.getEvent(eventID);
         } catch (JSONException e) {
-            error = ErrorCodes.READ_JSON;
-            return ServletUtils.createJSONError(error);
+            return ServletUtils.createJSONError(ErrorCodes.READ_JSON);
         }
 
         // for the following part: if attribute is in json Object - change value in Event
@@ -230,42 +231,12 @@ public class EventServlet extends HttpServlet {
         } catch (JSONException e) {
             // do nothing, because it can happen
         }
-        
 
         if (valuesChanged) {
             if (!eventMang.update(event)) {
-                error = ErrorCodes.DB_ERROR;
+                ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
             }
         }
-        return ServletUtils.createJSONError(error);
+        return ServletUtils.createJSONError(ErrorCodes.OK);
     }
-    
-    // Code for use in future Version in change
-    // try {
-    // int creatorID = json.getInt(JSONParameter.USER_ID.toString());
-    // UserManagement usMang = new UserManagement();
-    // User creator = usMang.getUser(creatorID);
-    // if (creator != null) {
-    // event.setCreator(creator);
-    // valuesChanged = true;
-    // } else {
-    // error = ErrorCodes.DB_ERROR;
-    // }
-    // } catch (JSONException e) {
-    // // do nothing, because it can happen
-    // }
-    // try {
-    // int groupID = json.getInt(JSONParameter.GRUOP_ID.toString());
-    // GroupManagement grMang = new GroupManagement();
-    // Group group = grMang.getGroup(groupID);
-    // if (group != null) {
-    // event.setGroup(group);
-    // valuesChanged = true;
-    // } else {
-    // error = ErrorCodes.DB_ERROR;
-    // }
-    // } catch (JSONException e) {
-    // // do nothing, because it can happen
-    // }
-
 }
