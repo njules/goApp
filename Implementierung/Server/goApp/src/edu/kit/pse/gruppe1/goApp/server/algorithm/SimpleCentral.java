@@ -10,6 +10,13 @@ import org.apache.commons.math4.ml.clustering.*;
  */
 public class SimpleCentral extends CentralPointAlgo {
 
+	
+	/**
+	*
+	*This is the method which returns the artihmetic central of a cluster
+	*@param DoublePoint Cluster
+	*@return The arithmetic midpoint
+	*/
 	@Override
 	public DoublePoint calculateCentralPoint(Cluster<DoublePoint> cluster) {
 		
