@@ -1,7 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -31,6 +30,7 @@ public class LocationServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final EventManagement event;
     private final UserManagement eventUser;
+    ClusterFacade clusterer = new ClusterFacade();
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -137,8 +137,7 @@ public class LocationServlet extends HttpServlet {
         if (evt == null) {
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
-        ClusterFacade f = new ClusterFacade();
-        List<Location> cluster = f.getClusteredLocations(evt);
+        List<Location> cluster = clusterer.getClusteredLocations(evt);
 
         return ServletUtils.createJSONListLoc(cluster);
     }

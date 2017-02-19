@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,11 +24,11 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import edu.kit.pse.gruppe1.goApp.server.algorithm.ClusterFacade;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
-import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 public class LocationServletTest {
     private LocationServlet servlet;
@@ -51,6 +48,8 @@ public class LocationServletTest {
     private EventManagement eventManager;
     @Mock
     private Event fakeEvent;
+    @Mock
+    private ClusterFacade clusterer;
     
     @Captor
     private ArgumentCaptor<String> argCap;
@@ -66,6 +65,9 @@ public class LocationServletTest {
         field = servlet.getClass().getDeclaredField("eventUser");
         field.setAccessible(true);
         field.set(servlet, userManager);
+        field = servlet.getClass().getDeclaredField("clusterer");
+        field.setAccessible(true);
+        field.set(servlet, clusterer);
     }
 
     @After
@@ -77,10 +79,9 @@ public class LocationServletTest {
     @Test
     public void testSyncPos() {
         // set up input
-        final Set<Location> fakeLocations = new HashSet<Location>();
+        final List<Location> fakeLocations = new ArrayList<Location>();
         fakeLocations.add(new Location(5, 2, null));
         fakeLocations.add(new Location(5, 3, null));
-        final User fakeUser = new User();
         final int user = 5;
         final double lat = 3;
         final double lon = 3;
@@ -105,7 +106,7 @@ public class LocationServletTest {
             when(request.readLine()).thenReturn(jsonRequest);
             when(userManager.updateLocation(user, new Location(lon, lat, null))).thenReturn(true);
             when(eventManager.getEvent(evt)).thenReturn(fakeEvent);
-            when(fakeEvent.getClusterPoints()).thenReturn(fakeLocations);
+            when(clusterer.getClusteredLocations(fakeEvent)).thenReturn(fakeLocations);
        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
             fail("Failed mocking!\n");
