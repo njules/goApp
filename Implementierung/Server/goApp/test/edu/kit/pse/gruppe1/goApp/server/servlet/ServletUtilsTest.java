@@ -91,11 +91,6 @@ public class ServletUtilsTest {
     }
 
     @Test
-    public void testCreateJSONListPart() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
     public void testCreateJSONEventID() {
         Event evt = getEvent();
 
@@ -145,11 +140,6 @@ public class ServletUtilsTest {
             fail();
         }
 
-    }
-
-    @Test
-    public void testCreateJSONDoubleListPartUsers() {
-        fail("Not yet implemented - Julian dein Job");
     }
 
     @Test
@@ -208,26 +198,6 @@ public class ServletUtilsTest {
     }
 
     @Test
-    public void testCreateJSONListEvent() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
-    public void testCreateJSONDoubleListEvent() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
-    public void testCreateJSONListUsr() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
-    public void testCreateJSONListGrp() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
     public void testCreateJSONGroupID() {
         Group group = getGroup();
         JSONObject json = null;
@@ -243,11 +213,6 @@ public class ServletUtilsTest {
     }
 
     @Test
-    public void testCreateJSONListLoc() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
     public void testCreateJSONError() {
         ErrorCodes error = ErrorCodes.GRP_LIMIT;
         JSONObject json = null;
@@ -257,11 +222,6 @@ public class ServletUtilsTest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    public void testExtractJSON() {
-        fail("Not yet implemented - Julian dein Job");
     }
 
 }
