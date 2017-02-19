@@ -103,7 +103,7 @@ public class LocationServletTest {
             when(httpRequest.getReader()).thenReturn(request);
             when(httpResponse.getWriter()).thenReturn(response);
             when(request.readLine()).thenReturn(jsonRequest);
-            when(userManager.getUser(user)).thenReturn(fakeUser);
+            when(userManager.updateLocation(user, new Location(lon, lat, null))).thenReturn(true);
             when(eventManager.getEvent(evt)).thenReturn(fakeEvent);
             when(fakeEvent.getClusterPoints()).thenReturn(fakeLocations);
        } catch (IOException | NullPointerException e) {
@@ -117,8 +117,6 @@ public class LocationServletTest {
             e.printStackTrace();
             fail("Failed to post HTTP request!\n");
         }
-        // test for correctly updated location
-        assertEquals(fakeUser.getLocation(), new Location(3, 3, null));
         // test for correct location list
         verify(response).println(argCap.capture());
         List<Location> cluster = new ArrayList<Location>();
