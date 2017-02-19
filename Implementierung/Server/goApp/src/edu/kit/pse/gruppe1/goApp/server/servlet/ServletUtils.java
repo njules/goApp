@@ -169,7 +169,7 @@ public final class ServletUtils {
         try {
             json.put(JSONParameter.USER_ID.toString(), user.getUserId());
             json.put(JSONParameter.USER_NAME.toString(), user.getName());
-            json.put(JSONParameter.STATUS.toString(), status);
+            json.put(JSONParameter.STATUS.toString(), status.getValue());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
