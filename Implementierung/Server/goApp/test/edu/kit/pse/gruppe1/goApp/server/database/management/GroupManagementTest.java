@@ -21,6 +21,7 @@ public class GroupManagementTest {
     private User user;
     private Group createdGroup;
     private String groupName = "group name";
+    private int invalidId = 1010101010;
 
     @Before
     public void setUp() throws Exception {
@@ -49,6 +50,7 @@ public class GroupManagementTest {
 
     @Test
     public void testGetGroup() {
+        assertThat(new GroupManagement().getGroup(invalidId), is(nullValue()));
         Group group = new GroupManagement().getGroup(createdGroup.getGroupId());
         assertThat(group, is(notNullValue()));
         assertThat(group.getName(), is(createdGroup.getName()));
@@ -66,6 +68,7 @@ public class GroupManagementTest {
 
     @Test
     public void testGetEvents() {
+        assertThat(new GroupManagement().getEvents(invalidId), is(nullValue()));
         List<Event> events = new GroupManagement().getEvents(createdGroup.getGroupId());
         assertThat(events, is(notNullValue()));
         assertThat(events.size(), is(0));

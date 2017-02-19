@@ -35,7 +35,7 @@ public class LocationDeletionTimerTest {
         session.getTransaction().commit();
         assertThat(l, is(notNullValue()));
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

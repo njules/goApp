@@ -17,6 +17,7 @@ public class UserManagementTest {
     private User createdUser;
     private String userName = "user name";
     private String googleId = "1234";
+    private int invalidId = 1010101010;
 
     @Before
     public void setUp() throws Exception {
@@ -38,12 +39,14 @@ public class UserManagementTest {
 
     @Test
     public void testDelete() {
+        assertThat(new UserManagement().delete(invalidId), is(false));
         assertThat(new UserManagement().delete(createdUser.getUserId()), is(true));
         assertThat(new UserManagement().getUser(createdUser.getUserId()), is(nullValue()));
     }
 
     @Test
     public void testGetUser() {
+        assertThat(new UserManagement().getUser(invalidId), is(nullValue()));
         User user = new UserManagement().getUser(createdUser.getUserId());
         assertThat(user, is(notNullValue()));
         assertThat(user.getGoogleId(), is(createdUser.getGoogleId()));
@@ -53,6 +56,7 @@ public class UserManagementTest {
 
     @Test
     public void testGetUserByGoogleId() {
+        assertThat(new UserManagement().getUserByGoogleId("" + invalidId), is(nullValue()));
         User user = new UserManagement().getUserByGoogleId(createdUser.getGoogleId() + 1);
         assertThat(user, is(nullValue()));
         user = new UserManagement().getUserByGoogleId(createdUser.getGoogleId());

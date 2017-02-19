@@ -78,7 +78,7 @@ public class EventManagement implements Management {
      * @return true, if update was successful, otherwise false
      */
     public boolean update(Event chEvent) {
-        if (chEvent.getEventId() == null) {
+        if (chEvent == null || chEvent.getEventId() == null) {
             return false;
         }
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
@@ -168,7 +168,7 @@ public class EventManagement implements Management {
      */
     public boolean setClusterPoints(int eventId, Collection<Location> points) {
         Event event = getEvent(eventId);
-        if (event == null) {
+        if (event == null || points == null) {
             return false;
         }
         event.setClusterPoints(new HashSet<Location>(points));

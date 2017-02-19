@@ -28,6 +28,7 @@ public class EventUserManagementTest {
     private Group group;
     private Timestamp timestamp;
     private String googleId = "1";
+    private int invalidID = 101010101;
 
     @Before
     public void setUp() {
@@ -71,6 +72,8 @@ public class EventUserManagementTest {
                 is(Status.PARTICIPATE.getValue()));
         assertThat(new EventUserManagement().updateStatus(createdEvent.getEventId(),
                 createdUser.getUserId(), newStatus), is(true));
+        assertThat(new EventUserManagement().updateStatus(invalidID, invalidID, newStatus),
+                is(false));
 
         assertThat(new EventUserManagement().getEvents(createdUser.getUserId()).size(), is(1));
         assertThat(new EventUserManagement()
@@ -80,6 +83,7 @@ public class EventUserManagementTest {
 
     @Test
     public void testGetParticipant() {
+        assertThat(new EventUserManagement().getParticipant(invalidID, invalidID), is(nullValue()));
         Participant participant = new EventUserManagement()
                 .getParticipant(createdEvent.getEventId(), createdUser.getUserId());
         assertThat(participant, is(notNullValue()));
@@ -87,6 +91,7 @@ public class EventUserManagementTest {
 
     @Test
     public void testGetParticipants() {
+        assertThat(new EventUserManagement().getParticipants(invalidID), is(nullValue()));
         List<Participant> participants = new EventUserManagement()
                 .getParticipants(createdEvent.getEventId());
         assertThat(participants, is(notNullValue()));
@@ -97,6 +102,7 @@ public class EventUserManagementTest {
 
     @Test
     public void testDeleteParamsEventIdUserId() {
+        assertThat(new EventUserManagement().delete(invalidID, invalidID), is(false));
         assertThat(new EventUserManagement().getUsers(createdEvent.getEventId()).size(), is(1));
         assertThat(new EventUserManagement().getEvents(createdUser.getUserId()).size(), is(1));
 
@@ -114,6 +120,7 @@ public class EventUserManagementTest {
 
     @Test
     public void testDeleteParamsParticipantId() {
+        assertThat(new EventUserManagement().delete(invalidID), is(false));
         assertThat(new EventUserManagement().getUsers(createdEvent.getEventId()).size(), is(1));
         assertThat(new EventUserManagement().getEvents(createdUser.getUserId()).size(), is(1));
 
@@ -132,6 +139,7 @@ public class EventUserManagementTest {
 
     @Test
     public void testGetUsers() {
+        assertThat(new EventUserManagement().getUsers(invalidID), is(nullValue()));
         List<User> users = new EventUserManagement().getUsers(createdEvent.getEventId());
         assertThat(users, is(notNullValue()));
         assertThat(users.size(), is(1));

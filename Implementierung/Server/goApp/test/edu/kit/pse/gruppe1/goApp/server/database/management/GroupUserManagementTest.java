@@ -2,7 +2,8 @@ package edu.kit.pse.gruppe1.goApp.server.database.management;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
-import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 public class GroupUserManagementTest {
@@ -21,6 +21,7 @@ public class GroupUserManagementTest {
     private String groupName = "group name";
     private String userName = "user name";
     private String googleId = "1234";
+    private int invalidId = 1010101010;
 
     @Before
     public void setUp() throws Exception {
@@ -74,6 +75,7 @@ public class GroupUserManagementTest {
 
     @Test
     public void testGetGroups() {
+        assertThat(new GroupUserManagement().getGroups(invalidId), is(nullValue()));
         List<Group> groups = new GroupUserManagement().getGroups(createdUser.getUserId());
         assertThat(groups, is(notNullValue()));
         assertThat(groups.size(), is(1));
@@ -82,6 +84,7 @@ public class GroupUserManagementTest {
 
     @Test
     public void testGetUsers() {
+        assertThat(new GroupUserManagement().getUsers(invalidId), is(nullValue()));
         List<User> users = new GroupUserManagement().getUsers(createdGroup.getGroupId());
         assertThat(users, is(notNullValue()));
         assertThat(users.size(), is(1));

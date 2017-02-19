@@ -165,10 +165,23 @@ public class UserManagement implements Management {
         List<Location> locations = session.createCriteria(Location.class)
                 .add(Restrictions.isNotNull("deletionTime"))
                 .add(Restrictions.lt("deletionTime", time)).list();
-
-        for (Location location : locations) {
-            session.delete(location);
-        }
         session.getTransaction().commit();
+        for (Location location : locations) {
+            session = DatabaseInitializer.getFactory().getCurrentSession();
+            session.beginTransaction();
+            @SuppressWarnings("unchecked")
+            List<User> users = session.createCriteria(User.class)
+                    .add(Restrictions.eq("location", location)).list();
+            session.getTransaction().commit();
+            if (!users.isEmpty()) {
+                users.get(0).setLocation(null);
+                new UserManagement().update(users.get(0));
+            }
+            session = DatabaseInitializer.getFactory().getCurrentSession();
+            session.beginTransaction();
+            session.delete(location);
+            session.getTransaction().commit();
+        }
+
     }
 }

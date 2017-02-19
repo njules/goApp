@@ -23,6 +23,7 @@ public class EventManagementTest {
     private User user;
     private Group group;
     private Timestamp timestamp;
+    private int invalidID = 01010101;
 
     @Before
     public void setUp() {
@@ -47,6 +48,7 @@ public class EventManagementTest {
 
     @Test
     public void testUpdate() {
+        assertThat(new EventManagement().update(null), is(false));
         // Database doesn't store the milliseconds
         Timestamp newTimestamp = new Timestamp((System.currentTimeMillis() / 1000L) * 1000L);
         createdEvent.setTimestamp(newTimestamp);
@@ -59,6 +61,7 @@ public class EventManagementTest {
     @Test
     public void testUpdateName() {
         String newName = "new Name";
+        assertThat(new EventManagement().updateName(invalidID, newName), is(false));
         assertThat(new EventManagement().updateName(createdEvent.getEventId(), newName), is(true));
         assertThat(new EventManagement().getEvent(createdEvent.getEventId()).getName(),
                 is(newName));
@@ -78,6 +81,7 @@ public class EventManagementTest {
 
     @Test
     public void testDelete() {
+        assertThat(new EventManagement().delete(invalidID), is(false));
         assertThat(new EventManagement().delete(createdEvent.getEventId()), is(true));
         assertThat(new EventManagement().getEvent(createdEvent.getEventId()), is(nullValue()));
         assertThat(new UserManagement().getUser(user.getUserId()), is(notNullValue()));
@@ -86,12 +90,14 @@ public class EventManagementTest {
 
     @Test
     public void testGetCreator() {
+        assertThat(new EventManagement().getCreator(invalidID), is(nullValue()));
         assertThat(new EventManagement().getCreator(createdEvent.getEventId()).getUserId(),
                 is(user.getUserId()));
     }
 
     @Test
     public void testGetEvent() {
+        assertThat(new EventManagement().getEvent(invalidID), is(nullValue()));
         Event event = new EventManagement().getEvent(createdEvent.getEventId());
         assertThat(event, is(notNullValue()));
         assertThat(event.getName(), is(createdEvent.getName()));
@@ -104,6 +110,7 @@ public class EventManagementTest {
 
     @Test
     public void testGetUserLocations() {
+        assertThat(new EventManagement().getEvent(invalidID), is(nullValue()));
         List<Location> locations = new EventManagement()
                 .getUserLocations(createdEvent.getEventId());
         assertThat(locations.size(), is(0));
@@ -121,6 +128,7 @@ public class EventManagementTest {
         List<Location> points = new ArrayList<>();
         Location location = new Location(1, 1, "location");
         points.add(location);
+        assertThat(new EventManagement().setClusterPoints(invalidID, points), is(false));
         assertThat(new EventManagement().setClusterPoints(createdEvent.getEventId(), points),
                 is(true));
         Event event = new EventManagement().getEvent(createdEvent.getEventId());
