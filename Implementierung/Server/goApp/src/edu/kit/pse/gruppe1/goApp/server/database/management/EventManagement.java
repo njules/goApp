@@ -150,7 +150,8 @@ public class EventManagement implements Management {
         }
         List<Location> locations = new ArrayList<>(event.getParticipants().size());
         for (Participant participant : event.getParticipants()) {
-            if (participant.getUser().getLocation() != null) {
+            if (participant.getStatus() == Status.STARTED.getValue()
+                    && participant.getUser().getLocation() != null) {
                 locations.add(participant.getUser().getLocation());
             }
         }

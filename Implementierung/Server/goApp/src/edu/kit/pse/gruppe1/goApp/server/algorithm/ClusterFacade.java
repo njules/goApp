@@ -28,7 +28,7 @@ public class ClusterFacade {
      */
     public ClusterFacade() {
         this.algorithm = new SimpleCentral();
-        clusterer = new DBSCANClusterer<DoublePoint>(2, 1);
+        clusterer = new DBSCANClusterer<DoublePoint>(0.001, 1);
         this.management = new EventManagement();
     }
 
@@ -40,7 +40,7 @@ public class ClusterFacade {
      */
     public ClusterFacade(CentralPointAlgo algorithm) {
         this.algorithm = algorithm;
-        this.clusterer = new DBSCANClusterer<DoublePoint>(2, 1);
+        this.clusterer = new DBSCANClusterer<DoublePoint>(0.001, 1);
         this.management = new EventManagement();
     }
 

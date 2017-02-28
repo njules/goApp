@@ -28,6 +28,14 @@ public class EventDeletionTimer extends TimerTask {
         timer.schedule(this, 200, period);
     }
 
+    /**
+     * stops the timer
+     */
+    public void stopTimer() {
+        timer.cancel();
+        this.cancel();
+    }
+
     @Override
     public void run() {
         new EventManagement().deleteOldEvents(minutesTillDeletion);

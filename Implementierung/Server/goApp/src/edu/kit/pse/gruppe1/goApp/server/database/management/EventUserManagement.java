@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Session;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
-import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Participant;
 import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
@@ -186,11 +187,14 @@ public class EventUserManagement implements Management {
      * @return List of matching Users
      */
     public List<User> getUserByStatus(Status status, int eventId) {
-        Event event = new EventManagement().getEvent(eventId);
-        if (event == null) {
-            return null;
-        }
-        Set<Participant> participants = event.getParticipants();
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        List<Participant> participants = session.createCriteria(Participant.class)
+                .add(Restrictions.eq("event.eventId", eventId)).createAlias("user", "u")
+                .addOrder(Property.forName("u.name").asc()).list();
+        session.getTransaction().commit();
+
         List<User> users = new ArrayList<>();
         for (Participant participant : participants) {
             if (Status.fromInteger(participant.getStatus()) == status) {
@@ -212,18 +216,19 @@ public class EventUserManagement implements Management {
      * @return a list with all events
      */
     public List<Event> getEventsByStatus(Status status, int groupId, int userId) {
-        Group group = new GroupManagement().getGroup(groupId);
-        if (group == null) {
+        if (new UserManagement().getUser(userId) == null
+                || new GroupManagement().getGroup(groupId) == null) {
             return null;
         }
-        List<Event> events = new ArrayList<>();
-
-        for (Event event : group.getEvents()) {
-            if (event.getParticipant(userId) != null
-                    && Status.fromInteger(event.getParticipant(userId).getStatus()) == status) {
-                events.add(event);
-            }
-        }
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        List<Event> events = session.createCriteria(Event.class)
+                .add(Restrictions.eq("group.groupId", groupId)).createAlias("participants", "p")
+                .add(Restrictions.eq("p.user.userId", userId))
+                .add(Restrictions.eq("p.status", status.getValue()))
+                .addOrder(Property.forName("timestamp").asc()).list();
+        session.getTransaction().commit();
         return events;
     }
 

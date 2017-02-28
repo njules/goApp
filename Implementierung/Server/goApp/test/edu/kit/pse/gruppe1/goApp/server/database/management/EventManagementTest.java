@@ -14,6 +14,7 @@ import org.junit.Test;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 
 public class EventManagementTest {
@@ -110,6 +111,9 @@ public class EventManagementTest {
 
     @Test
     public void testGetUserLocations() {
+        assertThat(new EventUserManagement().updateStatus(createdEvent.getEventId(),
+                user.getUserId(), Status.STARTED), is(true));
+        user = new UserManagement().getUser(user.getUserId());
         assertThat(new EventManagement().getEvent(invalidID), is(nullValue()));
         List<Location> locations = new EventManagement()
                 .getUserLocations(createdEvent.getEventId());

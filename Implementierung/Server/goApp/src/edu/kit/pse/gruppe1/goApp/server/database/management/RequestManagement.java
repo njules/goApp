@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Request;
@@ -77,14 +79,16 @@ public class RequestManagement implements Management {
      * @return List of matching Users
      */
     public List<User> getRequestByGroup(int groupId) {
-        Group group = new GroupManagement().getGroup(groupId);
-        if (group == null) {
+        if (new GroupManagement().getGroup(groupId) == null) {
             return null;
         }
-        List<User> users = new ArrayList<>(group.getRequests().size());
-        for (Request request : group.getRequests()) {
-            users.add(request.getUser());
-        }
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        List<User> users = session.createCriteria(User.class).createAlias("requests", "r")
+                .add(Restrictions.eq("r.group.groupId", groupId))
+                .addOrder(Property.forName("name").asc()).list();
+        session.getTransaction().commit();
         return users;
     }
 
@@ -96,14 +100,16 @@ public class RequestManagement implements Management {
      * @return List of matching Groups
      */
     public List<Group> getRequestByUser(int userId) {
-        User user = new UserManagement().getUser(userId);
-        if (user == null) {
+        if (new UserManagement().getUser(userId) == null) {
             return null;
         }
-        List<Group> groups = new ArrayList<>(user.getRequests().size());
-        for (Request request : user.getRequests()) {
-            groups.add(request.getGroup());
-        }
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        List<Group> groups = session.createCriteria(Group.class).createAlias("requests", "r")
+                .add(Restrictions.eq("r.user.userId", userId))
+                .addOrder(Property.forName("name").asc()).list();
+        session.getTransaction().commit();
         return groups;
     }
 

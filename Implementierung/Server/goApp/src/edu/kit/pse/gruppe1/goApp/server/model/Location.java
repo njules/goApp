@@ -73,7 +73,6 @@ public class Location {
         this.longitude = longitude;
         this.latitude = latitude;
         this.name = name;
-        this.deletionTime = deletionTime;
     }
 
     /**
