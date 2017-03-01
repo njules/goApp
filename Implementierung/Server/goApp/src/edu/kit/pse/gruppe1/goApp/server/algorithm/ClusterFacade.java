@@ -19,16 +19,18 @@ import edu.kit.pse.gruppe1.goApp.server.model.Location;
  */
 public class ClusterFacade {
 
+    private final double DEFAULT_RADIUS = 0.001;
     private CentralPointAlgo algorithm;
     private Clusterer<DoublePoint> clusterer;
     private EventManagement management;
+    
 
     /**
      * default constructor with simpleCentral-Algorithm and DBSCAN
      */
     public ClusterFacade() {
         this.algorithm = new SimpleCentral();
-        clusterer = new DBSCANClusterer<DoublePoint>(0.001, 1);
+        clusterer = new DBSCANClusterer<DoublePoint>(DEFAULT_RADIUS, 1);
         this.management = new EventManagement();
     }
 
@@ -40,7 +42,7 @@ public class ClusterFacade {
      */
     public ClusterFacade(CentralPointAlgo algorithm) {
         this.algorithm = algorithm;
-        this.clusterer = new DBSCANClusterer<DoublePoint>(0.001, 1);
+        this.clusterer = new DBSCANClusterer<DoublePoint>(DEFAULT_RADIUS, 1);
         this.management = new EventManagement();
     }
 
@@ -149,6 +151,63 @@ public class ClusterFacade {
         return locations;
 
     }
+    
+    
+    
+    
+    /**
+     * Method to get clustered central points by multiple algorithm calls and evaluating the best solution
+     * @param event The event which locations should be clustered.
+     * @return List of clustered central Points.
+     */
+    
+    public List<Location> getPointsByMultiDBSCAN(Event event) {
+        int eventId = event.getEventId();
+
+        List<DoublePoint> locations = getEventsLocations(eventId);
+        
+        final int MAXIMUM_ITERATIONS = 12;
+        double minRadius = 0.0005;
+        int maximumNumberOfOneManLists = locations.size() / 4 ;
+        
+        List<Cluster<DoublePoint>> clusters;
+        
+        List<DoublePoint> result;
+        boolean repeat;
+        
+        do {
+            
+            int loopCounter = 0;
+            repeat = false;
+            int oneManListCounter = 0;
+            clusters = new DBSCANClusterer<DoublePoint>(minRadius, 1).cluster(locations);
+            minRadius = minRadius * minRadius;
+            
+            result = new ArrayList<DoublePoint>();
+            
+            for (Cluster<DoublePoint> c : clusters) {
+
+                if (c.getPoints().size() >= 2) {
+
+                    result.add(getCenter(c));
+                } else { 
+                    oneManListCounter++;
+                    if(oneManListCounter > maximumNumberOfOneManLists) {
+                        repeat = true;
+                    }
+                }
+
+            }
+            if(loopCounter >= MAXIMUM_ITERATIONS) {
+                repeat = false;
+            }
+           
+            
+        } while(repeat);
+        
+        return convertDoublePointsToLocations(result);
+        
+    }
 
     /**
      *
@@ -174,6 +233,26 @@ public class ClusterFacade {
     public DoublePoint getCenter(Cluster<DoublePoint> cluster) {
         return algorithm.calculateCentralPoint(cluster);
     }
+    
+    
+    /**
+     * Converter from a List of DoublePoints to Locations
+     * @param doublePoints
+     * @return locations
+     */
+    public List<Location> convertDoublePointsToLocations(List<DoublePoint> doublePoints) {
+        ;
+        List<Location> locations = new ArrayList<Location>();
+
+        for (DoublePoint point : doublePoints) {
+
+            locations.add(new Location(point.getPoint()[0], point.getPoint()[1], ""));
+
+        }
+
+        return locations;
+        
+    }
 
     /**
      * Method which calls the getClusteredCentralPoints method and converts the DoublePoints into
@@ -186,14 +265,10 @@ public class ClusterFacade {
      */
     public List<Location> getClusteredLocations(Event event) {
         List<DoublePoint> pointList = getClusteredCentralPoints(event);
-        List<Location> locations = new ArrayList<Location>();
-
-        for (DoublePoint point : pointList) {
-
-            locations.add(new Location(point.getPoint()[0], point.getPoint()[1], ""));
-
-        }
-
-        return locations;
+        
+        return convertDoublePointsToLocations(pointList);
     }
+    
+    
+    
 }
