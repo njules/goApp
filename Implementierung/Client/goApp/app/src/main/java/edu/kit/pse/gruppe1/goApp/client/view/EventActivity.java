@@ -21,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
@@ -87,6 +88,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_GET));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationService.RESULT_MY_LOCATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationService.RESULT_LOCATION));
 
         participantRecyclerView = (RecyclerView) findViewById(R.id.participants_recycler_view);
         participantRecyclerView.setHasFixedSize(true);
@@ -130,7 +132,6 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
             switch (intent.getAction()) {
                 // loads the participants of the event in the userAdapter.
                 case EventService.RESULT_GET:
-                    if (intent.getParcelableArrayExtra(UtilService.USERS) != null) {
                         User[] participants = (User[]) intent.getParcelableArrayExtra(UtilService.USERS);
                         User[] startedParticipants = (User[]) intent.getParcelableArrayExtra(UtilService.STARTED_USERS);
                         User[] allParticipants;
@@ -145,7 +146,6 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                         }
                         userAdapter = new UserAdapter(allParticipants);
                         participantRecyclerView.setAdapter(userAdapter);
-                    }
                     break;
                 // Moves the Map to the Users Location.
                 case LocationService.RESULT_MY_LOCATION:
@@ -157,13 +157,15 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                 // Refreshes the markers on the map, representing the Group Locations.
                 case LocationService.RESULT_LOCATION:
                     Log.i("Location", "Location received");
-                    googleMap.clear();
-                    positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
-                    googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
-                    Location[] locations = (Location[]) intent.getParcelableArrayExtra(UtilService.LOCATIONS);
-                    for (int i = 0; i < locations.length; i++) {
-                        LatLng position = new LatLng(locations[i].getLatitude(), locations[i].getLongitude());
-                        googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position));
+                    if(intent.getParcelableArrayExtra(UtilService.LOCATIONS)!=null) {
+                        googleMap.clear();
+                        positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
+                        googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
+                        Location[] locations = (Location[]) intent.getParcelableArrayExtra(UtilService.LOCATIONS);
+                        for (int i = 0; i < locations.length; i++) {
+                            LatLng position = new LatLng(locations[i].getLongitude(), locations[i].getLatitude());
+                            googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position));
+                        }
                     }
                     break;
                 default:
