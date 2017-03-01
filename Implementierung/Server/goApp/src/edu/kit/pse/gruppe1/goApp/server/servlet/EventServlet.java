@@ -225,7 +225,7 @@ public class EventServlet extends HttpServlet {
         }
 
         try {
-            Timestamp time = (Timestamp) json.get(JSONParameter.EVENT_TIME.toString());
+            Timestamp time = new Timestamp(json.getLong(JSONParameter.EVENT_TIME.toString()));
             event.setTimestamp(time);
             valuesChanged = true;
         } catch (JSONException e) {
@@ -234,7 +234,7 @@ public class EventServlet extends HttpServlet {
 
         if (valuesChanged) {
             if (!eventMang.update(event)) {
-                ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
+                return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
             }
         }
         return ServletUtils.createJSONError(ErrorCodes.OK);
