@@ -1,0 +1,49 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[ngerman]{babel}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{pdfpages}
+\setlength{\parindent}{0em} 
+\setcounter{secnumdepth}{4}
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!65!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\title{goApp Qualitätssicherung}
+\author{Jörn Kussmaul, Katharina Riesterer, Julian Neubert,\\ Jonas Walter, Tobias Ohlsson, Eva-Maria Neumann}
+\begin{document}
+	\maketitle
+	\newpage
+	\tableofcontents
+	\newpage
+
+\section{Einleitung}
+\newpage
+\section{Server}
+\newpage
+\section{Client}
+	\subsection{Lint}
+	Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Lint überprüft Android-Projekten auf mögliche Bugs und liefert Vorschläge um den Code zu verbessern.
+Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer weiter optimiert, von Performance Issues über Rechtschreibfehler bis hin zur Verbesserung der XML-Dateien.  
+
+	\subsection{View}
+		\subsubsection{Monkey-Test}
+		\subsubsection{Beta Tester}
+		Wir haben unsere App unter circa xx Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
+		\newline Einige Beispiele:
+			\begin{itemize}
+				\item Alle Texte der goApp sind jetzt eingerückt und kleben nicht mehr am Bildschirmrand.
+				\item Die Reihenfolge der Buttons in der Toolbar der StartActivity wurde geändert da sie so intuitiver zu bedienen sind.
+			\end{itemize}
+		
+		Ebenfalls waren wir an eventuellem Fehlverhalten oder gar Abstürzen der Applikation im "alltagsgebrauch" interessiert und haben auch hier Feedback gesammelt um Bugs zu beheben.
+
+
+\end{document}
