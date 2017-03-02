@@ -135,6 +135,244 @@ public class RequestServletTest {
     }
 
     @Test
+    public void testCreateUserIsMember() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        int userID = 1;
+        int groupID = 2;
+        List<Group> groups = new ArrayList<Group>(5);
+        List<User> users = new ArrayList<User>(5);
+        List<Group> reqGroups = new ArrayList<Group>(1);
+        List<User> reqUsers = new ArrayList<User>(1);
+
+        // add User to Group
+        Group grp = new Group();
+        grp.setGroupId(2);
+        groups.add(grp);
+
+        try {
+            json.put(JSONParameter.USER_ID.toString(), userID);
+            json.put(JSONParameter.GROUP_ID.toString(), groupID);
+            json.put(JSONParameter.METHOD.toString(), Methods.CREATE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockGrUsrMang.getGroups(userID)).thenReturn(groups);
+        when(mockGrUsrMang.getUsers(groupID)).thenReturn(users);
+        when(mockReqMang.getRequestByUser(userID)).thenReturn(reqGroups);
+        when(mockReqMang.getRequestByGroup(groupID)).thenReturn(reqUsers);
+        when(mockReqMang.add(groupID, userID)).thenReturn(true);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.INTERACT_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+
+    @Test
+    public void testCreateUserHasRequest() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        int userID = 1;
+        int groupID = 2;
+        List<Group> groups = new ArrayList<Group>(5);
+        List<User> users = new ArrayList<User>(5);
+        List<Group> reqGroups = new ArrayList<Group>(1);
+        List<User> reqUsers = new ArrayList<User>(1);
+
+        // add User to Group
+        Group grp = new Group();
+        grp.setGroupId(2);
+        reqGroups.add(grp);
+
+        try {
+            json.put(JSONParameter.USER_ID.toString(), userID);
+            json.put(JSONParameter.GROUP_ID.toString(), groupID);
+            json.put(JSONParameter.METHOD.toString(), Methods.CREATE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockGrUsrMang.getGroups(userID)).thenReturn(groups);
+        when(mockGrUsrMang.getUsers(groupID)).thenReturn(users);
+        when(mockReqMang.getRequestByUser(userID)).thenReturn(reqGroups);
+        when(mockReqMang.getRequestByGroup(groupID)).thenReturn(reqUsers);
+        when(mockReqMang.add(groupID, userID)).thenReturn(true);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.INTERACT_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+
+    @Test
+    public void testCreateUserLimitReached() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        int userID = 1;
+        int groupID = 2;
+        List<Group> groups = new ArrayList<Group>();
+        List<User> users = new ArrayList<User>(5);
+        List<Group> reqGroups = new ArrayList<Group>(1);
+        List<User> reqUsers = new ArrayList<User>(1);
+
+        // fill Groups
+        Group grp = new Group();
+        grp.setGroupId(3);
+        for (int i = 0; i < ServletUtils.USERLIMIT; i++) {
+            groups.add(grp);
+        }
+
+        try {
+            json.put(JSONParameter.USER_ID.toString(), userID);
+            json.put(JSONParameter.GROUP_ID.toString(), groupID);
+            json.put(JSONParameter.METHOD.toString(), Methods.CREATE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockGrUsrMang.getGroups(userID)).thenReturn(groups);
+        when(mockGrUsrMang.getUsers(groupID)).thenReturn(users);
+        when(mockReqMang.getRequestByUser(userID)).thenReturn(reqGroups);
+        when(mockReqMang.getRequestByGroup(groupID)).thenReturn(reqUsers);
+        when(mockReqMang.add(groupID, userID)).thenReturn(true);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.USR_LIMIT.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testCreateGroupLimitReached() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        int userID = 1;
+        int groupID = 2;
+        List<Group> groups = new ArrayList<Group>();
+        List<User> users = new ArrayList<User>(5);
+        List<Group> reqGroups = new ArrayList<Group>(1);
+        List<User> reqUsers = new ArrayList<User>(1);
+
+        // fill Groups
+        User usr = new User();
+        usr.setUserId(3);
+        for (int i = 0; i < ServletUtils.GROUPLIMIT; i++) {
+            users.add(usr);
+        }
+
+        try {
+            json.put(JSONParameter.USER_ID.toString(), userID);
+            json.put(JSONParameter.GROUP_ID.toString(), groupID);
+            json.put(JSONParameter.METHOD.toString(), Methods.CREATE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockGrUsrMang.getGroups(userID)).thenReturn(groups);
+        when(mockGrUsrMang.getUsers(groupID)).thenReturn(users);
+        when(mockReqMang.getRequestByUser(userID)).thenReturn(reqGroups);
+        when(mockReqMang.getRequestByGroup(groupID)).thenReturn(reqUsers);
+        when(mockReqMang.add(groupID, userID)).thenReturn(true);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.GRP_LIMIT.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
     public void testCreateDatabaseAddFalse() {
         JSONObject json = new JSONObject();
         JSONObject newJson = null;
@@ -180,7 +418,7 @@ public class RequestServletTest {
         try {
             newJson = new JSONObject(captor.getValue());
             assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
-                    ErrorCodes.OK.getErrorCode());
+                    ErrorCodes.DB_ERROR.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             fail();
@@ -342,7 +580,7 @@ public class RequestServletTest {
         try {
             newJson = new JSONObject(captor.getValue());
             assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
-                    ErrorCodes.OK.getErrorCode());
+                    ErrorCodes.DB_ERROR.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             fail();
@@ -356,7 +594,6 @@ public class RequestServletTest {
         JSONObject newJson = null;
         int userID = 1;
         int groupID = 2;
-        List<Group> groups = new ArrayList<Group>(5);
         List<User> users = new ArrayList<User>(5);
         List<Group> reqGroups = new ArrayList<Group>(1);
         List<User> reqUsers = new ArrayList<User>(1);
@@ -406,7 +643,6 @@ public class RequestServletTest {
 
     @Test
     public void testCreateWOutJSON() {
-        fail();
         JSONObject json = new JSONObject();
         JSONObject newJson = null;
         int userID = 1;
@@ -743,13 +979,142 @@ public class RequestServletTest {
     }
 
     @Test
-    public void testRejectDatabaseNull() {
-        fail();
+    public void testRejectDatabaseDeleteFalse() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        int userID = 1;
+        int groupID = 2;
+        Request req = new Request();
+
+        try {
+            json.put(JSONParameter.USER_ID.toString(), userID);
+            json.put(JSONParameter.GROUP_ID.toString(), groupID);
+            json.put(JSONParameter.METHOD.toString(), Methods.REJECT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockReqMang.getRequest(groupID, userID)).thenReturn(req);
+        when(mockReqMang.delete(groupID, userID)).thenReturn(false);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testRejectDatabaseRequestNull() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        int userID = 1;
+        int groupID = 2;
+        Request req = new Request();
+
+        try {
+            json.put(JSONParameter.USER_ID.toString(), userID);
+            json.put(JSONParameter.GROUP_ID.toString(), groupID);
+            json.put(JSONParameter.METHOD.toString(), Methods.REJECT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockReqMang.getRequest(groupID, userID)).thenReturn(null);
+        when(mockReqMang.delete(groupID, userID)).thenReturn(true);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
     public void testRejectWOutJSON() {
-        fail();
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        int userID = 1;
+        int groupID = 2;
+        Request req = new Request();
+
+        try {
+            json.put(JSONParameter.METHOD.toString(), Methods.REJECT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockReqMang.getRequest(groupID, userID)).thenReturn(req);
+        when(mockReqMang.delete(groupID, userID)).thenReturn(true);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
