@@ -300,6 +300,14 @@ public class ClusterFacade {
         return convertDoublePointsToLocations(pointList);
     }
     
+    /**
+     * Method to get the Locations which are clustered by the MultiDBSCAN method and converted into Locations
+     * @param event
+     * @return Clustered Locations
+     */
+    public List<Location> getLocationsByMultiDBSCAN(Event event) {
+        return convertDoublePointsToLocations(getPointsByMultiDBSCAN(event));
+    }
     
     
 }
