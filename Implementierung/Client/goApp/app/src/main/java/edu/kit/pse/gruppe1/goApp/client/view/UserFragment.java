@@ -1,10 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.app.AlertDialog;
+import android.content.*;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +20,7 @@ import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.databinding.GroupInfoFragmentMemberBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
+import edu.kit.pse.gruppe1.goApp.client.model.Request;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 
@@ -80,7 +79,20 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.leave_group_button) {
-            groupService.deleteMember(getActivity(), group, Preferences.getUser());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.leave_group_dialog)
+                    .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            groupService.deleteMember(getActivity(), group, Preferences.getUser());
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.show();
         }
     }
 

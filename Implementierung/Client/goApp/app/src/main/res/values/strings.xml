@@ -43,4 +43,6 @@
     <string name="searchgroup_item">SearchGroup</string>
     <string name="search_item">Search new groups</string>
     <string name="empty_group_name">Bitte gib den Gruppennamen ein</string>
+    <string name="delete_group_dialog">Willst du diese Gruppe wirklich löschen?</string>
+    <string name="leave_group_dialog">Willst du aus der Gruppe austreten?</string>
 </resources>

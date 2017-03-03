@@ -14,9 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -61,6 +64,29 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
         setSupportActionBar(newGroupToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         et = (EditText) findViewById(R.id.search_edit_text);
+        et.setImeOptions(EditorInfo.IME_ACTION_SEARCH); // Lupe
+        et.setImeActionLabel("search",3); //tried to implement search
+        et.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(view.getId() == R.id.search_edit_text){
+                    if(keyEvent.getKeyCode()==KeyEvent.KEYCODE_ENTER){
+                        if (view != null) {
+                            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
+                        String search = et.getText().toString();
+                        if(search.isEmpty()){
+                            Toast.makeText(getApplicationContext(), R.string.empty_group_name, Toast.LENGTH_SHORT).show();
+                        }else {
+                            groupSearchService.getGroupsByName(NewGroupActivity.this, search);
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
         FloatingActionButton myFab = (FloatingActionButton) findViewById(R.id.new_group_button);
         myFab.setOnClickListener(this);
     }

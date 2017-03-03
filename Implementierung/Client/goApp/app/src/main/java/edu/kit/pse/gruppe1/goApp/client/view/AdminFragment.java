@@ -1,12 +1,10 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,6 +46,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     private int memberPosition;
     private int requestPosition;
     private User newMember;
+    AlertDialog.Builder builder;
 
     private RequestService requestService;
     private GroupService groupService;
@@ -73,6 +72,8 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     @Override
     public void onStart() {
         super.onStart();
+
+        builder = new AlertDialog.Builder(getActivity());
 
         receiver = new ResultReceiver(getActivity());
         requestSearchService = new RequestSearchService();
@@ -121,12 +122,37 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
                 break;
             case R.id.reject_member:
                 requestPosition = position;
-                requestService.reject(getActivity(), new Request(requestAdapter.getItem(position), group));
+                builder.setMessage("Willst du " + requestAdapter.getItem(requestPosition).getName() + " wirklich ablehnen?")
+                        .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                requestService.reject(getActivity(), new Request(requestAdapter.getItem(requestPosition), group));
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                builder.show();
                 break;
             case R.id.delete_member:
                 memberPosition = position;
-                if (memberAdapter.getItem(position).getId() != Preferences.getUser().getId()) {
-                    groupService.deleteMember(getActivity(), group, memberAdapter.getItem(position));
+                User member = memberAdapter.getItem(position);
+                if (member.getId() != Preferences.getUser().getId()) {
+                    builder.setMessage("Willst du " + member.getName() + " aus " + group.getName() + " entfernen?")
+                            .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    groupService.deleteMember(getActivity(), group, memberAdapter.getItem(memberPosition));
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                }
+                            });
+                    // Create the AlertDialog object and return it
+                    builder.show();
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.DeleteError), Toast.LENGTH_SHORT).show();
                 }
@@ -150,7 +176,20 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.delete_group_button) {
-            groupService.delete(getActivity(), group);
+            builder.setMessage(R.string.delete_group_dialog)
+                    .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            groupService.delete(getActivity(), group);
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.show();
+
         }
     }
 
@@ -200,7 +239,8 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
                     break;
                 // Inserts a new member into the memberAdapter and deletes the related request from the requestAdapter.
                 case RequestService.RESULT_ACCEPT:
-                    memberAdapter.insertItem(requestAdapter.getItem(requestPosition));
+                    User member = requestAdapter.getItem(requestPosition);
+                    memberAdapter.insertItem(member);
                     requestAdapter.delete(requestPosition);
                     break;
                 // Deletes a request from the requestAdapter.
