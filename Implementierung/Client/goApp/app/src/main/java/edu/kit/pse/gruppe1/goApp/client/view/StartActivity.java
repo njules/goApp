@@ -120,6 +120,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
 
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, StartActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
     }
 

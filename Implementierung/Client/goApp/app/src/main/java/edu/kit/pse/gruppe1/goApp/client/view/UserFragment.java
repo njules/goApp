@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -58,7 +59,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
 
-        receiver = new ResultReceiver();
+        receiver = new ResultReceiver(getActivity());
         groupService = new GroupService();
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(GroupService.RESULT_DELETE_MEMBER));
@@ -88,11 +89,17 @@ public class UserFragment extends Fragment implements View.OnClickListener {
      */
     private class ResultReceiver extends BroadcastReceiver {
 
+        private final Activity activity;
+
+        public ResultReceiver(Activity activity){
+            this.activity = activity;
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             // If the intent shows any kind of error the user will be notified.
             if (intent.getStringExtra(UtilService.ERROR) != null) {
-                Toast.makeText(getActivity(), intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, intent.getStringExtra(UtilService.ERROR), Toast.LENGTH_LONG).show();
                 return;
             }
             switch (intent.getAction()) {
@@ -106,7 +113,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                     break;
                 // Starts the StartActivity since the User is not longer a member of the Group.
                 case GroupService.RESULT_DELETE_MEMBER:
-                    StartActivity.start(getActivity());
+                    StartActivity.start(activity);
                     break;
                 default:
                     break;

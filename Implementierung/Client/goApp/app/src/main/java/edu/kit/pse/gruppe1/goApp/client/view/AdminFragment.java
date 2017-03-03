@@ -74,7 +74,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
     public void onStart() {
         super.onStart();
 
-        receiver = new ResultReceiver();
+        receiver = new ResultReceiver(getActivity());
         requestSearchService = new RequestSearchService();
         groupService = new GroupService();
         requestService = new RequestService();
@@ -159,6 +159,13 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
      */
     private class ResultReceiver extends BroadcastReceiver {
 
+        Activity activity;
+
+        public ResultReceiver(Activity activity){
+            super();
+            this.activity = activity;
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             // If the intent shows any kind of error the user will be notified.
@@ -189,7 +196,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
                     break;
                 // Starts the StartActivity since the Group does not longer exist.
                 case GroupService.RESULT_DELETE:
-                    StartActivity.start(AdminFragment.this.getActivity());
+                    StartActivity.start(activity);
                     break;
                 // Inserts a new member into the memberAdapter and deletes the related request from the requestAdapter.
                 case RequestService.RESULT_ACCEPT:

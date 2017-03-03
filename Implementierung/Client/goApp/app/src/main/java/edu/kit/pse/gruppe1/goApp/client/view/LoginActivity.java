@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             //starts the StartActivity after a successful login
             if (Objects.equals(intent.getAction(), LoginService.RESULT_LOGIN)) {
                 Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                finish();
                 StartActivity.start(LoginActivity.this);
             }
         }
