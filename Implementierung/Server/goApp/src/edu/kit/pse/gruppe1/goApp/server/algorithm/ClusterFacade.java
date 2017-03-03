@@ -161,27 +161,58 @@ public class ClusterFacade {
      * @return List of clustered central Points.
      */
     
-    public List<Location> getPointsByMultiDBSCAN(Event event) {
+    public List<DoublePoint> getPointsByMultiDBSCAN(Event event) {
         int eventId = event.getEventId();
 
         List<DoublePoint> locations = getEventsLocations(eventId);
         
+        List<DoublePoint> result;
+        
+        if(locations.size() <= 1) return null;
+        
+        if(locations.size()<= 3) {
+            Cluster<DoublePoint> cluster = new Cluster<DoublePoint>();
+            for(DoublePoint loc : locations) {
+                cluster.addPoint(loc);
+            }
+            
+           
+            DoublePoint oneResult = algorithm.calculateCentralPoint(cluster);
+            result = new ArrayList<DoublePoint>();
+            result.add(oneResult);
+            } else {
+            result = multiDBSCAN(locations);
+        }
+        
+        return result;
+        
+    }
+    
+    
+    /**
+     * Method which calls the DBSCAN algorithm till 3/4 of the locations are involved in the arithmetic midpoint
+     * @param locations
+     * @return list of midpoints
+     */
+    private List<DoublePoint> multiDBSCAN(List<DoublePoint> locations) {
+        
         final int MAXIMUM_ITERATIONS = 12;
         double minRadius = 0.0005;
-        int maximumNumberOfOneManLists = locations.size() / 4 ;
+        int minimalNumberOfMen = locations.size() * 3 / 4 ;
         
         List<Cluster<DoublePoint>> clusters;
         
         List<DoublePoint> result;
         boolean repeat;
+        int loopCounter = 0;
         
         do {
             
-            int loopCounter = 0;
-            repeat = false;
-            int oneManListCounter = 0;
+            
+            repeat = true;
+            int MenListCounter = 0;
             clusters = new DBSCANClusterer<DoublePoint>(minRadius, 1).cluster(locations);
-            minRadius = minRadius * minRadius;
+            minRadius = 2 * minRadius;
             
             result = new ArrayList<DoublePoint>();
             
@@ -190,22 +221,22 @@ public class ClusterFacade {
                 if (c.getPoints().size() >= 2) {
 
                     result.add(getCenter(c));
-                } else { 
-                    oneManListCounter++;
-                    if(oneManListCounter > maximumNumberOfOneManLists) {
-                        repeat = true;
-                    }
-                }
+                    MenListCounter += c.getPoints().size();
+                } 
 
             }
-            if(loopCounter >= MAXIMUM_ITERATIONS) {
+            if(MenListCounter >= minimalNumberOfMen) {
+                break;
+            }
+            if(loopCounter++ >= MAXIMUM_ITERATIONS) {
                 repeat = false;
             }
+            
            
             
         } while(repeat);
         
-        return convertDoublePointsToLocations(result);
+        return result;
         
     }
 
