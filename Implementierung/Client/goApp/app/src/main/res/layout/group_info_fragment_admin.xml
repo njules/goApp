@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"></variable>
+        <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"/>
     </data>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="match_parent"
@@ -13,6 +12,7 @@
                       android:layout_weight="1">
             <TextView android:id="@+id/member_text"
                       android:paddingStart="16dp"
+                      android:paddingEnd="16dp"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:elevation="2dp"
@@ -35,6 +35,7 @@
                 android:layout_weight="2">
             <TextView android:id="@+id/request_text"
                       android:paddingStart="16dp"
+                      android:paddingEnd="16dp"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:elevation="2dp"

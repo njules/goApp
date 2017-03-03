@@ -1,7 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,18 +8,9 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import edu.kit.pse.gruppe1.goApp.client.R;
-import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
-import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
-import edu.kit.pse.gruppe1.goApp.client.model.Event;
 import edu.kit.pse.gruppe1.goApp.client.model.Group;
-import edu.kit.pse.gruppe1.goApp.client.model.Location;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
-import edu.kit.pse.gruppe1.goApp.client.view.GroupActivity;
 import edu.kit.pse.gruppe1.goApp.client.view.LoginActivity;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.sql.Date;
 
 /**
  * This Service is used to notify an User that an Event is going to start even when the Application is closed.

@@ -98,7 +98,11 @@ public class NewGroupActivity extends AppCompatActivity implements View.OnClickL
                     inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
                 String search = et.getText().toString();
-                groupSearchService.getGroupsByName(this, search);
+                if(search.isEmpty()){
+                    Toast.makeText(getApplicationContext(), R.string.empty_group_name, Toast.LENGTH_SHORT).show();
+                }else {
+                    groupSearchService.getGroupsByName(this, search);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

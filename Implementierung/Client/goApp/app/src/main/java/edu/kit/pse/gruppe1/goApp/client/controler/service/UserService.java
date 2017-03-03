@@ -10,6 +10,8 @@ import edu.kit.pse.gruppe1.goApp.client.model.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 /**
  * This Service provides methods to handle a single User.
  */
@@ -57,7 +59,7 @@ public class UserService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent.getAction() == ACTION_CHANGE) {
+        if (Objects.equals(intent.getAction(), ACTION_CHANGE)) {
             HTTPConnection connection = new HTTPConnection(SERVLET);
             Intent resultIntent = new Intent();
             JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));

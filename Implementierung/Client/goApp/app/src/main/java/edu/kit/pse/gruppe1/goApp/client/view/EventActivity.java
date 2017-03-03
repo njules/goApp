@@ -21,7 +21,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
@@ -151,7 +150,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                 case LocationService.RESULT_MY_LOCATION:
                     positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
                     googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
-                    android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
+                    android.location.Location location = intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;
                 // Refreshes the markers on the map, representing the Group Locations.

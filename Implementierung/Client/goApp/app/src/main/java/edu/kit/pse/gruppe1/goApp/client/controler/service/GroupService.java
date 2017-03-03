@@ -1,18 +1,12 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
-import java.sql.Date;
-import java.util.List;
-
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.HTTPConnection;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,7 +48,7 @@ public class GroupService extends IntentService {
     /**
      * Action of the broadcasts intent with the results of setFounder(Context context, Group group, User newFounder)
      */
-    public static final String RESULT_SET_FOUNDER = "RESULT_SET_FOUNDER";
+    private static final String RESULT_SET_FOUNDER = "RESULT_SET_FOUNDER";
     /**
      * Action of the broadcasts intent with the results of getEvents(Context context, Group group, User user)
      */

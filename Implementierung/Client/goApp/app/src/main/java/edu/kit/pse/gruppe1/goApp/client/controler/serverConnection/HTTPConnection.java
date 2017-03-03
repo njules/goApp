@@ -1,7 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.client.controler.serverConnection;
 
 
-import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 

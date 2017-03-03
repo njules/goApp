@@ -190,7 +190,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 locationIntent.setAction(LocationService.ACTION_LOCATION);
                 locationIntent.putExtra(UtilService.EVENT, intentEvent);
                 context.startService(locationIntent);
-                return;
             } else {
 
                 notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

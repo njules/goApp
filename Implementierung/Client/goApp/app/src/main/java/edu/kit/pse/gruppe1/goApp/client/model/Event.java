@@ -3,11 +3,7 @@ package edu.kit.pse.gruppe1.goApp.client.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Set;
 
 /**
  * An event is created by a user within a specific group.
@@ -46,7 +42,7 @@ public class Event implements Parcelable {
     /**
      * @param in the Parcel that creates the Event.
      */
-    protected Event(Parcel in) {
+    private Event(Parcel in) {
         id = in.readInt();
         name = in.readString();
         time = new Timestamp(in.readLong());

@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -188,7 +189,7 @@ public class AdminFragment extends Fragment implements ItemClickListener, View.O
                     break;
                 // Starts the StartActivity since the Group does not longer exist.
                 case GroupService.RESULT_DELETE:
-                    StartActivity.start(getActivity());
+                    StartActivity.start(AdminFragment.this.getActivity());
                     break;
                 // Inserts a new member into the memberAdapter and deletes the related request from the requestAdapter.
                 case RequestService.RESULT_ACCEPT:

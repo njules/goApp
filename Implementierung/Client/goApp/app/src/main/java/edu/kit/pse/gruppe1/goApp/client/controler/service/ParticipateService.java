@@ -10,6 +10,8 @@ import edu.kit.pse.gruppe1.goApp.client.model.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 /**
  * This Service provides methods to handle a users reaction towards an event
  */
@@ -58,7 +60,7 @@ public class ParticipateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent.getAction() == ACTION_STATUS) {
+        if (Objects.equals(intent.getAction(), ACTION_STATUS)) {
             HTTPConnection connection = new HTTPConnection(SERVLET);
             Intent resultIntent = new Intent();
             JSONObject result = connection.sendPostRequest(intent.getStringExtra(UtilService.JSON));

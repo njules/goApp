@@ -4,6 +4,6 @@
     <item
             android:id="@+id/action_change_name"
             android:icon="@drawable/ic_edit"
-            android:title="Change name"
+            android:title="@string/change_name_item"
             app:showAsAction="always" />
 </menu>

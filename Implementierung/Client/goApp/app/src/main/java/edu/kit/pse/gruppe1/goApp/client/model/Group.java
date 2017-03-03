@@ -4,7 +4,6 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.*;
 
@@ -43,7 +42,7 @@ public class Group extends BaseObservable implements Parcelable {
     /**
      * @param in the Parcel that creates the Group.
      */
-    protected Group(Parcel in) {
+    Group(Parcel in) {
         id = in.readInt();
         name = in.readString();
         founder = in.readParcelable(User.class.getClassLoader());

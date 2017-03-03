@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -26,6 +25,8 @@ import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.LoginService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
+
+import java.util.Objects;
 
 /**
  * The LoginActivity is the first Activity to start when the goApp starts.
@@ -131,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 return;
             }
             //starts the StartActivity after a successful login
-            if (intent.getAction() == LoginService.RESULT_LOGIN) {
+            if (Objects.equals(intent.getAction(), LoginService.RESULT_LOGIN)) {
                 Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
                 StartActivity.start(LoginActivity.this);
             }

@@ -34,7 +34,7 @@ public class Location implements Parcelable {
     /**
      * @param in the Parcel that creates the Location.
      */
-    protected Location(Parcel in) {
+    Location(Parcel in) {
         longitude = in.readDouble();
         latitude = in.readDouble();
         name = in.readString();

@@ -209,7 +209,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     }
                     notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent notifyIntent = new Intent(context, NotificationService.class);
-                    notifyIntent.putExtra(UtilService.GROUP.toString(), Preferences.getGroup());
+                    notifyIntent.putExtra(UtilService.GROUP, Preferences.getGroup());
                     notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
                     //900000 is 15 mins in millis
                     notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, event.getTime().getTime() - beforeEvent, notifyAlarmIntent);
@@ -227,7 +227,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     break;
                 // Moves the Map to the Users Location.
                 case LocationService.RESULT_MY_LOCATION:
-                    android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
+                    android.location.Location location = intent.getParcelableExtra(UtilService.LOCATION);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;
                 default:

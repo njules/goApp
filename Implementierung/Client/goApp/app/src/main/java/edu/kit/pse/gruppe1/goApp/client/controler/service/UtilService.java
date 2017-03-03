@@ -2,14 +2,12 @@ package edu.kit.pse.gruppe1.goApp.client.controler.service;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
-import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.serverConnection.JSONParameter;
 import edu.kit.pse.gruppe1.goApp.client.model.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 
@@ -41,6 +39,7 @@ public final class UtilService {
     private static final String SERVER_FAILED = "Our server has some problems";
     private static final String CONNECTION_FAILED = "Please check your internet connection";
     private static final String OK = "ok";
+    private static final String REQUEST_FAIL = "You are are already a member";
 
 
     /**
@@ -178,8 +177,10 @@ public final class UtilService {
             return CONNECTION_FAILED;
         } else if (error == JSONParameter.ErrorCodes.OK.getErrorCode()) {
             return OK;
-        }else if(error == JSONParameter.ErrorCodes.EMPTY_LIST.getErrorCode()){
+        }else if(error == JSONParameter.ErrorCodes.EMPTY_LIST.getErrorCode()) {
             return null;
+        }else if(error == JSONParameter.ErrorCodes.INTERACT_ERROR.getErrorCode()){
+            return REQUEST_FAIL;
         } else {
             return SERVER_FAILED;
         }

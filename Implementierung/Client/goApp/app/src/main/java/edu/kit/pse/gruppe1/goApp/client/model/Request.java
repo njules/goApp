@@ -23,7 +23,7 @@ public class Request implements Parcelable {
     /**
      * @param in the Parcel that creates the Request.
      */
-    protected Request(Parcel in) {
+    private Request(Parcel in) {
         user = in.readParcelable(User.class.getClassLoader());
         group = in.readParcelable(Group.class.getClassLoader());
     }

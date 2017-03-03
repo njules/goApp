@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"></variable>
+        <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -38,6 +38,7 @@
                           android:textColor="#000000"
                           android:background="@color/colorPrimary"
                           android:paddingStart="16dp"
+                          android:paddingEnd="16dp"
                           android:text="@string/new_events"/>
                 <android.support.v7.widget.RecyclerView
                         android:id="@+id/new_event_recycler_view"
@@ -56,6 +57,7 @@
                           android:elevation="2dp"
                           android:textSize="26sp"
                           android:textColor="#000000"
+                          android:paddingEnd="16dp"
                           android:paddingStart="16dp"
                           android:background="@color/colorPrimary"
                           android:text="@string/your_events"/>

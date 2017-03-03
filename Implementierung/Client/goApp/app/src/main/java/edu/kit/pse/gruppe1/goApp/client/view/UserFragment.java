@@ -32,13 +32,13 @@ import edu.kit.pse.gruppe1.goApp.client.model.User;
 public class UserFragment extends Fragment implements View.OnClickListener {
     private Group group;
     private GroupInfoFragmentMemberBinding binding;
-    RecyclerView memberRecyclerView;
-    LinearLayoutManager memberLinearLayoutManager;
-    UserAdapter memberAdapter;
-    AppCompatButton leave;
+    private RecyclerView memberRecyclerView;
+    private LinearLayoutManager memberLinearLayoutManager;
+    private UserAdapter memberAdapter;
+    private AppCompatButton leave;
 
-    ResultReceiver receiver;
-    GroupService groupService;
+    private ResultReceiver receiver;
+    private GroupService groupService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
