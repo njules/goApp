@@ -16,8 +16,7 @@
 		<property name="hbm2ddl.auto">create-drop</property>
 
 
-		<!-- JDBC connection pool settings ... using built-in test pool -->
-		<property name="connection.pool_size">1</property>
+
 
 		<!-- Select our SQL dialect -->
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>

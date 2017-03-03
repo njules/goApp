@@ -61,6 +61,9 @@ public class EventUserManagementTest {
         assertThat(new UserManagement().getUser(userTmp.getUserId()).getParticipations().size(),
                 is(1));
         new UserManagement().delete(userTmp.getUserId());
+
+        assertThat(new EventUserManagement().addUser(invalidID, invalidID, Status.INVITED),
+                is(false));
     }
 
     @Test
@@ -195,6 +198,10 @@ public class EventUserManagementTest {
         assertThat(events.get(0).getEventId(), is(eventTmp.getEventId()));
 
         new EventManagement().delete(eventTmp.getEventId());
+
+        assertThat(
+                new EventUserManagement().getEventsByStatus(Status.INVITED, invalidID, invalidID),
+                is(nullValue()));
     }
 
     @Test
@@ -203,6 +210,8 @@ public class EventUserManagementTest {
         assertThat(events, is(notNullValue()));
         assertThat(events.size(), is(1));
         assertThat(events.get(0).getEventId(), is(createdEvent.getEventId()));
+
+        assertThat(new EventUserManagement().getEvents(invalidID), is(nullValue()));
     }
 
 }

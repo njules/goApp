@@ -235,6 +235,11 @@ public class Group {
      * @return true, if success, otherwise false
      */
     public boolean addRequest(Request request) {
+        for (Request r : requests) {
+            if (r.getUser().getUserId() == request.getUser().getUserId()) {
+                return false;
+            }
+        }
         return requests.add(request);
     }
 

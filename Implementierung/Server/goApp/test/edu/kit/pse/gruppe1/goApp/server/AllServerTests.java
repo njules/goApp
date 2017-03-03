@@ -13,6 +13,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagementTest;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagementTest;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagementTest;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagementTest;
+import edu.kit.pse.gruppe1.goApp.server.database.management.LocationDeletionTimerTest;
 import edu.kit.pse.gruppe1.goApp.server.database.management.RequestManagementTest;
 import edu.kit.pse.gruppe1.goApp.server.database.management.ThreadTest;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagementTest;
@@ -31,9 +32,10 @@ import edu.kit.pse.gruppe1.goApp.server.servlet.UserServletTest;
         LocationServletTest.class, ParticipateServletTest.class, RequestServletTest.class,
         ServletUtilsTest.class, UserServletTest.class, RequestSearchServletTest.class,
         ClusterFacadeTest.class, ImportantMidPointCentralTest.class, SimpleCentralTest.class,
-        DatabaseInitializerTest.class, EventDeletionTimerTest.class, EventManagementTest.class,
-        EventUserManagementTest.class, GroupManagementTest.class, GroupUserManagementTest.class,
-        ThreadTest.class, UserManagementTest.class, RequestManagementTest.class })
+        DatabaseInitializerTest.class, EventDeletionTimerTest.class, LocationDeletionTimerTest.class,
+        EventManagementTest.class, EventUserManagementTest.class, GroupManagementTest.class,
+        GroupUserManagementTest.class, ThreadTest.class, UserManagementTest.class,
+        RequestManagementTest.class })
 public class AllServerTests {
 
 }

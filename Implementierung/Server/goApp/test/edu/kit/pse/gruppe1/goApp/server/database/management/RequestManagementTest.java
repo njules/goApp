@@ -50,12 +50,17 @@ public class RequestManagementTest {
     }
 
     @Test
-    public void testAdd() {
+    public void testAdd() {        
         assertThat(createdGroup.getRequest(userWithRequest.getUserId()), is(notNullValue()));
         assertThat(createdGroup.getRequests().size(), is(1));
         assertThat(userWithRequest.getRequests().size(), is(1));
         assertThat(userWithRequest.getRequests().iterator().next().getGroup().getGroupId(),
                 is(createdGroup.getGroupId()));
+        
+        assertThat(new RequestManagement().add(createdGroup.getGroupId(), userWithRequest.getUserId()),
+                is(false));
+        assertThat(new RequestManagement().add(invalidId, invalidId), is(false));
+        
     }
 
     @Test

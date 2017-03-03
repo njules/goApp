@@ -113,9 +113,6 @@ public class EventUserManagement implements Management {
     }
 
     private boolean update(Participant chParticipant) {
-        if (chParticipant.getParticipantID() == null) {
-            return false;
-        }
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
         session.beginTransaction();
         session.update(chParticipant);

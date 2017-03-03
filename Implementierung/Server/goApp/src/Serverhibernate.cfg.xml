@@ -18,9 +18,7 @@
 		<property name="hbm2ddl.auto">update</property>
 
 
-		<!-- JDBC connection pool settings ... using built-in test pool. Later 
-			use C3p0 or something like this. -->
-		<property name="connection.pool_size">1</property>
+
 
 		<!-- Select our SQL dialect -->
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
