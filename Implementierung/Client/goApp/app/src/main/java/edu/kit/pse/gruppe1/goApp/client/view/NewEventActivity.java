@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -82,6 +83,10 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
 
         en = (EditText) findViewById(R.id.new_event_name);
         el = (EditText) findViewById(R.id.new_event_location);
+
+        en.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        el.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
 
         timepicker = (TimePicker) findViewById(R.id.time_picker);
         timepicker.setIs24HourView(true);

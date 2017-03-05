@@ -24,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPersonName"
+                android:textCursorDrawable="@drawable/search_cursor"
                 android:hint="@string/groupName"/>
         </android.support.v7.widget.Toolbar>
 

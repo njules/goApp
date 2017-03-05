@@ -19,7 +19,7 @@
                       android:paddingBottom="5dp"
                       android:paddingTop="5dp"
                       android:textSize="26sp"
-                      android:textColor="#000000"
+                      android:textColor="@color/colorText"
                       android:background="@color/colorSecondary"
                       android:text="@string/group_member"/>
             <android.support.v7.widget.RecyclerView
@@ -42,7 +42,7 @@
                       android:paddingBottom="5dp"
                       android:paddingTop="5dp"
                       android:textSize="26sp"
-                      android:textColor="#000000"
+                      android:textColor="@color/colorText"
                       android:background="@color/colorSecondary"
                       android:text="@string/group_request"/>
             <android.support.v7.widget.RecyclerView

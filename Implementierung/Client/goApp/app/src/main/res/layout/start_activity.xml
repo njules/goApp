@@ -35,7 +35,7 @@
                 android:elevation="2dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColor="#000000"
+                android:textColor="@color/colorText"
                 android:background="@color/colorPrimary"
                 android:text="@string/your_groups"/>
         <android.support.v7.widget.RecyclerView
@@ -61,7 +61,7 @@
                 android:elevation="2dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColor="#000000"
+                android:textColor="@color/colorText"
                 android:background="@color/colorPrimary"
                 android:text="@string/requests"/>
 

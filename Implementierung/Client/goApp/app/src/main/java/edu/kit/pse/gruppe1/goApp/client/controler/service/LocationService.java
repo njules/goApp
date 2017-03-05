@@ -89,6 +89,7 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
                 Location[] locations = syncLocation(event.getId());
                 resultIntent.setAction(RESULT_LOCATION);
                 resultIntent.putExtra(UtilService.LOCATIONS, locations);
+                resultIntent.putExtra(UtilService.EVENT,event);
                 Log.i("Location", resultIntent.toString()+event.getId() );
 
                 //The Service restarts itself when the Event is still on.

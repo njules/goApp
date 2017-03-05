@@ -61,14 +61,14 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
      */
     public static void start(Activity activity, Event event) {
         Intent intent = new Intent(activity, EventActivity.class);
-        intent.putExtra("Event", event);
+        intent.putExtra(UtilService.EVENT, event);
         activity.startActivity(intent);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        event = getIntent().getParcelableExtra("Event");
+        event = getIntent().getParcelableExtra(UtilService.EVENT);
         binding = DataBindingUtil.setContentView(this, R.layout.event_info_activity);
         binding.setEvent(event);
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.event_info_toolbar);
@@ -157,13 +157,16 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                 case LocationService.RESULT_LOCATION:
                     Log.i("Location", "Location received");
                     if(intent.getParcelableArrayExtra(UtilService.LOCATIONS)!=null) {
-                        googleMap.clear();
-                        positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
-                        googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
-                        Location[] locations = (Location[]) intent.getParcelableArrayExtra(UtilService.LOCATIONS);
-                        for (int i = 0; i < locations.length; i++) {
-                            LatLng position = new LatLng(locations[i].getLongitude(), locations[i].getLatitude());
-                            googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position));
+                        Event intentEvent = intent.getParcelableExtra(UtilService.EVENT);
+                        if(intentEvent.getId()==event.getId()) {
+                            googleMap.clear();
+                            positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
+                            googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
+                            Location[] locations = (Location[]) intent.getParcelableArrayExtra(UtilService.LOCATIONS);
+                            for (int i = 0; i < locations.length; i++) {
+                                LatLng position = new LatLng(locations[i].getLongitude(), locations[i].getLatitude());
+                                googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position));
+                            }
                         }
                     }
                     break;

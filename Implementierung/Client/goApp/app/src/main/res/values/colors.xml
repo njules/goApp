@@ -10,4 +10,5 @@
     <color name="colorAccept">#217709</color>
     <color name="colorAccent">#23780b</color>
     <color name="colorReject">#a90518</color>
+    <color name="colorText">#000000</color>
 </resources>
