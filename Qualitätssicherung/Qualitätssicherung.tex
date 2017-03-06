@@ -45,20 +45,17 @@ Außerdem war der Umgang mit dem Timestamp falsch.
 \newpage
 \section{Testbericht}
 \subsection{Testszenarien}
-hier unere Szenarien aus dem Pflichtenheft rein und testen - beschreiben ob es ok war oder nicht, momentan sind diese nur kopiert aus dem Pflichtenheft.
-Irgendwie unter jedes noch Ergebnis: machen und Auffälligkeiten bei der Durchführung beschreiben oder das alles ok war oder so.\newline
+Im folgenden wollen wir kurz auf unsere Testszenarien aus dem Pflichtenheft eingehen,.
+Trotz einer immer weiter voranschreitenden Verbesserung und dadurch teilweise auch Abänderung unserer Ideen aus dem Pflichtenheft konnten alle Testszenarien die im Pflichtenheft definiert wurden mit positivem Ausgang durchlaufen werden.
 
-%TODO: ab hier kopiert aus Pflichtenheft
- 
-%\section{Globale Testfälle}
-Die Tests werden auf dem Referenzgerät mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
-Die folgenden Testfälle stellen sicher, dass die genannten Funktionalen Anforderungen erfüllt sind.
+Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galaxy S4) mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
 
 \subsubsection{Kontoverwaltung}
 \begin{itemize} 
 	\item[T10] deckt ab \hyperlink{FA10}{FA10} \newline
 	Registrieren: Eine bisher nicht registrierte Person mit einem Google Account registriert sich mit diesem im System 				und wählt zusätzlich einen Benutzernamen. \newline
-	Ergebnis: Der neue Benutzer mit seinem Google Account und Benutzername ist in der Datenbank.
+	Ergebnis: Der neue Benutzer mit seinem Google Account und Benutzername ist in der Datenbank. \newline
+	Bemerkung: Dieses Testszenario kann so nicht mehr umgesetzt werden da der Benutzername bei der Erstellung eines Accounts nicht meht gewählt wird sondern auf den GoogleAccount Namen gesetzt wird, der Benutername lässt sich allerdings immernoch nachträglich ändern.
 	
 	\item[T20] deckt ab \hyperlink{FA20}{FA20}\newline
 	Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
@@ -120,11 +117,13 @@ Die folgenden Testfälle stellen sicher, dass die genannten Funktionalen Anforde
 	Ergebnis: 30 Minuten vor dem Termin werden alle Teilnehmer von dem Termin benachrichtigt.  \newline
 	15 Minuten vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar.  \newline
 	60 Minuten nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf 					dem Client noch auf dem Server).
+	Bemerkung: Die Teilnehmer werden in der jetztigen Version 15 Minuten vor dem Termin benarichtigt. 
 	
 	\subsubsection{Standort}
 	\item[T120] deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
 	Standort Übertragung der Clients an den Server.  \newline
-	Ergebnis: Der Standort aller Teilnehmer ist auf dem Server gespeichert.
+	Ergebnis: Der Standort aller Teilnehmer ist auf dem Server gespeichert. \newline
+	Bemerkung: Da die Kommunikation zwischen Server und Client bei unserer App immer vom Client ausgeht lässt sich nicht sicher sagen ob zu einem gewissen Zeitpunkt die aktuellen Standorte aller User eines Termins auf dem Server gespeichert sind. Allerdings updaten die Clients bei ausreichender Internetverbindung alle 15-30 Sekunden ihre Standortinformationen auf dem Server.
 	
 	\item[T130]  deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
 	Der Server sendet den berechneten Gruppenmittelpunkt an den Teilnehmer. \newline
@@ -234,9 +233,10 @@ Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer we
 		Wir haben unsere App unter circa xx Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
 		\newline Einige Beispiele:
 			\begin{itemize}
-				\item User bekommen jetzt bei "`kritischen"' Aktionen wie dem Löschen einer Gruppe einen Dialog angezeigt ob sie diese Aktion wirklich durchführen wollen.
+				\item User bekommen jetzt bei allen "`kritischen"' Aktionen wie dem Löschen einer Gruppe einen Dialog angezeigt ob sie diese Aktion wirklich durchführen wollen.
 				\item Alle Texte der goApp sind jetzt eingerückt und kleben nicht mehr am Bildschirmrand.
 				\item Die Reihenfolge der Buttons in der Toolbar der StartActivity wurde geändert da sie so intuitiver zu bedienen sind.
+				\item In der NewGroupActivity erkennt ein User jetzt durch einen Cursor ob er sich wirklich im Suchfeld befindet, außerdem wird jetzt mit einem betätigen der Enter Taste ebenfalls eine Suche gestartet.
 			\end{itemize}
 		
 		Ebenfalls waren wir an eventuellem Fehlverhalten oder gar Abstürzen der Applikation im "`alltagsgebrauch"' interessiert und haben auch hier Feedback gesammelt um Bugs zu beheben.
@@ -248,12 +248,16 @@ Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer we
 				\item Lösung: Der ResultReceiver erhält jetzt die GroupInfoActivity als Parameter für den Konstruktor und speichert sich diese, so kann er mit diesem Kontext immer eine andere Activity starten.
 			\end{itemize}
 
-			\item Problem: Teilweise stürzte die goApp ab wenn der User eine Gruppe verlässt. Fehler und Lösung sind wie beim Löschen einer Gruppe.
-
-			\item Problem: Wenn ein User erfolgreich eine Gruppe gelöscht hat konnte mit dem Zurückbutton wieder in die GroupInfoActivity der entsprechenden Gruppe zurückgekehrt werden.
+			\item Problem: Wenn ein User erfolgreich eine Gruppe gelöscht hat oder aus ihr ausgetreten ist konnte mit dem Zurückbutton wieder in die GroupInfoActivity der entsprechenden Gruppe zurückgekehrt werden.
 			\begin{itemize}
 				\item Fehler: Die GroupInfoActivity war noch auf dem back stack der zuletzt geöffneten Activities abgelegt. 
 				\item Lösung: Wenn die StartActivity gestart wird wird der komplette back stack gelöscht.
+			\end{itemize}
+
+			\item Problem: Keine Zuordnung der Gruppen Standorte zu den richtigen Events.
+			\begin{itemize}
+				\item Fehler: Wenn ein User an (mindestens) zwei Events zur gleichen Zeit teilgenommen hat konnten die vom Server empfangenen Gruppen Standorte nicht den richtigen Events zu geordnet werden und es wurden die Karten in allen EventActivities geupdatet.
+				\item Lösung: Wir schicken nun bei dem Intent der die Karte updatet zusätzlich das zugehörige Event mit um sicherzustellen dass nur die Karte des richtigen Events geupdatet wird.
 			\end{itemize}
 
 			
