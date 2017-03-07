@@ -32,6 +32,24 @@ Während der Qualitätssicherung bemerkten wir durch unsere Tests noch einige kl
 \subsection{Server}
 \subsubsection{Algorithmus}
 \subsubsection{Datenbank}
+Es gab einen Fehler im Zusammenhang mit dem LocationDeletionTimer und dem EventDeletionTimer, welche sich um das Löschen alter Events und alter Locations kümmern.
+\begin{itemize} 
+\item Fehlersymptom:
+Mehrere der Timer liefen gleichzeitig. Und es gab Timer mit zum Teil veralteten Einstellungen (Dauer bis zum löschen).
+\item Fehlergrund:
+Alte Timer wurden niemals beendet und liefen auch nach erneutem Hochladen weiter. Dadurch kam bei jedem hochladen auf den Server ein weiterer Timer hinzu.
+\item Fehlerbehebung:
+Wir haben eine neue Klasse die das Interace ServletContextListener implementiert erstellt. Das Interface deklariert die zwei Methoden contextInitialized und contextDestroyed. Diese werden aufgerufen, wenn die Web-App gestartet bzw. beendet wird.
+Anstatt beim erstellen der SessionFactory werden die zwei Timer deshalb jetzt in dieser Klasse gestartet und dort auch wieder beendet.
+\end{itemize}
+Zudem zeigten neue Assertions in den Tests, dass die Parameter nicht immer auf null überprüft wurden. Zum Beispiel in der Klasse GroupManagement bei der Methode public boolean update(Group chGroup). An diesen stellen wurden die entsprechenden Überprüfungen ergänzt.\newline
+
+Zusätzlich zu dem Beheben von Fehlern wurden noch folgende Sachen verändert:
+\begin{itemize} 
+\item Der bei der Datenbank voreingestellte Connection Pool, welcher nur zum Testen verwendet werden sollte, wurde durch den c3p0 Pool ersetzt.
+\item Die Termine werden nun immer aufsteigend nach Datum sortiert zurückgegeben, damit sie auf dem Client nicht immer in einer anderen Reihenfolge erscheinen und man die aktuellsten Termine als erstes sieht.
+\item Gruppen und User werden nun immer aufsteigend nach dem Namen zurückgegeben.
+\end{itemize}
 \subsubsection{Servlet}
 \paragraph{RequestServlet}
 Beim Ausführen der Methode create kam es zu  einer NullPointerException, wenn der Nutzer in keinen Gruppen Mitglied war oder noch keine Anfragen gesendet hatte.
@@ -46,7 +64,7 @@ Außerdem war der Umgang mit dem Timestamp falsch.
 \section{Testbericht}
 \subsection{Testszenarien}
 Im folgenden wollen wir kurz auf unsere Testszenarien aus dem Pflichtenheft eingehen,.
-Trotz einer immer weiter voranschreitenden Verbesserung und dadurch teilweise auch Abänderung unserer Ideen aus dem Pflichtenheft konnten alle Testszenarien die im Pflichtenheft definiert wurden mit positivem Ausgang durchlaufen werden.
+Trotz einer immer weiter voranschreitenden Verbesserung und dadurch teilweisen Abänderung unserer Ideen aus dem Pflichtenheft, konnten alle Testszenarien die im Pflichtenheft definiert wurden mit positivem Ausgang durchlaufen werden.
 
 Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galaxy S4) mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
 
@@ -136,6 +154,16 @@ Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galax
 Zu den Unit-Tests aus der Implementierungsphase sind weitere Tests dazugekommen um die Abdeckung zu erhöhen, sowie Randfälle zu testen.
 \subsubsection{Algorithmus}
 \subsubsection{Datenbank}
+Bei den Tests für die Datenbank kamen nur zwei neue Testmethoden hinzu.
+Es wurden aber die bestehenden um Assertions ergänzt, welche Randfälle wie eine falsche id oder einen Parameter bei dem null übergeben wird überprüfen.
+\paragraph{EventManagement}
+\subparagraph{public void testDeleteOldEvents()}
+Der Test überprüft, ob das löschen alter Events aus der Datenbank funktioniert.
+\paragraph{LocationDeletionTimer}
+\subparagraph{public void testTimerStarter()}
+Der Test stellt sicher, dass die Methoden contextInitialized und contextDestroyed des ServletContextListeners den LocationDeletionTimer korrekt starten und beenden.
+
+
 \subsubsection{Servlet}
 
 \paragraph{RequestServlet}

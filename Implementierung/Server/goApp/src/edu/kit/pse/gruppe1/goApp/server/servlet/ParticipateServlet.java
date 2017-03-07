@@ -61,6 +61,7 @@ public class ParticipateServlet extends HttpServlet {
         switch (method) {
         case SET_STATUS:
             response.getWriter().println(setStatus(jsonRequest).toString());
+            break;
         default:
             response.getWriter()
                     .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
@@ -107,7 +108,8 @@ public class ParticipateServlet extends HttpServlet {
             if (!eventUser.delete(event, user)) {
                 return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
             }
-        } if (!eventUser.updateStatus(event, user, status)) {
+        }
+        if (!eventUser.updateStatus(event, user, status)) {
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
         return ServletUtils.createJSONError(JSONParameter.ErrorCodes.OK);
