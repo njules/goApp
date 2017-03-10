@@ -137,7 +137,7 @@ public class LocationServlet extends HttpServlet {
         if (evt == null) {
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
-        List<Location> cluster = clusterer.getClusteredLocations(evt);
+        List<Location> cluster = clusterer.getLocationsByMultiDBSCAN(evt);
 
         return ServletUtils.createJSONListLoc(cluster);
     }
