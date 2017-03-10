@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -47,38 +49,57 @@ public class LocationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+        // Evas Code kopiert
+        String strResponse = null;
+        JSONObject jsonRequest = null;
+        JSONParameter.Methods method = null;
+        PrintWriter out = null;
+        ErrorCodes error = ErrorCodes.OK;
+
+        out = response.getWriter();
+
+        jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
             return;
         }
-        Methods method;
+
         try {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
+            // response.getWriter()
+            // .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
+            error = ErrorCodes.READ_JSON;
             return;
         }
 
-        if (method == null) {
+        if (method == null || !error.equals(ErrorCodes.OK)) {
             method = Methods.NONE;
         }
 
         switch (method) {
         case SYNC_LOC:
             if (!setGPS(jsonRequest)) {
-                response.getWriter()
-                        .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+                // response.getWriter()
+                // .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
+                error = ErrorCodes.READ_JSON;
             } else {
-                response.getWriter().println(getCluster(jsonRequest).toString());
+                // response.getWriter().println(getCluster(jsonRequest).toString());
+                strResponse = getCluster(jsonRequest).toString();
             }
             break;
         default:
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+         //   response.getWriter()
+          //          .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+            if (error.equals(ErrorCodes.OK)) {
+                error = ErrorCodes.METH_ERROR;
+            }
+            strResponse = ServletUtils.createJSONError(error).toString();
+            break;
+
         }
+        out.println(strResponse);
     }
 
     /**
