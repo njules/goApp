@@ -70,7 +70,7 @@ public class LocationServlet extends HttpServlet {
         case SYNC_LOC:
             if (!setGPS(jsonRequest)) {
                 response.getWriter()
-                        .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+                        .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
             } else {
                 response.getWriter().println(getCluster(jsonRequest).toString());
             }

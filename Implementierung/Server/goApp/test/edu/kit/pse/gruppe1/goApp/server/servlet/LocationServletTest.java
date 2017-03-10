@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -29,6 +31,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 
 public class LocationServletTest {
     private LocationServlet servlet;
@@ -76,6 +79,7 @@ public class LocationServletTest {
         jsonRequest = null;
     }
 
+    @Ignore
     @Test
     public void testSyncPos() {
         // set up input
@@ -141,8 +145,9 @@ public class LocationServletTest {
         assertTrue(fakeLocations.isEmpty());
     }
     
+    @Ignore
     @Test
-    public void testMissingLocation() {
+    public void testMissingLocation1() {
         // set up input
         final int user = 5;
         final int evt = 2;
@@ -177,10 +182,57 @@ public class LocationServletTest {
         verify(response).println(argCap.capture());
         try {
             JSONObject json = new JSONObject(argCap.getValue());
-            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.METH_ERROR.getErrorCode());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             fail("Failed to read JSON response!\n");
+        }
+    }
+
+    @Test
+    public void testMissingLocation() {
+        // set up input
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        int user = 5;
+        int evt = 2;
+        // prepare input JSON parameter
+        try {
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SYNC_LOC);
+            json.put(JSONParameter.USER_ID.toString(), user);
+            json.put(JSONParameter.EVENT_ID.toString(), evt);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(userManager.updateLocation(eq(user), any(Location.class))).thenReturn(true);
+            when(eventManager.getEvent(evt)).thenReturn(fakeEvent);
+            when(clusterer.getClusteredLocations(fakeEvent)).thenReturn(null);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test correct error code
+        verify(response).println(argCap.capture());
+        try {
+            newJson = new JSONObject(argCap.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
         }
     }
 }
