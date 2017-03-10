@@ -20,11 +20,14 @@ import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import edu.kit.pse.gruppe1.goApp.server.algorithm.ClusterFacade;
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
@@ -56,6 +59,9 @@ public class LocationServletTest {
     
     @Captor
     private ArgumentCaptor<String> argCap;
+    
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Before
     public void setUp() throws Exception {
@@ -209,7 +215,7 @@ public class LocationServletTest {
         try {
             when(httpRequest.getReader()).thenReturn(request);
             when(httpResponse.getWriter()).thenReturn(response);
-            when(request.readLine()).thenReturn(jsonRequest);
+            when(request.readLine()).thenReturn(json.toString());
             when(userManager.updateLocation(eq(user), any(Location.class))).thenReturn(true);
             when(eventManager.getEvent(evt)).thenReturn(fakeEvent);
             when(clusterer.getClusteredLocations(fakeEvent)).thenReturn(null);
