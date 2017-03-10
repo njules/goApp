@@ -30,7 +30,7 @@ public class LocationServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final EventManagement event;
     private final UserManagement eventUser;
-    ClusterFacade clusterer = new ClusterFacade();
+    private ClusterFacade clusterer = new ClusterFacade();
 
     /**
      * @see HttpServlet#HttpServlet()

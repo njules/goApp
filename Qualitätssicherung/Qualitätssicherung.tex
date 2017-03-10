@@ -1,0 +1,299 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[ngerman]{babel}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{pdfpages}
+\setlength{\parindent}{0em} 
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4} 
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!65!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\title{goApp Qualitätssicherung}
+\author{Jörn Kussmaul, Katharina Riesterer, Julian Neubert,\\ Jonas Walter, Tobias Ohlsson, Eva-Maria Neumann}
+\begin{document}
+	\maketitle
+	\newpage
+	\tableofcontents
+	\newpage
+
+\section{Einleitung}
+\newpage
+\section{Änderungen}
+Während der Qualitätssicherung bemerkten wir durch unsere Tests noch einige kleine Fehler im Code. Diese wurden behoben und sind im folgenden aufgeführt.
+\subsection{Server}
+\subsubsection{Algorithmus}
+\subsubsection{Datenbank}
+Es gab einen Fehler im Zusammenhang mit dem LocationDeletionTimer und dem EventDeletionTimer, welche sich um das Löschen alter Events und alter Locations kümmern.
+\begin{itemize} 
+\item Fehlersymptom:
+Mehrere der Timer liefen gleichzeitig. Und es gab Timer mit zum Teil veralteten Einstellungen (Dauer bis zum löschen).
+\item Fehlergrund:
+Alte Timer wurden niemals beendet und liefen auch nach erneutem Hochladen weiter. Dadurch kam bei jedem hochladen auf den Server ein weiterer Timer hinzu.
+\item Fehlerbehebung:
+Wir haben eine neue Klasse die das Interace ServletContextListener implementiert erstellt. Das Interface deklariert die zwei Methoden contextInitialized und contextDestroyed. Diese werden aufgerufen, wenn die Web-App gestartet bzw. beendet wird.
+Anstatt beim erstellen der SessionFactory werden die zwei Timer deshalb jetzt in dieser Klasse gestartet und dort auch wieder beendet.
+\end{itemize}
+Zudem zeigten neue Assertions in den Tests, dass die Parameter nicht immer auf null überprüft wurden. Zum Beispiel in der Klasse GroupManagement bei der Methode public boolean update(Group chGroup). An diesen stellen wurden die entsprechenden Überprüfungen ergänzt.\newline
+
+Zusätzlich zu dem Beheben von Fehlern wurden noch folgende Sachen verändert:
+\begin{itemize} 
+\item Der bei der Datenbank voreingestellte Connection Pool, welcher nur zum Testen verwendet werden sollte, wurde durch den c3p0 Pool ersetzt.
+\item Die Termine werden nun immer aufsteigend nach Datum sortiert zurückgegeben, damit sie auf dem Client nicht immer in einer anderen Reihenfolge erscheinen und man die aktuellsten Termine als erstes sieht.
+\item Gruppen und User werden nun immer aufsteigend nach dem Namen zurückgegeben.
+\end{itemize}
+\subsubsection{Servlet}
+\paragraph{RequestServlet}
+Beim Ausführen der Methode create kam es zu  einer NullPointerException, wenn der Nutzer in keinen Gruppen Mitglied war oder noch keine Anfragen gesendet hatte.
+\paragraph{UserServlet}
+In der Methode changeName trat eine NullPointerException auf, wenn der Nutzer nicht in der Datenbank gefunden wurde, da der Name auf dem zurückgegeben Nutzer geändert wurde.
+\paragraph{EventServlet}
+In der Methode change hat eine Rückgabe des Fehlercodes gefehlt und es wurde trotz Fehlerfall weiter ausgeführt, sowie der Code OK zurück gegeben.
+Außerdem war der Umgang mit dem Timestamp falsch.
+\newpage
+\subsection{Client}
+\newpage
+\section{Testbericht}
+\subsection{Testszenarien}
+Im folgenden wollen wir kurz auf unsere Testszenarien aus dem Pflichtenheft eingehen,.
+Trotz einer immer weiter voranschreitenden Verbesserung und dadurch teilweisen Abänderung unserer Ideen aus dem Pflichtenheft, konnten alle Testszenarien die im Pflichtenheft definiert wurden mit positivem Ausgang durchlaufen werden.
+
+Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galaxy S4) mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
+
+\subsubsection{Kontoverwaltung}
+\begin{itemize} 
+	\item[T10] deckt ab \hyperlink{FA10}{FA10} \newline
+	Registrieren: Eine bisher nicht registrierte Person mit einem Google Account registriert sich mit diesem im System 				und wählt zusätzlich einen Benutzernamen. \newline
+	Ergebnis: Der neue Benutzer mit seinem Google Account und Benutzername ist in der Datenbank. \newline
+	Bemerkung: Dieses Testszenario kann so nicht mehr umgesetzt werden da der Benutzername bei der Erstellung eines Accounts nicht meht gewählt wird sondern auf den GoogleAccount Namen gesetzt wird, der Benutername lässt sich allerdings immernoch nachträglich ändern.
+	
+	\item[T20] deckt ab \hyperlink{FA20}{FA20}\newline
+	Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
+	Ergebnis: Der neue Benutzername des Benutzers ist in der Datenbank. 
+	
+	\subsubsection{Gruppenverwaltung}
+	
+	\item[T30] deckt ab \hyperlink{FA30}{FA30}, \hyperlink{FA35}{FA35}\newline
+	Ein beliebiger Benutzer erstellt eine neue Gruppe mit Namen. \newline
+	Ergebnis: Eine neue Gruppe, mit eindeutiger ID, dem angegebenen Namen und dem Benutzer als Gründer, ist in der 			Datenbank.
+	
+	\item[T35] deckt ab \hyperlink{FA35}{FA35} \newline
+	Der Gründer ändert den Gruppennamen.\newline
+	Ergebnis: Auf dem Server ist bei der Gruppe der neue Name eingetragen. 
+	
+	\item[T40] deckt ab \hyperlink{FA40}{FA40}, \hyperlink{FA45}{FA45}  \newline
+	Suchen der Gruppe nach Namen und eine Beitrittsanfrage an eine gefundene Gruppe stellen. \newline
+	Ergebnis: Alle Gruppen-IDs der Gruppen, die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
+	hinzugefügt.
+	
+	\item[T50] deckt ab \hyperlink{FA50}{FA50}  \newline
+	Der Gruppengrnder bestätigt eine Anfrage. \newline
+	Ergebnis: Der Benutzer der Anfrage ist Mitglied der Gruppe und die Anfrage ist gelöscht.
+	
+	\item[T55] deckt ab \hyperlink{FA50}{FA50}  \newline
+	Der Gruppengründer lehnt eine Anfrage ab. \newline
+	Ergebnis: Die Anfrage ist gelöscht.
+	
+	\item[T60] deckt ab \hyperlink{FA60}{FA60}  \newline
+	Der Gruppengrnder entfernt ein Mitglied.  \newline
+	Ergebnis: Der Benutzer ist nicht mehr Mitglied (Alle Assoziationen zwischen Gruppe und Benutzer sind getrennt).
+	
+	\item[T70] deckt ab \hyperlink{FA70}{FA70}  \newline
+	Der Gruppengründer löscht die Gruppe.  \newline
+	Ergebnis: Alle Mitgliedern sind entfernt (\hyperlink{FA60}{FA60}) und die Gruppe aus der Datenbank gelöscht.
+	
+	\item[T80] deckt ab \hyperlink{FA80}{FA80}  \newline
+	Ein Gruppenmitglied verlässt die Gruppe.  \newline
+	Ergebnis: Der Benutzer ist nicht mehr Mitglied (siehe T60).
+	
+	\subsubsection{Terminverwaltung}
+	
+	\item[T90] deckt ab \hyperlink{FA100}{FA100}, \hyperlink{FA120}{FA120}  \newline
+	Ein beliebiges Mitglied erstellt einen Termin mit Name, Ort, Zeitpunkt.  \newline
+	Ergebnis: Es gibt einen Termin mit dem genannten Namen, Ort und Zeitpunkt in der Gruppe.
+	
+	\item [T100] deckt ab \hyperlink{FA130}{FA130}  \newline
+	Ein Mitglied sagt ab.  \newline
+	Ergebnis: Der Termin ist für das Mitglied gelöscht.
+	
+	\item[T105] deckt ab \hyperlink{FA130}{FA130}  \newline
+	Ein Mitglied sagt zu.  \newline
+	Ergebnis: Das Mitglied ist Teilnehmer des Termins und der Termin ist auf dem Gerät des Teilnehmers gespeichert.
+	
+	\subsubsection{Terminablauf}
+	
+	\item[T110] deckt ab \hyperlink{FA140}{FA140}, \hyperlink{FA150}{FA150}, \hyperlink{FA170}{FA170} \newline
+	Automatischer Ablauf eines Termins. \newline
+	Ergebnis: 30 Minuten vor dem Termin werden alle Teilnehmer von dem Termin benachrichtigt.  \newline
+	15 Minuten vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar.  \newline
+	60 Minuten nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf 					dem Client noch auf dem Server).
+	Bemerkung: Die Teilnehmer werden in der jetztigen Version 15 Minuten vor dem Termin benarichtigt. 
+	
+	\subsubsection{Standort}
+	\item[T120] deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
+	Standort Übertragung der Clients an den Server.  \newline
+	Ergebnis: Der Standort aller Teilnehmer ist auf dem Server gespeichert. \newline
+	Bemerkung: Da die Kommunikation zwischen Server und Client bei unserer App immer vom Client ausgeht lässt sich nicht sicher sagen ob zu einem gewissen Zeitpunkt die aktuellen Standorte aller User eines Termins auf dem Server gespeichert sind. Allerdings updaten die Clients bei ausreichender Internetverbindung alle 15-30 Sekunden ihre Standortinformationen auf dem Server.
+	
+	\item[T130]  deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
+	Der Server sendet den berechneten Gruppenmittelpunkt an den Teilnehmer. \newline
+	Ergebnis: Der Client hat den aktuellen Gruppenmittelpunkt.
+	
+\end{itemize}	
+
+%TODO: bis hier
+\subsection{Server}
+Zu den Unit-Tests aus der Implementierungsphase sind weitere Tests dazugekommen um die Abdeckung zu erhöhen, sowie Randfälle zu testen.
+\subsubsection{Algorithmus}
+\subsubsection{Datenbank}
+Bei den Tests für die Datenbank kamen nur zwei neue Testmethoden hinzu.
+Es wurden aber die bestehenden um Assertions ergänzt, welche Randfälle wie eine falsche id oder einen Parameter bei dem null übergeben wird überprüfen.
+\paragraph{EventManagement}
+\subparagraph{public void testDeleteOldEvents()}
+Der Test überprüft, ob das löschen alter Events aus der Datenbank funktioniert.
+\paragraph{LocationDeletionTimer}
+\subparagraph{public void testTimerStarter()}
+Der Test stellt sicher, dass die Methoden contextInitialized und contextDestroyed des ServletContextListeners den LocationDeletionTimer korrekt starten und beenden.
+
+
+\subsubsection{Servlet}
+
+\paragraph{RequestServlet}
+\subparagraph{public void testCreateUserIsMember()}
+Dieser Test überprüft das Verhalten des Servlets, wenn der Nutzer schon Mitglied in der angefragten Gruppe ist. Erwartet wird ein Interact Fehler.
+\subparagraph{public void testCreateUserHasRequest()}
+Dieser Test überprüft das Verhalten des Servlets, wenn der Nutzer schon eine offene Anfrage an die Gruppe hat. Erwartet wird ein Interact Fehler.
+\subparagraph{public void testCreateUserLimitReached()}
+Es wird überprüft ob ein USR\_LIMIT Fehler gesendet wird, wenn der Nutzer schon in zu vielen Gruppen Mitglied ist.
+\subparagraph{public void testCreateGroupLimitReached()}
+Es wird überprüft ob ein GRP\_LIMIT Fehler gesendet wird, wenn die Gruppe ihr Mitglieder Limit schon erreicht hat.
+\subparagraph{public void testCreateDatabaseAddFalse()}
+Dieser Test überprüft das Verhalten, wenn die Datenbank beim Hinzufügen der Gruppe und des Nutzers zur Datenbank false zurück gibt. Erwartet wird ein DB\_ERROR.
+\subparagraph{public void testCreateDatabaseReqByGroupNull()}
+Es soll kein Fehler auftreten, wenn die Datenbank bei den Anfragen zu einer bestimmten Gruppe null zurück gibt, weil momentan keine existieren.
+\subparagraph{public void testCreateDatabaseReqByUserNull()}
+Es soll kein Fehler auftreten, wenn die Datenbank bei den Anfragen zu einem bestimmten Nutzer null zurück gibt, weil momentan keine existieren.
+\subparagraph{public void testCreateDatabaseGetUserNull()}
+Es soll ein Fehler auftreten, wenn der Nutzer nicht in der Datenbank existiert.
+\subparagraph{public void testCreateDatabaseGetGroupsNull() }
+Es soll ein Fehler auftreten, wenn die Gruppe nicht in der Datenbank existiert.
+\subparagraph{public void testCreateWOutJSON()}
+Die Methode create wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
+\subparagraph{public void testAcceptDatabaseAddFalse()}
+Es soll ein DB\_ERROR entstehen, wenn die Datenbank beim Hinzufügen einer Gruppen/Nutzer Kombination false zurückgibt.
+\subparagraph{public void testRejectDatabaseDeleteFalse()}
+Es soll ein DB\_ERROR entstehen, wenn die Datenbank beim Löschen einer Gruppen/Nutzer Kombination false zurückgibt.
+\subparagraph{public void testRejectDatabaseRequestNull()}
+Es soll ein DB\_ERROR entstehen, wenn die Datenbank keine Anfrage vom Nutzer an die Gruppe findet.
+\subparagraph{public void testAcceptWOutJSON()}
+Die Methode accept wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
+\subparagraph{public void testRejectWOutJSON() }
+Die Methode reject wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
+\subparagraph{public void testMethodNotExisting()}
+Wenn eine Methode augerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
+\subparagraph{public void testEmptyJSON()}
+Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehen.
+%TODO: wirklich? sonst überall im Code ändern, wie hat es Julian?
+
+\paragraph{RequestSearchServlet}
+\subparagraph{public void testGetRequestsByUserDatabaseNull()}
+Wenn keine Anfragen von einem bestimmten Nutzer existieren gibt die Datenabnak null zurück. Das Ergebnis der Methode soll ein Fehlercode EMPTY\_LIST sein.
+\subparagraph{public void testGetRequestsByUserWOutJSON()}
+Die Methode getRequestsByUser wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
+\subparagraph{public void testGetRequestsByGroupDatabaseNull()}
+Wenn keine Anfragen an eine bestimmte Gruppe existieren gibt die Datenabank null zurück. Das Ergebnis der Methode soll ein Fehlercode EMPTY\_LIST sein.
+\subparagraph{public void testGetRequestsByGroupWOutJSON()}
+Die Methode getRequestsByGroup wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
+\subparagraph{public void testMethodNotExisting()}
+Wenn eine Methode augerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
+\subparagraph{public void testEmptyJSON()}
+Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehen.
+
+\paragraph{UserServlet}
+\subparagraph{public void testMethodNotExisting()} 
+Wenn eine Methode augerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
+\subparagraph{public void testEmptyJSON()}
+Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehen.
+\subparagraph{public void testChangeNameDatabseNullGetUser()}
+Es soll ein DB\_ERROR zurückgegeben werden, wenn die Datenbank beim Aufruf der Methode getUser null zurückgibt (d.h. der Nutzer wurde nicht gefunden).
+\subparagraph{public void testChangeNameDatabseFalseUpdate()}
+Es soll ein DB\_ERROR zurückgegeben werden, wenn die Datenbank beim Aufruf der Methode update vom User false zurückgibt.
+\subparagraph{public void testChangeNameWOutJSON()}
+Die Methode changeName wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
+
+\paragraph{EventServlet}
+\subparagraph{public void testMethodNotExisting()}
+Wenn eine Methode augerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
+\subparagraph{public void testEmptyJSON()}
+Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehen.
+\subparagraph{public void testCreateDatabaseNull()}
+Es wird ein DB\_ERROR erwartet, wenn die die Datenbank das Event nicht angelegen konnte und deswegen null zurückgibt.
+\subparagraph{public void testCreateWOutJSON()}
+Die Methode create wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
+\subparagraph{public void testGetParticipatesDatabaseNull()}
+Es wird ein EMPTY\_LIST Fehler erwartet, wenn die die Datenbank keiner Nutzer beim event mit der übergebenen EventID gefunden hat und deswegen null zurückgibt.
+\subparagraph{public void testGetParticipatesWOutJSON()}
+Die Methode getParticipates wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
+\subparagraph{public void testChangeWOutEventId()}
+Wenn der JSONParameter EventId bei der Methode change fehlt, soll der Fehler READ\_JSON entstehen.
+\subparagraph{public void testChangeDatabaseWrong()}
+ Wenn die Datenbank das Event nicht updaten konnte und deswegen false zurück gibt, soll ein DB\_ERROR entstehen.
+ 
+\subsubsection{Abdeckung}
+hier am Ende EclEmma beschreiben und \%te pro Datei oder Paket? angeben
+\newpage
+\subsection{Client}
+	\subsubsection{Lint}
+	Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Lint überprüft Android-Projekten auf mögliche Bugs und liefert Vorschläge um den Code zu verbessern.
+Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer weiter optimiert, von Performance Issues über Rechtschreibfehler bis hin zur Verbesserung der XML-Dateien.  
+
+	\subsubsection{Performance}
+		\paragraph{Monkey-Test}
+		\paragraph{Beta Tester}
+		Wir haben unsere App unter circa xx Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
+		\newline Einige Beispiele:
+			\begin{itemize}
+				\item User bekommen jetzt bei allen "`kritischen"' Aktionen wie dem Löschen einer Gruppe einen Dialog angezeigt ob sie diese Aktion wirklich durchführen wollen.
+				\item Alle Texte der goApp sind jetzt eingerückt und kleben nicht mehr am Bildschirmrand.
+				\item Die Reihenfolge der Buttons in der Toolbar der StartActivity wurde geändert da sie so intuitiver zu bedienen sind.
+				\item In der NewGroupActivity erkennt ein User jetzt durch einen Cursor ob er sich wirklich im Suchfeld befindet, außerdem wird jetzt mit einem betätigen der Enter Taste ebenfalls eine Suche gestartet.
+			\end{itemize}
+		
+		Ebenfalls waren wir an eventuellem Fehlverhalten oder gar Abstürzen der Applikation im "`alltagsgebrauch"' interessiert und haben auch hier Feedback gesammelt um Bugs zu beheben.
+
+		\begin{itemize}
+			\item Problem: Teilweise stürzte die goApp ab wenn der User eine Gruppe löscht.
+			\begin{itemize}
+				\item Fehler: Nachdem ein User eine Gruppe löscht soll er auf die StartActivity gelangen, weil seine Gruppe nun nicht mehr existiert. Um eine Activity zu starten muss ein Intent mit dem Context erstellt werden durch den die  Activity gestartet werden soll. Die StartActivity wird hier aus dem ResultReceiver eines Fragments gestartet, hier nutzten wir die Methode getActivity() um einen Kontext zu bekommen. Diese Mehtode lieferte meist auch die GroupInfoActivity, manchmal wurde aber auch ein null Objekt zurückgegeben.
+				\item Lösung: Der ResultReceiver erhält jetzt die GroupInfoActivity als Parameter für den Konstruktor und speichert sich diese, so kann er mit diesem Kontext immer eine andere Activity starten.
+			\end{itemize}
+
+			\item Problem: Wenn ein User erfolgreich eine Gruppe gelöscht hat oder aus ihr ausgetreten ist konnte mit dem Zurückbutton wieder in die GroupInfoActivity der entsprechenden Gruppe zurückgekehrt werden.
+			\begin{itemize}
+				\item Fehler: Die GroupInfoActivity war noch auf dem back stack der zuletzt geöffneten Activities abgelegt. 
+				\item Lösung: Wenn die StartActivity gestart wird wird der komplette back stack gelöscht.
+			\end{itemize}
+
+			\item Problem: Keine Zuordnung der Gruppen Standorte zu den richtigen Events.
+			\begin{itemize}
+				\item Fehler: Wenn ein User an (mindestens) zwei Events zur gleichen Zeit teilgenommen hat konnten die vom Server empfangenen Gruppen Standorte nicht den richtigen Events zu geordnet werden und es wurden die Karten in allen EventActivities geupdatet.
+				\item Lösung: Wir schicken nun bei dem Intent der die Karte updatet zusätzlich das zugehörige Event mit um sicherzustellen dass nur die Karte des richtigen Events geupdatet wird.
+			\end{itemize}
+
+			
+		\end{itemize}
+	
+		Im Anhang findet sich zusätzlich ein Fragebogen an die Beta User.
+
+\section{Anhang}
+
+
+\end{document}

@@ -8,16 +8,15 @@
 
 		<!-- JDBC Database connection settings -->
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="connection.url">jdbc:mysql://localhost/db?createDatabaseIfNotExist=true</property>
+		<property name="connection.url">jdbc:mysql://localhost/db?autoReconnect=true</property>
 		<property name="connection.username">root</property>
 		<property name="connection.password">j9w5alter</property>
-		
+
 		<!-- update -->
 		<property name="hbm2ddl.auto">create-drop</property>
 
 
-		<!-- JDBC connection pool settings ... using built-in test pool -->
-		<property name="connection.pool_size">1</property>
+
 
 		<!-- Select our SQL dialect -->
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
@@ -27,6 +26,12 @@
 
 		<!-- Set the current session context -->
 		<property name="current_session_context_class">thread</property>
+
+		<property name="hibernate.c3p0.min_size">5</property>
+		<property name="hibernate.c3p0.max_size">20</property>
+		<property name="hibernate.c3p0.timeout">300</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.c3p0.idle_test_period">3000</property>
 
 	</session-factory>
 

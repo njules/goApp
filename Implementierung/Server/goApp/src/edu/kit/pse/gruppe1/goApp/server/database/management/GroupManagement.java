@@ -54,7 +54,7 @@ public class GroupManagement implements Management {
      * @return true, if update was successfull, otherwise false
      */
     public boolean update(Group chGroup) {
-        if (chGroup.getGroupId() == null) {
+        if (chGroup == null || chGroup.getGroupId() == null) {
             return false;
         }
         Session session = DatabaseInitializer.getFactory().getCurrentSession();
@@ -93,7 +93,7 @@ public class GroupManagement implements Management {
      */
     public boolean updateFounder(int groupId, User newFounder) {
         Group group = getGroup(groupId);
-        if (group == null) {
+        if (group == null || newFounder == null) {
             return false;
         }
         group.setFounder(newFounder);
@@ -128,11 +128,8 @@ public class GroupManagement implements Management {
         @SuppressWarnings("unchecked")
         List<Group> groups = session.createCriteria(Group.class)
                 .add(Restrictions.ilike("name", searchName, MatchMode.ANYWHERE))
-                .addOrder(Property.forName("name").asc()).list();
+                .addOrder(Property.forName("name").asc()).setMaxResults(50).list();
         session.getTransaction().commit();
-        if (groups.size() > 50) {
-            groups = groups.subList(0, 50);
-        }
         return groups;
     }
 

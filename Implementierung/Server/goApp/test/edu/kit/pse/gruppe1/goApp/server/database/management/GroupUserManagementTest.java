@@ -50,7 +50,12 @@ public class GroupUserManagementTest {
         assertThat(new UserManagement().getUser(userTmp.getUserId()).getGroups()
                 .contains(createdGroup), is(true));
 
+        assertThat(new GroupUserManagement().add(createdGroup.getGroupId(), userTmp.getUserId()),
+                is(false));
         new UserManagement().delete(userTmp.getUserId());
+
+        assertThat(new GroupUserManagement().add(invalidId, invalidId), is(false));
+
     }
 
     @Test
@@ -59,6 +64,8 @@ public class GroupUserManagementTest {
         assertThat(new GroupUserManagement().delete(createdGroup.getGroupId(),
                 createdUser.getUserId()), is(false));
         assertThat(new GroupUserManagement().getGroups(createdUser.getUserId()).size(), is(1));
+
+        assertThat(new GroupUserManagement().delete(invalidId, invalidId), is(false));
     }
 
     @Test

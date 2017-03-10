@@ -46,6 +46,7 @@ public class GroupManagementTest {
         for (User u : createdGroup.getUsers()) {
             assertThat(u.getUserId(), is(user.getUserId()));
         }
+        assertThat(new GroupManagement().add("test", invalidId), is(nullValue()));
     }
 
     @Test
@@ -95,6 +96,8 @@ public class GroupManagementTest {
         assertThat(events, is(notNullValue()));
         assertThat(events.size(), is(1));
         assertThat(events.get(0).getEventId(), is(event.getEventId()));
+
+        assertThat(new GroupManagement().update(new Group()), is(false));
     }
 
     @Test
@@ -129,7 +132,10 @@ public class GroupManagementTest {
         assertThat(
                 new GroupManagement().getGroup(createdGroup.getGroupId()).getFounder().getUserId(),
                 is(user.getUserId()));
+
         assertThat(new UserManagement().delete(userTmp.getUserId()), is(true));
+
+        assertThat(new GroupManagement().updateFounder(invalidId, new User()), is(false));
     }
 
     @Test
@@ -138,6 +144,8 @@ public class GroupManagementTest {
         assertThat(new GroupManagement().updateName(createdGroup.getGroupId(), newName), is(true));
         assertThat(new GroupManagement().getGroup(createdGroup.getGroupId()).getName(),
                 is(newName));
+
+        assertThat(new GroupManagement().updateName(invalidId, "test"), is(false));
     }
 
 }
