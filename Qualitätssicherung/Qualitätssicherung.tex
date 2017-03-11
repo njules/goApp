@@ -29,13 +29,13 @@
 In der Phase der Qualitätssicherung ging es uns darum Fehler der goApp zu finden und zu beheben.
 Allen voran kann die App jetzt den auf dem Server berechneten Gruppenmittelpunkt bei Terminen anzeigen.
 \newline
-Ebenfalls haben wir weitere Unit-Tests zur Erhöhung der Code-Übderdeckung und zur Überprüfung von Randfällen implementiert um möglichst viele Fehler zu finden und eine hervorragende user experience zu bieten.
+Ebenfalls haben wir weitere Unit-Tests zur Erhöhung der Code-Überdeckung und zur Überprüfung von Randfällen implementiert um möglichst viele Fehler zu finden und eine hervorragende user experience zu bieten.
 \newline
 Ob uns dies gelungen ist haben wir versucht über das verbreiten der App unter Beta Usern herauszufinden.
 Hiervon versprachen wir uns konstruktive Kritik, insbesondere an der GUI um diese für den User noch intuitiver zu gestalten. 
-Ansonsten haben wir unser Projekt durch Werkzeuge wie Lint, ein Tool zur statischen Ananlyse von Code, und Monkey Test überprüft um die Code Qualität noch weiter zu steigern.
+Ansonsten haben wir unser Projekt durch Werkzeuge wie Lint, ein Tool zur statischen Analyse von Code, und Monkey Test überprüft um die Code Qualität noch weiter zu steigern.
 
-Auf weitere Änderungen sowohl am Desing als auch der Funktionalität der goApp gehen wir im folgendem Dokument ein.
+Auf weitere Änderungen sowohl am Design als auch der Funktionalität der goApp gehen wir im folgendem Dokument ein.
 
 \newpage
 \section{Server}
@@ -55,7 +55,7 @@ Mehrere der Timer liefen gleichzeitig. Und es gab Timer mit zum Teil veralteten 
 \item Fehlergrund:
 Alte Timer wurden niemals beendet und liefen auch nach erneutem Hochladen weiter. Dadurch kam bei jedem hochladen auf den Server ein weiterer Timer hinzu.
 \item Fehlerbehebung:
-Wir haben eine neue Klasse die das Interace ServletContextListener implementiert erstellt. Das Interface deklariert die zwei Methoden contextInitialized und contextDestroyed. Diese werden aufgerufen, wenn die Web-App gestartet bzw. beendet wird.
+Wir haben eine neue Klasse die das Interface ServletContextListener implementiert erstellt. Das Interface deklariert die zwei Methoden contextInitialized und contextDestroyed. Diese werden aufgerufen, wenn die Web-App gestartet bzw. beendet wird.
 Anstatt beim erstellen der SessionFactory werden die zwei Timer deshalb jetzt in dieser Klasse gestartet und dort auch wieder beendet.
 \end{itemize}
 Zudem zeigten neue Assertions in den Tests, dass die Parameter nicht immer auf null überprüft wurden. Zum Beispiel in der Klasse GroupManagement bei der Methode public boolean update(Group chGroup). An diesen stellen wurden die entsprechenden Überprüfungen ergänzt.\newline
@@ -92,7 +92,7 @@ Zusätzlich zu dem Beheben von Fehlern wurden noch folgende Sachen verändert:
 \subsection{Tests}
 Zu den Unit-Tests aus der Implementierungsphase sind weitere Tests dazugekommen um die Abdeckung zu erhöhen, sowie Randfälle zu testen.
 \subsubsection{Algorithmus}
-Wie oben beschrieben stellen wir eine weitere Methode zur Berechnung der Cluster und deren Mittelpunkte zur Verfügung. Diese Methode wurde nun auch ausführlich mit Hilfe von Unittests getestet. Dabei wurden wieder verschiedenen Testpunkte initialisiert und die Verbindung zur Datenbank mit Mockito gemockt, um den Algorithmus seperat zu testen.
+Wie oben beschrieben stellen wir eine weitere Methode zur Berechnung der Cluster und deren Mittelpunkte zur Verfügung. Diese Methode wurde nun auch ausführlich mit Hilfe von Unittests getestet. Dabei wurden wieder verschiedenen Testpunkte initialisiert und die Verbindung zur Datenbank mit Mockito gemockt, um den Algorithmus separat zu testen.
 \subsubsection{Datenbank}
 Bei den Tests für die Datenbank kamen nur zwei neue Testmethoden hinzu.
 Es wurden aber die bestehenden um Assertions ergänzt, welche Randfälle wie eine falsche id oder einen Parameter bei dem null übergeben wird überprüfen.
@@ -144,21 +144,21 @@ Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehe
 
 \paragraph{RequestSearchServlet}
 \subparagraph{public void testGetRequestsByUserDatabaseNull()}
-Wenn keine Anfragen von einem bestimmten Nutzer existieren gibt die Datenabnak null zurück. Das Ergebnis der Methode soll ein Fehlercode EMPTY\_LIST sein.
+Wenn keine Anfragen von einem bestimmten Nutzer existieren gibt die Datenbank null zurück. Das Ergebnis der Methode soll ein Fehlercode EMPTY\_LIST sein.
 \subparagraph{public void testGetRequestsByUserWOutJSON()}
 Die Methode getRequestsByUser wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
 \subparagraph{public void testGetRequestsByGroupDatabaseNull()}
-Wenn keine Anfragen an eine bestimmte Gruppe existieren gibt die Datenabank null zurück. Das Ergebnis der Methode soll ein Fehlercode EMPTY\_LIST sein.
+Wenn keine Anfragen an eine bestimmte Gruppe existieren gibt die Datenbank null zurück. Das Ergebnis der Methode soll ein Fehlercode EMPTY\_LIST sein.
 \subparagraph{public void testGetRequestsByGroupWOutJSON()}
 Die Methode getRequestsByGroup wird ohne alle erforderlichen JSON Parameter aufgerufen. Es soll ein READ\_JSON Fehler zurückgegeben werden.
 \subparagraph{public void testMethodNotExisting()}
-Wenn eine Methode augerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
+Wenn eine Methode aufgerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
 \subparagraph{public void testEmptyJSON()}
 Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehen.
 
 \paragraph{UserServlet}
 \subparagraph{public void testMethodNotExisting()} 
-Wenn eine Methode augerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
+Wenn eine Methode aufgerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
 \subparagraph{public void testEmptyJSON()}
 Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehen.
 \subparagraph{public void testChangeNameDatabseNullGetUser()}
@@ -170,7 +170,7 @@ Die Methode changeName wird ohne alle erforderlichen JSON Parameter aufgerufen. 
 
 \paragraph{EventServlet}
 \subparagraph{public void testMethodNotExisting()}
-Wenn eine Methode augerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
+Wenn eine Methode aufgerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
 \subparagraph{public void testEmptyJSON()}
 Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehen.
 \subparagraph{public void testCreateDatabaseNull()}
@@ -206,7 +206,7 @@ Nach der Implementierungsphase mit Tests zur Funktionalität betrug die Abdeckun
 \newpage
 \section{Client}
 	\subsection{Android Lint}
-	Android Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Wir benutzten Android Lint auf dem Client equivalent zu SonarLint auf dem Server um unser Android-Projekt auf mögliche Bugs zu überprüfen. Außerdem liefert Android Lint Vorschläge um den Code zu verbessern.
+	Android Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Wir benutzten Android Lint auf dem Client äquivalent zu SonarLint auf dem Server um unser Android-Projekt auf mögliche Bugs zu überprüfen. Außerdem liefert Android Lint Vorschläge um den Code zu verbessern.
 Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer weiter optimiert, von Performance Issues über Rechtschreibfehler bis hin zur Verbesserung der XML-Dateien.  
 
 
@@ -217,7 +217,7 @@ Unsere App ist bei jedem der 10 Testläufe mit jeweils 10.000 Eingaben nicht abg
 
 		\subsection{Beta Tester}
 		\subsubsection{Verbesserungen an der GUI}
-Wir haben unsere App unter circa 10 Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
+Wir haben unsere App unter circa 10 Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzen.
 		
 			\begin{itemize}
 				\item User die bei einem Termin auf "'GO"' gedrückt haben werden in der Teilnehmeransicht nun farblich hervorgehoben.  
@@ -234,20 +234,20 @@ Wir haben unsere App unter circa 10 Beta Usern verteilt um sie unter realen Bedi
 		\begin{itemize}
 			\item Problem: Teilweise stürzte die goApp ab wenn der User eine Gruppe löscht.
 			\begin{itemize}
-				\item Fehler: Nachdem ein User eine Gruppe löscht soll er auf die StartActivity gelangen, weil seine Gruppe nun nicht mehr existiert. Um eine Activity zu starten muss ein Intent mit dem Context erstellt werden durch den die  Activity gestartet werden soll. Die StartActivity wird hier aus dem ResultReceiver eines Fragments gestartet, hier nutzten wir die Methode getActivity() um einen Kontext zu bekommen. Diese Mehtode lieferte meist auch die GroupInfoActivity, manchmal wurde aber auch ein null Objekt zurückgegeben.
+				\item Fehler: Nachdem ein User eine Gruppe löscht soll er auf die StartActivity gelangen, weil seine Gruppe nun nicht mehr existiert. Um eine Activity zu starten muss ein Intent mit dem Context erstellt werden durch den die  Activity gestartet werden soll. Die StartActivity wird hier aus dem ResultReceiver eines Fragments gestartet, hier nutzten wir die Methode getActivity() um einen Kontext zu bekommen. Diese Methode lieferte meist auch die GroupInfoActivity, manchmal wurde aber auch ein null Objekt zurückgegeben.
 				\item Lösung: Der ResultReceiver erhält jetzt die GroupInfoActivity als Parameter für den Konstruktor und speichert sich diese, so kann er mit diesem Kontext immer eine andere Activity starten.
 			\end{itemize}
 
 			\item Problem: Wenn ein User erfolgreich eine Gruppe gelöscht hat oder aus ihr ausgetreten ist konnte mit dem Zurückbutton wieder in die GroupInfoActivity der entsprechenden Gruppe zurückgekehrt werden.
 			\begin{itemize}
 				\item Fehler: Die GroupInfoActivity war noch auf dem back stack der zuletzt geöffneten Activities abgelegt. 
-				\item Lösung: Wenn die StartActivity gestart wird wird der komplette back stack gelöscht.
+				\item Lösung: Wenn die StartActivity gestartet wird, wird der komplette back stack gelöscht.
 			\end{itemize}
 
 			\item Problem: Keine Zuordnung der Gruppen Standorte zu den richtigen Events.
 			\begin{itemize}
-				\item Fehler: Wenn ein User an (mindestens) zwei Events zur gleichen Zeit teilgenommen hat konnten die vom Server empfangenen Gruppen Standorte nicht den richtigen Events zu geordnet werden und es wurden die Karten in allen EventActivities geupdatet.
-				\item Lösung: Wir schicken nun bei dem Intent der die Karte updatet zusätzlich das zugehörige Event mit um sicherzustellen dass nur die Karte des richtigen Events geupdatet wird.
+				\item Fehler: Wenn ein User an (mindestens) zwei Events zur gleichen Zeit teilgenommen hat konnten die vom Server empfangenen Gruppen Standorte nicht den richtigen Events zu geordnet werden und es wurden die Karten in allen EventActivities upgedatet.
+				\item Lösung: Wir schicken nun bei dem Intent der die Karte updatet zusätzlich das zugehörige Event mit um sicherzustellen dass nur die Karte des richtigen Events upgedatet wird.
 			\end{itemize}
 
 			
@@ -260,14 +260,14 @@ Wir haben unsere App unter circa 10 Beta Usern verteilt um sie unter realen Bedi
 Im folgenden wollen wir kurz auf unsere Testszenarien aus dem Pflichtenheft eingehen,.
 Trotz einer immer weiter voranschreitenden Verbesserung und dadurch teilweisen Abänderung unserer Ideen aus dem Pflichtenheft, konnten alle Testszenarien die im Pflichtenheft definiert wurden mit positivem Ausgang durchlaufen werden.
 
-Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galaxy S4) mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
+Die Tests wurden auf dem im Pflichtenheft genannten Referenzgerät(Samsung Galaxy S4) mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
 
 \subsubsection{Kontoverwaltung}
 \begin{itemize} 
 	\item[T10] deckt ab \hyperlink{FA10}{FA10} \newline
 	Registrieren: Eine bisher nicht registrierte Person mit einem Google Account registriert sich mit diesem im System und wählt zusätzlich einen Benutzernamen. \newline
 	Ergebnis: Der neue Benutzer mit seinem Google Account und Benutzername ist in der Datenbank. \newline
-	Bemerkung: Dieses Testszenario kann so nicht mehr umgesetzt werden da der Benutzername bei der Erstellung eines Accounts nicht meht gewählt wird sondern auf den GoogleAccount Namen gesetzt wird, der Benutername lässt sich allerdings immernoch nachträglich ändern.
+	Bemerkung: Dieses Testszenario kann so nicht mehr umgesetzt werden da der Benutzername bei der Erstellung eines Accounts nicht mehr gewählt wird sondern auf den GoogleAccount Namen gesetzt wird, der Benutzername lässt sich allerdings immer noch nachträglich ändern.
 	
 	\item[T20] deckt ab \hyperlink{FA20}{FA20}\newline
 	Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
@@ -289,7 +289,7 @@ Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galax
 	hinzugefügt.
 	
 	\item[T50] deckt ab \hyperlink{FA50}{FA50}  \newline
-	Der Gruppengrnder bestätigt eine Anfrage. \newline
+	Der Gruppengründer bestätigt eine Anfrage. \newline
 	Ergebnis: Der Benutzer der Anfrage ist Mitglied der Gruppe und die Anfrage ist gelöscht.
 	
 	\item[T55] deckt ab \hyperlink{FA50}{FA50}  \newline
@@ -297,7 +297,7 @@ Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galax
 	Ergebnis: Die Anfrage ist gelöscht.
 	
 	\item[T60] deckt ab \hyperlink{FA60}{FA60}  \newline
-	Der Gruppengrnder entfernt ein Mitglied.  \newline
+	Der Gruppengründer entfernt ein Mitglied.  \newline
 	Ergebnis: Der Benutzer ist nicht mehr Mitglied (Alle Assoziationen zwischen Gruppe und Benutzer sind getrennt).
 	
 	\item[T70] deckt ab \hyperlink{FA70}{FA70}  \newline
@@ -329,7 +329,7 @@ Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galax
 	Ergebnis: 30 Minuten vor dem Termin werden alle Teilnehmer von dem Termin benachrichtigt.  \newline
 	15 Minuten vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar.  \newline
 	60 Minuten nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf dem Client noch auf dem Server).
-	Bemerkung: Die Teilnehmer werden in der jetztigen Version 15 Minuten vor dem Termin benarichtigt. 
+	Bemerkung: Die Teilnehmer werden in der jetzigen Version 15 Minuten vor dem Termin benachrichtigt. 
 	
 	\subsubsection{Standort}
 	\item[T120] deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
