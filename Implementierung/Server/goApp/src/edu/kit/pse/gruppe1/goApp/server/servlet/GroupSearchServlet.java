@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.GroupUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -44,36 +46,52 @@ public class GroupSearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+        
+        String strResponse = null;
+        JSONObject jsonRequest = null;
+        JSONParameter.Methods method = null;
+        PrintWriter out = null;
+        ErrorCodes error = ErrorCodes.OK;
+
+        out = response.getWriter();
+
+        jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
+            // response was set in extractJSON
             return;
         }
-        Methods method;
+
         try {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
-            e.printStackTrace();
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
-            return;
+            if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
+                error = ErrorCodes.EMPTY_JSON;
+            } else {
+                error = ErrorCodes.READ_JSON;
+            }
         }
 
-        if (method == null) {
+        if (method == null || !error.equals(ErrorCodes.OK)) {
             method = Methods.NONE;
         }
 
         switch (method) {
         case GET_GRP_NAME:
-            response.getWriter().println(getGroupsByName(jsonRequest).toString());
+            strResponse = getGroupsByName(jsonRequest).toString();
             break;
         case GET_GRP_MEM:
-            response.getWriter().println(getGroupsByMember(jsonRequest).toString());
+            strResponse = getGroupsByMember(jsonRequest).toString();
             break;
         default:
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+            if (error.equals(ErrorCodes.OK)) {
+                error = ErrorCodes.READ_JSON;
+            }
+            strResponse = ServletUtils.createJSONError(error).toString();
+            break;
+
         }
+        out.println(strResponse);
     }
 
     /**
