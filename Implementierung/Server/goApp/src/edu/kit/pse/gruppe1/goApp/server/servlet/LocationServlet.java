@@ -49,7 +49,7 @@ public class LocationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Evas Code kopiert
+
         String strResponse = null;
         JSONObject jsonRequest = null;
         JSONParameter.Methods method = null;
@@ -60,6 +60,7 @@ public class LocationServlet extends HttpServlet {
 
         jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
+            // response was set in extractJSON
             return;
         }
 
@@ -67,11 +68,11 @@ public class LocationServlet extends HttpServlet {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
-            e.printStackTrace();
-            // response.getWriter()
-            // .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
-            error = ErrorCodes.READ_JSON;
-            return;
+            if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
+                error = ErrorCodes.EMPTY_JSON;
+            } else {
+                error = ErrorCodes.READ_JSON;
+            }
         }
 
         if (method == null || !error.equals(ErrorCodes.OK)) {
@@ -81,23 +82,18 @@ public class LocationServlet extends HttpServlet {
         switch (method) {
         case SYNC_LOC:
             if (!setGPS(jsonRequest)) {
-                // response.getWriter()
-                // .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
                 error = ErrorCodes.READ_JSON;
+                strResponse = ServletUtils.createJSONError(error).toString();
             } else {
-                // response.getWriter().println(getCluster(jsonRequest).toString());
                 strResponse = getCluster(jsonRequest).toString();
             }
             break;
         default:
-         //   response.getWriter()
-          //          .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
             if (error.equals(ErrorCodes.OK)) {
                 error = ErrorCodes.METH_ERROR;
             }
             strResponse = ServletUtils.createJSONError(error).toString();
             break;
-
         }
         out.println(strResponse);
     }
