@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -121,6 +120,7 @@ public class StartActivity extends AppCompatActivity implements Communicator {
 
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, StartActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
     }
 
@@ -178,7 +178,6 @@ public class StartActivity extends AppCompatActivity implements Communicator {
                 case UserService.RESULT_CHANGE:
                     user.setName(newUserName);
                     Preferences.setUser(user);
-                    String output = getString(R.string.changeName) + " " + user.getName();
                     break;
                 default:
                     break;

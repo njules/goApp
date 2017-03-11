@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"></variable>
+        <variable name="group" type="edu.kit.pse.gruppe1.goApp.client.model.Group"/>
     </data>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="match_parent"
@@ -13,14 +12,15 @@
                       android:layout_weight="1">
             <TextView android:id="@+id/member_text"
                       android:paddingStart="16dp"
+                      android:paddingEnd="16dp"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:elevation="2dp"
                       android:paddingBottom="5dp"
                       android:paddingTop="5dp"
                       android:textSize="26sp"
-                      android:textColor="#000000"
-                      android:background="@color/colorSecondary"
+                      android:textColor="@color/colorText"
+                      android:background="@color/colorPrimary"
                       android:text="@string/group_member"/>
             <android.support.v7.widget.RecyclerView
                     android:id="@+id/member_recycler_view"
@@ -35,14 +35,15 @@
                 android:layout_weight="2">
             <TextView android:id="@+id/request_text"
                       android:paddingStart="16dp"
+                      android:paddingEnd="16dp"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:elevation="2dp"
                       android:paddingBottom="5dp"
                       android:paddingTop="5dp"
                       android:textSize="26sp"
-                      android:textColor="#000000"
-                      android:background="@color/colorSecondary"
+                      android:textColor="@color/colorText"
+                      android:background="@color/colorPrimary"
                       android:text="@string/group_request"/>
             <android.support.v7.widget.RecyclerView
                     android:id="@+id/request_recycler_view"

@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -26,6 +25,8 @@ import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.LoginService;
 import edu.kit.pse.gruppe1.goApp.client.controler.service.UtilService;
 import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
+
+import java.util.Objects;
 
 /**
  * The LoginActivity is the first Activity to start when the goApp starts.
@@ -50,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 loginService.login(this, idToken);
             } else {
                 Log.i("Login", result.getStatus().toString());
+                findViewById(R.id.sign_in).setClickable(true);
             }
         }
     }
@@ -78,6 +80,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
      * starts google sign in flow with a signInIntent. Results are received in OnActivityResult()
      */
     private void SignIn() {
+        findViewById(R.id.sign_in).setClickable(false);
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         Toast.makeText(this, R.string.starting_google_sign_in, Toast.LENGTH_SHORT).show();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -93,6 +96,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
      * starts google silent sign in with an intent and starts loginService.login() with the received idToken
      */
     private void trySilentSignIn() {
+        findViewById(R.id.sign_in).setClickable(false);
         Auth.GoogleSignInApi.silentSignIn(googleApiClient).setResultCallback(new ResultCallback<GoogleSignInResult>() {
 
             @Override
@@ -131,8 +135,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 return;
             }
             //starts the StartActivity after a successful login
-            if (intent.getAction() == LoginService.RESULT_LOGIN) {
+            if (Objects.equals(intent.getAction(), LoginService.RESULT_LOGIN)) {
                 Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                finish();
                 StartActivity.start(LoginActivity.this);
             }
         }

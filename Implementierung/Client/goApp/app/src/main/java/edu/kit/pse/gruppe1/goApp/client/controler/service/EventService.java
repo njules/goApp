@@ -27,7 +27,7 @@ public class EventService extends IntentService {
     /**
      * Action of the broadcasts intent with the results of change(Context context, Event event)
      */
-    public static final String RESULT_CHANGE = "RESULT_CHANGE";
+    private static final String RESULT_CHANGE = "RESULT_CHANGE";
     /**
      * Action of the broadcasts intent with the results of create(Context context, String name, Location destination, User eventAdmin, Timestamp time, Group group)
      */

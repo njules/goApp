@@ -35,7 +35,7 @@ public class User extends BaseObservable implements Parcelable {
     /**
      * @param in the Parcel that creates the User.
      */
-    protected User(Parcel in) {
+    User(Parcel in) {
         id = in.readInt();
         name = in.readString();
     }

@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <variable name="user" type="edu.kit.pse.gruppe1.goApp.client.model.User"></variable>
+        <variable name="user" type="edu.kit.pse.gruppe1.goApp.client.model.User"/>
     </data>
     <RelativeLayout
             android:layout_width="match_parent"

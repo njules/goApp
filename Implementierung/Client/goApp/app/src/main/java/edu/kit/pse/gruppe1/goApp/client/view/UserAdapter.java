@@ -1,11 +1,13 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.UserViewBinding;
+import edu.kit.pse.gruppe1.goApp.client.model.Status;
 import edu.kit.pse.gruppe1.goApp.client.model.User;
 
 /**
@@ -32,6 +34,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
         final User user = dataset[position];
+        if(user.getStatus()== Status.STARTED) {
+            holder.getBinding().getRoot().setBackgroundColor(holder.getBinding().getRoot().getResources().getColor(R.color.colorSecondary));
+        }
         holder.getBinding().setUser(user);
         holder.getBinding().executePendingBindings();
     }

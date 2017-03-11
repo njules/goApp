@@ -20,14 +20,11 @@
     <string name="hint_event_name">Name des Events</string>
     <string name="new_event_title">Neuer Termin</string>
     <string name="hint_event_destination">Ort des Termins</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="event_location">Ziel</string>
     <string name="wrongTime">Dein Termin liegt in der Vergangenheit</string>
     <string name="noLocation">Du musst einen Treffpunkt auswählen</string>
 
     <string name="clientId">425489712686-6jq1g9fk1ttct9pgn8am0b2udfpht8u6.apps.googleusercontent.com</string>
     <string name="login_text">Bitte melde dich mit deinem Google Konto an</string>
-    <string name="json">JSON</string>
     <string name="notification_massage">Bald geht ein Termin los:</string>
     <string name="NoGroup">Sorry, keine Gruppe mit diesem Namen gefunden.</string>
     <string name="deleteRequest">Möchtest du diese Anfrage löschen?</string>
@@ -39,4 +36,13 @@
     <string name="retryName">Bitte gib einen Namen ein</string>
     <string name="starting_google_sign_in">starting google sign in</string>
     <string name="login_success">Login erfolgreich</string>
+    <string name="accept_content_description">Teilnehmen</string>
+    <string name="reject_content_description">Absagen</string>
+    <string name="group_content_description">Gruppe öffnen</string>
+    <string name="change_name_item">Change name</string>
+    <string name="searchgroup_item">SearchGroup</string>
+    <string name="search_item">Search new groups</string>
+    <string name="empty_group_name">Bitte gib den Gruppennamen ein</string>
+    <string name="delete_group_dialog">Willst du diese Gruppe wirklich löschen?</string>
+    <string name="leave_group_dialog">Willst du aus der Gruppe austreten?</string>
 </resources>

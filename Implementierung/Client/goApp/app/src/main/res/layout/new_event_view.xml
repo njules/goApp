@@ -40,12 +40,14 @@
                          android:layout_height="match_parent"
                          android:layout_weight="1"
                          android:background="@color/colorAccept"
+                         android:contentDescription="@string/accept_content_description"
                          android:src="@drawable/ic_accept"/>
 
             <ImageButton android:id="@+id/reject_event"
                          android:layout_width="match_parent"
                          android:layout_height="match_parent"
                          android:layout_weight="1"
+                         android:contentDescription="@string/reject_content_description"
                          android:background="@color/colorReject"
                          android:src="@drawable/ic_reject"/>
         </LinearLayout>

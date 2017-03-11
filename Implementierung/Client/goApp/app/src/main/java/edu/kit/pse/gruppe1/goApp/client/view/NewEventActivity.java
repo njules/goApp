@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -82,6 +83,10 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
 
         en = (EditText) findViewById(R.id.new_event_name);
         el = (EditText) findViewById(R.id.new_event_location);
+
+        en.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        el.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
 
         timepicker = (TimePicker) findViewById(R.id.time_picker);
         timepicker.setIs24HourView(true);
@@ -209,7 +214,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     }
                     notifyAlarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent notifyIntent = new Intent(context, NotificationService.class);
-                    notifyIntent.putExtra(UtilService.GROUP.toString(), Preferences.getGroup());
+                    notifyIntent.putExtra(UtilService.GROUP, Preferences.getGroup());
                     notifyAlarmIntent = PendingIntent.getService(context, 0, notifyIntent, 0);
                     //900000 is 15 mins in millis
                     notifyAlarmMgr.set(AlarmManager.RTC_WAKEUP, event.getTime().getTime() - beforeEvent, notifyAlarmIntent);
@@ -227,8 +232,8 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                     break;
                 // Moves the Map to the Users Location.
                 case LocationService.RESULT_MY_LOCATION:
-                    android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+                    android.location.Location location = intent.getParcelableExtra(UtilService.LOCATION);
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
                     break;
                 default:
                     break;

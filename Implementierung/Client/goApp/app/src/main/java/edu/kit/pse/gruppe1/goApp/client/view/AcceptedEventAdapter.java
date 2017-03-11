@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import edu.kit.pse.gruppe1.goApp.client.R;
 import edu.kit.pse.gruppe1.goApp.client.databinding.AcceptedEventViewBinding;
 import edu.kit.pse.gruppe1.goApp.client.model.Event;
+import edu.kit.pse.gruppe1.goApp.client.model.Preferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;

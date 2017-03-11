@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.Manifest;
+import android.accessibilityservice.AccessibilityService;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
@@ -61,14 +63,14 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
      */
     public static void start(Activity activity, Event event) {
         Intent intent = new Intent(activity, EventActivity.class);
-        intent.putExtra("Event", event);
+        intent.putExtra(UtilService.EVENT, event);
         activity.startActivity(intent);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        event = getIntent().getParcelableExtra("Event");
+        event = getIntent().getParcelableExtra(UtilService.EVENT);
         binding = DataBindingUtil.setContentView(this, R.layout.event_info_activity);
         binding.setEvent(event);
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.event_info_toolbar);
@@ -87,6 +89,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(EventService.RESULT_GET));
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationService.RESULT_MY_LOCATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(LocationService.RESULT_LOCATION));
 
         participantRecyclerView = (RecyclerView) findViewById(R.id.participants_recycler_view);
         participantRecyclerView.setHasFixedSize(true);
@@ -101,12 +104,16 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         marker = new MarkerOptions();
+        LatLng positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
+        googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positionEvent, 13));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
             ActivityCompat.requestPermissions(this, permissions, 0);
             return;
         }
+
         googleMap.setMyLocationEnabled(true);
 
         Intent intent = new Intent(this, LocationService.class);
@@ -130,7 +137,6 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
             switch (intent.getAction()) {
                 // loads the participants of the event in the userAdapter.
                 case EventService.RESULT_GET:
-                    if (intent.getParcelableArrayExtra(UtilService.USERS) != null) {
                         User[] participants = (User[]) intent.getParcelableArrayExtra(UtilService.USERS);
                         User[] startedParticipants = (User[]) intent.getParcelableArrayExtra(UtilService.STARTED_USERS);
                         User[] allParticipants;
@@ -145,25 +151,26 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                         }
                         userAdapter = new UserAdapter(allParticipants);
                         participantRecyclerView.setAdapter(userAdapter);
-                    }
                     break;
                 // Moves the Map to the Users Location.
                 case LocationService.RESULT_MY_LOCATION:
-                    positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
-                    googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
-                    android.location.Location location = (android.location.Location) intent.getParcelableExtra(UtilService.LOCATION);
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+                    android.location.Location location = intent.getParcelableExtra(UtilService.LOCATION);
                     break;
                 // Refreshes the markers on the map, representing the Group Locations.
                 case LocationService.RESULT_LOCATION:
                     Log.i("Location", "Location received");
-                    googleMap.clear();
-                    positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
-                    googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
-                    Location[] locations = (Location[]) intent.getParcelableArrayExtra(UtilService.LOCATIONS);
-                    for (int i = 0; i < locations.length; i++) {
-                        LatLng position = new LatLng(locations[i].getLatitude(), locations[i].getLongitude());
-                        googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position));
+                    if(intent.getParcelableArrayExtra(UtilService.LOCATIONS)!=null) {
+                        Event intentEvent = intent.getParcelableExtra(UtilService.EVENT);
+                        if(intentEvent.getId()==event.getId()) {
+                            googleMap.clear();
+                            positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
+                            googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
+                            Location[] locations = (Location[]) intent.getParcelableArrayExtra(UtilService.LOCATIONS);
+                            for (int i = 0; i < locations.length; i++) {
+                                LatLng position = new LatLng(locations[i].getLongitude(), locations[i].getLatitude());
+                                googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            }
+                        }
                     }
                     break;
                 default:
