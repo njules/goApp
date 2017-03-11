@@ -17,6 +17,7 @@ public class UserManagementTest {
     private User createdUser;
     private String userName = "user name";
     private String googleId = "1234";
+    private int invalidId = 1010101010;
 
     @Before
     public void setUp() throws Exception {
@@ -38,12 +39,22 @@ public class UserManagementTest {
 
     @Test
     public void testDelete() {
+        assertThat(new UserManagement().delete(invalidId), is(false));
+        Group newGroup = new GroupManagement().add("test", createdUser.getUserId());
+        assertThat(newGroup, is(notNullValue()));
+        User secondUser = new UserManagement().add("test", "8997897");
+        assertThat(secondUser, is(notNullValue()));
+        new GroupUserManagement().add(newGroup.getGroupId(), secondUser.getUserId());
+        assertThat(new UserManagement().delete(secondUser.getUserId()), is(true));
+        assertThat(new UserManagement().delete(createdUser.getUserId()), is(false));
+        assertThat(new GroupManagement().delete(newGroup.getGroupId()), is(true));
         assertThat(new UserManagement().delete(createdUser.getUserId()), is(true));
         assertThat(new UserManagement().getUser(createdUser.getUserId()), is(nullValue()));
     }
 
     @Test
     public void testGetUser() {
+        assertThat(new UserManagement().getUser(invalidId), is(nullValue()));
         User user = new UserManagement().getUser(createdUser.getUserId());
         assertThat(user, is(notNullValue()));
         assertThat(user.getGoogleId(), is(createdUser.getGoogleId()));
@@ -53,6 +64,7 @@ public class UserManagementTest {
 
     @Test
     public void testGetUserByGoogleId() {
+        assertThat(new UserManagement().getUserByGoogleId("" + invalidId), is(nullValue()));
         User user = new UserManagement().getUserByGoogleId(createdUser.getGoogleId() + 1);
         assertThat(user, is(nullValue()));
         user = new UserManagement().getUserByGoogleId(createdUser.getGoogleId());
@@ -67,6 +79,7 @@ public class UserManagementTest {
         assertThat(new UserManagement().getUser(createdUser.getUserId()).getLocation(),
                 is(nullValue()));
         Location location = new Location(1, 1, "location");
+        assertThat(new UserManagement().updateLocation(invalidId, location), is(false));
         assertThat(new UserManagement().updateLocation(createdUser.getUserId(), location),
                 is(true));
         assertThat(new UserManagement().getUser(createdUser.getUserId()).getLocation(),
@@ -80,6 +93,8 @@ public class UserManagementTest {
 
     @Test
     public void testUpdate() {
+        User u = new User();
+        assertThat(new UserManagement().update(u), is(false));
         String newGoogleId = googleId + "1";
         createdUser.setGoogleId(newGoogleId);
         assertThat(new UserManagement().update(createdUser), is(true));
@@ -90,6 +105,7 @@ public class UserManagementTest {
     @Test
     public void testUpdateName() {
         String newName = userName + "new";
+        assertThat(new UserManagement().updateName(invalidId, newName), is(false));
         assertThat(new UserManagement().updateName(createdUser.getUserId(), newName), is(true));
         assertThat(new UserManagement().getUser(createdUser.getUserId()).getName(), is(newName));
     }

@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -87,6 +88,86 @@ public class EventServletTest {
     }
 
     @Test
+    public void testMethodNotExisting() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        List<User> part = createUserList();
+        int eventID = createEvent().getEventId();
+
+        try {
+            // there is no method accept in EventServlet
+            json.put(JSONParameter.METHOD.toString(), Methods.ACCEPT);
+            json.put(JSONParameter.EVENT_ID.toString(), eventID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        when(mockEventUsrMang.getUserByStatus(Status.STARTED, eventID)).thenReturn(part);
+
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.METH_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+
+    @Test
+    public void testEmptyJSON() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+
+    @Test
     public void testCreate() {
         Event event = createEvent();
         JSONObject json = createJSONEvent(event);
@@ -132,13 +213,106 @@ public class EventServletTest {
     }
 
     @Test
+    public void testCreateDatabaseNull() {
+        Event event = createEvent();
+        JSONObject json = createJSONEvent(event);
+        JSONObject newJson = null;
+
+        try {
+            json.put(JSONParameter.METHOD.toString(), Methods.CREATE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        // Define Mock behaviors, here database methode returns null
+        when(mockEventMang.add(event.getName(), event.getLocation(), event.getTimestamp(),
+                event.getCreator().getUserId(), event.getGroup().getGroupId())).thenReturn(null);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+
+    @Test
+    public void testCreateWOutJSON() {
+        Event event = createEvent();
+        JSONObject newJson = null;
+        JSONObject json = new JSONObject();
+
+        // create only some JSON, not all
+        try {
+            json.put(JSONParameter.EVENT_NAME.toString(), event.getName());
+            json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
+            json.put(JSONParameter.GROUP_ID.toString(), event.getGroup().getGroupId());
+            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
+            json.put(JSONParameter.METHOD.toString(), Methods.CREATE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        // Define Mock behaviors (normal ones)
+        when(mockEventMang.add(event.getName(), event.getLocation(), event.getTimestamp(),
+                event.getCreator().getUserId(), event.getGroup().getGroupId())).thenReturn(event);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
     public void testGetParticipates() {
-        // TODO: Rückgabetyp der Methode wurde verändert -> Test anpassen
         JSONObject json = new JSONObject();
         JSONObject internJson = null;
         JSONArray arrJson = null;
         JSONObject newJson = null;
-        List<Participant> part = createPartList();
+        List<User> part = createUserList();
         int eventID = createEvent().getEventId();
         int userID = -1;
 
@@ -149,7 +323,7 @@ public class EventServletTest {
             e.printStackTrace();
             fail();
         }
-        when(mockEventUsrMang.getParticipants(eventID)).thenReturn(part);
+        when(mockEventUsrMang.getUserByStatus(Status.STARTED, eventID)).thenReturn(part);
 
         try {
             when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
@@ -171,7 +345,7 @@ public class EventServletTest {
 
         try {
             newJson = new JSONObject(captor.getValue());
-            arrJson = newJson.getJSONArray(JSONParameter.LIST_PART.toString());
+            arrJson = newJson.getJSONArray(JSONParameter.LIST_START_PART.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             fail();
@@ -182,9 +356,9 @@ public class EventServletTest {
                 internJson = arrJson.getJSONObject(i);
                 userID = internJson.getInt(JSONParameter.USER_ID.toString());
 
-                for (Participant p : part) {
-                    if (p.getUser().getUserId() == userID) {
-                        assertEquals(p.getStatus().intValue(),
+                for (User u : part) {
+                    if (u.getUserId() == userID) {
+                        assertEquals(Status.STARTED.getValue().intValue(),
                                 internJson.getInt(JSONParameter.STATUS.toString()));
                     }
                 }
@@ -194,6 +368,95 @@ public class EventServletTest {
                 fail();
             }
         }
+    }
+
+    @Test
+    public void testGetParticipatesDatabaseNull() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        int eventID = 1;
+
+        try {
+            json.put(JSONParameter.METHOD.toString(), Methods.GET_EVENT);
+            json.put(JSONParameter.EVENT_ID.toString(), eventID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        when(mockEventUsrMang.getUserByStatus(Status.STARTED, eventID)).thenReturn(null);
+
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.EMPTY_LIST.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+
+    @Test
+    public void testGetParticipatesWOutJSON() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        List<User> part = createUserList();
+        int eventID = createEvent().getEventId();
+
+        try {
+            json.put(JSONParameter.METHOD.toString(), Methods.GET_EVENT);
+            // no event ID here
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+        when(mockEventUsrMang.getUserByStatus(Status.STARTED, eventID)).thenReturn(part);
+
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
     }
 
     @Test
@@ -208,6 +471,10 @@ public class EventServletTest {
             json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
             json.put(JSONParameter.METHOD.toString(), Methods.CHANGE.toString());
             json.put(JSONParameter.EVENT_NAME.toString(), "New Name");
+            json.put(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
+            json.put(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
+            json.put(JSONParameter.LOC_NAME.toString(), event.getLocation().getName());
+            json.put(JSONParameter.EVENT_TIME.toString(), event.getTimestamp().getTime());
         } catch (JSONException e) {
             e.printStackTrace();
             fail();
@@ -242,6 +509,150 @@ public class EventServletTest {
         }
     }
 
+    @Test
+    public void testChangeNothingChanged() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        Event event = createEvent();
+
+        when(mockEventMang.getEvent(event.getEventId())).thenReturn(event);
+
+        try {
+            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
+            json.put(JSONParameter.METHOD.toString(), Methods.CHANGE.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockEventMang.update(any(Event.class))).thenReturn(true);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testChangeWOutEventId() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        Event event = createEvent();
+
+        when(mockEventMang.getEvent(event.getEventId())).thenReturn(event);
+
+        try {
+            json.put(JSONParameter.METHOD.toString(), Methods.CHANGE.toString());
+            json.put(JSONParameter.EVENT_NAME.toString(), "New Name");
+            json.put(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
+            json.put(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
+            json.put(JSONParameter.LOC_NAME.toString(), event.getLocation().getName());
+            json.put(JSONParameter.EVENT_TIME.toString(), event.getTimestamp().getTime());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockEventMang.update(any(Event.class))).thenReturn(true);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testChangeDatabaseWrong() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        Event event = createEvent();
+
+        when(mockEventMang.getEvent(event.getEventId())).thenReturn(event);
+
+        try {
+            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
+            json.put(JSONParameter.METHOD.toString(), Methods.CHANGE.toString());
+            json.put(JSONParameter.EVENT_NAME.toString(), "New Name");
+            json.put(JSONParameter.LONGITUDE.toString(), event.getLocation().getLongitude());
+            json.put(JSONParameter.LATITUDE.toString(), event.getLocation().getLatitude());
+            json.put(JSONParameter.LOC_NAME.toString(), event.getLocation().getName());
+            json.put(JSONParameter.EVENT_TIME.toString(), event.getTimestamp().getTime());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockEventMang.update(any(Event.class))).thenReturn(false);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
     private Event createEvent() {
         String name = "Test Event";
         Location loc = new Location(49.014352, 8.404579, "Test Location");
@@ -256,15 +667,14 @@ public class EventServletTest {
         return event;
     }
 
-    private List<Participant> createPartList() {
-        List<Participant> part = new ArrayList<Participant>();
-        Event e1 = createEvent();
+    private List<User> createUserList() {
+        List<User> part = new ArrayList<User>();
         User u1 = new User();
         User u2 = new User();
         u1.setUserId(1);
         u2.setUserId(2);
-        part.add(new Participant(Status.INVITED.getValue(), e1, u1));
-        part.add(new Participant(Status.PARTICIPATE.getValue(), e1, u2));
+        part.add(u1);
+        part.add(u2);
         return part;
     }
 

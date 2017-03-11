@@ -1,9 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +18,7 @@ import edu.kit.pse.gruppe1.goApp.server.database.management.EventManagement;
 import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
-import edu.kit.pse.gruppe1.goApp.server.model.User;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -33,6 +32,7 @@ public class LocationServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final EventManagement event;
     private final UserManagement eventUser;
+    private ClusterFacade clusterer = new ClusterFacade();
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -49,38 +49,53 @@ public class LocationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+
+        String strResponse = null;
+        JSONObject jsonRequest = null;
+        JSONParameter.Methods method = null;
+        PrintWriter out = null;
+        ErrorCodes error = ErrorCodes.OK;
+
+        out = response.getWriter();
+
+        jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
+            // response was set in extractJSON
             return;
         }
-        Methods method;
+
         try {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
-            e.printStackTrace();
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
-            return;
+            if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
+                error = ErrorCodes.EMPTY_JSON;
+            } else {
+                error = ErrorCodes.READ_JSON;
+            }
         }
 
-        if (method == null) {
+        if (method == null || !error.equals(ErrorCodes.OK)) {
             method = Methods.NONE;
         }
 
         switch (method) {
         case SYNC_LOC:
             if (!setGPS(jsonRequest)) {
-                response.getWriter()
-                        .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+                error = ErrorCodes.READ_JSON;
+                strResponse = ServletUtils.createJSONError(error).toString();
             } else {
-                response.getWriter().println(getCluster(jsonRequest).toString());
+                strResponse = getCluster(jsonRequest).toString();
             }
             break;
         default:
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+            if (error.equals(ErrorCodes.OK)) {
+                error = ErrorCodes.METH_ERROR;
+            }
+            strResponse = ServletUtils.createJSONError(error).toString();
+            break;
         }
+        out.println(strResponse);
     }
 
     /**
@@ -104,7 +119,6 @@ public class LocationServlet extends HttpServlet {
         int userId = -1;
         double lat = -1;
         double lon = -1;
-        User user = null;
         try {
             userId = json.getInt(JSONParameter.USER_ID.toString());
             lat = json.getDouble(JSONParameter.LATITUDE.toString());
@@ -115,6 +129,7 @@ public class LocationServlet extends HttpServlet {
         }
 
         return eventUser.updateLocation(userId, new Location(lon, lat, null));
+        // 45 Minutes after current time
     }
 
     /**
@@ -139,9 +154,8 @@ public class LocationServlet extends HttpServlet {
         if (evt == null) {
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
-        ClusterFacade f = new ClusterFacade();
-        List<Location> cluster = f.getClusteredLocations(evt);
-        
+        List<Location> cluster = clusterer.getLocationsByMultiDBSCAN(evt);
+
         return ServletUtils.createJSONListLoc(cluster);
     }
 }

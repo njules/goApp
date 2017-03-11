@@ -21,6 +21,7 @@ public class GroupManagementTest {
     private User user;
     private Group createdGroup;
     private String groupName = "group name";
+    private int invalidId = 1010101010;
 
     @Before
     public void setUp() throws Exception {
@@ -45,10 +46,12 @@ public class GroupManagementTest {
         for (User u : createdGroup.getUsers()) {
             assertThat(u.getUserId(), is(user.getUserId()));
         }
+        assertThat(new GroupManagement().add("test", invalidId), is(nullValue()));
     }
 
     @Test
     public void testGetGroup() {
+        assertThat(new GroupManagement().getGroup(invalidId), is(nullValue()));
         Group group = new GroupManagement().getGroup(createdGroup.getGroupId());
         assertThat(group, is(notNullValue()));
         assertThat(group.getName(), is(createdGroup.getName()));
@@ -66,6 +69,7 @@ public class GroupManagementTest {
 
     @Test
     public void testGetEvents() {
+        assertThat(new GroupManagement().getEvents(invalidId), is(nullValue()));
         List<Event> events = new GroupManagement().getEvents(createdGroup.getGroupId());
         assertThat(events, is(notNullValue()));
         assertThat(events.size(), is(0));
@@ -92,6 +96,8 @@ public class GroupManagementTest {
         assertThat(events, is(notNullValue()));
         assertThat(events.size(), is(1));
         assertThat(events.get(0).getEventId(), is(event.getEventId()));
+
+        assertThat(new GroupManagement().update(new Group()), is(false));
     }
 
     @Test
@@ -126,7 +132,10 @@ public class GroupManagementTest {
         assertThat(
                 new GroupManagement().getGroup(createdGroup.getGroupId()).getFounder().getUserId(),
                 is(user.getUserId()));
+
         assertThat(new UserManagement().delete(userTmp.getUserId()), is(true));
+
+        assertThat(new GroupManagement().updateFounder(invalidId, new User()), is(false));
     }
 
     @Test
@@ -135,6 +144,8 @@ public class GroupManagementTest {
         assertThat(new GroupManagement().updateName(createdGroup.getGroupId(), newName), is(true));
         assertThat(new GroupManagement().getGroup(createdGroup.getGroupId()).getName(),
                 is(newName));
+
+        assertThat(new GroupManagement().updateName(invalidId, "test"), is(false));
     }
 
 }

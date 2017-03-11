@@ -229,7 +229,7 @@ public class GroupServletTest {
         try {
             JSONObject json = new JSONObject();
             json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DEL_MEM);
-            json.put(JSONParameter.USER_ID.toString(), 5);
+            json.put(JSONParameter.USER_ID.toString(), member);
             json.put(JSONParameter.GROUP_ID.toString(), group);
             jsonRequest = json.toString();
         } catch (JSONException e) {
@@ -304,7 +304,7 @@ public class GroupServletTest {
         }
         // call method
         try {
-            servlet.doPost(httpRequest, httpResponse);System.out.println(fakeFriends.size());
+            servlet.doPost(httpRequest, httpResponse);
         } catch (ServletException | IOException e) {
             e.printStackTrace();
             fail("Failed to post HTTP request!\n");
@@ -466,6 +466,803 @@ public class GroupServletTest {
         try {
             JSONObject json = new JSONObject(argCap.getValue());
             assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+
+    @Test
+    public void missingMethod() {
+        JSONObject json = new JSONObject();
+        jsonRequest = json.toString();
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject response = new JSONObject(argCap.getValue());
+            assertEquals(response.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+
+    @Test
+    public void invalidMethod() {
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SYNC_LOC);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.METH_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void createMissingParameter() {
+        // set up input
+        final int founder = 666;
+        final int groupID = 36;
+        final Group group = new Group();
+        group.setGroupId(groupID);
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CREATE);
+            json.put(JSONParameter.USER_ID.toString(), founder);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void createDatabaseError() {
+        // set up input
+        final String name = "Die Illuminati";
+        final int founder = 666;
+        final int groupID = 36;
+        final Group group = new Group();
+        group.setGroupId(groupID);
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.CREATE);
+            json.put(JSONParameter.GROUP_NAME.toString(), name);
+            json.put(JSONParameter.USER_ID.toString(), founder);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(groupManager.add(name, founder)).thenReturn(null);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+
+    @Test
+    public void deleteMissingParameter() {
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DELETE);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+
+    @Test
+    public void deleteDatabaseError() {
+        // set up input
+        final int group = 2;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DELETE);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(groupManager.delete(group)).thenReturn(false);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+
+    @Test
+    public void setNameMissingParameter() {
+        // set up input
+        final int group = 5;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_NAME);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+
+    @Test
+    public void setNameDatabaseError() {
+        // set up input
+        final int group = 5;
+        final String name = "take over Karlsruhe";
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_NAME);
+            json.put(JSONParameter.GROUP_NAME.toString(), name);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(groupManager.updateName(group, name)).thenReturn(false);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+
+    @Test
+    public void deleteMemberMissingParameter() {
+        // set up input
+        final int group = 5;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DEL_MEM);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+
+    @Test
+    public void deleteMemberDatabaseError() {
+        // set up input
+        final int group = 5;
+        final int member = 5;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.DEL_MEM);
+            json.put(JSONParameter.USER_ID.toString(), member);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(groupManager.delete(group)).thenReturn(false);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void getEventsMissingParameter() {
+        // set up input
+        final int user = 77;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_EVENT);
+            json.put(JSONParameter.USER_ID.toString(), user);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct event list
+        verify(response).println(argCap.capture());
+        try {//System.out.println(fakePending);System.out.println(fakeFriends);System.out.println(fakeMeeting);
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void getEventsDatabaseParticipantsError() {
+        // set up input
+        final int group = 80;
+        final int user = 77;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_EVENT);
+            json.put(JSONParameter.USER_ID.toString(), user);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, user)).thenReturn(null);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct event list
+        verify(response).println(argCap.capture());
+        try {//System.out.println(fakePending);System.out.println(fakeFriends);System.out.println(fakeMeeting);
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void getEventsDatabaseStartedError() {
+        // set up input
+        final int group = 80;
+        final int user = 77;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_EVENT);
+            json.put(JSONParameter.USER_ID.toString(), user);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, user)).thenReturn(new ArrayList<Event>());
+            when(eventUserManager.getEventsByStatus(Status.STARTED, group, user)).thenReturn(null);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct event list
+        verify(response).println(argCap.capture());
+        try {//System.out.println(fakePending);System.out.println(fakeFriends);System.out.println(fakeMeeting);
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void getEventsDatabaseInvitedError() {
+        // set up input
+        final int group = 80;
+        final int user = 77;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_EVENT);
+            json.put(JSONParameter.USER_ID.toString(), user);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(eventUserManager.getEventsByStatus(Status.PARTICIPATE, group, user)).thenReturn(new ArrayList<Event>());
+            when(eventUserManager.getEventsByStatus(Status.STARTED, group, user)).thenReturn(new ArrayList<Event>());
+            when(eventUserManager.getEventsByStatus(Status.INVITED, group, user)).thenReturn(null);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct event list
+        verify(response).println(argCap.capture());
+        try {//System.out.println(fakePending);System.out.println(fakeFriends);System.out.println(fakeMeeting);
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void getMembersMissingParameter() {
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_MEMBERS);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct location list
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void getMembersDataseError() {
+        // set up input
+        final int group = 65;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.GET_MEMBERS);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(groupUserManager.getUsers(group)).thenReturn(null);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct location list
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void setFounderMissingParameter() {
+        // set up input
+        final int newFounderID = 7;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_FOUNDER);
+            json.put(JSONParameter.USER_ID.toString(), newFounderID);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void setFounderGetUserDatabaseError() {
+        // set up input
+        final int group = 6;
+        final int newFounderID = 7;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_FOUNDER);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            json.put(JSONParameter.USER_ID.toString(), newFounderID);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(userManager.getUser(newFounderID)).thenReturn(null);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to read JSON response!\n");
+        }
+    }
+    
+    @Test
+    public void setFounderDatabaseError() {
+        // set up input
+        final User newFounder = new User("7", null);
+        final int group = 6;
+        final int newFounderID = 7;
+        // prepare input JSON parameter
+        try {
+            JSONObject json = new JSONObject();
+            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SET_FOUNDER);
+            json.put(JSONParameter.GROUP_ID.toString(), group);
+            json.put(JSONParameter.USER_ID.toString(), newFounderID);
+            jsonRequest = json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail("Failed to create JSON request!\n");
+        }
+        // initialize mocking
+        try {
+            when(httpRequest.getReader()).thenReturn(request);
+            when(httpResponse.getWriter()).thenReturn(response);
+            when(request.readLine()).thenReturn(jsonRequest);
+            when(userManager.getUser(newFounderID)).thenReturn(newFounder);
+            when(groupManager.updateFounder(group, newFounder)).thenReturn(false);
+       } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            fail("Failed mocking!\n");
+        }
+        // call method
+        try {
+            servlet.doPost(httpRequest, httpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail("Failed to post HTTP request!\n");
+        }
+        // test for correct results
+        verify(response).println(argCap.capture());
+        try {
+            JSONObject json = new JSONObject(argCap.getValue());
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.DB_ERROR.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             fail("Failed to read JSON response!\n");

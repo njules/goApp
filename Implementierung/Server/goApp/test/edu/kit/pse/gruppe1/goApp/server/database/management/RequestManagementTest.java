@@ -23,6 +23,7 @@ public class RequestManagementTest {
     private String groupName = "group name";
     private String userName = "user name";
     private String googleId = "1234";
+    private int invalidId = 1010101010;
 
     @Before
     public void setUp() throws Exception {
@@ -49,16 +50,22 @@ public class RequestManagementTest {
     }
 
     @Test
-    public void testAdd() {
+    public void testAdd() {        
         assertThat(createdGroup.getRequest(userWithRequest.getUserId()), is(notNullValue()));
         assertThat(createdGroup.getRequests().size(), is(1));
         assertThat(userWithRequest.getRequests().size(), is(1));
         assertThat(userWithRequest.getRequests().iterator().next().getGroup().getGroupId(),
                 is(createdGroup.getGroupId()));
+        
+        assertThat(new RequestManagement().add(createdGroup.getGroupId(), userWithRequest.getUserId()),
+                is(false));
+        assertThat(new RequestManagement().add(invalidId, invalidId), is(false));
+        
     }
 
     @Test
     public void testDeleteParamsRequestId() {
+        assertThat(new RequestManagement().delete(invalidId), is(false));
         assertThat(
                 new RequestManagement().delete(
                         createdGroup.getRequest(userWithRequest.getUserId()).getRequestId()),
@@ -71,6 +78,7 @@ public class RequestManagementTest {
 
     @Test
     public void testDeleteParamsGroupIdUserId() {
+        assertThat(new RequestManagement().delete(invalidId, invalidId), is(false));
         assertThat(new RequestManagement().delete(createdGroup.getGroupId(),
                 userWithRequest.getUserId()), is(true));
         assertThat(new GroupManagement().getGroup(createdGroup.getGroupId()).getRequests().size(),
@@ -81,6 +89,7 @@ public class RequestManagementTest {
 
     @Test
     public void testGetRequestByGroup() {
+        assertThat(new RequestManagement().getRequestByGroup(invalidId), is(nullValue()));
         List<User> users = new RequestManagement().getRequestByGroup(createdGroup.getGroupId());
         assertThat(users, is(notNullValue()));
         assertThat(users.size(), is(1));
@@ -89,6 +98,7 @@ public class RequestManagementTest {
 
     @Test
     public void testGetRequestByUser() {
+        assertThat(new RequestManagement().getRequestByUser(invalidId), is(nullValue()));
         List<Group> groups = new RequestManagement().getRequestByUser(userWithRequest.getUserId());
         assertThat(groups, is(notNullValue()));
         assertThat(groups.size(), is(1));

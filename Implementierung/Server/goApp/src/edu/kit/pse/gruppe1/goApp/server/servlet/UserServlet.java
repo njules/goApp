@@ -111,9 +111,10 @@ public class UserServlet extends HttpServlet {
             user = usrMang.getUser(userID);
             if (user == null) {
                 error = ErrorCodes.DB_ERROR;
+            } else {
+                String name = json.getString(JSONParameter.USER_NAME.toString());
+                user.setName(name);
             }
-            String name = json.getString(JSONParameter.USER_NAME.toString());
-            user.setName(name);
         } catch (JSONException e) {
             error = ErrorCodes.READ_JSON;
         }

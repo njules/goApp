@@ -1,5 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.server.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +18,7 @@ import javax.persistence.Table;
 public class Location {
 
     private Integer locationId;
+    private Timestamp deletionTime;
 
     /**
      * The longitude value of the position.
@@ -35,6 +38,25 @@ public class Location {
      * standart constructor
      */
     public Location() {
+    }
+
+    /**
+     * constructor
+     * 
+     * @param longitude
+     *            the longitude
+     * @param latitude
+     *            the latitude
+     * @param name
+     *            the name of the location
+     * @param deletionTime
+     *            the time when the location is old and should be deleted
+     */
+    public Location(double longitude, double latitude, String name, Timestamp deletionTime) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.name = name;
+        this.deletionTime = deletionTime;
     }
 
     /**
@@ -71,6 +93,24 @@ public class Location {
      */
     public void setLocationId(Integer locationId) {
         this.locationId = locationId;
+    }
+
+    /**
+     * 
+     * @return the time when the location should be deleted
+     */
+    @Column(name = "deletionTime")
+    public Timestamp getDeletionTime() {
+        return deletionTime;
+    }
+
+    /**
+     * 
+     * @param deletionTime
+     *            the time when the location should be deleted
+     */
+    public void setDeletionTime(Timestamp deletionTime) {
+        this.deletionTime = deletionTime;
     }
 
     /**

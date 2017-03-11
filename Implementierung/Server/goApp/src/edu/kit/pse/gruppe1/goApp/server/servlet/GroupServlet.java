@@ -2,6 +2,7 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Status;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -54,51 +56,67 @@ public class GroupServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+
+        String strResponse = null;
+        JSONObject jsonRequest = null;
+        JSONParameter.Methods method = null;
+        PrintWriter out = null;
+        ErrorCodes error = ErrorCodes.OK;
+
+        out = response.getWriter();
+
+        jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
+            // response was set in extractJSON
             return;
         }
-        Methods method;
+
         try {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
-            e.printStackTrace();
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
-            return;
+            if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
+                error = ErrorCodes.EMPTY_JSON;
+            } else {
+                error = ErrorCodes.READ_JSON;
+            }
         }
 
-        if (method == null) {
+        if (method == null || !error.equals(ErrorCodes.OK)) {
             method = Methods.NONE;
         }
 
         switch (method) {
         case CREATE:
-            response.getWriter().println(create(jsonRequest).toString());
+            strResponse = create(jsonRequest).toString();
             break;
         case DELETE:
-            response.getWriter().println(delete(jsonRequest).toString());
+            strResponse = delete(jsonRequest).toString();
             break;
         case SET_NAME:
-            response.getWriter().println(setName(jsonRequest).toString());
+            strResponse = setName(jsonRequest).toString();
             break;
         case DEL_MEM:
-            response.getWriter().println(deleteMember(jsonRequest).toString());
+            strResponse = deleteMember(jsonRequest).toString();
             break;
         case GET_EVENT:
-            response.getWriter().println(getEvents(jsonRequest).toString());
+            strResponse = getEvents(jsonRequest).toString();
             break;
         case GET_MEMBERS:
-            response.getWriter().println(getMembers(jsonRequest).toString());
+            strResponse = getMembers(jsonRequest).toString();
             break;
         case SET_FOUNDER:
-            response.getWriter().println(setFounder(jsonRequest).toString());
+            strResponse = setFounder(jsonRequest).toString();
             break;
         default:
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+            if (error.equals(ErrorCodes.OK)) {
+                error = ErrorCodes.METH_ERROR;
+            }
+            strResponse = ServletUtils.createJSONError(error).toString();
+            break;
+
         }
+        out.println(strResponse);
     }
 
     /**
@@ -182,7 +200,7 @@ public class GroupServlet extends HttpServlet {
         }
 
         if (!groupManager.updateName(groupId, newName)) {
-            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR);
+            return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
         return ServletUtils.createJSONError(JSONParameter.ErrorCodes.OK);
     }
@@ -268,6 +286,9 @@ public class GroupServlet extends HttpServlet {
         try {
             int groupID = json.getInt(JSONParameter.GROUP_ID.toString());
             List<User> users = groupUserManager.getUsers(groupID);
+            if (users == null) {
+                return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
+            }
             return ServletUtils.createJSONListUsr(users);
         } catch (JSONException e) {
             e.printStackTrace();

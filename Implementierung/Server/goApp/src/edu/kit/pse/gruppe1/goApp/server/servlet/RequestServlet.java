@@ -144,25 +144,25 @@ public class RequestServlet extends HttpServlet {
             reqUsers = reqMang.getRequestByGroup(newGroupID);
 
             // Check if User is already member of group
-            for (Group g : groups) {
-                if (g.getGroupId() == newGroupID) {
-                    return ServletUtils.createJSONError(ErrorCodes.INTERACT_ERROR);
-                }
-            }
-
-            // Check if User is already has an open request
-            for (Group g : reqGroups) {
-                if (g.getGroupId() == newGroupID) {
-                    return ServletUtils.createJSONError(ErrorCodes.INTERACT_ERROR);
-                }
-            }
-
-            // it is possible, that there are no groups
             if (groups != null) {
+                for (Group g : groups) {
+                    if (g.getGroupId() == newGroupID) {
+                        return ServletUtils.createJSONError(ErrorCodes.INTERACT_ERROR);
+                    }
+                }
                 groupSum += groups.size();
             }
 
-            // but there should be at least the founder in users
+            // Check if User is already has an open request
+            if (reqGroups != null) {
+                for (Group g : reqGroups) {
+                    if (g.getGroupId() == newGroupID) {
+                        return ServletUtils.createJSONError(ErrorCodes.INTERACT_ERROR);
+                    }
+                }
+            }
+
+            // there should be at least the founder in users
             if (users == null) {
                 return ServletUtils.createJSONError(ErrorCodes.DB_ERROR);
             }

@@ -1,7 +1,11 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.User;
 
@@ -46,12 +50,16 @@ public class GroupUserManagement {
      * @return List of matching User
      */
     public List<User> getUsers(int groupId) {
-        Group group = new GroupManagement().getGroup(groupId);
-        if (group == null) {
-            return null;
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        List<User> users = session.createCriteria(User.class).createAlias("groups", "g")
+                .add(Restrictions.eq("g.groupId", groupId)).addOrder(Property.forName("name").asc())
+                .list();
+        session.getTransaction().commit();
+        if (users.isEmpty()) {
+            return null; // return null to signal invalid groupId
         }
-        List<User> users = new ArrayList<>();
-        users.addAll(group.getUsers());
         return users;
     }
 
@@ -63,12 +71,17 @@ public class GroupUserManagement {
      * @return List of matching Groups
      */
     public List<Group> getGroups(int userId) {
-        User user = new UserManagement().getUser(userId);
-        if (user == null) {
+        if (new UserManagement().getUser(userId) == null) {
             return null;
         }
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(user.getGroups());
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        List<Group> groups = session.createCriteria(Group.class).createAlias("users", "u")
+                .add(Restrictions.eq("u.userId", userId)).addOrder(Property.forName("name").asc())
+                .list();
+        session.getTransaction().commit();
+
         return groups;
     }
 

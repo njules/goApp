@@ -3,6 +3,7 @@ package edu.kit.pse.gruppe1.goApp.server.servlet;
 import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -10,7 +11,9 @@ import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
+import edu.kit.pse.gruppe1.goApp.server.database.management.UserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Event;
 import edu.kit.pse.gruppe1.goApp.server.model.Group;
 import edu.kit.pse.gruppe1.goApp.server.model.Location;
@@ -91,8 +94,12 @@ public class ServletUtilsTest {
     }
 
     @Test
-    public void testCreateJSONListPart() {
-        fail("Not yet implemented - Julian dein Job");
+    public void testCreateJSONParticipateJSONError() {
+        Participant part = new Participant();
+        JSONObject json = ServletUtils.createJSONParticipate(part);
+
+        assertEquals(json, null);
+
     }
 
     @Test
@@ -111,6 +118,79 @@ public class ServletUtilsTest {
             fail();
         }
 
+    }
+
+    @Test
+    public void testDLPartUsersStartedNull() {
+        List<User> started = null;
+        List<User> part = new ArrayList<User>(1);
+        JSONObject json = ServletUtils.createJSONDoubleListPartUsers(started, part);
+        try {
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.EMPTY_LIST.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testDLPartUsersParticpNull() {
+        List<User> started = new ArrayList<User>(1);
+        List<User> part = null;
+        JSONObject json = ServletUtils.createJSONDoubleListPartUsers(started, part);
+        try {
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.EMPTY_LIST.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testDLPartUsersParticpEmpty() {
+        List<User> started = new ArrayList<User>(1);
+        List<User> part = new ArrayList<User>();
+        JSONObject json = ServletUtils.createJSONDoubleListPartUsers(started, part);
+        try {
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.EMPTY_LIST.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testDLPartUsersStartedEmpty() {
+        List<User> started = new ArrayList<User>(1);
+        List<User> part = new ArrayList<User>();
+        JSONObject json = ServletUtils.createJSONDoubleListPartUsers(started, part);
+        try {
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.EMPTY_LIST.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testDLPartUsersPartFilled() {
+        List<User> started = new ArrayList<User>(1);
+        List<User> part = new ArrayList<User>();
+        part.add(getUser());
+        part.add(getUser());
+        part.add(getUser());
+        JSONObject json = ServletUtils.createJSONDoubleListPartUsers(started, part);
+        try {
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
@@ -148,8 +228,29 @@ public class ServletUtilsTest {
     }
 
     @Test
-    public void testCreateJSONDoubleListPartUsers() {
-        fail("Not yet implemented - Julian dein Job");
+    public void testCreateJSONDoubleListEventListNull() {
+        List<Event> accEvt = null;
+        List<Event> newEvt = new ArrayList<Event>(1);
+        JSONObject json = ServletUtils.createJSONDoubleListEvent(accEvt, newEvt);
+        try {
+            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.EMPTY_LIST.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testCreateJSONEventIDNull() {
+        JSONObject json = ServletUtils.createJSONEventID(null);
+        assertEquals(json, null);
+    }
+
+    @Test
+    public void testCreateJSONEventNull() {
+        JSONObject json = ServletUtils.createJSONEvent(null);
+        assertEquals(json, null);
     }
 
     @Test
@@ -208,26 +309,6 @@ public class ServletUtilsTest {
     }
 
     @Test
-    public void testCreateJSONListEvent() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
-    public void testCreateJSONDoubleListEvent() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
-    public void testCreateJSONListUsr() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
-    public void testCreateJSONListGrp() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
     public void testCreateJSONGroupID() {
         Group group = getGroup();
         JSONObject json = null;
@@ -243,11 +324,6 @@ public class ServletUtilsTest {
     }
 
     @Test
-    public void testCreateJSONListLoc() {
-        fail("Not yet implemented - Julian dein Job");
-    }
-
-    @Test
     public void testCreateJSONError() {
         ErrorCodes error = ErrorCodes.GRP_LIMIT;
         JSONObject json = null;
@@ -257,11 +333,6 @@ public class ServletUtilsTest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    public void testExtractJSON() {
-        fail("Not yet implemented - Julian dein Job");
     }
 
 }

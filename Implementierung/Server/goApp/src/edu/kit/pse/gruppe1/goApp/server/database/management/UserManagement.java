@@ -1,5 +1,6 @@
 package edu.kit.pse.gruppe1.goApp.server.database.management;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -85,6 +86,8 @@ public class UserManagement implements Management {
      * @return true, if update was successfull, otherwise false
      */
     public boolean updateLocation(int userId, Location newLocation) {
+        newLocation
+                .setDeletionTime(new Timestamp(System.currentTimeMillis() + (45L * 60L * 1000L)));
         User user = getUser(userId);
         if (user == null) {
             return false;
@@ -149,5 +152,36 @@ public class UserManagement implements Management {
         session.delete(user);
         session.getTransaction().commit();
         return true;
+    }
+
+    /**
+     * deletes old user locations
+     */
+    public void deleteOldLocations() {
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        Session session = DatabaseInitializer.getFactory().getCurrentSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        List<Location> locations = session.createCriteria(Location.class)
+                .add(Restrictions.isNotNull("deletionTime"))
+                .add(Restrictions.lt("deletionTime", time)).list();
+        session.getTransaction().commit();
+        for (Location location : locations) {
+            session = DatabaseInitializer.getFactory().getCurrentSession();
+            session.beginTransaction();
+            @SuppressWarnings("unchecked")
+            List<User> users = session.createCriteria(User.class)
+                    .add(Restrictions.eq("location", location)).list();
+            session.getTransaction().commit();
+            if (!users.isEmpty()) {
+                users.get(0).setLocation(null);
+                new UserManagement().update(users.get(0));
+            }
+            session = DatabaseInitializer.getFactory().getCurrentSession();
+            session.beginTransaction();
+            session.delete(location);
+            session.getTransaction().commit();
+        }
+
     }
 }

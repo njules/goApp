@@ -1,6 +1,8 @@
 package edu.kit.pse.gruppe1.goApp.server.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +14,7 @@ import org.json.JSONObject;
 
 import edu.kit.pse.gruppe1.goApp.server.database.management.EventUserManagement;
 import edu.kit.pse.gruppe1.goApp.server.model.Status;
+import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.ErrorCodes;
 import edu.kit.pse.gruppe1.goApp.server.servlet.JSONParameter.Methods;
 
 /**
@@ -39,32 +42,43 @@ public class ParticipateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        JSONObject jsonRequest = ServletUtils.extractJSON(request, response);
+        String strResponse = null;
+        JSONObject jsonRequest = null;
+        JSONParameter.Methods method = null;
+        PrintWriter out = null;
+        ErrorCodes error = ErrorCodes.OK;
+
+        out = response.getWriter();
+
+        jsonRequest = ServletUtils.extractJSON(request, response);
         if (jsonRequest == null) {
+            // response was set in extractJSON
             return;
         }
-        Methods method;
+
         try {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
-            e.printStackTrace();
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.READ_JSON));
-            return;
+            error = ErrorCodes.READ_JSON;
         }
 
-        if (method == null) {
+        if (method == null || !error.equals(ErrorCodes.OK)) {
             method = Methods.NONE;
         }
 
         switch (method) {
         case SET_STATUS:
-            response.getWriter().println(setStatus(jsonRequest).toString());
+            strResponse = setStatus(jsonRequest).toString();
+            break;
         default:
-            response.getWriter()
-                    .println(ServletUtils.createJSONError(JSONParameter.ErrorCodes.METH_ERROR));
+            if (error.equals(ErrorCodes.OK)) {
+                error = ErrorCodes.METH_ERROR;
+            }
+            strResponse = ServletUtils.createJSONError(error).toString();
+            break;
         }
+        out.println(strResponse);
     }
 
     /**
@@ -107,7 +121,8 @@ public class ParticipateServlet extends HttpServlet {
             if (!eventUser.delete(event, user)) {
                 return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
             }
-        } if (!eventUser.updateStatus(event, user, status)) {
+        }
+        if (!eventUser.updateStatus(event, user, status)) {
             return ServletUtils.createJSONError(JSONParameter.ErrorCodes.DB_ERROR);
         }
         return ServletUtils.createJSONError(JSONParameter.ErrorCodes.OK);

@@ -4,31 +4,37 @@
 		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 
-    <session-factory>
+	<session-factory>
 
-        <!-- JDBC Database connection settings -->
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost/PSEWS1617GoGruppe1</property>
-        <property name="connection.username">PSEWS1617User1</property>
-        <property name="connection.password">DTOxQ6yBnv4QR9pj</property>
-        
-        
-         <!-- <property name="hbm2ddl.auto">create-drop</property> would delete the tables if sessionfactory is closed  -->
-        <property name="hbm2ddl.auto">update</property>
-        
+		<!-- JDBC Database connection settings -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://localhost/PSEWS1617GoGruppe1?autoReconnect=true</property>
+		<property name="connection.username">PSEWS1617User1</property>
+		<property name="connection.password">DTOxQ6yBnv4QR9pj</property>
 
-        <!-- JDBC connection pool settings ... using built-in test pool. Later use C3p0 or something like this.-->
-        <property name="connection.pool_size">1</property>
 
-        <!-- Select our SQL dialect -->
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<!-- <property name="hbm2ddl.auto">create-drop</property> would delete 
+			the tables if sessionfactory is closed -->
+		<property name="hbm2ddl.auto">update</property>
 
-        <!-- Echo the SQL to stdout -->
-        <property name="show_sql">true</property>
+
+
+
+		<!-- Select our SQL dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+		<!-- Echo the SQL to stdout -->
+		<property name="show_sql">true</property>
 
 		<!-- Set the current session context -->
 		<property name="current_session_context_class">thread</property>
- 
-    </session-factory>
+
+
+		<property name="hibernate.c3p0.min_size">5</property>
+		<property name="hibernate.c3p0.max_size">20</property>
+		<property name="hibernate.c3p0.timeout">300</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.c3p0.idle_test_period">3000</property>
+	</session-factory>
 
 </hibernate-configuration>
