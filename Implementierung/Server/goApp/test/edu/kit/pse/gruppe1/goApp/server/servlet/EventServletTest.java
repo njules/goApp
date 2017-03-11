@@ -510,6 +510,51 @@ public class EventServletTest {
     }
 
     @Test
+    public void testChangeNothingChanged() {
+        JSONObject json = new JSONObject();
+        JSONObject newJson = null;
+        Event event = createEvent();
+
+        when(mockEventMang.getEvent(event.getEventId())).thenReturn(event);
+
+        try {
+            json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
+            json.put(JSONParameter.METHOD.toString(), Methods.CHANGE.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        when(mockEventMang.update(any(Event.class))).thenReturn(true);
+        try {
+            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
+            when(mockBuffRead.readLine()).thenReturn(json.toString());
+            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        try {
+            servlet.doPost(mockHttpRequest, mockHttpResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        verify(mockPrintWriter).println(captor.capture());
+
+        try {
+            newJson = new JSONObject(captor.getValue());
+            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
+                    ErrorCodes.OK.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
     public void testChangeWOutEventId() {
         JSONObject json = new JSONObject();
         JSONObject newJson = null;
