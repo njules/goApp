@@ -397,7 +397,7 @@ public class GroupSearchServletTest {
         try {
             JSONObject json = new JSONObject(argCap.getValue());
             assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()),
-                    JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
+                    JSONParameter.ErrorCodes.METH_ERROR.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
             fail("Failed to read JSON response!\n");
