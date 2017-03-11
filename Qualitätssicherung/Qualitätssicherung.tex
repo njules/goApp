@@ -67,13 +67,25 @@ Zusätzlich zu dem Beheben von Fehlern wurden noch folgende Sachen verändert:
 \item Gruppen und User werden nun immer aufsteigend nach dem Namen zurückgegeben.
 \end{itemize}
 \subsubsection{Servlet}
+
 \paragraph{RequestServlet}
-Beim Ausführen der Methode create kam es zu  einer NullPointerException, wenn der Nutzer in keinen Gruppen Mitglied war oder noch keine Anfragen gesendet hatte.
+\begin{itemize} 
+\item Fehlersymptom: Es tritt eine NullPointerException in der Methode create auf.
+\item Fehlergrund: Der Nutzer ist in keiner Gruppe Mitglied oder hat noch keine Anfrage gesendet.
+\item Fehlerbehebung: Es wird geprüft ob Gruppen bzw. Anfragen existieren und falls nicht entsprechend reagiert.
+\end{itemize}
 \paragraph{UserServlet}
-In der Methode changeName trat eine NullPointerException auf, wenn der Nutzer nicht in der Datenbank gefunden wurde, da der Name auf dem zurückgegeben Nutzer geändert wurde.
+\begin{itemize} 
+\item Fehlersymptom: Es tritt in der Methode changeName eine NullPointerException auf.
+\item Fehlergrund: Wenn ein Nutzer in der Datenbank nicht gefunden wird, gibt diese null zurück. Dies wurde nicht geprüft.
+\item Fehlerbehebung: Vor der weiteren Ausführung wird die Antwort der Datenbank geprüft.
+\end{itemize}
 \paragraph{EventServlet}
-In der Methode change hat eine Rückgabe des Fehlercodes gefehlt und es wurde trotz Fehlerfall weiter ausgeführt, sowie der Code OK zurück gegeben.
-Außerdem war der Umgang mit dem Timestamp falsch.
+\begin{itemize} 
+\item Fehlersymptom: Es wurde trotz eines Fehlers, der Fehlercode für OK zurück gegeben.
+\item Fehlergrund: Die Rückgabe des Fehlercodes an Stelle, wo der Fehler gefunden wurde hat gefehlt.
+\item Fehlerbehebung: Der Fehlercode wird jetzt zurück gegeben.
+\end{itemize}
 \newpage
 
 
@@ -129,7 +141,6 @@ Die Methode reject wird ohne alle erforderlichen JSON Parameter aufgerufen. Es s
 Wenn eine Methode augerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
 \subparagraph{public void testEmptyJSON()}
 Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehen.
-%TODO: wirklich? sonst überall im Code ändern, wie hat es Julian?
 
 \paragraph{RequestSearchServlet}
 \subparagraph{public void testGetRequestsByUserDatabaseNull()}
@@ -175,8 +186,17 @@ Wenn der JSONParameter EventId bei der Methode change fehlt, soll der Fehler REA
 \subparagraph{public void testChangeDatabaseWrong()}
  Wenn die Datenbank das Event nicht updaten konnte und deswegen false zurück gibt, soll ein DB\_ERROR entstehen.
  
+\newpage
 \subsubsection{Abdeckung}
-hier am Ende EclEmma beschreiben und \%te pro Datei oder Paket? angeben
+\paragraph{EclEmma}
+EclEmma ist ein Plugin für Eclipse, welches die Testabdeckung misst. Dabei wird bei der Ausführung einer Anwendung festgestellt, welche Klassen, Methoden, Blöcke und Zeilen Code ausgeführt wurden. 
+Mit diesem Tool haben wir die Abdeckung durch unsere Tests geprüft.
+\paragraph{XY}
+Die Testabdeckung für den Server beträgt XX \%.
+Nach der Implementierungsphase mit Tests zur Funktionalität betrug die Abdeckung 76,5\%.
+
+%TODO hier Bild von Jonas
+
 
 \newpage
 \section{Client}
