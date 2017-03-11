@@ -27,9 +27,11 @@
 
 \section{Einleitung}
 \newpage
-\section{Änderungen}
-Während der Qualitätssicherung bemerkten wir durch unsere Tests noch einige kleine Fehler im Code. Diese wurden behoben und sind im folgenden aufgeführt.
-\subsection{Server}
+\section{Server}
+
+
+Während der Qualitätssicherung bemerkten wir durch unsere Tests noch einige kleine Fehler im Code. Diese wurden behoben und sind im folgenden zusammen mit kleineren Optimierungen aufgeführt.
+\subsection{Änderungen}
 \subsubsection{Algorithmus}
 \subsubsection{Datenbank}
 Es gab einen Fehler im Zusammenhang mit dem LocationDeletionTimer und dem EventDeletionTimer, welche sich um das Löschen alter Events und alter Locations kümmern.
@@ -59,98 +61,9 @@ In der Methode changeName trat eine NullPointerException auf, wenn der Nutzer ni
 In der Methode change hat eine Rückgabe des Fehlercodes gefehlt und es wurde trotz Fehlerfall weiter ausgeführt, sowie der Code OK zurück gegeben.
 Außerdem war der Umgang mit dem Timestamp falsch.
 \newpage
-\subsection{Client}
-\newpage
-\section{Testbericht}
-\subsection{Testszenarien}
-Im folgenden wollen wir kurz auf unsere Testszenarien aus dem Pflichtenheft eingehen,.
-Trotz einer immer weiter voranschreitenden Verbesserung und dadurch teilweisen Abänderung unserer Ideen aus dem Pflichtenheft, konnten alle Testszenarien die im Pflichtenheft definiert wurden mit positivem Ausgang durchlaufen werden.
 
-Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galaxy S4) mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
 
-\subsubsection{Kontoverwaltung}
-\begin{itemize} 
-	\item[T10] deckt ab \hyperlink{FA10}{FA10} \newline
-	Registrieren: Eine bisher nicht registrierte Person mit einem Google Account registriert sich mit diesem im System 				und wählt zusätzlich einen Benutzernamen. \newline
-	Ergebnis: Der neue Benutzer mit seinem Google Account und Benutzername ist in der Datenbank. \newline
-	Bemerkung: Dieses Testszenario kann so nicht mehr umgesetzt werden da der Benutzername bei der Erstellung eines Accounts nicht meht gewählt wird sondern auf den GoogleAccount Namen gesetzt wird, der Benutername lässt sich allerdings immernoch nachträglich ändern.
-	
-	\item[T20] deckt ab \hyperlink{FA20}{FA20}\newline
-	Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
-	Ergebnis: Der neue Benutzername des Benutzers ist in der Datenbank. 
-	
-	\subsubsection{Gruppenverwaltung}
-	
-	\item[T30] deckt ab \hyperlink{FA30}{FA30}, \hyperlink{FA35}{FA35}\newline
-	Ein beliebiger Benutzer erstellt eine neue Gruppe mit Namen. \newline
-	Ergebnis: Eine neue Gruppe, mit eindeutiger ID, dem angegebenen Namen und dem Benutzer als Gründer, ist in der 			Datenbank.
-	
-	\item[T35] deckt ab \hyperlink{FA35}{FA35} \newline
-	Der Gründer ändert den Gruppennamen.\newline
-	Ergebnis: Auf dem Server ist bei der Gruppe der neue Name eingetragen. 
-	
-	\item[T40] deckt ab \hyperlink{FA40}{FA40}, \hyperlink{FA45}{FA45}  \newline
-	Suchen der Gruppe nach Namen und eine Beitrittsanfrage an eine gefundene Gruppe stellen. \newline
-	Ergebnis: Alle Gruppen-IDs der Gruppen, die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
-	hinzugefügt.
-	
-	\item[T50] deckt ab \hyperlink{FA50}{FA50}  \newline
-	Der Gruppengrnder bestätigt eine Anfrage. \newline
-	Ergebnis: Der Benutzer der Anfrage ist Mitglied der Gruppe und die Anfrage ist gelöscht.
-	
-	\item[T55] deckt ab \hyperlink{FA50}{FA50}  \newline
-	Der Gruppengründer lehnt eine Anfrage ab. \newline
-	Ergebnis: Die Anfrage ist gelöscht.
-	
-	\item[T60] deckt ab \hyperlink{FA60}{FA60}  \newline
-	Der Gruppengrnder entfernt ein Mitglied.  \newline
-	Ergebnis: Der Benutzer ist nicht mehr Mitglied (Alle Assoziationen zwischen Gruppe und Benutzer sind getrennt).
-	
-	\item[T70] deckt ab \hyperlink{FA70}{FA70}  \newline
-	Der Gruppengründer löscht die Gruppe.  \newline
-	Ergebnis: Alle Mitgliedern sind entfernt (\hyperlink{FA60}{FA60}) und die Gruppe aus der Datenbank gelöscht.
-	
-	\item[T80] deckt ab \hyperlink{FA80}{FA80}  \newline
-	Ein Gruppenmitglied verlässt die Gruppe.  \newline
-	Ergebnis: Der Benutzer ist nicht mehr Mitglied (siehe T60).
-	
-	\subsubsection{Terminverwaltung}
-	
-	\item[T90] deckt ab \hyperlink{FA100}{FA100}, \hyperlink{FA120}{FA120}  \newline
-	Ein beliebiges Mitglied erstellt einen Termin mit Name, Ort, Zeitpunkt.  \newline
-	Ergebnis: Es gibt einen Termin mit dem genannten Namen, Ort und Zeitpunkt in der Gruppe.
-	
-	\item [T100] deckt ab \hyperlink{FA130}{FA130}  \newline
-	Ein Mitglied sagt ab.  \newline
-	Ergebnis: Der Termin ist für das Mitglied gelöscht.
-	
-	\item[T105] deckt ab \hyperlink{FA130}{FA130}  \newline
-	Ein Mitglied sagt zu.  \newline
-	Ergebnis: Das Mitglied ist Teilnehmer des Termins und der Termin ist auf dem Gerät des Teilnehmers gespeichert.
-	
-	\subsubsection{Terminablauf}
-	
-	\item[T110] deckt ab \hyperlink{FA140}{FA140}, \hyperlink{FA150}{FA150}, \hyperlink{FA170}{FA170} \newline
-	Automatischer Ablauf eines Termins. \newline
-	Ergebnis: 30 Minuten vor dem Termin werden alle Teilnehmer von dem Termin benachrichtigt.  \newline
-	15 Minuten vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar.  \newline
-	60 Minuten nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf 					dem Client noch auf dem Server).
-	Bemerkung: Die Teilnehmer werden in der jetztigen Version 15 Minuten vor dem Termin benarichtigt. 
-	
-	\subsubsection{Standort}
-	\item[T120] deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
-	Standort Übertragung der Clients an den Server.  \newline
-	Ergebnis: Der Standort aller Teilnehmer ist auf dem Server gespeichert. \newline
-	Bemerkung: Da die Kommunikation zwischen Server und Client bei unserer App immer vom Client ausgeht lässt sich nicht sicher sagen ob zu einem gewissen Zeitpunkt die aktuellen Standorte aller User eines Termins auf dem Server gespeichert sind. Allerdings updaten die Clients bei ausreichender Internetverbindung alle 15-30 Sekunden ihre Standortinformationen auf dem Server.
-	
-	\item[T130]  deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
-	Der Server sendet den berechneten Gruppenmittelpunkt an den Teilnehmer. \newline
-	Ergebnis: Der Client hat den aktuellen Gruppenmittelpunkt.
-	
-\end{itemize}	
-
-%TODO: bis hier
-\subsection{Server}
+\subsection{Tests}
 Zu den Unit-Tests aus der Implementierungsphase sind weitere Tests dazugekommen um die Abdeckung zu erhöhen, sowie Randfälle zu testen.
 \subsubsection{Algorithmus}
 \subsubsection{Datenbank}
@@ -249,15 +162,16 @@ Wenn der JSONParameter EventId bei der Methode change fehlt, soll der Fehler REA
  
 \subsubsection{Abdeckung}
 hier am Ende EclEmma beschreiben und \%te pro Datei oder Paket? angeben
+
 \newpage
-\subsection{Client}
-	\subsubsection{Lint}
+\section{Client}
+	\subsection{Lint}
 	Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Lint überprüft Android-Projekten auf mögliche Bugs und liefert Vorschläge um den Code zu verbessern.
 Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer weiter optimiert, von Performance Issues über Rechtschreibfehler bis hin zur Verbesserung der XML-Dateien.  
 
-	\subsubsection{Performance}
-		\paragraph{Monkey-Test}
-		\paragraph{Beta Tester}
+	\subsection{Performance}
+		\subsubsection{Monkey-Test}
+		\subsubsection{Beta Tester}
 		Wir haben unsere App unter circa xx Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
 		\newline Einige Beispiele:
 			\begin{itemize}
@@ -293,6 +207,95 @@ Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer we
 	
 		Im Anhang findet sich zusätzlich ein Fragebogen an die Beta User.
 
+\newpage
+\section{Testszenarien}
+Im folgenden wollen wir kurz auf unsere Testszenarien aus dem Pflichtenheft eingehen,.
+Trotz einer immer weiter voranschreitenden Verbesserung und dadurch teilweisen Abänderung unserer Ideen aus dem Pflichtenheft, konnten alle Testszenarien die im Pflichtenheft definiert wurden mit positivem Ausgang durchlaufen werden.
+
+Die Tests wurdem auf dem im Pflichtenheft gennanten Referenzgerät(Samsung Galaxy S4) mit einer ausreichenden Internetverbindung und funktionierendem GPS ausgeführt. \newline
+
+\subsubsection{Kontoverwaltung}
+\begin{itemize} 
+	\item[T10] deckt ab \hyperlink{FA10}{FA10} \newline
+	Registrieren: Eine bisher nicht registrierte Person mit einem Google Account registriert sich mit diesem im System und wählt zusätzlich einen Benutzernamen. \newline
+	Ergebnis: Der neue Benutzer mit seinem Google Account und Benutzername ist in der Datenbank. \newline
+	Bemerkung: Dieses Testszenario kann so nicht mehr umgesetzt werden da der Benutzername bei der Erstellung eines Accounts nicht meht gewählt wird sondern auf den GoogleAccount Namen gesetzt wird, der Benutername lässt sich allerdings immernoch nachträglich ändern.
+	
+	\item[T20] deckt ab \hyperlink{FA20}{FA20}\newline
+	Namensänderung: Ein Benutzer ändert seinen Benutzernamen. \newline
+	Ergebnis: Der neue Benutzername des Benutzers ist in der Datenbank. 
+	
+	\subsubsection{Gruppenverwaltung}
+	
+	\item[T30] deckt ab \hyperlink{FA30}{FA30}, \hyperlink{FA35}{FA35}\newline
+	Ein beliebiger Benutzer erstellt eine neue Gruppe mit Namen. \newline
+	Ergebnis: Eine neue Gruppe, mit eindeutiger ID, dem angegebenen Namen und dem Benutzer als Gründer, ist in der Datenbank.
+	
+	\item[T35] deckt ab \hyperlink{FA35}{FA35} \newline
+	Der Gründer ändert den Gruppennamen.\newline
+	Ergebnis: Auf dem Server ist bei der Gruppe der neue Name eingetragen. 
+	
+	\item[T40] deckt ab \hyperlink{FA40}{FA40}, \hyperlink{FA45}{FA45}  \newline
+	Suchen der Gruppe nach Namen und eine Beitrittsanfrage an eine gefundene Gruppe stellen. \newline
+	Ergebnis: Alle Gruppen-IDs der Gruppen, die die Suchanfrage im Namen enthalten. Anfrage in der Gruppe 		
+	hinzugefügt.
+	
+	\item[T50] deckt ab \hyperlink{FA50}{FA50}  \newline
+	Der Gruppengrnder bestätigt eine Anfrage. \newline
+	Ergebnis: Der Benutzer der Anfrage ist Mitglied der Gruppe und die Anfrage ist gelöscht.
+	
+	\item[T55] deckt ab \hyperlink{FA50}{FA50}  \newline
+	Der Gruppengründer lehnt eine Anfrage ab. \newline
+	Ergebnis: Die Anfrage ist gelöscht.
+	
+	\item[T60] deckt ab \hyperlink{FA60}{FA60}  \newline
+	Der Gruppengrnder entfernt ein Mitglied.  \newline
+	Ergebnis: Der Benutzer ist nicht mehr Mitglied (Alle Assoziationen zwischen Gruppe und Benutzer sind getrennt).
+	
+	\item[T70] deckt ab \hyperlink{FA70}{FA70}  \newline
+	Der Gruppengründer löscht die Gruppe.  \newline
+	Ergebnis: Alle Mitgliedern sind entfernt (\hyperlink{FA60}{FA60}) und die Gruppe aus der Datenbank gelöscht.
+	
+	\item[T80] deckt ab \hyperlink{FA80}{FA80}  \newline
+	Ein Gruppenmitglied verlässt die Gruppe.  \newline
+	Ergebnis: Der Benutzer ist nicht mehr Mitglied (siehe T60).
+	
+	\subsubsection{Terminverwaltung}
+	
+	\item[T90] deckt ab \hyperlink{FA100}{FA100}, \hyperlink{FA120}{FA120}  \newline
+	Ein beliebiges Mitglied erstellt einen Termin mit Name, Ort, Zeitpunkt.  \newline
+	Ergebnis: Es gibt einen Termin mit dem genannten Namen, Ort und Zeitpunkt in der Gruppe.
+	
+	\item [T100] deckt ab \hyperlink{FA130}{FA130}  \newline
+	Ein Mitglied sagt ab.  \newline
+	Ergebnis: Der Termin ist für das Mitglied gelöscht.
+	
+	\item[T105] deckt ab \hyperlink{FA130}{FA130}  \newline
+	Ein Mitglied sagt zu.  \newline
+	Ergebnis: Das Mitglied ist Teilnehmer des Termins und der Termin ist auf dem Gerät des Teilnehmers gespeichert.
+	
+	\subsubsection{Terminablauf}
+	
+	\item[T110] deckt ab \hyperlink{FA140}{FA140}, \hyperlink{FA150}{FA150}, \hyperlink{FA170}{FA170} \newline
+	Automatischer Ablauf eines Termins. \newline
+	Ergebnis: 30 Minuten vor dem Termin werden alle Teilnehmer von dem Termin benachrichtigt.  \newline
+	15 Minuten vor dem Terminzeitpunkt ist die Karte für alle Teilnehmer verfügbar.  \newline
+	60 Minuten nach dem Terminzeitpunkt ist der Termin gelöscht (Keine Daten mehr zu diesem Termin, weder auf dem Client noch auf dem Server).
+	Bemerkung: Die Teilnehmer werden in der jetztigen Version 15 Minuten vor dem Termin benarichtigt. 
+	
+	\subsubsection{Standort}
+	\item[T120] deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
+	Standort Übertragung der Clients an den Server.  \newline
+	Ergebnis: Der Standort aller Teilnehmer ist auf dem Server gespeichert. \newline
+	Bemerkung: Da die Kommunikation zwischen Server und Client bei unserer App immer vom Client ausgeht lässt sich nicht sicher sagen ob zu einem gewissen Zeitpunkt die aktuellen Standorte aller User eines Termins auf dem Server gespeichert sind. Allerdings updaten die Clients bei ausreichender Internetverbindung alle 15-30 Sekunden ihre Standortinformationen auf dem Server.
+	
+	\item[T130]  deckt ab \hyperlink{FA110}{FA110}, \hyperlink{FA150}{FA150} \newline
+	Der Server sendet den berechneten Gruppenmittelpunkt an den Teilnehmer. \newline
+	Ergebnis: Der Client hat den aktuellen Gruppenmittelpunkt.
+	
+\end{itemize}	
+
+\newpage
 \section{Anhang}
 
 

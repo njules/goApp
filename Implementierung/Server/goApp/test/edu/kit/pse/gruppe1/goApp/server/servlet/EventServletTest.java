@@ -87,42 +87,6 @@ public class EventServletTest {
         servlet = null;
     }
 
-    @Ignore
-    @Test
-    public void testMethodNull() {
-        // TODO
-        JSONObject newJson = null;
-
-        try {
-            when(mockHttpResponse.getWriter()).thenReturn(mockPrintWriter);
-            // return null as JSONObject
-            when(mockBuffRead.readLine()).thenReturn(null);
-            when(mockHttpRequest.getReader()).thenReturn(mockBuffRead);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail();
-        }
-
-        try {
-            servlet.doPost(mockHttpRequest, mockHttpResponse);
-        } catch (ServletException | IOException e) {
-            e.printStackTrace();
-            fail();
-        }
-
-        verify(mockPrintWriter).println(captor.capture());
-
-        try {
-            newJson = new JSONObject(captor.getValue());
-            assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
-                    ErrorCodes.EMPTY_JSON.getErrorCode());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            fail();
-        }
-
-    }
-
     @Test
     public void testMethodNotExisting() {
         JSONObject json = new JSONObject();
