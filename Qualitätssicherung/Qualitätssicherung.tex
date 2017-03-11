@@ -184,12 +184,16 @@ hier am Ende EclEmma beschreiben und \%te pro Datei oder Paket? angeben
 	Android Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Wir benutzten Android Lint auf dem Client equivalent zu SonarLint auf dem Server um unser Android-Projekt auf mögliche Bugs zu überprüfen. Außerdem liefert Android Lint Vorschläge um den Code zu verbessern.
 Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer weiter optimiert, von Performance Issues über Rechtschreibfehler bis hin zur Verbesserung der XML-Dateien.  
 
-	\subsection{Performance}
-		\subsubsection{Monkey-Test}
 
-		\subsubsection{Beta Tester}
-		Wir haben unsere App unter circa 10 Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
-		\newline Einige Beispiele:
+		\subsection{Monkey-Test}
+Um die Resistenz und Stabilität unserer App zu überprüfen haben wir Monkey-Tests auf dem Android-Simulator durchgeführt.
+Monkey-Tests produzieren eine willkürliche Folge von Eingaben (clicks, swipes, keys) um die Reaktion der App zu testen.
+Unsere App ist bei jedem der 10 Testläufe mit jeweils 10.000 Eingaben nicht abgestürzt und hat eine kurze Reaktionszeit aufgewiesen.
+
+		\subsection{Beta Tester}
+		\subsubsection{Verbesserungen an der GUI}
+Wir haben unsere App unter circa 10 Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
+		
 			\begin{itemize}
 				\item User die bei einem Termin auf "'GO"' gedrückt haben werden in der Teilnehmeransicht nun farblich hervorgehoben.  
 				\item User bekommen jetzt bei allen "`kritischen"' Aktionen wie dem Löschen einer Gruppe einen Dialog angezeigt ob sie diese Aktion wirklich durchführen wollen.
@@ -199,6 +203,7 @@ Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer we
 				\item Der berechnete Gruppenmittelpunkt wird dem User nun in dunkelgrün der goApp anstatt in rot angezeigt, so ist es leichter den Gruppenmittelpunkt vom Terminstandort auseinander zu halten.
 			\end{itemize}
 		
+		\subsubsection{Fehlverhalten}
 		Ebenfalls waren wir an eventuellem Fehlverhalten oder gar Abstürzen der Applikation im "`alltagsgebrauch"' interessiert und haben auch hier Feedback gesammelt um Bugs zu beheben.
 
 		\begin{itemize}
@@ -223,7 +228,7 @@ Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer we
 			
 		\end{itemize}
 	
-		Im Anhang findet sich zusätzlich ein Fragebogen an die Beta User.
+		Im Anhang findet sich der ausgewertete Fragebogen den wir entwickelt haben um die Beta User systematisch zu befragen und die Antworten einheitlich auswerten zu können. Insgesamt scheinen die User mit der App zufrieden zu sein.
 
 \newpage
 \section{Testszenarien}
