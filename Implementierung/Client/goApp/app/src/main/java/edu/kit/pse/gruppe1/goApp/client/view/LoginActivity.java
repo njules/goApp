@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 loginService.login(this, idToken);
             } else {
                 Log.i("Login", result.getStatus().toString());
+                findViewById(R.id.sign_in).setClickable(true);
             }
         }
     }
@@ -79,6 +80,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
      * starts google sign in flow with a signInIntent. Results are received in OnActivityResult()
      */
     private void SignIn() {
+        findViewById(R.id.sign_in).setClickable(false);
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         Toast.makeText(this, R.string.starting_google_sign_in, Toast.LENGTH_SHORT).show();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -94,6 +96,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
      * starts google silent sign in with an intent and starts loginService.login() with the received idToken
      */
     private void trySilentSignIn() {
+        findViewById(R.id.sign_in).setClickable(false);
         Auth.GoogleSignInApi.silentSignIn(googleApiClient).setResultCallback(new ResultCallback<GoogleSignInResult>() {
 
             @Override

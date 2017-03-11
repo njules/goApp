@@ -21,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.kit.pse.gruppe1.goApp.client.R;
@@ -102,6 +103,9 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         marker = new MarkerOptions();
+        LatLng positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
+        googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positionEvent, 13));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
@@ -148,10 +152,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                     break;
                 // Moves the Map to the Users Location.
                 case LocationService.RESULT_MY_LOCATION:
-                    positionEvent = new LatLng(event.getLocation().getLongitude(), event.getLocation().getLatitude());
-                    googleMap.addMarker(new MarkerOptions().title(event.getLocation().getName()).position(positionEvent));
                     android.location.Location location = intent.getParcelableExtra(UtilService.LOCATION);
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                     break;
                 // Refreshes the markers on the map, representing the Group Locations.
                 case LocationService.RESULT_LOCATION:
@@ -165,7 +166,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                             Location[] locations = (Location[]) intent.getParcelableArrayExtra(UtilService.LOCATIONS);
                             for (int i = 0; i < locations.length; i++) {
                                 LatLng position = new LatLng(locations[i].getLongitude(), locations[i].getLatitude());
-                                googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position));
+                                googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position).icon(BitmapDescriptorFactory.defaultMarker(getResources().getColor(R.color.colorPrimary))));
                             }
                         }
                     }

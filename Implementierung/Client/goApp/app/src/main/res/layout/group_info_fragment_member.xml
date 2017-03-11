@@ -21,7 +21,7 @@
                       android:paddingTop="5dp"
                       android:textSize="26sp"
                       android:textColor="@color/colorText"
-                      android:background="@color/colorSecondary"
+                      android:background="@color/colorPrimary"
                       android:text="@string/group_member"/>
             <android.support.v7.widget.RecyclerView
                     android:id="@+id/member_recycler_view"

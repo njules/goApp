@@ -233,7 +233,7 @@ public class NewEventActivity extends AppCompatActivity implements OnMapReadyCal
                 // Moves the Map to the Users Location.
                 case LocationService.RESULT_MY_LOCATION:
                     android.location.Location location = intent.getParcelableExtra(UtilService.LOCATION);
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 10));
                     break;
                 default:
                     break;
