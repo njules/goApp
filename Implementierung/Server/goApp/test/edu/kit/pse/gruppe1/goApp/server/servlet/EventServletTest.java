@@ -160,7 +160,6 @@ public class EventServletTest {
             newJson = new JSONObject(captor.getValue());
             assertEquals(newJson.getInt(JSONParameter.ERROR_CODE.toString()),
                     ErrorCodes.READ_JSON.getErrorCode());
-            // TODO: evtl. Code ändern und dann dokumentieren
         } catch (JSONException e) {
             e.printStackTrace();
             fail();

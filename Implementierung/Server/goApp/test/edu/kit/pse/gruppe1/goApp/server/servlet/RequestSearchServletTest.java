@@ -116,7 +116,6 @@ public class RequestSearchServletTest {
         JSONObject json = new JSONObject();
         JSONObject newJson = null;
         int userID = 1;
-        List<Group> groupList = createListGroup();
 
         try {
             json.put(JSONParameter.USER_ID.toString(), userID);
@@ -262,7 +261,6 @@ public class RequestSearchServletTest {
         JSONObject json = new JSONObject();
         JSONObject newJson = null;
         int groupID = 1;
-        List<User> userList = createListUser();
 
         try {
             json.put(JSONParameter.GROUP_ID.toString(), groupID);
