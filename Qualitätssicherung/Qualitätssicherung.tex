@@ -102,6 +102,7 @@ Der Test überprüft, ob das löschen alter Events aus der Datenbank funktionier
 \paragraph{LocationDeletionTimer}
 \subparagraph{public void testTimerStarter()}
 Der Test stellt sicher, dass die Methoden contextInitialized und contextDestroyed des ServletContextListeners den LocationDeletionTimer korrekt starten und beenden.
+\newpage
 
 
 \subsubsection{Servlet}
@@ -141,6 +142,7 @@ Die Methode reject wird ohne alle erforderlichen JSON Parameter aufgerufen. Es s
 Wenn eine Methode augerufen wird, die in dem Servlet nicht existiert, soll ein METH\_ERROR zurück gegeben werden.
 \subparagraph{public void testEmptyJSON()}
 Wenn ein leerer JSON String übergeben wird, soll der Fehler READ\_JSON entstehen.
+\newpage
 
 \paragraph{RequestSearchServlet}
 \subparagraph{public void testGetRequestsByUserDatabaseNull()}
@@ -185,10 +187,21 @@ Die Methode getParticipates wird ohne alle erforderlichen JSON Parameter aufgeru
 Wenn der JSONParameter EventId bei der Methode change fehlt, soll der Fehler READ\_JSON entstehen.
 \subparagraph{public void testChangeDatabaseWrong()}
  Wenn die Datenbank das Event nicht updaten konnte und deswegen false zurück gibt, soll ein DB\_ERROR entstehen.
+\newpage
  
 \paragraph{ParticipateServlet}
-\subparagraph{public void testSetStatsuWOutJSON()}
-
+\subparagraph{public void testSetStatusWOutJSON()}
+Die Methode setStatus wird aufgerufen, jedoch fehlt die UserID als Parameter. Das Servlet soll den Fehlercode READ\_JSON zurückgeben.
+\subparagraph{public void testSetStatusDBUpdateFalse()}
+Beim aktualisieren des Status in de Datenbank tritt ein Fehler auf. Vom Servlet wird der DB\_ERROR Fehler erwartet.
+\subparagraph{public void testSetStatusDBDeleteFalse()}
+Wird der Status auf rejected gesetzt, soll der Benutzer aus der Datenbank gelöscht werden. Hierbei tritt ein Fehler auf und das Servlet gibt einen DB\_ERROR zurück.
+\subparagraph{public void testSetStatusDBTrue()}
+Es wird getestet, ob das entfernen des Benutzers aus der Datenbank erfolgreich verläuft, wenn er seinen Status auf rejected setzen will.
+\subparagraph{public void testMethodNotExisting()}
+Dieser Test überprüft, ob das Servlet einen METH\_ERROR zurückgibt, wenn versucht wird eine Methode aufzurufen, die in diesem Serlvet nicht existiert.
+\subparagraph{public void testEmptyJSON()}
+In diesem Test wird eine Anfrage mit einem Leeren JSON Objekt gesendet. Das Servlet soll einen READ\_JSON Fehler zurückgeben.
 
 \paragraph{LocationServlet}
 \subparagraph{public void missingMethod()}
@@ -199,6 +212,7 @@ Es wird versucht eine Methode aufzurufen, die in diesem Servlet nicht existiert.
 Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Ausführung. Der METH\_ERROR Fehler wird zurückgegeben.
 \subparagraph{public void getClusterError()}
 Beim Abfragen des Events tritt ein Fehler in der Datenbank auf und das Servlet gibt den DB\_ERROR zurück.
+\newpage
 
 \paragraph{GroupServlet}
 \subparagraph{public void invalidMethod()}
@@ -239,6 +253,7 @@ Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Au
 Es wird versucht den Gründer einer Gruppe zu ändern, jedoch tritt beim abfragen des Users des Gründers aus der Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
 \subparagraph{public void setFounderDatabaseError()}
 Es wird versucht den Namen einer Gruppe zu ändern, jedoch tritt beim ändern des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\newpage
 
 \paragraph{GroupSearchServlet}
 \subparagraph{public void missingMemberSearch()}
