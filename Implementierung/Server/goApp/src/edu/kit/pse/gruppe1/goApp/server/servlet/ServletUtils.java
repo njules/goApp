@@ -240,6 +240,36 @@ public final class ServletUtils {
     }
 
     /**
+     * create JSONObject for an List of locations
+     * 
+     * @param locat
+     *            Location List to serialize
+     * @return Serialized objects
+     */
+    protected static JSONObject createJSONListLoc(List<Location> locat) {
+        JSONObject json = new JSONObject();
+        if (locat == null || locat.isEmpty()) {
+            try {
+                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
+                return json;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        try {
+            for (Location loc : locat) {
+                json.append(JSONParameter.LIST_LOC.toString(), createJSONLocation(loc));
+            }
+            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
+        } catch (JSONException | NullPointerException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+        
+    /**
      * create JSONObject for an event
      * 
      * @param event
