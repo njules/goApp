@@ -186,6 +186,74 @@ Wenn der JSONParameter EventId bei der Methode change fehlt, soll der Fehler REA
 \subparagraph{public void testChangeDatabaseWrong()}
  Wenn die Datenbank das Event nicht updaten konnte und deswegen false zurück gibt, soll ein DB\_ERROR entstehen.
  
+\paragraph{ParticipateServlet}
+\subparagraph{public void testSetStatsuWOutJSON()}
+
+
+\paragraph{LocationServlet}
+\subparagraph{public void missingMethod()}
+Das LocationServlet wird ohne den Parameter für die Methode aufgerufen, so dass der Fehlercode READ\_JSON zurückgegeben wird.
+\subparagraph{public void invalidMethod()}
+Es wird versucht eine Methode aufzurufen, die in diesem Servlet nicht existiert. Der METH\_ERROR Fehlercode soll an den Client gesendet werden.
+\subparagraph{public void missingParameter()}
+Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Ausführung. Der METH\_ERROR Fehler wird zurückgegeben.
+\subparagraph{public void getClusterError()}
+Beim Abfragen des Events tritt ein Fehler in der Datenbank auf und das Servlet gibt den DB\_ERROR zurück.
+
+\paragraph{GroupServlet}
+\subparagraph{public void invalidMethod()}
+Es wird versucht eine Methode aufzurufen, die in diesem Servlet nicht existiert. Der METH\_ERROR Fehlercode soll an den Client gesendet werden.
+\subparagraph{public void missingMethod()}
+Das GroupSearchServlet wird ohne den Parameter für die Methode aufgerufen, so dass der Fehlercode READ\_JSON zurückgegeben wird.
+\subparagraph{public void createMissingParameter()}
+Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Ausführung. Der METH\_ERROR Fehler wird zurückgegeben.
+\subparagraph{public void createDatabaseError()}
+Es wird versucht eine neue Gruppe zu erstellen, jedoch tritt beim erstellen des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\subparagraph{public void deleteMissingParameter()}
+Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Ausführung. Der METH\_ERROR Fehler wird zurückgegeben.
+\subparagraph{public void deleteDatabaseError()}
+Es wird versucht eine Gruppe zu löschen, jedoch tritt beim entfernen des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\subparagraph{public void setNameMissingParameter()}
+Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Ausführung. Der METH\_ERROR Fehler wird zurückgegeben.
+\subparagraph{public void setNameDatabaseError()}
+Es wird versucht den Namen einer Gruppe zu ändern, jedoch tritt beim ändern des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\subparagraph{public void deleteMemberMissingParameter()}
+Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Ausführung. Der METH\_ERROR Fehler wird zurückgegeben.
+\subparagraph{public void deleteMemberDatabaseError()}
+Es wird versucht ein Mitglied aus einer Gruppe zu entfernen, jedoch tritt beim entfernen des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\subparagraph{public void getEventsMissingParameter()}
+Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Ausführung. Der METH\_ERROR Fehler wird zurückgegeben.
+\subparagraph{public void getEventsDatabaseParticipantsError()}
+Es wird versucht die Liste von Events in einer Gruppe abzufragen, jedoch tritt beim abrufen des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\subparagraph{public void getEventsDatabaseStartedError()}
+Es wird versucht die Liste von Events in einer Gruppe abzufragen, jedoch tritt beim abrufen des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\subparagraph{public void getEventsDatabaseInvitedError()}
+Es wird versucht die Liste von Events in einer Gruppe abzufragen, jedoch tritt beim abrufen des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\subparagraph{public void getMembersMissingParameter()}
+Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Ausführung. Der METH\_ERROR Fehler wird zurückgegeben.
+\subparagraph{public void getMembersDatabaseError()}
+Es wird versucht die Liste von Mitgliedern der gegebenen Gruppe abzufragen, jedoch tritt beim abrufen des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\subparagraph{public void setFounderMissingParameter()}
+Die Methode wird korrekt aufgerufen, jedoch fehlt ein Parameter zur korrekten Ausführung. Der METH\_ERROR Fehler wird zurückgegeben.
+\subparagraph{public void setFoundergetUserDatabaseError()}
+Es wird versucht den Gründer einer Gruppe zu ändern, jedoch tritt beim abfragen des Users des Gründers aus der Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+\subparagraph{public void setFounderDatabaseError()}
+Es wird versucht den Namen einer Gruppe zu ändern, jedoch tritt beim ändern des Datenbankeintrags ein Fehler auf und es wird null zurückgegeben. Das Servlet sendet den DB\_ERROR Fehlercode an den Client.
+
+\paragraph{GroupSearchServlet}
+\subparagraph{public void missingMemberSearch()}
+Es wird eine Anfrage gesendet, eine Gruppe mit dem gegebenen Mitglied zu suchen, die UserID des Mitglieds wird jedoch nicht als Parameter übergeben. Das Servlet antwortet mit einem READ\_JSON Fehlercode.
+\subparagraph{public void groupNonExistentMemberSearch()}
+Eine Suchanfrage wird an das Servlet gesendet, in der nach einer Gruppe mit einem gegeben Mitglied gesucht wird, jedoch existiert keine Gruppe mit dem Mitglied in der Datenbank. Die Datenbank gibt null zurück und der Client erhält einen DB\_ERROR.
+\subparagraph{public void missingNameSearch()}
+Es wird eine Anfrage gesendet, eine Gruppe mit dem gegebenen Namen zu suchen, der Name wird jedoch nicht als Parameter übergeben. Das Servlet antwortet mit einem READ\_JSON Fehlercode.
+\subparagraph{public void groupNonExistentNameSearch()}
+Eine Suchanfrage wird an das Servlet gesendet, in der nach einer Gruppe mit dem Namen gesucht wird, jedoch existiert keine Gruppe mit dem Namen in der Datenbank. Die Datenbank gibt null zurück und der Client erhält einen DB\_ERROR.
+\subparagraph{public void invalidMethod()}
+Es wird versucht eine Methode aufzurufen, die in diesem Servlet nicht existiert. Der METH\_ERROR Fehlercode soll an den Client gesendet werden.
+\subparagraph{public void missingMethod()}
+Das GroupSearchServlet wird ohne den Parameter für die Methode aufgerufen, so dass der Fehlercode READ\_JSON zurückgegeben wird.
+
 \newpage
 \subsubsection{Abdeckung}
 \paragraph{EclEmma}
