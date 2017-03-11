@@ -1,6 +1,7 @@
 package edu.kit.pse.gruppe1.goApp.client.view;
 
 import android.Manifest;
+import android.accessibilityservice.AccessibilityService;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -112,6 +113,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
             ActivityCompat.requestPermissions(this, permissions, 0);
             return;
         }
+
         googleMap.setMyLocationEnabled(true);
 
         Intent intent = new Intent(this, LocationService.class);
@@ -166,7 +168,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
                             Location[] locations = (Location[]) intent.getParcelableArrayExtra(UtilService.LOCATIONS);
                             for (int i = 0; i < locations.length; i++) {
                                 LatLng position = new LatLng(locations[i].getLongitude(), locations[i].getLatitude());
-                                googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position).icon(BitmapDescriptorFactory.defaultMarker(getResources().getColor(R.color.colorPrimary))));
+                                googleMap.addMarker(new MarkerOptions().title(locations[i].getName()).position(position).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                             }
                         }
                     }

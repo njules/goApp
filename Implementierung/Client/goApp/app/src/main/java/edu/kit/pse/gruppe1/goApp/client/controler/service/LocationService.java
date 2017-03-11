@@ -43,7 +43,6 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
     private int eventLength = 3600000;
     private AlarmManager eventAlarmMgr;
     private PendingIntent eventAlarmIntent;
-    private Event event;
     private boolean connected;
 
 
@@ -85,12 +84,12 @@ public class LocationService extends IntentService implements GoogleApiClient.Co
                 resultIntent.setAction(RESULT_MY_LOCATION);
                 resultIntent.putExtra(UtilService.LOCATION, mLastLocation);
             } else {
-                event = intent.getParcelableExtra(UtilService.EVENT);
+                Event event = intent.getParcelableExtra(UtilService.EVENT);
                 Location[] locations = syncLocation(event.getId());
                 resultIntent.setAction(RESULT_LOCATION);
                 resultIntent.putExtra(UtilService.LOCATIONS, locations);
                 resultIntent.putExtra(UtilService.EVENT,event);
-                Log.i("Location", resultIntent.toString()+event.getId() );
+                Log.i("Location", resultIntent.toString()+event.getId());
 
                 //The Service restarts itself when the Event is still on.
                 if (System.currentTimeMillis() + refreshTime < event.getTime().getTime() + eventLength) {
