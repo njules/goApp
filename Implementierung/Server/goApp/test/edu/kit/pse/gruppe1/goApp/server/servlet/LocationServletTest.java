@@ -150,51 +150,8 @@ public class LocationServletTest {
         }
         assertTrue(fakeLocations.isEmpty());
     }
-    
-    @Ignore
-    @Test
-    public void testMissingLocation1() {
-        // set up input
-        final int user = 5;
-        final int evt = 2;
-        // prepare input JSON parameter
-        try {
-            JSONObject json = new JSONObject();
-            json.put(JSONParameter.METHOD.toString(), JSONParameter.Methods.SYNC_LOC);
-            json.put(JSONParameter.USER_ID.toString(), user);
-            json.put(JSONParameter.EVENT_ID.toString(), evt);
-            jsonRequest = json.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            fail("Failed to create JSON request!\n");
-        }
-        // initialize mocking
-        try {
-            when(httpRequest.getReader()).thenReturn(request);
-            when(httpResponse.getWriter()).thenReturn(response);
-            when(request.readLine()).thenReturn(jsonRequest);
-       } catch (IOException | NullPointerException e) {
-            e.printStackTrace();
-            fail("Failed mocking!\n");
-        }
-        // call method
-        try {
-            servlet.doPost(httpRequest, httpResponse);
-        } catch (ServletException | IOException e) {
-            e.printStackTrace();
-            fail("Failed to post HTTP request!\n");
-        }
-        // test correct error code
-        verify(response).println(argCap.capture());
-        try {
-            JSONObject json = new JSONObject(argCap.getValue());
-            assertEquals(json.getInt(JSONParameter.ERROR_CODE.toString()), JSONParameter.ErrorCodes.READ_JSON.getErrorCode());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            fail("Failed to read JSON response!\n");
-        }
-    }
 
+    @Ignore
     @Test
     public void testMissingLocation() {
         // set up input
@@ -238,7 +195,7 @@ public class LocationServletTest {
                     ErrorCodes.READ_JSON.getErrorCode());
         } catch (JSONException e) {
             e.printStackTrace();
-            fail();
+            fail("Failed to read JSON response!\n");
         }
     }
 }

@@ -26,13 +26,27 @@
 	\newpage
 
 \section{Einleitung}
+In der Phase der Qualitätssicherung ging es uns darum Fehler der goApp zu finden und zu beheben.
+Allen voran kann die App jetzt den auf dem Server berechneten Gruppenmittelpunkt bei Terminen anzeigen.
+\newline
+Ebenfalls haben wir weitere Unit-Tests zur Erhöhung der Code-Übderdeckung und zur Überprüfung von Randfällen implementiert um möglichst viele Fehler zu finden und eine hervorragende user experience zu bieten.
+\newline
+Ob uns dies gelungen ist haben wir versucht über das verbreiten der App unter Beta Usern herauszufinden.
+Hiervon versprachen wir uns konstruktive Kritik, insbesondere an der GUI um diese für den User noch intuitiver zu gestalten. 
+Ansonsten haben wir unser Projekt durch Werkzeuge wie Lint, ein Tool zur statischen Ananlyse von Code, und Monkey Test überprüft um die Code Qualität noch weiter zu steigern.
+
+Auf weitere Änderungen sowohl am Desing als auch der Funktionalität der goApp gehen wir im folgendem Dokument ein.
+
 \newpage
 \section{Server}
+\subsection{SonarLint}
+SonarLint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen. Mit SonarLint überprüfen wir unseren Servercode um mögliche Bugs zu finden und unsere Codequalität zu steigern.
+Dadurch haben wir unter anderem das Fehlen einer break Anweisung gefunden.
 
-
-Während der Qualitätssicherung bemerkten wir durch unsere Tests noch einige kleine Fehler im Code. Diese wurden behoben und sind im folgenden zusammen mit kleineren Optimierungen aufgeführt.
 \subsection{Änderungen}
+Während der Qualitätssicherung bemerkten wir durch unsere Tests noch einige kleine Fehler im Code. Diese wurden behoben und sind im folgenden zusammen mit kleineren Optimierungen aufgeführt.
 \subsubsection{Algorithmus}
+Beim Testen ist uns aufgefallen, dass die Clusterberechnung bei verschiedenen Größenordnungen an Abständen der Mitglieder schlechte Ergebnisse  liefert, da der Radius, der festlegt wann man zusammen in ein Cluster gezählt wird, fest und nicht dynamisch ist. Aus diesem Grund haben wir uns nun dazu entschieden eine weitere, speziell auf den Clusteralgorithmus DBSCAN festgelegte, Methode anzubieten, die verschiedene Radien bei der Berechnung benutzt. Die Methode basiert auf der Rahmenbedingung, dass mindestens 3 von 4 Mitglieder bei der Berechnung der der Mittelpunkte berücksichtigt werden sollen, was äquivalent zu der Aussage ist, dass mindestens 3 von 4 Mitglieder sich nach der Clusterberechung in Cluster mit mehr als einer Person befinden. Wir suchen also nach den kleinsten Cluster, so dass die Rahmenbedingung erfüllt ist. Diese Suche wurde mit Hilfe einer Schleife implementiert, wobei bei jedem Schleifendurchlauf der Parameter, der angibt welchen Abstand Clustermitglieder zueinander haben dürfen, verdoppelt wird. Um unseren Server vor vor ewigen Laufzeiten zu schützen haben wir zusätzlich eine maximale Schleifendurchlaufszahl von 12 festgelegt, was einem Radius von über 200 Kilometer entspricht und somit für jede sinnvolle Nutzung unserer App ausreicht.
 \subsubsection{Datenbank}
 Es gab einen Fehler im Zusammenhang mit dem LocationDeletionTimer und dem EventDeletionTimer, welche sich um das Löschen alter Events und alter Locations kümmern.
 \begin{itemize} 
@@ -66,6 +80,7 @@ Außerdem war der Umgang mit dem Timestamp falsch.
 \subsection{Tests}
 Zu den Unit-Tests aus der Implementierungsphase sind weitere Tests dazugekommen um die Abdeckung zu erhöhen, sowie Randfälle zu testen.
 \subsubsection{Algorithmus}
+Wie oben beschrieben stellen wir eine weitere Methode zur Berechnung der Cluster und deren Mittelpunkte zur Verfügung. Diese Methode wurde nun auch ausführlich mit Hilfe von Unittests getestet. Dabei wurden wieder verschiedenen Testpunkte initialisiert und die Verbindung zur Datenbank mit Mockito gemockt, um den Algorithmus seperat zu testen.
 \subsubsection{Datenbank}
 Bei den Tests für die Datenbank kamen nur zwei neue Testmethoden hinzu.
 Es wurden aber die bestehenden um Assertions ergänzt, welche Randfälle wie eine falsche id oder einen Parameter bei dem null übergeben wird überprüfen.
@@ -165,20 +180,23 @@ hier am Ende EclEmma beschreiben und \%te pro Datei oder Paket? angeben
 
 \newpage
 \section{Client}
-	\subsection{Lint}
-	Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Lint überprüft Android-Projekten auf mögliche Bugs und liefert Vorschläge um den Code zu verbessern.
+	\subsection{Android Lint}
+	Android Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Wir benutzten Android Lint auf dem Client equivalent zu SonarLint auf dem Server um unser Android-Projekt auf mögliche Bugs zu überprüfen. Außerdem liefert Android Lint Vorschläge um den Code zu verbessern.
 Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer weiter optimiert, von Performance Issues über Rechtschreibfehler bis hin zur Verbesserung der XML-Dateien.  
 
 	\subsection{Performance}
 		\subsubsection{Monkey-Test}
+
 		\subsubsection{Beta Tester}
-		Wir haben unsere App unter circa xx Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
+		Wir haben unsere App unter circa 10 Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
 		\newline Einige Beispiele:
 			\begin{itemize}
+				\item User die bei einem Termin auf "'GO"' gedrückt haben werden in der Teilnehmeransicht nun farblich hervorgehoben.  
 				\item User bekommen jetzt bei allen "`kritischen"' Aktionen wie dem Löschen einer Gruppe einen Dialog angezeigt ob sie diese Aktion wirklich durchführen wollen.
 				\item Alle Texte der goApp sind jetzt eingerückt und kleben nicht mehr am Bildschirmrand.
 				\item Die Reihenfolge der Buttons in der Toolbar der StartActivity wurde geändert da sie so intuitiver zu bedienen sind.
 				\item In der NewGroupActivity erkennt ein User jetzt durch einen Cursor ob er sich wirklich im Suchfeld befindet, außerdem wird jetzt mit einem betätigen der Enter Taste ebenfalls eine Suche gestartet.
+				\item Der berechnete Gruppenmittelpunkt wird dem User nun in dunkelgrün der goApp anstatt in rot angezeigt, so ist es leichter den Gruppenmittelpunkt vom Terminstandort auseinander zu halten.
 			\end{itemize}
 		
 		Ebenfalls waren wir an eventuellem Fehlverhalten oder gar Abstürzen der Applikation im "`alltagsgebrauch"' interessiert und haben auch hier Feedback gesammelt um Bugs zu beheben.
