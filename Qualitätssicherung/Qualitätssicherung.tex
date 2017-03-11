@@ -26,6 +26,17 @@
 	\newpage
 
 \section{Einleitung}
+In der Phase der Qualitätssicherung ging es uns darum Fehler der goApp zu finden und zu beheben.
+Allen voran kann die App jetzt den auf dem Server berechneten Gruppenmittelpunkt bei Terminen anzeigen.
+\newline
+Ebenfalls haben wir weitere Unit-Tests zur Erhöhung der Code-Übderdeckung und zur Überprüfung von Randfällen implementiert um möglichst viele Fehler zu finden und eine hervorragende user experience zu bieten.
+\newline
+Ob uns dies gelungen ist haben wir versucht über das verbreiten der App unter Beta Usern herauszufinden.
+Hiervon versprachen wir uns konstruktive Kritik, insbesondere an der GUI um diese für den User noch intuitiver zu gestalten. 
+Ansonsten haben wir unser Projekt durch Werkzeuge wie Lint, ein Tool zur statischen Ananlyse von Code, und Monkey Test überprüft um die Code Qualität noch weiter zu steigern.
+
+Auf weitere Änderungen sowohl am Desing als auch der Funktionalität der goApp gehen wir im folgendem Dokument ein.
+
 \newpage
 \section{Server}
 
@@ -166,7 +177,7 @@ hier am Ende EclEmma beschreiben und \%te pro Datei oder Paket? angeben
 \newpage
 \section{Client}
 	\subsection{Lint}
-	Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Lint überprüft Android-Projekten auf mögliche Bugs und liefert Vorschläge um den Code zu verbessern.
+	Android Lint ist ein Programm zur statischen Code-Analyse der Quelltexte von Computerprogrammen und in Android Studio integriert. Lint überprüft Android-Projekten auf mögliche Bugs und liefert Vorschläge um den Code zu verbessern.
 Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer weiter optimiert, von Performance Issues über Rechtschreibfehler bis hin zur Verbesserung der XML-Dateien.  
 
 	\subsection{Performance}
@@ -175,10 +186,12 @@ Wir haben unseren Client Code mehrmals mit Lint überprüft und dadurch immer we
 		Wir haben unsere App unter circa xx Beta Usern verteilt um sie unter realen Bedingungen durch Personen testen zu lassen welche nicht an der Entwicklung beteiligt waren und um Verbesserungsvorschläge an der GUI zu sammeln und umzusetzten.
 		\newline Einige Beispiele:
 			\begin{itemize}
+				\item User die bei einem Termin auf "'GO"' gedrückt haben werden in der Teilnehmeransicht nun farblich hervorgehoben.  
 				\item User bekommen jetzt bei allen "`kritischen"' Aktionen wie dem Löschen einer Gruppe einen Dialog angezeigt ob sie diese Aktion wirklich durchführen wollen.
 				\item Alle Texte der goApp sind jetzt eingerückt und kleben nicht mehr am Bildschirmrand.
 				\item Die Reihenfolge der Buttons in der Toolbar der StartActivity wurde geändert da sie so intuitiver zu bedienen sind.
 				\item In der NewGroupActivity erkennt ein User jetzt durch einen Cursor ob er sich wirklich im Suchfeld befindet, außerdem wird jetzt mit einem betätigen der Enter Taste ebenfalls eine Suche gestartet.
+				\item Der berechnete Gruppenmittelpunkt wird dem User nun in dunkelgrün der goApp anstatt in rot angezeigt, so ist es leichter den Gruppenmittelpunkt vom Terminstandort auseinander zu halten.
 			\end{itemize}
 		
 		Ebenfalls waren wir an eventuellem Fehlverhalten oder gar Abstürzen der Applikation im "`alltagsgebrauch"' interessiert und haben auch hier Feedback gesammelt um Bugs zu beheben.
