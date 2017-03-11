@@ -435,7 +435,6 @@ public class RequestServletTest {
         List<Group> groups = new ArrayList<Group>(5);
         List<User> users = new ArrayList<User>(5);
         List<Group> reqGroups = new ArrayList<Group>(1);
-        List<User> reqUsers = new ArrayList<User>(1);
 
         try {
             json.put(JSONParameter.USER_ID.toString(), userID);
@@ -488,7 +487,6 @@ public class RequestServletTest {
         int groupID = 2;
         List<Group> groups = new ArrayList<Group>(5);
         List<User> users = new ArrayList<User>(5);
-        List<Group> reqGroups = new ArrayList<Group>(1);
         List<User> reqUsers = new ArrayList<User>(1);
 
         try {
@@ -541,7 +539,6 @@ public class RequestServletTest {
         int userID = 1;
         int groupID = 2;
         List<Group> groups = new ArrayList<Group>(5);
-        List<User> users = new ArrayList<User>(5);
         List<Group> reqGroups = new ArrayList<Group>(1);
         List<User> reqUsers = new ArrayList<User>(1);
 
@@ -843,7 +840,6 @@ public class RequestServletTest {
         JSONObject newJson = null;
         int userID = 1;
         int groupID = 2;
-        Request req = new Request();
 
         try {
             json.put(JSONParameter.USER_ID.toString(), userID);
@@ -1031,7 +1027,6 @@ public class RequestServletTest {
         JSONObject newJson = null;
         int userID = 1;
         int groupID = 2;
-        Request req = new Request();
 
         try {
             json.put(JSONParameter.USER_ID.toString(), userID);

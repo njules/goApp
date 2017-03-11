@@ -68,11 +68,7 @@ public class EventServlet extends HttpServlet {
             method = JSONParameter.Methods
                     .fromString(jsonRequest.getString(JSONParameter.METHOD.toString()));
         } catch (JSONException e) {
-            if (e.getMessage().equals(ErrorCodes.EMPTY_JSON.toString())) {
-                error = ErrorCodes.EMPTY_JSON;
-            } else {
-                error = ErrorCodes.READ_JSON;
-            }
+            error = ErrorCodes.READ_JSON;
         }
 
         if (method == null || !error.equals(ErrorCodes.OK)) {

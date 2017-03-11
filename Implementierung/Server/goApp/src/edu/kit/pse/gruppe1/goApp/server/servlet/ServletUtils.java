@@ -148,7 +148,7 @@ public final class ServletUtils {
             json.put(JSONParameter.USER_NAME.toString(), part.getUser().getName());
             json.put(JSONParameter.STATUS.toString(), part.getStatus());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return null;
         }
@@ -171,7 +171,7 @@ public final class ServletUtils {
             json.put(JSONParameter.USER_NAME.toString(), user.getName());
             json.put(JSONParameter.STATUS.toString(), status.getValue());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return null;
         }
@@ -221,37 +221,6 @@ public final class ServletUtils {
     }
 
     /**
-     * create JSONObject for a LIst of Participants
-     * 
-     * @param part
-     *            Participant List to serialize
-     * @return Serialized objects
-     */
-    protected static JSONObject createJSONListPart(List<Participant> part) {
-        JSONObject json = new JSONObject();
-        if (part == null || part.isEmpty()) {
-            try {
-                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
-                return json;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        try {
-            for (Participant p : part) {
-                json.append(JSONParameter.LIST_PART.toString(), createJSONParticipate(p));
-            }
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return json;
-
-    }
-
-    /**
      * create JSONObject for an eventId
      * 
      * @param event
@@ -263,7 +232,7 @@ public final class ServletUtils {
         try {
             json.put(JSONParameter.EVENT_ID.toString(), event.getEventId());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return null;
         }
@@ -292,7 +261,7 @@ public final class ServletUtils {
             json.put(JSONParameter.USER_ID.toString(), event.getCreator().getUserId());
             json.put(JSONParameter.USER_NAME.toString(), event.getCreator().getName());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return null;
         }
@@ -314,7 +283,7 @@ public final class ServletUtils {
             json.put(JSONParameter.LONGITUDE.toString(), location.getLongitude());
             json.put(JSONParameter.LATITUDE.toString(), location.getLatitude());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return null;
         }
@@ -338,7 +307,7 @@ public final class ServletUtils {
             json.put(JSONParameter.GROUP_ID.toString(), group.getGroupId());
 
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return null;
         }
@@ -358,37 +327,7 @@ public final class ServletUtils {
             json.put(JSONParameter.USER_ID.toString(), user.getUserId());
             json.put(JSONParameter.USER_NAME.toString(), user.getName());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return json;
-    }
-
-    /**
-     * create JSONObject for an List of event
-     * 
-     * @param event
-     *            Event List to serialize
-     * @return Serialized objects
-     */
-    protected static JSONObject createJSONListEvent(List<Event> event) {
-        JSONObject json = new JSONObject();
-        if (event == null || event.isEmpty()) {
-            try {
-                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
-                return json;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        try {
-            for (Event evt : event) {
-                json.append(JSONParameter.LIST_EVENT.toString(), createJSONEvent(evt));
-            }
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return null;
         }
@@ -510,37 +449,7 @@ public final class ServletUtils {
         try {
             json.put(JSONParameter.GROUP_ID.toString(), grp.getGroupId());
             json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return json;
-    }
-
-    /**
-     * create JSONObject for an List of locations
-     * 
-     * @param locat
-     *            Location List to serialize
-     * @return Serialized objects
-     */
-    protected static JSONObject createJSONListLoc(List<Location> locat) {
-        JSONObject json = new JSONObject();
-        if (locat == null || locat.isEmpty()) {
-            try {
-                json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.EMPTY_LIST.getErrorCode());
-                return json;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        try {
-            for (Location loc : locat) {
-                json.append(JSONParameter.LIST_LOC.toString(), createJSONLocation(loc));
-            }
-            json.put(JSONParameter.ERROR_CODE.toString(), ErrorCodes.OK.getErrorCode());
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return null;
         }
