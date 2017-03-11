@@ -80,6 +80,7 @@ Außerdem war der Umgang mit dem Timestamp falsch.
 \subsection{Tests}
 Zu den Unit-Tests aus der Implementierungsphase sind weitere Tests dazugekommen um die Abdeckung zu erhöhen, sowie Randfälle zu testen.
 \subsubsection{Algorithmus}
+Wie oben beschrieben stellen wir eine weitere Methode zur Berechnung der Cluster und deren Mittelpunkte zur Verfügung. Diese Methode wurde nun auch ausführlich mit Hilfe von Unittests getestet. Dabei wurden wieder verschiedenen Testpunkte initialisiert und die Verbindung zur Datenbank mit Mockito gemockt, um den Algorithmus seperat zu testen.
 \subsubsection{Datenbank}
 Bei den Tests für die Datenbank kamen nur zwei neue Testmethoden hinzu.
 Es wurden aber die bestehenden um Assertions ergänzt, welche Randfälle wie eine falsche id oder einen Parameter bei dem null übergeben wird überprüfen.
