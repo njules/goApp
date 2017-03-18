@@ -1,0 +1,80 @@
+  	[Total lines] 	[Source code lines] 	[Source code lines in %] 	[comment lines] 	[comment lines in %] 	[Blank Lines] 	[Blank Lines in %]
+nur java code jeweils (ganz unten xml):
+gesamt (tests app + tests Server+ server+app):
+Total:	18325		12757			0.6961527967257845		3321			0.18122783083219646	2247		0.1226193724420191
+gesamt (Code auf Server + Tests):
+Total:	12751		9136			0.716492824092228		2085			0.16351658693435808	1530		0.11999058897341384
+
+gesamt (ohne Tests):
+Total:	5645		3119			0.5525243578387954		1829			0.32400354295837025	697		0.12347209920283436
+
+Verschiedene Pakete im Ordner src(nicht Tests):
+edu.kit.pse.gruppe1.goApp.server.algorithm:
+Total:	447		195			0.436241610738255		145			0.3243847874720358	107		0.23937360178970918
+
+edu.kit.pse.gruppe1.goApp.server.database.management:
+Total:	1136		650			0.5721830985915493		386			0.3397887323943662	100		0.0880281690140845
+
+edu.kit.pse.gruppe1.goApp.server.model:
+Total:	1228		592			0.4820846905537459		501			0.40798045602605865	135		0.10993485342019543
+
+edu.kit.pse.gruppe1.goApp.server.servlet:
+Total:	2723		1621			0.5952993022401762		767			0.2816746235769372	335		0.12302607418288652
+
+edu.kit.pse.gruppe1.goApp.server (Klassen EventdeletionTimer, LocationdeletionTimer, Timerstarter) (package eventuell umbenennen in edu.kit.pse.gruppe1.goApp.server.timer)
+Total:	111	     	61			0.5495495495495496		30			0.2702702702702703	20		0.18018018018018017 
+
+gesamt (nur Tests):
+Total:	7106		6017			0.846749226006192		256			0.03602589361103293	833		0.11722488038277512
+
+Pakete im Ordner Tests:
+edu.kit.pse.gruppe1.goApp.server.algorithm:
+Total:	323		212			0.6563467492260062		7			0.021671826625386997	104		0.3219814241486068
+
+edu.kit.pse.gruppe1.goApp.server.database.management:
+Total:	966		820			0.8488612836438924		4			0.004140786749482402	142		0.14699792960662525
+
+edu.kit.pse.gruppe1.goApp.server.servlet:
+Total:	5599		4792			0.8558671191284158		244			0.043579210573316665	563		0.10055367029826755
+
+edu.kit.pse.gruppe1.goApp.server (Klassen EventdeletionTimer, LocationdeletionTimer, Timerstarter) (package eventuell umbenennen in edu.kit.pse.gruppe1.goApp.server.timer)
+Total:	177		156			0.8813559322033898		1			0.005649717514124294	20		0.11299435028248588
+
+
+   	[Total lines] 	[Source code lines] 	[Source code lines in %] 	[comment lines] 	[comment lines in %] 	[Blank Lines] 	[Blank Lines in %]
+
+gesamt (Code app + Tests):
+Total:	5574		3621			0.6496232508073198		1236			0.2217438105489774	717		0.1286329386437029
+
+gesamt (app ohne Tests):
+Total:	5288		3428			0.6482602118003026		1190			0.22503782148260212	670		0.1267019667170953
+
+edu.kit.pse.gruppe1.goApp.client.controler.serverConnection:
+Total:	609		220			0.361247947454844		277			0.4548440065681445	112		0.1839080459770115
+
+edu.kit.pse.gruppe1.goApp.client.controler.service:
+Total:	1594		1084			0.6800501882057717		326			0.20451693851944794	184		0.11543287327478043
+
+edu.kit.pse.gruppe1.goApp.client.model:
+Total:	614		322			0.5244299674267101		201			0.3273615635179153	91		0.1482084690553746
+
+edu.kit.pse.gruppe1.goApp.client.view:
+Total:	2471		1802			0.7292594091460947		386			0.15621205989477943	283		0.11452853095912587
+
+gesamt (app nur Tests):
+Total:	286		193			0.6748251748251748		46			0.16083916083916083	47		0.16433566433566432
+
+edu.kit.pse.gruppe1.goApp.client.controler.serverConnection:
+Total:	36		28			0.7777777777777778		3			0.08333333333333333	5		0.1388888888888889
+
+edu.kit.pse.gruppe1.goApp.client.controler.service:
+Total:	250		165			0.66				43			0.172			42		0.168
+
+gesamt (App ohne Tests+ Server ohne tests):
+Total:	10933		6547			0.5988292325985548		3019			0.27613646757523097	1367		0.12503429982621422
+
+gesamt (App nur Tests+ Server nur tests):
+Total:	7392		6210			0.8400974025974026		302			0.04085497835497835	880		0.11904761904761904
+
+xml-dateien app:
+Total:	993		916			0.9224572004028198		0			0.0			77		0.07754279959718026
