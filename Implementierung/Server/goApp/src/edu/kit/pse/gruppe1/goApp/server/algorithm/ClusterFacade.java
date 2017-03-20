@@ -23,7 +23,6 @@ public class ClusterFacade {
     private CentralPointAlgo algorithm;
     private Clusterer<DoublePoint> clusterer;
     private EventManagement management;
-    
 
     /**
      * default constructor with simpleCentral-Algorithm and DBSCAN
@@ -137,7 +136,7 @@ public class ClusterFacade {
             if (!(userLocation == null)) {
 
                 userPoint = new DoublePoint(
-                        new double[] {userLocation.getLongitude(), userLocation.getLatitude() }); // Build
+                        new double[] { userLocation.getLongitude(), userLocation.getLatitude() }); // Build
                                                                                                    // a
                                                                                                    // DoublePoint
                                                                                                    // from
@@ -151,93 +150,93 @@ public class ClusterFacade {
         return locations;
 
     }
-    
-    
-    
-    
+
     /**
-     * Method to get clustered central points by multiple algorithm calls and evaluating the best solution
-     * @param event The event which locations should be clustered.
+     * Method to get clustered central points by multiple algorithm calls and evaluating the best
+     * solution
+     * 
+     * @param event
+     *            The event which locations should be clustered.
      * @return List of clustered central Points.
      */
-    
+
     public List<DoublePoint> getPointsByMultiDBSCAN(Event event) {
         int eventId = event.getEventId();
 
         List<DoublePoint> locations = getEventsLocations(eventId);
-        
+
         List<DoublePoint> result;
-        
-        if(locations.size() <= 1) return null;
-        
-        if(locations.size()<= 3) {
+
+        if (locations.size() <= 1)
+            return null;
+
+        if (locations.size() <= 3) {
             Cluster<DoublePoint> cluster = new Cluster<DoublePoint>();
-            for(DoublePoint loc : locations) {
+            for (DoublePoint loc : locations) {
                 cluster.addPoint(loc);
             }
-            
-           
+
             DoublePoint oneResult = algorithm.calculateCentralPoint(cluster);
             result = new ArrayList<DoublePoint>();
             result.add(oneResult);
-            } else {
+        } else {
             result = multiDBSCAN(locations);
         }
-        
+
         return result;
-        
+
     }
-    
-    
+
     /**
-     * Method which calls the DBSCAN algorithm till 3/4 of the locations are involved in the arithmetic midpoint
+     * Method which calls the DBSCAN algorithm till 3/4 of the locations are involved in the
+     * arithmetic midpoint
+     * 
      * @param locations
      * @return list of midpoints
      */
     private List<DoublePoint> multiDBSCAN(List<DoublePoint> locations) {
-        
+
         final int MAXIMUM_ITERATIONS = 12;
         double minRadius = 0.0005;
-        int minimalNumberOfMen = locations.size() * 3 / 4 ;
-        
-        List<Cluster<DoublePoint>> clusters;
-        
-        List<DoublePoint> result;
-        boolean repeat;
-        int loopCounter = 0;
-        
-        do {
-            
-            
-            repeat = true;
-            int MenListCounter = 0;
-            clusters = new DBSCANClusterer<DoublePoint>(minRadius, 1).cluster(locations);
-            minRadius = 2 * minRadius;
-            
-            result = new ArrayList<DoublePoint>();
-            
-            for (Cluster<DoublePoint> c : clusters) {
+        int minimalNumberOfPeople = locations.size() * 3 / 4;
 
+        List<Cluster<DoublePoint>> clusters;
+
+        List<DoublePoint> result = null;
+
+        for (int loopCounter = 0; loopCounter < MAXIMUM_ITERATIONS; loopCounter++) {
+
+            int peopleCounter = 0;
+
+            // Calculates clusters from the given locations
+            clusters = new DBSCANClusterer<DoublePoint>(minRadius, 1).cluster(locations);
+
+            result = new ArrayList<DoublePoint>();
+
+            for (Cluster<DoublePoint> c : clusters) {
+                /*
+                 * Checks whether there is more than one person in the cluster, adds the center to
+                 * the solution and raises the people Counter
+                 */
                 if (c.getPoints().size() >= 2) {
 
                     result.add(getCenter(c));
-                    MenListCounter += c.getPoints().size();
-                } 
+                    peopleCounter += c.getPoints().size();
+                }
 
             }
-            if(MenListCounter >= minimalNumberOfMen) {
+
+            // Check whether enough people are involved in the calculation
+            if (peopleCounter >= minimalNumberOfPeople) {
                 break;
             }
-            if(loopCounter++ >= MAXIMUM_ITERATIONS) {
-                repeat = false;
-            }
-            
-           
-            
-        } while(repeat);
-        
+
+            // Double the radius each loop pass
+            minRadius = 2 * minRadius;
+        }
+
         return result;
-        
+
     }
 
     /**
@@ -264,10 +263,10 @@ public class ClusterFacade {
     public DoublePoint getCenter(Cluster<DoublePoint> cluster) {
         return algorithm.calculateCentralPoint(cluster);
     }
-    
-    
+
     /**
      * Converter from a List of DoublePoints to Locations
+     * 
      * @param doublePoints
      * @return locations
      */
@@ -282,7 +281,7 @@ public class ClusterFacade {
         }
 
         return locations;
-        
+
     }
 
     /**
@@ -296,18 +295,19 @@ public class ClusterFacade {
      */
     public List<Location> getClusteredLocations(Event event) {
         List<DoublePoint> pointList = getClusteredCentralPoints(event);
-        
+
         return convertDoublePointsToLocations(pointList);
     }
-    
+
     /**
-     * Method to get the Locations which are clustered by the MultiDBSCAN method and converted into Locations
+     * Method to get the Locations which are clustered by the MultiDBSCAN method and converted into
+     * Locations
+     * 
      * @param event
      * @return Clustered Locations
      */
     public List<Location> getLocationsByMultiDBSCAN(Event event) {
         return convertDoublePointsToLocations(getPointsByMultiDBSCAN(event));
     }
-    
-    
+
 }
